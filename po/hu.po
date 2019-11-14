@@ -962,8 +962,13 @@ msgid "Tiles placed"
 msgstr "Lerakott lapkák"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
-msgid "Time consumed"
+msgid "Time consumed:(Player/Game)"
 msgstr "Felhasznált idő"
+
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:147
+msgid "Time consumed:(Percentage)"
+msgstr "Felhasznált idő (%)"
+
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
 msgid "Roads"

@@ -9,9 +9,6 @@ mv build/JCloisterZone.jar build/JCloisterZone
 chmod a+x build/JCloisterZone/JCloisterZone.jar
 cp ../JCloisterZone-plugins/builds/* build/JCloisterZone/plugins
 
-# temporary
-rm build/JCloisterZone/plugins/newart.jar
-
 cd build
 # zip -r -9 JCloisterZone-$1.zip JCloisterZone
 tar cvzf JCloisterZone-$1.tgz JCloisterZone
