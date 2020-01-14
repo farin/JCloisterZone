@@ -9,6 +9,7 @@ import static com.jcloisterzone.XMLUtils.contentAsLocations;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.jcloisterzone.game.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -76,9 +77,11 @@ public class TileBuilder {
             for (int i = 0; i < nl.getLength(); i++) {
                 processCityElement((Element) nl.item(i));
             }
-            nl = xml.getElementsByTagName("farm");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processFarmElement((Element) nl.item(i));
+            if (!this.state.getBooleanValue(Rule.DISABLE_FARMS)) {
+                nl = xml.getElementsByTagName("farm");
+                for (int i = 0; i < nl.getLength(); i++) {
+                    processFarmElement((Element) nl.item(i));
+                }
             }
             nl = xml.getElementsByTagName("tower");
             for (int i = 0; i < nl.getLength(); i++) {

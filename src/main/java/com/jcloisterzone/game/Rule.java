@@ -15,6 +15,8 @@ import io.vavr.collection.Map;
 public enum Rule {
     RANDOM_SEATING_ORDER(null, Boolean.class,  _tr("Randomize seating order")),
 
+    DISABLE_FARMS(Expansion.BASIC, Boolean.class, _tr("Disable farms")),
+
     USE_PIG_HERDS_INDEPENDENTLY(Expansion.BASIC, Boolean.class, _tr("Use pig herds independently (without T&B expansion)")),
 
     PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _tr("Princess MUST remove a knight from city.") + " (RGG, ZMG)"),
