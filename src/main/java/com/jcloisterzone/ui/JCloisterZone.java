@@ -23,9 +23,6 @@ import org.java_websocket.WebSocketImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
 import com.jcloisterzone.AppUpdate;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.FileTeeStream;
@@ -254,12 +251,6 @@ public class JCloisterZone  {
             public void run() {
                 client.init();
 
-                if (isMac()) {
-                    Application macApplication = Application.getApplication();
-                    macApplication.setDockIconImage(new ImageIcon(Client.class.getClassLoader().getResource("sysimages/ico.png")).getImage());
-                    macApplication.addApplicationListener(new MacApplicationAdapter(client));
-                }
-
                 DebugConfig debugConfig = client.getConfig().getDebug();
                 if (debugConfig != null && debugConfig.isAutostartEnabled()) {
                     if (Boolean.TRUE.equals(debugConfig.getAutostart().getOnline())) {
@@ -278,29 +269,4 @@ public class JCloisterZone  {
         (new JCloisterZone()).run();
     }
 
-    static class MacApplicationAdapter extends ApplicationAdapter {
-        private final Client client;
-
-        public MacApplicationAdapter(Client client) {
-            this.client = client;
-        }
-
-        @Override
-        public void handleAbout(ApplicationEvent ev) {
-            ev.setHandled(true);
-            client.showAboutDialog();
-        }
-
-        @Override
-        public void handleQuit(ApplicationEvent ev) {
-            ev.setHandled(true);
-            client.handleQuit();
-        }
-
-        @Override
-        public void handlePreferences(ApplicationEvent ev) {
-            ev.setHandled(true);
-            client.showPreferncesDialog();
-        }
-    }
 }
