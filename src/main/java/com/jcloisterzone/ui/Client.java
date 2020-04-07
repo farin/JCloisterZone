@@ -205,10 +205,6 @@ public class Client extends JFrame {
         this.setTitle(BASE_TITLE);
         this.setVisible(true);
 
-        if (JCloisterZone.isMac()) {
-            enableFullScreenMode();
-        }
-
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent ev) {
@@ -217,19 +213,6 @@ public class Client extends JFrame {
                 return view.dispatchKeyEvent(ev);
             }
         });
-    }
-
-    private void enableFullScreenMode() {
-        String className = "com.apple.eawt.FullScreenUtilities";
-        String methodName = "setWindowCanFullScreen";
-
-        try {
-            Class<?> clazz = Class.forName(className);
-            Method method = clazz.getMethod(methodName, new Class<?>[] { Window.class, boolean.class });
-            method.invoke(null, this, true);
-        } catch (Throwable e) {
-            logger.info("OSX full screen mode isn't supported.", e);
-        }
     }
 
     @Override

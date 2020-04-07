@@ -1,5 +1,11 @@
 # Version history
 
+## 4.4.2
+*2020-04-07
+   - OSX helpers removed because they seems to crash app on Mac with some new Java versions
+     (UI layer will be migrate to modern Java FX in next release)
+
+
 ## 4.4.1
 *2019-04-24*
 
