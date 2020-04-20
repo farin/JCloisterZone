@@ -6,12 +6,16 @@ It supports multiplayer game on a local computer or over a network.
 Games can be also played against computer AI.
 The game contains [many of the available expansions](http://www.boardgamegeek.com/boardgame/822/carcassonne), including the small ones, distributed during game expos or in a game magazines.
 
+Project website http://jcloisterzone.com/
 
-- Download ready-made packages at [jcloisterzone.com](http://jcloisterzone.com/).
-- Build your own version from source by reading [BUILDING.md](./BUILDING.md).
-- Contribute to the project by reading [CONTRIBUTE.md](./CONTRIBUTE.md).
+## Roadmap
+
+- (04/2020) Play server improvements. Eg. fiximg zombie games in list
+- UI rework, support fine game configuration (like adding tiles from expansion multiple tiles, excluding some feature eg playing without Dragon etc. - these is already supported by game engine
+but UI doesn't exist) - estimate delivery 07/2020
 
 
----
+## Development notes
 
-JCloisterZone copyright (C) 2004-2014 [Roman Krejčík](http://farin.cz) ([@farin](https://github.com/farin/)). Licensed under the [GNU Affero General Public License, Version 3 (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0.html).
+Refer to [BUILDING.md](./BUILDING.md).
+
