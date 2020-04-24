@@ -3,6 +3,7 @@
 ## upcoming
 *estimated May 2020*
 
+* rules: allow farmer placement on field with shepherd (#305)
 * fixed #306: H&S null pointer exception when trying to place tile next to weird CCCF tile
 * fixed #283: Sheep/wolf token counting error (panel should display remaining tokes not sheep sum)
 * fixed #295: fix NullPointerException at ClientMessageListener in error log when playing online

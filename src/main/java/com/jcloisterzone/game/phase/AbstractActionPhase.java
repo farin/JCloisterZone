@@ -13,10 +13,7 @@ import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.FlyingMachine;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.figure.DeploymentCheckResult;
-import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.BarnCapability;
@@ -117,7 +114,8 @@ public abstract class AbstractActionPhase extends Phase {
                            .isEmpty();
                         if (isOccupied) return false;
                     }
-                    return !t._2.isOccupied(state);
+                    // Shepherd is not interacting with other meeples
+                    return t._2.getMeeples(state).find(m -> !(m instanceof Shepherd)).isEmpty();
                 })
                 .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
                 .map(t -> t._1)
