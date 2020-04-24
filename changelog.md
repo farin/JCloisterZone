@@ -3,8 +3,10 @@
 ## upcoming
 *estimated May 2020*
 
-* fixed #283: Sheep/wolf token counting error (panel should display remaining tokes not sheep sum)
 * fixed #306: H&S null pointer exception when trying to place tile next to weird CCCF tile
+* fixed #283: Sheep/wolf token counting error (panel should display remaining tokes not sheep sum)
+* fixed #295: fix NullPointerException at ClientMessageListener in error log when playing online
+
 
 
 ## 4.4.2

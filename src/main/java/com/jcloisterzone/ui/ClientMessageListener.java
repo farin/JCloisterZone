@@ -390,29 +390,33 @@ public class ClientMessageListener implements MessageListener {
     @WsSubscribe
     public void handleSlot(SlotMessage msg) {
         Game game = getGame(msg);
-        //slot's can be updated also for running game
-        PlayerSlot[] slots = game.getPlayerSlots();
-        updateSlot(slots, msg);
-        game.post(new PlayerSlotChangeEvent(slots[msg.getNumber()]));
+        if (game != null) {
+            //slot's can be updated also for running game
+            PlayerSlot[] slots = game.getPlayerSlots();
+            updateSlot(slots, msg);
+            game.post(new PlayerSlotChangeEvent(slots[msg.getNumber()]));
+        }
     }
 
     @WsSubscribe
     public void handleGameSetup(GameSetupMessage msg) {
         Game game = getGame(msg);
-        game.setSetup(
-            new GameSetup(
-                io.vavr.collection.HashMap.ofAll(msg.getExpansions()),
-                io.vavr.collection.HashSet.ofAll(msg.getCapabilities()),
-                io.vavr.collection.HashMap.ofAll(msg.getRules())
-            )
-        );
+        if (game != null) {
+            game.setSetup(
+                    new GameSetup(
+                            io.vavr.collection.HashMap.ofAll(msg.getExpansions()),
+                            io.vavr.collection.HashSet.ofAll(msg.getCapabilities()),
+                            io.vavr.collection.HashMap.ofAll(msg.getRules())
+                    )
+            );
 
-        for (Expansion exp : Expansion.values()) {
-            game.post(new ExpansionChangedEvent(exp, game.getSetup().getExpansions().get(exp).getOrElse(0)));
-        }
-        for (Rule rule : Rule.values()) {
-            Object value = game.getSetup().getRules().get(rule).getOrNull();
-            game.post(new RuleChangeEvent(rule, value));
+            for (Expansion exp : Expansion.values()) {
+                game.post(new ExpansionChangedEvent(exp, game.getSetup().getExpansions().get(exp).getOrElse(0)));
+            }
+            for (Rule rule : Rule.values()) {
+                Object value = game.getSetup().getRules().get(rule).getOrNull();
+                game.post(new RuleChangeEvent(rule, value));
+            }
         }
     }
 
@@ -420,40 +424,48 @@ public class ClientMessageListener implements MessageListener {
     @WsSubscribe
     public void handleSetExpansion(SetExpansionMessage msg) {
         Game game = getGame(msg);
-        Expansion expansion = msg.getExpansion();
-        int count = msg.getCount();
-        game.mapSetup(setup ->  setup.mapExpansions(expansions ->
-             count > 0 ? expansions.put(expansion, count) : expansions.remove(expansion)
-        ));
-        game.post(new ExpansionChangedEvent(expansion, count));
+        if (game != null) {
+            Expansion expansion = msg.getExpansion();
+            int count = msg.getCount();
+            game.mapSetup(setup -> setup.mapExpansions(expansions ->
+                    count > 0 ? expansions.put(expansion, count) : expansions.remove(expansion)
+            ));
+            game.post(new ExpansionChangedEvent(expansion, count));
+        }
     }
 
     @WsSubscribe
     public void handleSetRule(SetRuleMessage msg) {
         Game game = getGame(msg);
-        Rule rule = msg.getRule();
-        Object value = msg.getValue();
-        game.mapSetup(setup ->  setup.mapRules(rules ->
-            msg.getValue() == null ? rules.remove(rule) : rules.put(rule, value)
-        ));
-        game.post(new RuleChangeEvent(rule, msg.getValue()));
+        if (game != null) {
+            Rule rule = msg.getRule();
+            Object value = msg.getValue();
+            game.mapSetup(setup -> setup.mapRules(rules ->
+                    msg.getValue() == null ? rules.remove(rule) : rules.put(rule, value)
+            ));
+            game.post(new RuleChangeEvent(rule, msg.getValue()));
+        }
     }
 
     @WsSubscribe
     public void handleSetCapability(SetCapabilityMessage msg) {
         Game game = getGame(msg);
-        Class<? extends Capability<?>> cap = msg.getCapability();
-        boolean enabled = msg.isEnabled();
-        game.mapSetup(setup ->  setup.mapCapabilities(caps ->
-            enabled ? caps.add(cap) : caps.remove(cap)
-        ));
-        game.post(new CapabilityChangeEvent(cap, enabled));
+        if (game != null) {
+            Class<? extends Capability<?>> cap = msg.getCapability();
+            boolean enabled = msg.isEnabled();
+            game.mapSetup(setup -> setup.mapCapabilities(caps ->
+                    enabled ? caps.add(cap) : caps.remove(cap)
+            ));
+            game.post(new CapabilityChangeEvent(cap, enabled));
+        }
     }
 
     @WsSubscribe
     public void handleUndo(UndoMessage msg) {
         Game game = getGame(msg);
-        game.undo();
+        if (game != null) {
+            game.undo();
+        }
     }
 
     @WsSubscribe
