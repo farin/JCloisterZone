@@ -10,7 +10,8 @@ Project website http://jcloisterzone.com/
 
 ## Roadmap
 
-- (04/2020) Play server improvements. Eg. fiximg zombie games in list
+- ~(04/2020) Play server improvements. Eg. fiximg zombie games in list~ DONE
+- Bug fixing release (05/2020) - Fixing few hills & sheeps issues etc.
 - UI rework, support fine game configuration (like adding tiles from expansion multiple tiles, excluding some feature eg playing without Dragon etc. - these is already supported by game engine
 but UI doesn't exist) - estimate delivery 07/2020
 
