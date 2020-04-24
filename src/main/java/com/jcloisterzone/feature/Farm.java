@@ -4,6 +4,7 @@ import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -52,6 +53,26 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
             adjoiningCityOfCarcassonne,
             pigHerds
         );
+    }
+
+    public boolean isOpen(GameState state) {
+        List<FeaturePointer> places = getPlaces();
+        if (places.length() == 1) {
+            Location loc = places.get().getLocation();
+            if (loc == Location.INNER_FARM || loc == Location.INNER_FARM_B) {
+                return false;
+            }
+            // otherwise it can be still closed when placed next to Abbey
+        }
+        for (FeaturePointer fp : places) {
+            Position pos = fp.getPosition();
+            for (Location loc : fp.getLocation().splitToFarmSides().map(Location::farmToSide).distinct()) {
+                if (!state.getPlacedTiles().containsKey(pos.add(loc))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public Set<FeaturePointer> getAdjoiningCities() {

@@ -255,6 +255,19 @@ public class Location implements Serializable {
         return create((mask >> 8) & 0b010101010);
     }
 
+    public Location farmToSide() {
+        assert isFarmLocation();
+        int mask = 0;
+        if (Location.NL.isPartOf(this)) mask |= Location.N.mask;
+        if (Location.NR.isPartOf(this)) mask |= Location.N.mask;
+        if (Location.EL.isPartOf(this)) mask |= Location.E.mask;
+        if (Location.ER.isPartOf(this)) mask |= Location.E.mask;
+        if (Location.SL.isPartOf(this)) mask |= Location.S.mask;
+        if (Location.SR.isPartOf(this)) mask |= Location.S.mask;
+        if (Location.WL.isPartOf(this)) mask |= Location.W.mask;
+        if (Location.WR.isPartOf(this)) mask |= Location.W.mask;
+        return create(mask);
+    }
 
     /**
      * Checks if {@code this} is part of {@code loc}.
@@ -324,6 +337,10 @@ public class Location implements Serializable {
      */
     public List<Location> splitToSides() {
         return Location.SIDES.filter(side -> intersect(side) != null);
+    }
+
+    public List<Location> splitToFarmSides() {
+        return Location.FARM_SIDES.filter(side -> intersect(side) != null);
     }
 
     /**

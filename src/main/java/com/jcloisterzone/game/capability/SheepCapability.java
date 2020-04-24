@@ -4,15 +4,17 @@ import java.util.function.Function;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.figure.MeepleIdProvider;
-import com.jcloisterzone.figure.Shepherd;
-import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.SheepCapability.SheepToken;
 import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.Predicates;
+import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;

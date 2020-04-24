@@ -20,9 +20,11 @@ import com.jcloisterzone.reducers.UndeployMeeple;
 import com.jcloisterzone.wsio.message.FlockMessage;
 import com.jcloisterzone.wsio.message.FlockMessage.FlockOption;
 
+import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
+import io.vavr.collection.Seq;
 import io.vavr.collection.Vector;
 
 
@@ -37,6 +39,17 @@ public class ShepherdPhase extends Phase {
 	@Override
 	public StepResult enter(GameState state) {
 		PlacedTile lastPlaced = state.getLastPlaced();
+		GameState _state = state;
+		Seq<Farm> closedFarmsWithShepherd = state.getDeployedMeeples()
+				.filterKeys(Predicates.instanceOf(Shepherd.class))
+				.values()
+				.map(fp -> (Farm) _state.getFeature(fp))
+				.distinct()
+				.filter(farm -> !farm.isOpen(_state));
+
+		for (Farm farm : closedFarmsWithShepherd) {
+			state = scoreFlock(state, farm);
+		}
 
 		Shepherd shepherd = (Shepherd) state.getTurnPlayer().getSpecialMeeples(state).find(m -> m instanceof Shepherd).getOrNull();
 		FeaturePointer shepherdFp = shepherd.getDeployment(state);
@@ -75,16 +88,21 @@ public class ShepherdPhase extends Phase {
 		}
     }
 
-	private Map<Meeple, FeaturePointer> getShepherdOnFarm(GameState state, Farm farm) {
+	private Map<Meeple, FeaturePointer> getShepherdsOnFarm(GameState state, Farm farm) {
 		return state.getDeployedMeeples().filter((m, fp) -> m instanceof Shepherd && farm.getPlaces().contains(fp));
 	}
 
 	private StepResult scoreFlock(GameState state, FeaturePointer shepherdFp) {
+		Farm farm = (Farm) state.getFeature(shepherdFp);
+		state = scoreFlock(state, farm);
+		state = clearActions(state);
+		return next(state);
+	}
+
+	private GameState scoreFlock(GameState state, Farm farm) {
 		SheepCapability cap = state.getCapabilities().get(SheepCapability.class);
 		Map<FeaturePointer, List<SheepToken>> placedTokens = cap.getModel(state);
-
-		Farm farm = (Farm) state.getFeature(shepherdFp);
-		Map<Meeple, FeaturePointer> shepherdsOnFarm = getShepherdOnFarm(state, farm);
+		Map<Meeple, FeaturePointer> shepherdsOnFarm = getShepherdsOnFarm(state, farm);
 		int points = shepherdsOnFarm.values().map(fp -> {
 			return placedTokens.get(fp).get().map(SheepToken::sheepCount).sum();
 		}).sum().intValue();
@@ -97,12 +115,10 @@ public class ShepherdPhase extends Phase {
             state = (new UndeployMeeple(m, false)).apply(state);
 		}
 
-		state = cap.setModel(
+		return cap.setModel(
 			state,
 			shepherdsOnFarm.values().foldLeft(placedTokens, (acc, fp) -> acc.remove(fp))
 		);
-		state = clearActions(state);
-		return next(state);
 	}
 
 	private StepResult expandFlock(GameState state, FeaturePointer shepherdFp) {
@@ -114,7 +130,7 @@ public class ShepherdPhase extends Phase {
 
 		if (drawnToken == SheepToken.WOLF) {
 			Farm farm = (Farm) state.getFeature(shepherdFp);
-			Map<Meeple, FeaturePointer> shepherdsOnFarm = getShepherdOnFarm(state, farm);
+			Map<Meeple, FeaturePointer> shepherdsOnFarm = getShepherdsOnFarm(state, farm);
 			for (Meeple m : shepherdsOnFarm.keySet()) {
 				state = (new UndeployMeeple(m, true)).apply(state);
 			}

@@ -100,6 +100,8 @@ public class Position implements BoardPointer, Comparable<Position> {
         if (Location.S.isPartOf(loc)) y++;
         if (Location.W.isPartOf(loc)) x--;
         if (Location.E.isPartOf(loc)) x++;
+
+
         return new Position(x,y);
     }
 

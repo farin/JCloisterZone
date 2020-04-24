@@ -109,6 +109,14 @@ public class LocationTest {
         assertEquals(Location.E, Location.WE.intersect(Location.SE));
         assertNull(Location.NW.intersect(Location.NR.union(Location.EL)));
     }
+
+    @Test
+    public void farmToSide() {
+        assertEquals(Location.E, Location.EL.farmToSide());
+        assertEquals(Location.E, Location.ER.farmToSide());
+        assertEquals(Location.E, Location.EL.union(Location.ER).farmToSide());
+        assertEquals(Location.NW, Location.NL.union(Location.WR).farmToSide());
+    }
 }
 
 
