@@ -3,7 +3,9 @@
 ## upcoming
 *estimated May 2020*
 
+* fixed #283: Sheep/wolf token counting error (panel should display remaining tokes not sheep sum)
 * fixed #306: H&S null pointer exception when trying to place tile next to weird CCCF tile
+
 
 ## 4.4.2
 *2020-04-07*

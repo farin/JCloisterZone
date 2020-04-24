@@ -606,7 +606,7 @@ msgstr "Mužete si vytáhnout nový žeton ovce/vlka za sáčku."
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:90
 #, java-format
 msgid "({0} tokens left in bag)"
-msgstr "(v sáčky zbývá {0} žetonů)"
+msgstr "(v sáčku zbývá {0} žetonů)"
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:96
 msgid "Expand the flock of sheep."

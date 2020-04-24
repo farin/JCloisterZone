@@ -86,7 +86,7 @@ public class FlockPanel extends ActionInteractionPanel<FlockAction> {
         label = new ThemedJLabel(_tr("You can draw another sheep/wolf token from a bag."));
         add(label, "wrap, gapbottom 0");
 
-        int remainingTokens = SheepCapability.TOKENS_COUNT - placedTokens.values().flatMap(Function.identity()).map(SheepToken::sheepCount).sum().intValue();
+        int remainingTokens = SheepCapability.TOKENS_COUNT - placedTokens.values().flatMap(Function.identity()).length();
         label = new ThemedJLabel(_tr("({0} tokens left in bag)", remainingTokens));
         add(label, "wrap, gapbottom 5");
 
