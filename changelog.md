@@ -1,10 +1,14 @@
 # Version history
 
+## upcoming
+*estimated May 2020*
+
+* fixed #306: H&S null pointer exception when trying to place tile next to weird CCCF tile
+
 ## 4.4.2
 *2020-04-07*
-   - OSX helpers removed because they seems to crash app on Mac with some new Java versions
-     (UI layer will be migrate to modern Java FX in next release)
 
+* OSX helpers removed because they seems to crash app on Mac with some new Java versions (UI layer will be migrate to modern Java FX in next release)
 
 ## 4.4.1
 *2019-04-24*

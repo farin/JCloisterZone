@@ -1,0 +1,110 @@
+{
+  "gameId": "l93pnj45gp93dq3k1m57gps25n",
+  "name": "",
+  "appVersion": "4.4.0",
+  "initialSeed": 1,
+  "created": "2019-04-20T21:41:47.168Z",
+  "slots": [
+    {
+      "number": 0,
+      "serial": 1,
+      "clientId": "1",
+      "nickname": "Alice"
+    },
+    {
+      "number": 1,
+      "serial": 2,
+      "clientId": "2",
+      "nickname": "Bob"
+    }
+  ],
+  "clocks": [
+    0,
+    0
+  ],
+  "setup": {
+    "expansions": {
+      "HILLS_AND_SHEEP": 1,
+      "BASIC": 1
+    },
+    "rules": {
+      "MORE_TUNNEL_TOKENS": true,
+      "TUNNELIZE_ALL_EXPANSIONS": true,
+      "PIG_HERD_ON_GQ_FARM": true
+    },
+    "capabilities": [
+      "StandardGame",
+      "Hill",
+      "Sheep",
+      "Vineyard"
+    ]
+  },
+  "replay": [
+    {
+      "type": "PLACE_TILE",
+        "payload": {
+            "tileId": "HS.CC!.v",
+            "rotation": "R90",
+            "position": [0, -1]
+        }
+    }, {
+      "type": "DEPLOY_MEEPLE",
+        "payload": {
+            "pointer": {
+                "position": [0, -1],
+                "location": "S"
+            },
+            "meepleId": "0.small.1"
+        }
+    }, {
+      "type": "COMMIT",
+        "payload": {
+            "salt": 0
+        }
+    },
+    {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.C",
+        "rotation": "R270",
+        "position": [1, -1]
+      }
+    }, {
+      "type": "PASS",
+      "payload": {}
+    },{
+      "type": "COMMIT",
+      "payload": {
+        "salt": 0
+      }
+    }, {
+      "type": "PLACE_TILE",
+      "payload": {
+        "tileId": "BA.C",
+        "rotation": "R180",
+        "position": [0, -2]
+      }
+    }, {
+      "type": "PASS",
+      "payload": {}
+    }, {
+      "type": "COMMIT",
+      "payload": {
+        "salt": 0
+      }
+    }
+  ],
+  "annotations": {
+    "tilePack": {
+      "className": "com.jcloisterzone.debug.ForcedDrawTilePack",
+      "params": {
+        "drawOrder": [
+          "HS.CC!.v",
+          "BA.C",
+          "BA.C",
+          "BA.C"
+        ]
+      }
+    }
+  }
+}

@@ -130,12 +130,16 @@ public class PlaceTile implements Reducer {
                                 FeaturePointer fullFp = multiEdge._2;
                                 City adj = (City) _state.getFeature(fullFp);
 
-                                // finding feature pointer on pos is technicaly not necessary, any place can be used, but let it clear
+                                // finding feature pointer on pos is technically not necessary, any place can be used, but let it clear
                                 multiEdgePairsToMerge.add(new Tuple3<FeaturePointer, FeaturePointer, ShortEdge>(
                                         fullFp,
                                         feature.getPlaces().find(fp -> fp.getPosition().equals(pos)).get(),
                                         multiEdge._1
                                 ));
+                                // if is not updated yet put it there anyway to make bellow statetement fpUpdate.get(t._1) works in any case
+                                if (!fpUpdate.containsKey(fullFp)) {
+                                    fpUpdate.put(fullFp, adj);
+                                }
                             }
 
                             feature = city;

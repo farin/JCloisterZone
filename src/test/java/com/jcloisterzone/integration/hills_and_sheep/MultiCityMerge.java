@@ -42,6 +42,21 @@ public class MultiCityMerge extends IntegrationTest {
     }
 
     /**
+     *  HS.CC!.v merging from other side
+     */
+    @Test
+    public void testMultiCityMerge3() {
+        GameState state = createGameState("saved-games/hills_and_sheep/multi_city_merge3.jcz");
+
+        Array<PlayerScore> score = state.getPlayers().getScore();
+        PlayerScore alice = score.get(0);
+        PlayerScore bob = score.get(1);
+
+        assertEquals(8, alice.getPoints());
+        assertEquals(0, bob.getPoints());
+    }
+
+    /**
      *  HS.CC!.v merging
      */
     @Test
