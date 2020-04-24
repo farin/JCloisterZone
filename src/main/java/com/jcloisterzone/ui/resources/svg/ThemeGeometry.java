@@ -134,9 +134,12 @@ public class ThemeGeometry {
             @Override
             public void processSubstract(Element node, String tileId, AffineTransform transform, boolean isFarm) {
                 Map<String, Area> target = isFarm ? subtractionFarm : subtractionAll;
-                //TODO merge if already exists
-                assert !target.containsKey(tileId);
-                target.put(tileId, az.area.createTransformedArea(transform));
+                Area transformed = az.area.createTransformedArea(transform);
+                if (target.containsKey(tileId)) {
+                    transformed.add(target.get(tileId));
+                }
+                target.put(tileId, transformed);
+
             }
 
         });
