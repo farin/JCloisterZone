@@ -41,11 +41,14 @@ public final class ShrineCapability extends Capability<Void> {
 
     @Override
     public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
-        Set<Cloister> completedCloisters = completed.keySet()
-            .filter(Predicates.instanceOf(Cloister.class))
-            .map(f -> (Cloister) f);
-
         GameState _state = state;
+
+        Set<Cloister> completedCloisters = completed
+                .filterValues(r -> r.getOwners().nonEmpty())
+                .keySet()
+                .filter(Predicates.instanceOf(Cloister.class))
+                .map(f -> (Cloister) f);
+
         Set<Cloister> challenged = completedCloisters
             .flatMap(cloister -> {
                 Position pos = cloister.getPlace().getPosition();
