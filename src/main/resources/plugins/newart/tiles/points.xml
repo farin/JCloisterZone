@@ -7,6 +7,9 @@
     <point feature="CLOISTER" cx="430" cy="395">
         <apply>R1.LIRI CLOISTER</apply>
     </point>
+    <point feature="CLOISTER" cx="535" cy="395">
+        <apply>R2.LIFI CLOISTER</apply>
+    </point>
 
     <point feature="CLOISTER" cx="465" cy="350">
         <apply>CU.S CLOISTER</apply>
@@ -99,6 +102,9 @@
         <apply>R1.RIrI WE</apply>
     </point>
 
+    <point feature="CITY" cx="150" cy="500">
+        <apply>R2.CIcI WE</apply>
+    </point>
     <point feature="CITY" cx="480" cy="820">
         <apply>KR.CCcc NS</apply>
     </point>
@@ -108,6 +114,7 @@
         <apply>TB.CcCC.c E</apply>
         <apply>TB.CcRC.c S</apply>
         <apply>TB.CcRC.g S</apply>
+        <apply>R2.CIRI N</apply>
     </point>
     <point feature="CITY" cx="500" cy="140" baseLocation="N">
         <apply>IC.CCc+ S</apply>
@@ -153,6 +160,11 @@
     <point feature="FARM" cx="180" cy="180">
         <apply>CU.SR NL.NR.WL.WR.SL.SR.EL.ER</apply>
         <apply>CU.SRFR NL.SR.WL.WR</apply>
+        <apply>R2.IFC WR.NL.NR</apply>
+        <apply>R2.LIFI WR.NL.NR.EL</apply>
+    </point>
+    <point feature="FARM" cx="180" cy="900">
+        <apply>R2.RrII SR.WL</apply>
     </point>
     <point feature="FARM" cx="180" cy="500">
         <apply>BA.CRr SR.WL.WR.EL</apply>
@@ -160,6 +172,9 @@
     <point feature="FARM" cx="180" cy="820">
         <apply>CU.SCFR EL.ER.SL.SR.WL.WR</apply>
         <apply>CU.SC EL.ER.SL.SR.WL.WR</apply>
+        <apply>R2.IFC SL.SR.WL</apply>
+        <apply>R2.II WR.WL</apply>
+        <apply>R2.LIFI ER.SL.SR.WL</apply>
     </point>
     <point feature="FARM" cx="220" cy="780">
         <apply>R1.IFI ER.SL.SR.WL</apply>
@@ -199,16 +214,25 @@
         <apply>IC.LRFR WR.NL.NR.EL</apply>
         <apply>TB.LRRR WR.NL.NR.EL</apply>
     </point>
+    <point feature="FARM" cx="750" cy="750">
+        <apply>R2.II WR.NL.NR.EL.ER.SL</apply>
+    </point>
     <point feature="FARM" cx="800" cy="200">
         <apply>BA.L NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>BA.LR NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>R1.LIRI WR.NL.NR.EL</apply>
+    </point>
+    <point feature="FARM" cx="800" cy="380">
+        <apply>R2.II+ NR.EL.ER.SL.SR.WL</apply>
     </point>
     <point feature="FARM" cx="800" cy="440">
         <apply>KR.RC EL.ER.SL.SR.WL</apply>
     </point>
     <point feature="FARM" cx="827" cy="437">
         <apply>TB.RCc.g EL.ER.SL</apply>
+    </point>
+    <point feature="FARM" cx="830" cy="70" >
+        <apply>R2.RIrI NR.EL</apply>
     </point>
     <point feature="FARM" cx="850" cy="800">
         <apply>BA.RrC WR.EL.ER.SL</apply>
