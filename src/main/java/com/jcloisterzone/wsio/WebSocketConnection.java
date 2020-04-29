@@ -102,7 +102,6 @@ public class WebSocketConnection implements Connection {
                 pingInterval = welcome.getPingInterval();
                 maintenance = welcome.getMaintenance();
             }
-            schedulePing();
             listener.onWebsocketMessage(msg);
         }
 
