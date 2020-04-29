@@ -13,7 +13,7 @@ public interface Connection {
     public boolean isClosed();
     public void close();
 
-    public void reconnect(String gameId);
+    public void reconnect(String gameId, long initialDelay);
     public void stopReconnecting();
 
     public String getSessionId();

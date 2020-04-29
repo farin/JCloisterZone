@@ -230,15 +230,16 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
     @Override
     public void onWebsocketClose(int code, String reason, boolean remote) {
         String message = _tr("Connection lost") + ". " + _tr("Reconnecting...");
-        if (code == CloseFrame.ABNORMAL_CLOSE || code == Connection.CLOSE_MESSAGE_LOST || remote) {
+        if (code == CloseFrame.GOING_AWAY || code == CloseFrame.ABNORMAL_CLOSE || code == Connection.CLOSE_MESSAGE_LOST || remote) {
+            int initialDelay = code == CloseFrame.GOING_AWAY ? 3000 : 500;
             if (gc.getChannel() == null) {
                 if (!game.isOver()) {
                     //simple server sends game message automatically, send game id for online server only
-                    gc.getConnection().reconnect(null);
+                    gc.getConnection().reconnect(null, initialDelay);
                     getGridPanel().showErrorMessage(message, RECONNECTING_ERR_MSG);
                 }
             } else {
-                gc.getConnection().reconnect(game.isOver() ? null : game.getGameId());
+                gc.getConnection().reconnect(game.isOver() ? null : game.getGameId(), initialDelay);
                 getGridPanel().showErrorMessage(message, RECONNECTING_ERR_MSG);
             }
         }

@@ -7,6 +7,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
@@ -43,6 +44,7 @@ public class WebSocketConnection implements Connection {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> pingFuture;
     private ScheduledFuture<?> reconnectFuture;
+    private String tryReconnectTo = null;
 
     class WebSocketClientImpl extends WebSocketClient {
         private String username;
@@ -126,24 +128,27 @@ public class WebSocketConnection implements Connection {
         ws.connect();
     }
 
-    @Override
-    public void reconnect(final String gameId) {
-        reconnectFuture = scheduler.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                ws = new WebSocketClientImpl(uri, nickname, gameId);
-                try {
-                    if (ws.connectBlocking()) {
-                        stopReconnecting();
-                    }
-                } catch (InterruptedException e) {
+    private void doReconnectAttempt() {
+        if (tryReconnectTo != null) {
+            ws = new WebSocketClientImpl(uri, nickname, tryReconnectTo);
+            try {
+                if (ws.connectBlocking()) {
+                    stopReconnecting();
                 }
+            } catch (InterruptedException e) {
             }
-        }, 1, 4, TimeUnit.SECONDS);
+        }
+    }
+
+    @Override
+    public void reconnect(final String gameId, long initialDelay) {
+        tryReconnectTo = gameId;
+        reconnectFuture = scheduler.scheduleWithFixedDelay(this::doReconnectAttempt, 1000, 4000, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void stopReconnecting() {
+        tryReconnectTo = null;
         if (reconnectFuture != null) {
             reconnectFuture.cancel(false);
             reconnectFuture = null;

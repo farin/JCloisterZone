@@ -307,8 +307,8 @@ public class GameController extends EventProxyUiController<Game> {
         }
 
         @Override
-        public void reconnect(String gameId) {
-            getConnection().reconnect(gameId);
+        public void reconnect(String gameId, long initialDelay) {
+            getConnection().reconnect(gameId, initialDelay);
         }
 
         @Override
