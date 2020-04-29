@@ -132,9 +132,15 @@ public final class MessageParser {
             @Override
             public WsMessage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                     throws JsonParseException {
-                JsonObject obj = (JsonObject) json;
-                Class<? extends WsMessage> cls = WsCommandRegistry.TYPES.get(obj.get("type").getAsString()).get();
-                return context.deserialize(obj.get("payload"), cls);
+                try {
+                    JsonObject obj = (JsonObject) json;
+                    Class<? extends WsMessage> cls = WsCommandRegistry.TYPES.get(obj.get("type").getAsString()).get();
+                    return context.deserialize(obj.get("payload"), cls);
+                } catch (RuntimeException e) {
+                    System.err.println(json);
+                    System.err.println(e);
+                    throw e;
+                }
             }
         };
 

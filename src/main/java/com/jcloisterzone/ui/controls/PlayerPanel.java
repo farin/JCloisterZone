@@ -385,7 +385,9 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
     @Override
     public void mouseClicked(MouseEvent e, MouseListeningRegion origin) {
         String meepleId = (String) origin.getData();
-        gc.getConnection().send(new PayRansomMessage(meepleId));
+        if (meepleId != null && (!"king".equals(meepleId)) && (!"robber".equals(meepleId))) {
+            gc.getConnection().send(new PayRansomMessage(meepleId));
+        }
     }
 
     @Override

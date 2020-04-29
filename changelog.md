@@ -10,6 +10,14 @@
 * fixed #304: Adjacent monastery and shrine should not challenge each if one of them is unoccupied
 * fixed #283: Sheep/wolf token counting error (panel should display remaining tokes not sheep sum)
 * fixed #295: fix NullPointerException at ClientMessageListener in error log when playing online
+* fixed: Null pointer exception and crashed game when user clicks on king or robber icon in panel
+
+## Play server "big update"
+*2020-04-28*
+
+* server migrated to a new framework
+* fixed: undo corrupt game backup on server. When game was interrupted/leaved and reconnected and reloaded from server it didn't worked
+  (causing "Message PlaceTileMessage hasn't been handled by ActionPhase phase" error, see #272)
 
 ## 4.4.2
 *2020-04-07*
