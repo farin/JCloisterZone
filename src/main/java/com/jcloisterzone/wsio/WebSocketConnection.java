@@ -51,7 +51,7 @@ public class WebSocketConnection implements Connection {
         private String reconnectGameId;
 
         public WebSocketClientImpl(URI serverURI, String username, String reconnectGameId) {
-            super(serverURI);
+            super(serverURI, new Draft_17(), null, 9000);
 //            if (System.getProperty("hearthbeat") != null) {
 //                setConnectionLostTimeout(Integer.parseInt(System.getProperty("hearthbeat")));
 //            } else {
@@ -142,6 +142,7 @@ public class WebSocketConnection implements Connection {
 
     private void doReconnectAttempt() {
         if (tryReconnectTo != null) {
+            logger.info("Reconnection attempt.");
             ws = new WebSocketClientImpl(uri, nickname, tryReconnectTo);
             try {
                 if (ws.connectBlocking()) {
@@ -155,7 +156,7 @@ public class WebSocketConnection implements Connection {
     @Override
     public void reconnect(final String gameId, long initialDelay) {
         tryReconnectTo = gameId;
-        reconnectFuture = scheduler.scheduleWithFixedDelay(this::doReconnectAttempt, 1000, 4000, TimeUnit.MILLISECONDS);
+        reconnectFuture = scheduler.scheduleWithFixedDelay(this::doReconnectAttempt, initialDelay, 1000, TimeUnit.MILLISECONDS);
     }
 
     @Override
