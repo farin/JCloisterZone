@@ -84,7 +84,19 @@ public class WebSocketConnection implements Connection {
 
         @Override
         synchronized public void onMessage(String payload) {
-            WsMessage msg = parser.fromJson(payload);
+            if (isClosing()) {
+                return;
+            }
+
+            WsMessage msg = null;
+            try {
+                msg = parser.fromJson(payload);
+            } catch (Exception e) {
+                logger.error("Can't parse message: " + payload);
+                close(Connection.CLOSE_MESSAGE_LOST, "Can't parse message");
+                return;
+            }
+
             if (logger.isInfoEnabled()) {
                 logger.info(payload);
             }
@@ -109,7 +121,7 @@ public class WebSocketConnection implements Connection {
 
         @Override
         public void onOpen(ServerHandshake arg0) {
-            msgSequence = 1;
+            msgSequence = 1L;
             WebSocketConnection.this.send(new HelloMessage(username, clientId, secret));
             if (reconnectGameId != null) {
                 JoinGameMessage msg = new JoinGameMessage();
