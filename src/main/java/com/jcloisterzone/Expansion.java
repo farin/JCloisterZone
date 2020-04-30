@@ -122,6 +122,8 @@ public class Expansion {
     @NotImplemented public static Expansion DARMSTADT_PROMO = new Expansion("DARMSTADT_PROMO", "DP", _tr("Darmstadt Promo"), ExpansionType.PROMO);
     @NotImplemented public static Expansion LABYRINTH = new Expansion("LABYRINTH", "LA", _tr("Labyrinth"), ExpansionType.PROMO);
 
+    @NotImplemented public static Expansion _MISSING_PLACEHOLDER = new Expansion("(Unknown expansion)", "??", _tr("(Unknown expansion)"), ExpansionType.UNKNOWN);
+
     private static Vector<Expansion> _values = Vector.of(
         BASIC, WINTER,
         INNS_AND_CATHEDRALS, TRADERS_AND_BUILDERS, PRINCESS_AND_DRAGON, TOWER,
@@ -186,14 +188,14 @@ public class Expansion {
         for (Expansion exp : values()) {
             if (exp.name.equals(name)) return exp;
         }
-        throw new IllegalArgumentException("Expansion " + name + " doesn't exist.");
+        return _MISSING_PLACEHOLDER;
     }
 
     public static Expansion valueOfCode(String code) {
         for (Expansion exp : values()) {
             if (exp.code.equals(code)) return exp;
         }
-        throw new IllegalArgumentException("Expansion " + code + " doesn't exist.");
+        return _MISSING_PLACEHOLDER;
     }
 
     public static void register(Expansion exp, Plugin origin) {

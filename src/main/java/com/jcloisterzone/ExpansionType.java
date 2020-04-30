@@ -6,5 +6,6 @@ public enum ExpansionType {
     MAJOR,
     MINOR,
     MINI,
-    PROMO
+    PROMO,
+    UNKNOWN
 }

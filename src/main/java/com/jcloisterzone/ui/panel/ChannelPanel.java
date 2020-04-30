@@ -181,19 +181,21 @@ public class ChannelPanel extends ThemedJPanel implements UIEventListener {
                 buttons.add(password, "width 160");
             }
 
-            joinButton = new JButton(gc.getGameStatus() == GameStatus.OPEN ? _tr("Join game") : _tr("Continue"));
-            joinButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JoinGameMessage msg = new JoinGameMessage();
-                    msg.setGameId(game.getGameId());
-                    if (gc.isPasswordProtected()) {
-                        msg.setPassword(password.getText().toString());
+            if (!expansions.containsKey(Expansion._MISSING_PLACEHOLDER)) {
+                joinButton = new JButton(gc.getGameStatus() == GameStatus.OPEN ? _tr("Join game") : _tr("Continue"));
+                joinButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        JoinGameMessage msg = new JoinGameMessage();
+                        msg.setGameId(game.getGameId());
+                        if (gc.isPasswordProtected()) {
+                            msg.setPassword(password.getText().toString());
+                        }
+                        cc.getConnection().send(msg);
                     }
-                    cc.getConnection().send(msg);
-                }
-            });
-            buttons.add(joinButton);
+                });
+                buttons.add(joinButton);
+            }
 
             if (gc.getGameStatus() != GameStatus.OPEN) {
                 abandonButton = new JButton(_tr("Remove game"));
