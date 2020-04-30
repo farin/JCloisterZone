@@ -1,7 +1,7 @@
 # Version history
 
-## upcoming
-*estimated May 2020*
+## 4.5.0
+*2020-05-01*
 
 * newart plugin extended by River/River II and Abbey & Mayor tiles
 * rules: allow farmer placement on field with shepherd (#305)
