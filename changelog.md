@@ -3,7 +3,7 @@
 ## upcoming
 *estimated May 2020*
 
-* newart plugin extended by River/River II tiles
+* newart plugin extended by River/River II and Abbey & Mayor tiles
 * rules: allow farmer placement on field with shepherd (#305)
 * rules: Shepherd is automatically returned when farm is "closed" (#281)
 * fixed #306: H&S null pointer exception when trying to place tile next to weird CCCF tile
