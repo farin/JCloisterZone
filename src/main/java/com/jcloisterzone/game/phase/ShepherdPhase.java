@@ -47,27 +47,30 @@ public class ShepherdPhase extends Phase {
 				.distinct()
 				.filter(farm -> !farm.isOpen(_state));
 
+		Shepherd shepherd = (Shepherd) state.getTurnPlayer().getSpecialMeeples(state).find(m -> m instanceof Shepherd).getOrNull();
+		FeaturePointer shepherdFp = shepherd.getDeployment(state);
+
+		boolean isFarmExtended = false;
+		boolean alreadyExpanded = false;
+
+		if (shepherdFp != null) {
+			boolean isJustPlaced = lastPlaced.getPosition().equals(shepherdFp.getPosition());
+
+			Farm farm = (Farm) state.getFeature(shepherdFp);
+			isFarmExtended = state.getTileFeatures2(lastPlaced.getPosition()).map(Tuple2::_2).contains(farm);
+
+			// close farms after placed flock is expanded http://wikicarpedia.com/index.php/Hills_%26_Sheep#cite_note-2
+			if (isJustPlaced || closedFarmsWithShepherd.contains(farm)) {
+				state = expandFlock(state, shepherdFp);
+				alreadyExpanded = true;
+			}
+		}
+
 		for (Farm farm : closedFarmsWithShepherd) {
 			state = scoreFlock(state, farm);
 		}
 
-		Shepherd shepherd = (Shepherd) state.getTurnPlayer().getSpecialMeeples(state).find(m -> m instanceof Shepherd).getOrNull();
-		FeaturePointer shepherdFp = shepherd.getDeployment(state);
-		if (shepherdFp == null) {
-			// player shepherd is not placed on the board
-			return next(state);
-		}
-
-		if (lastPlaced.getPosition().equals(shepherdFp.getPosition())) {
-			// Shepherd was just placed
-			return expandFlock(state, shepherdFp);
-		}
-
-
-		Farm farm = (Farm) state.getFeature(shepherdFp);
-		boolean isFarmExtended = state.getTileFeatures2(lastPlaced.getPosition()).map(Tuple2::_2).contains(farm);
-
-		if (!isFarmExtended) {
+		if (shepherdFp == null || !isFarmExtended || alreadyExpanded) {
 			return next(state);
 		}
 
@@ -82,7 +85,7 @@ public class ShepherdPhase extends Phase {
 		FeaturePointer shepherdFp = shepherd.getDeployment(state);
 
 		if (msg.getValue() == FlockOption.EXPAND) {
-			return expandFlock(state, shepherdFp);
+			return next(expandFlock(state, shepherdFp));
 		} else {
 			return scoreFlock(state, shepherdFp);
 		}
@@ -121,7 +124,7 @@ public class ShepherdPhase extends Phase {
 		);
 	}
 
-	private StepResult expandFlock(GameState state, FeaturePointer shepherdFp) {
+	private GameState expandFlock(GameState state, FeaturePointer shepherdFp) {
 		SheepToken drawnToken = drawTokenFromBag(state);
 
 		state = state.appendEvent(new TokenPlacedEvent(PlayEventMeta.createWithoutPlayer(), drawnToken, shepherdFp));
@@ -140,13 +143,12 @@ public class ShepherdPhase extends Phase {
 				shepherdsOnFarm.values().foldLeft(placedTokens, (acc, fp) -> acc.remove(fp))
 			);
 
-			return next(state);
+			return state;
 		}
 
-		state = state.getCapabilities().get(SheepCapability.class).updateModel(state, placedTokens -> {
+		return state.getCapabilities().get(SheepCapability.class).updateModel(state, placedTokens -> {
 			return placedTokens.put(shepherdFp, List.of(drawnToken), (l1, l2) -> l1.appendAll(l2));
 		});
-		return next(state);
 	}
 
 	private SheepToken drawTokenFromBag(GameState state) {

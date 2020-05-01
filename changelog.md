@@ -1,5 +1,10 @@
 # Version history
 
+## 4.5.1
+*2020-05-01*
+
+* fixed #313: Shepherd placement on empty and closed farm cause error
+
 ## 4.5.0
 *2020-05-01*
 
