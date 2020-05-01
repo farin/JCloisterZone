@@ -1,5 +1,6 @@
 package com.jcloisterzone.engine;
 
+import com.google.gson.Gson;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.config.Config;
@@ -7,6 +8,7 @@ import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.GameStatePhaseReducer;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.save.SavedGame;
@@ -31,6 +33,7 @@ public class Engine implements  Runnable {
     private Scanner in;
     private PrintStream out;
 
+    private final Gson gson;
     private MessageParser parser = new MessageParser();
 
     private Random random = new Random();
@@ -47,6 +50,8 @@ public class Engine implements  Runnable {
         this.in = new Scanner(in);
         this.out = out;
 
+        gson = new StateGsonBuilder().create();
+
         gameId = KeyUtils.createRandomId();
         initialSeed = random.nextLong();
         replay = new ArrayList<>();
@@ -56,7 +61,7 @@ public class Engine implements  Runnable {
 
         gameSetup = new GameSetup(
                 io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
-                io.vavr.collection.HashSet.of(StandardGameCapability.class),
+                io.vavr.collection.HashSet.of(StandardGameCapability.class, BridgeCapability.class),
                 Rule.getDefaultRules()
         );
     }
@@ -88,7 +93,7 @@ public class Engine implements  Runnable {
         state = state.setPhase(firstPhase.getClass());
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
 
-        out.println(state);
+        out.println(gson.toJson(state));
 
         while (true) {
             String line = in.nextLine();
@@ -102,7 +107,7 @@ public class Engine implements  Runnable {
                 }
                 state = phaseReducer.apply(state, (WsInGameMessage) msg);
             }
-            out.println(state);
+            out.println(gson.toJson(state));
         }
     }
 

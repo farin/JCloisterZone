@@ -65,15 +65,7 @@ public final class MessageParser {
                 return Expansion.valueOf(json.getAsString());
             }
         });
-        builder.registerTypeAdapter(Position.class, new JsonSerializer<Position>() {
-            @Override
-            public JsonElement serialize(Position src, Type typeOfSrc, JsonSerializationContext context) {
-                JsonArray arr = new JsonArray(2);
-                arr.add(src.x);
-                arr.add(src.y);
-                return arr;
-            }
-        });
+        builder.registerTypeAdapter(Position.class, new PositionSerializer());
         builder.registerTypeAdapter(Position.class, new JsonDeserializer<Position>() {
             @Override
             public Position deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -82,12 +74,7 @@ public final class MessageParser {
                 return new Position(arr.get(0).getAsInt(), arr.get(1).getAsInt());
             }
         });
-        builder.registerTypeAdapter(Location.class, new JsonSerializer<Location>() {
-            @Override
-            public JsonElement serialize(Location src, Type typeOfSrc, JsonSerializationContext context) {
-                return new JsonPrimitive(src.toString());
-            }
-        });
+        builder.registerTypeAdapter(Location.class, new LocationSerializer());
         builder.registerTypeAdapter(Location.class, new JsonDeserializer<Location>() {
             @Override
             public Location deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -176,5 +163,22 @@ public final class MessageParser {
 
     public Gson getGson() {
         return gson;
+    }
+
+    public static class PositionSerializer implements JsonSerializer<Position> {
+        @Override
+        public JsonElement serialize(Position src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonArray arr = new JsonArray(2);
+            arr.add(src.x);
+            arr.add(src.y);
+            return arr;
+        }
+    }
+
+    public static class LocationSerializer implements JsonSerializer<Location> {
+        @Override
+        public JsonElement serialize(Location src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.toString());
+        }
     }
 }
