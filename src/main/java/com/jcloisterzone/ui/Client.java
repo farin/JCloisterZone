@@ -135,6 +135,7 @@ public class Client extends JFrame {
         getContentPane().setVisible(true);
         this.view = view;
         logger.info("{} mounted", view.getClass().getSimpleName());
+        repaint();
         return true;
     }
 
