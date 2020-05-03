@@ -1,8 +1,10 @@
 package com.jcloisterzone.engine;
 
 import com.google.gson.*;
+import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.*;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -23,15 +25,16 @@ public class StateGsonBuilder {
         builder.registerTypeAdapter(ActionsState.class, new ActionsStateSerializer());
         builder.registerTypeAdapter(Position.class, new MessageParser.PositionSerializer());
         builder.registerTypeAdapter(Location.class, new MessageParser.LocationSerializer());
+        builder.registerTypeAdapter(BoardPointer.class, new MessageParser.BoardPointerSerializer());
         // actions
         builder.registerTypeAdapter(TilePlacementAction.class, new TilePlacementActionSerializer());
+        builder.registerTypeAdapter(MeepleAction.class, new MeepleActionSerializer());
 
         return builder.create();
     }
 
-    private String rotationToPrimitive(Rotation rot) {
-        // TODO sent as svg rotation
-        return rot.name();
+    private int rotationToPrimitive(Rotation rot) {
+        return rot.ordinal() * 90;
     }
 
     private class GameStateSerializer implements JsonSerializer<GameState> {
@@ -41,7 +44,8 @@ public class StateGsonBuilder {
             obj.add("tilePack", context.serialize(state.getTilePack()));
             obj.add("placedTiles", serializePlacedTiles(state.getPlacedTiles(), context));
             obj.add("discardedTiles", serializeDiscardedTiles(state.getDiscardedTiles(), context));
-            obj.add("actions", context.serialize(state.getPlayerActions()));
+            obj.addProperty("phase", state.getPhase().getSimpleName());
+            obj.add("action", context.serialize(state.getPlayerActions()));
             return obj;
         }
     }
@@ -122,7 +126,7 @@ public class StateGsonBuilder {
             state.getActions().forEach(action -> {
                 actions.add(context.serialize(action));
             });
-            json.add("actions", actions);
+            json.add("items", actions);
             return json;
         }
     }
@@ -132,16 +136,31 @@ public class StateGsonBuilder {
         public JsonElement serialize(TilePlacementAction action, Type type, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
             json.addProperty("type", "TilePlacement");
-            json.addProperty("tile", action.getTile().getId());
+            json.addProperty("tileId", action.getTile().getId());
             JsonArray options = new JsonArray();
-            action.getOptions().groupBy(PlacementOption::getPosition).forEach((pos, placedTiles) -> {
+            action.getOptions().groupBy(PlacementOption::getPosition).forEach((pos, group) -> {
                 JsonObject opt = new JsonObject();
                 opt.add("position", context.serialize(pos));
                 JsonArray rotations = new JsonArray();
                 // TODO sorted
-                placedTiles.forEach(pt -> { rotations.add(rotationToPrimitive(pt.getRotation())); });
+                group.map(PlacementOption::getRotation).toArray().sorted().forEach(rot -> { rotations.add(rotationToPrimitive(rot)); });
                 opt.add("rotations", rotations);
                 options.add(opt);
+            });
+            json.add("options", options);
+            return json;
+        }
+    }
+
+    private class MeepleActionSerializer implements JsonSerializer<MeepleAction> {
+        @Override
+        public JsonElement serialize(MeepleAction action, Type type, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("type", "Meeple");
+            json.addProperty("meeple", action.getMeepleType().getSimpleName());
+            JsonArray options = new JsonArray();
+            action.getOptions().forEach(fp -> {
+                options.add(context.serialize(fp));
             });
             json.add("options", options);
             return json;

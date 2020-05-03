@@ -82,12 +82,7 @@ public final class MessageParser {
                 return Location.valueOf(json.getAsString());
             }
         });
-        builder.registerTypeAdapter(BoardPointer.class, new JsonSerializer<BoardPointer>() {
-            @Override
-            public JsonElement serialize(BoardPointer src, Type typeOfSrc, JsonSerializationContext context) {
-                return context.serialize(src);
-            }
-        });
+        builder.registerTypeAdapter(BoardPointer.class, new BoardPointerSerializer());
         builder.registerTypeAdapter(BoardPointer.class, new JsonDeserializer<BoardPointer>() {
             @Override
             public BoardPointer deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -179,6 +174,13 @@ public final class MessageParser {
         @Override
         public JsonElement serialize(Location src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.toString());
+        }
+    }
+
+    public static class BoardPointerSerializer implements JsonSerializer<BoardPointer> {
+        @Override
+        public JsonElement serialize(BoardPointer src, Type typeOfSrc, JsonSerializationContext context) {
+            return context.serialize(src);
         }
     }
 }

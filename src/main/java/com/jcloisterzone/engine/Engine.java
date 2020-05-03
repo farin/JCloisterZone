@@ -61,7 +61,8 @@ public class Engine implements  Runnable {
 
         gameSetup = new GameSetup(
                 io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
-                io.vavr.collection.HashSet.of(StandardGameCapability.class, BridgeCapability.class),
+                //io.vavr.collection.HashSet.of(StandardGameCapability.class, BridgeCapability.class),
+                io.vavr.collection.HashSet.of(StandardGameCapability.class),
                 Rule.getDefaultRules()
         );
     }
@@ -82,6 +83,10 @@ public class Engine implements  Runnable {
     public void run() {
         Config config = new Config();
         PlayerSlot[] slots = createPlayerSlots(2);
+        // debug seeds
+        // initialSeed = 4125305802896227250L; // RR
+        initialSeed = -5589071459783070185L; // CFC.2
+
         GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialSeed);
         GameStateBuilder builder = new GameStateBuilder(gameSetup, slots, config);
         // builder.setGameAnnotations(...);
@@ -93,6 +98,7 @@ public class Engine implements  Runnable {
         state = state.setPhase(firstPhase.getClass());
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
 
+        out.println(initialSeed);
         out.println(gson.toJson(state));
 
         while (true) {
