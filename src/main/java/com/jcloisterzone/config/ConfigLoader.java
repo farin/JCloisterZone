@@ -137,7 +137,7 @@ public class ConfigLoader {
         }
     }
 
-    private Config createDefault() {
+    public Config createDefault() {
         Config config = new Config();
         config.setUpdate(DEFAULT_UPDATE);
         config.setPort(DEFAULT_PORT);

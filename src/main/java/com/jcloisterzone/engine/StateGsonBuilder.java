@@ -5,6 +5,8 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.BoardPointer;
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -20,7 +22,6 @@ public class StateGsonBuilder {
     public Gson create() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(GameState.class, new GameStateSerializer());
-        builder.registerTypeAdapter(PlayersState.class, new PlayersStateSerializer());
         builder.registerTypeAdapter(TilePack.class, new TilePackSerializer());
         builder.registerTypeAdapter(ActionsState.class, new ActionsStateSerializer());
         builder.registerTypeAdapter(Position.class, new MessageParser.PositionSerializer());
@@ -44,10 +45,11 @@ public class StateGsonBuilder {
     private class GameStateSerializer implements JsonSerializer<GameState> {
         public JsonElement serialize(GameState state, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject obj = new JsonObject();
-            obj.add("players", context.serialize(state.getPlayers()));
+            obj.add("players", serializePlayers(state, context));
             obj.add("tilePack", context.serialize(state.getTilePack()));
             obj.add("placedTiles", serializePlacedTiles(state.getPlacedTiles(), context));
             obj.add("discardedTiles", serializeDiscardedTiles(state.getDiscardedTiles(), context));
+            obj.add("deployedMeeples", serializeDeployedMeeples(state, context));
             obj.addProperty("phase", state.getPhase().getSimpleName());
             obj.add("action", context.serialize(state.getPlayerActions()));
             return obj;
@@ -74,48 +76,60 @@ public class StateGsonBuilder {
         return tiles;
     }
 
-    private class PlayersStateSerializer implements JsonSerializer<PlayersState> {
-        @Override
-        public JsonElement serialize(PlayersState state, Type typeOfSrc, JsonSerializationContext context) {
-            int playerCount = state.getPlayers().length();
-            JsonArray players = new JsonArray(playerCount);
-            for (int i = 0; i < playerCount; i++) {
-                JsonObject player = new JsonObject();
-                player.addProperty("points", state.getScore().get(i).getPoints());
 
-                JsonObject tokens = new JsonObject();
-                state.getTokens().get(i).forEach((token, count) -> {
-                    tokens.addProperty(token.name(), count);
-                });
-                player.add("tokens", tokens);
+    public JsonElement serializePlayers(GameState root, JsonSerializationContext context) {
+        PlayersState state = root.getPlayers();
+        int playerCount = state.getPlayers().length();
+        JsonArray players = new JsonArray(playerCount);
+        for (int i = 0; i < playerCount; i++) {
+            JsonObject player = new JsonObject();
+            player.addProperty("points", state.getScore().get(i).getPoints());
 
-                JsonObject followers = new JsonObject();
-                state.getFollowers().get(i).groupBy(f -> f.getClass()).forEach((cls, arr) -> {
-                    //followers.addProperty(cls.getSimpleName(), arr.size());
-                    JsonArray sizeAndId = new JsonArray(2);
-                    sizeAndId.add(arr.size());
-                    sizeAndId.add(arr.get().getId());
-                    followers.add(cls.getSimpleName(), sizeAndId);
-                });
-                player.add("followers", followers);
+            JsonObject tokens = new JsonObject();
+            state.getTokens().get(i).forEach((token, count) -> {
+                tokens.addProperty(token.name(), count);
+            });
+            player.add("tokens", tokens);
 
-                JsonObject specialMeeples = new JsonObject();
-                state.getSpecialMeeples().get(i).groupBy(f -> f.getClass()).forEach((cls, arr) -> {
-                    //specialMeeples.addProperty(cls.getSimpleName(), arr.size());
-                    JsonArray sizeAndId = new JsonArray(2);
-                    sizeAndId.add(arr.size());
-                    sizeAndId.add(arr.get().getId());
-                    specialMeeples.add(cls.getSimpleName(), sizeAndId);
-                });
-                player.add("meeples", specialMeeples);
+            JsonObject meeples = new JsonObject();
+            state.getFollowers().get(i).filter(f -> f.isInSupply(root)).groupBy(f -> f.getClass()).forEach((cls, arr) -> {
+                //followers.addProperty(cls.getSimpleName(), arr.size());
+                JsonArray sizeAndId = new JsonArray(2);
+                sizeAndId.add(arr.size());
+                sizeAndId.add(arr.get().getId());
+                meeples.add(cls.getSimpleName(), sizeAndId);
+            });
+            state.getSpecialMeeples().get(i).filter(f -> f.isInSupply(root)).groupBy(f -> f.getClass()).forEach((cls, arr) -> {
+                //specialMeeples.addProperty(cls.getSimpleName(), arr.size());
+                JsonArray sizeAndId = new JsonArray(2);
+                sizeAndId.add(arr.size());
+                sizeAndId.add(arr.get().getId());
+                meeples.add(cls.getSimpleName(), sizeAndId);
+            });
+            player.add("meeples", meeples);
 
-                if (state.getTurnPlayerIndex() == i) {
-                    player.addProperty("turn", true);
-                }
-                players.add(player);
+            if (state.getTurnPlayerIndex() == i) {
+                player.addProperty("turn", true);
             }
-            return players;
+            players.add(player);
         }
+        return players;
+    }
+
+    public JsonElement serializeDeployedMeeples(GameState root, JsonSerializationContext context) {
+        LinkedHashMap<Meeple, FeaturePointer> state = root.getDeployedMeeples();
+        JsonArray meeples = new JsonArray();
+        state.forEach((m, fp) -> {
+            JsonObject json = new JsonObject();
+            json.addProperty("id", m.getId());
+            json.addProperty("type", m.getClass().getSimpleName());
+            json.addProperty("player", m.getPlayer().getIndex());
+            json.add("position", context.serialize(fp.getPosition()));
+            json.add("location", context.serialize(fp.getLocation()));
+            meeples.add(json);
+        });
+        return meeples;
+
     }
 
     private class TilePackSerializer implements JsonSerializer<TilePack> {
