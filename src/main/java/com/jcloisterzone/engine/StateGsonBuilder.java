@@ -91,13 +91,21 @@ public class StateGsonBuilder {
 
                 JsonObject followers = new JsonObject();
                 state.getFollowers().get(i).groupBy(f -> f.getClass()).forEach((cls, arr) -> {
-                    followers.addProperty(cls.getSimpleName(), arr.size());
+                    //followers.addProperty(cls.getSimpleName(), arr.size());
+                    JsonArray sizeAndId = new JsonArray(2);
+                    sizeAndId.add(arr.size());
+                    sizeAndId.add(arr.get().getId());
+                    followers.add(cls.getSimpleName(), sizeAndId);
                 });
                 player.add("followers", followers);
 
                 JsonObject specialMeeples = new JsonObject();
                 state.getSpecialMeeples().get(i).groupBy(f -> f.getClass()).forEach((cls, arr) -> {
-                    specialMeeples.addProperty(cls.getSimpleName(), arr.size());
+                    //specialMeeples.addProperty(cls.getSimpleName(), arr.size());
+                    JsonArray sizeAndId = new JsonArray(2);
+                    sizeAndId.add(arr.size());
+                    sizeAndId.add(arr.get().getId());
+                    specialMeeples.add(cls.getSimpleName(), sizeAndId);
                 });
                 player.add("meeples", specialMeeples);
 
