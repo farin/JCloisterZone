@@ -98,7 +98,7 @@ public class Engine implements  Runnable {
         state = state.setPhase(firstPhase.getClass());
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
 
-        out.println(initialSeed);
+        //out.println(initialSeed);
         out.println(gson.toJson(state));
 
         while (true) {

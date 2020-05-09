@@ -33,6 +33,10 @@ public class StateGsonBuilder {
         return builder.create();
     }
 
+    String adaptTileId(String id) {
+        return id.replaceFirst("\\.", "/");
+    }
+
     private int rotationToPrimitive(Rotation rot) {
         return rot.ordinal() * 90;
     }
@@ -56,7 +60,7 @@ public class StateGsonBuilder {
             JsonObject obj = new JsonObject();
             obj.add("position", context.serialize(pos));
             obj.addProperty("rotation", rotationToPrimitive(placedTile.getRotation()));
-            obj.addProperty("id", placedTile.getTile().getId());
+            obj.addProperty("id", adaptTileId(placedTile.getTile().getId()));
             tiles.add(obj);
         });
         return tiles;
@@ -65,7 +69,7 @@ public class StateGsonBuilder {
     private JsonElement serializeDiscardedTiles(List<Tile> state, JsonSerializationContext context) {
         JsonArray tiles = new JsonArray();
         state.forEach(t -> {
-            tiles.add(t.getId());
+            tiles.add(adaptTileId(t.getId()));
         });
         return tiles;
     }
@@ -86,14 +90,14 @@ public class StateGsonBuilder {
                 player.add("tokens", tokens);
 
                 JsonObject followers = new JsonObject();
-                state.getFollowers().get(i).forEach(f -> {
-                    followers.addProperty(f.getId(), f.getClass().getSimpleName());
+                state.getFollowers().get(i).groupBy(f -> f.getClass()).forEach((cls, arr) -> {
+                    followers.addProperty(cls.getSimpleName(), arr.size());
                 });
                 player.add("followers", followers);
 
                 JsonObject specialMeeples = new JsonObject();
-                state.getSpecialMeeples().get(i).forEach(f -> {
-                    specialMeeples.addProperty(f.getId(), f.getClass().getSimpleName());
+                state.getSpecialMeeples().get(i).groupBy(f -> f.getClass()).forEach((cls, arr) -> {
+                    specialMeeples.addProperty(cls.getSimpleName(), arr.size());
                 });
                 player.add("meeples", specialMeeples);
 
@@ -136,7 +140,7 @@ public class StateGsonBuilder {
         public JsonElement serialize(TilePlacementAction action, Type type, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
             json.addProperty("type", "TilePlacement");
-            json.addProperty("tileId", action.getTile().getId());
+            json.addProperty("tileId", adaptTileId(action.getTile().getId()));
             JsonArray options = new JsonArray();
             action.getOptions().groupBy(PlacementOption::getPosition).forEach((pos, group) -> {
                 JsonObject opt = new JsonObject();
