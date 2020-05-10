@@ -28,6 +28,7 @@ import java.util.Scanner;
 public class Engine implements  Runnable {
     private Scanner in;
     private PrintStream out;
+    private PrintStream err;
 
     private final Gson gson;
     private MessageParser parser = new MessageParser();
@@ -42,9 +43,10 @@ public class Engine implements  Runnable {
 
 
 
-    public Engine(InputStream in, PrintStream out) {
+    public Engine(InputStream in, PrintStream out, PrintStream err) {
         this.in = new Scanner(in);
         this.out = out;
+        this.err = err;
 
         gson = new StateGsonBuilder().create();
 
@@ -106,7 +108,10 @@ public class Engine implements  Runnable {
             if (line.length() == 0) {
                 break;
             }
+            //err.println("RECEIVED:" + line);
+
             WsMessage msg = parser.fromJson(line);
+            msg = adaptMessage(msg);
             Player oldActivePlayer = state.getActivePlayer();
 
             if (msg instanceof WsReplayableMessage) {
@@ -114,9 +119,7 @@ public class Engine implements  Runnable {
                     phaseReducer.getRandom().setSalt(((WsSaltMessage) msg).getSalt());
                 }
                 state = phaseReducer.apply(state, (WsInGameMessage) msg);
-                game.replaceState(state);
-
-
+                
                 Player newActivePlayer = state.getActivePlayer();
                 boolean undoAllowed = !(msg instanceof WsSaltMessage) &&
                         newActivePlayer != null && newActivePlayer.equals(oldActivePlayer);
@@ -126,6 +129,8 @@ public class Engine implements  Runnable {
                 } else {
                     game.clearUndo();
                 }
+
+                game.replaceState(state);
                 game.setReplay(game.getReplay().prepend((WsReplayableMessage) msg));
             } else if (msg instanceof UndoMessage) {
                 game.undo();
@@ -138,8 +143,16 @@ public class Engine implements  Runnable {
         }
     }
 
+    private WsMessage adaptMessage(WsMessage msg) {
+        if (msg instanceof PlaceTileMessage) {
+            PlaceTileMessage m = (PlaceTileMessage) msg;
+            m.setTileId(m.getTileId().replace("/", "."));
+        }
+        return msg;
+    }
+
     public static void main(String[] args) {
-        Engine engine = new Engine(System.in, System.out);
+        Engine engine = new Engine(System.in, System.out, System.err);
         engine.run();
     }
 }
