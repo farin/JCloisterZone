@@ -269,13 +269,13 @@ public class Game implements EventProxy {
         Player oldActivePlayer = state.getActivePlayer();
         Player newActivePlayer = newState.getActivePlayer();
         boolean undoAllowed = !(msg instanceof WsSaltMessage) &&
-        			newActivePlayer != null && newActivePlayer.equals(oldActivePlayer);
+                newActivePlayer != null && newActivePlayer.equals(oldActivePlayer);
 
         updateMessageIdSequence(state, newState);
         if (undoAllowed) {
-        	markUndo();
+            markUndo();
         } else {
-        	clearUndo();
+            clearUndo();
         }
         replay = replay.prepend(msg);
         replaceState(newState);

@@ -21,7 +21,7 @@ public class StateGsonBuilder {
 
     public Gson create() {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(GameState.class, new GameStateSerializer());
+        builder.registerTypeAdapter(Game.class, new GameSerializer());
         builder.registerTypeAdapter(TilePack.class, new TilePackSerializer());
         builder.registerTypeAdapter(ActionsState.class, new ActionsStateSerializer());
         builder.registerTypeAdapter(Position.class, new MessageParser.PositionSerializer());
@@ -42,8 +42,9 @@ public class StateGsonBuilder {
         return rot.ordinal() * 90;
     }
 
-    private class GameStateSerializer implements JsonSerializer<GameState> {
-        public JsonElement serialize(GameState state, Type typeOfSrc, JsonSerializationContext context) {
+    private class GameSerializer implements JsonSerializer<Game> {
+        public JsonElement serialize(Game game, Type typeOfSrc, JsonSerializationContext context) {
+            GameState state = game.getState();
             JsonObject obj = new JsonObject();
             obj.add("players", serializePlayers(state, context));
             obj.add("tilePack", context.serialize(state.getTilePack()));
@@ -52,6 +53,7 @@ public class StateGsonBuilder {
             obj.add("deployedMeeples", serializeDeployedMeeples(state, context));
             obj.addProperty("phase", state.getPhase().getSimpleName());
             obj.add("action", context.serialize(state.getPlayerActions()));
+            obj.addProperty("undo", game.isUndoAllowed());
             return obj;
         }
     }
