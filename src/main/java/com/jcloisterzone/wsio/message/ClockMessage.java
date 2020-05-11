@@ -10,9 +10,6 @@ public class ClockMessage extends AbstractWsMessage implements WsInGameMessage {
     private long[] clocks;
     private long currentTime;
 
-    public ClockMessage() {
-    }
-
     public ClockMessage(Integer running, long[] clocks, long currentTime) {
         this.running = running;
         this.clocks = clocks;
@@ -39,18 +36,6 @@ public class ClockMessage extends AbstractWsMessage implements WsInGameMessage {
 
     public long[] getClocks() {
         return clocks;
-    }
-
-    public void setClocks(long[] clocks) {
-        this.clocks = clocks;
-    }
-
-    public long getCurrentTime() {
-        return currentTime;
-    }
-
-    public void setCurrentTime(long currentTime) {
-        this.currentTime = currentTime;
     }
 
 }

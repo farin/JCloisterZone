@@ -295,10 +295,7 @@ public class Game implements EventProxy {
         for (int i = 0; i < clockValues.length; i++) {
             boolean running = msg.getRunning() != null && msg.getRunning() == i;
             PlayerClock clock = clocks.get(i);
-            PlayerClock newClock = clock.setRunning(running).setTime(clockValues[i]);
-            if (clock != newClock) {
-                clocks = clocks.update(i, newClock);
-            }
+            clock.setRunning(running);
         }
         post(new ClockUpdateEvent(clocks, msg.getRunning()));
     }
@@ -356,7 +353,7 @@ public class Game implements EventProxy {
         // 1. create state with basic config
         GameState state = builder.createInitialState();
         this.state = state; // set state to get proper state diff against empty state later (in replacedState)
-        clocks = state.getPlayers().getPlayers().map(p -> new PlayerClock(0));
+        clocks = state.getPlayers().getPlayers().map(p -> new PlayerClock());
 
         // 2. Register local AI players
         createAiPlayers(gc);

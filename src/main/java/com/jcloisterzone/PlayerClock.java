@@ -2,24 +2,23 @@ package com.jcloisterzone;
 
 import java.io.Serializable;
 
-@Immutable
 public class PlayerClock implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final long time;
-    private final boolean running;
-    private final long runningSince;
+    private long time;
+    private boolean running;
+    private long runningSince;
+
+    public PlayerClock() {
+        this(0);
+    }
 
     /**
      * @param time in ms
      */
-    public PlayerClock(long time) {
+    public PlayerClock(int time) {
         this(time, false, 0);
-    }
-
-    public PlayerClock(long time, boolean running) {
-        this(time, running, running ? System.currentTimeMillis() : 0);
     }
 
     public PlayerClock(long time, boolean running, long runningSince) {
@@ -40,28 +39,16 @@ public class PlayerClock implements Serializable {
         }
     }
 
-    /**
-     * Returns time ignoring runningSince (which is reset to now)
-     */
-    public PlayerClock resetRunning() {
-        return new PlayerClock(time, running, System.currentTimeMillis());
-    }
-
-    public PlayerClock setTime(long time) {
-        if (!running && this.time == time) {
-            return this;
+    public void setRunning(boolean setRunning) {
+        // start running
+        if (!this.running && setRunning) {
+            this.running = true;
+            this.runningSince = System.currentTimeMillis();
         }
-        return new PlayerClock(time, running, running ? System.currentTimeMillis() : 0);
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public PlayerClock setRunning(boolean running) {
-        if (this.running == running) {
-            return this;
+        // stop running
+        if (this.running && !setRunning){
+            this.running = false;
+            time += System.currentTimeMillis() - runningSince;
         }
-        return new PlayerClock(time, running, running ? System.currentTimeMillis() : 0);
     }
 }
