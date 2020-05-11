@@ -11,6 +11,9 @@ public class PlayerClock implements Serializable {
     private final boolean running;
     private final long runningSince;
 
+    /**
+     * @param time in ms
+     */
     public PlayerClock(long time) {
         this(time, false, 0);
     }
@@ -26,6 +29,9 @@ public class PlayerClock implements Serializable {
     }
 
 
+    /**
+     * @return playtime in milliseconds
+     */
     public long getTime() {
         if (running) {
             return time + System.currentTimeMillis() - runningSince;
