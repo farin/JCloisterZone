@@ -30,7 +30,7 @@ public class PlayerClock implements Serializable {
 
 
     /**
-     * @return playtime in milliseconds
+     * @return playtime in ms
      */
     public long getTime() {
         if (running) {
