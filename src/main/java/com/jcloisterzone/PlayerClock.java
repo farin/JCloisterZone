@@ -17,7 +17,7 @@ public class PlayerClock implements Serializable {
     /**
      * @param time in ms
      */
-    public PlayerClock(int time) {
+    public PlayerClock(long time) {
         this(time, false, 0);
     }
 
