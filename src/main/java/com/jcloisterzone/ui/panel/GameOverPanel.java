@@ -1,6 +1,7 @@
 package com.jcloisterzone.ui.panel;
 
 import static com.jcloisterzone.ui.I18nUtils._tr;
+import static com.jcloisterzone.ui.panel.GameOverPanel.getPlaytimeByPlayer;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -182,9 +183,9 @@ public class GameOverPanel extends JPanel {
 
             Player[] players = getSortedPlayers().toArray(new Player[state.getPlayers().length()]);
             // calculate the full time of the current played game
-            int fulltime = 0;
+            int totalSecondsPlayed = 0;
             for (Player player : players) {
-                fulltime = fulltime + (int)(game.getClocks().get(player.getIndex()).getTime());
+                totalSecondsPlayed = totalSecondsPlayed + getPlaytimeByPlayer(game, player);
             }
             for (Player player : players) {
                 gridy = 0;
@@ -200,20 +201,9 @@ public class GameOverPanel extends JPanel {
                 int tilesPlaced = state.getEvents().filter(ev -> ev instanceof TilePlacedEvent && Integer.valueOf(player.getIndex()).equals(ev.getMetadata().getTriggeringPlayerIndex())).size();
                 add(new JLabel("" +tilesPlaced, SwingConstants.CENTER), getSpec(gridx, gridy++));
 
-                int seconds = (int)(game.getClocks().get(player.getIndex()).getTime() / 1000);
-                int hours = seconds / 3600;
-                seconds = seconds % 3600;
-                int minutes = seconds / 60;
-                seconds = seconds % 60;
-                int fullseconds = fulltime / 1000;
-                int fullhours = fullseconds / 3600;
-                fullseconds = fullseconds % 3600;
-                int fullminutes = fullseconds / 60;
-                fullseconds = fullseconds % 60;
-                add(new JLabel(String.format("%d:%02d:%02d/\n%d:%02d:%02d", hours, minutes, seconds, fullhours, fullminutes, fullseconds), SwingConstants.CENTER), getSpec(gridx, gridy++));
-               
-                float percentage = ((float)seconds / (float)fullseconds) * 100;
-                add(new JLabel(String.format("%.0f%%", percentage), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                Playtime playtime = new Playtime(game, player, totalSecondsPlayed);
+                add(new JLabel(formatPlaytimeString(playtime), SwingConstants.CENTER), getSpec(gridx, gridy++));
+                add(new JLabel(formatPercentageString(playtime), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
@@ -290,4 +280,71 @@ public class GameOverPanel extends JPanel {
         }
     }
 
+    static String formatPlaytimeString(Playtime playtime) {
+        return String.format("%d:%02d:%02d/\n%d:%02d:%02d",
+                playtime.getHours(), playtime.getMinutes(), playtime.getSeconds(),
+                playtime.getTotalHours(), playtime.getTotalMinutes(), playtime.getTotalSeconds());
+    }
+
+    static String formatPercentageString(Playtime playtime) {
+        return String.format("%.0f%%", playtime.getPercentage());
+    }
+
+    /**
+     * @return playtime in seconds
+     */
+    static int getPlaytimeByPlayer(Game game, Player player) {
+        return (int) (game.getClocks().get(player.getIndex()).getTime() / 1000);
+    }
+}
+
+
+
+class Playtime {
+    private int hours;
+    private int minutes;
+    private int seconds;
+    private int totalHours;
+    private int totalMinutes;
+    private int totalSeconds;
+    private float percentage;
+
+    Playtime(Game game, Player player, int totalRawSeconds) {
+        int playerRawSeconds = getPlaytimeByPlayer(game, player);
+        this.hours = playerRawSeconds / 3600;
+        this.minutes = (playerRawSeconds % 3600) / 60;
+        this.seconds = playerRawSeconds % 60;
+        this.totalHours = totalRawSeconds / 3600;
+        this.totalMinutes = (totalRawSeconds % 3600) / 60;
+        this.totalSeconds = totalRawSeconds % 60;
+        this.percentage = ((float) playerRawSeconds / (float) totalRawSeconds) * 100;
+    }
+
+    int getHours() {
+        return hours;
+    }
+
+    int getMinutes() {
+        return minutes;
+    }
+
+    int getSeconds() {
+        return seconds;
+    }
+
+    int getTotalHours() {
+        return totalHours;
+    }
+
+    int getTotalMinutes() {
+        return totalMinutes;
+    }
+
+    int getTotalSeconds() {
+        return totalSeconds;
+    }
+
+    float getPercentage() {
+        return percentage;
+    }
 }
