@@ -31,8 +31,8 @@
     </point>
     <point feature="CLOISTER" cx="500" cy="600">
         <apply>BB.LCFc CLOISTER</apply>
-        <apply>GM.Andechs CLOISTER</apply>
-        <apply>GM.Lorch CLOISTER</apply>
+        <apply>MO.Andechs CLOISTER</apply>
+        <apply>MO.Lorch CLOISTER</apply>
         <apply>CU.SC CLOISTER</apply>
         <apply>CU.SCFR CLOISTER</apply>
         <apply>CU.SRCR CLOISTER</apply>
@@ -88,10 +88,10 @@
         <apply>TU.CRRR W</apply>
         <apply>TU.RCR W</apply>
         <apply>TU.RR E</apply>
-        <apply>C2.RRr E</apply>
-        <apply>C2.RRRr N</apply>
-        <apply>C2.RRRr E</apply>
-        <apply>C2.CFR S</apply>
+        <apply>CC.RRr E</apply>
+        <apply>CC.RRRr N</apply>
+        <apply>CC.RRRr E</apply>
+        <apply>CC.CFR S</apply>
         <apply>HS.LRrR S</apply>
         <apply>HS.RRr.v S</apply>
     </point>
@@ -105,9 +105,9 @@
         <apply>KR.CcRR! S</apply>
         <apply>GQ.CRcR.1 N</apply>
         <apply>GQ.CRcR.1 S</apply>
-        <apply>C2.RCR W</apply>
-        <apply>C2.RCR E</apply>
-        <apply>GM.Lorch S</apply>
+        <apply>CC.RCR W</apply>
+        <apply>CC.RCR E</apply>
+        <apply>MO.Lorch S</apply>
     </point>
     <point feature="ROAD" cx="550" cy="100" baseLocation="N">
         <apply>GQ.RFI W</apply>
@@ -115,7 +115,7 @@
     <point feature="ROAD" cx="570" cy="140" baseLocation="N"> <!-- short / under _N regular left -->
         <apply>TB.CccR.w S</apply>
         <apply>TB.RCc!.g S</apply>
-        <apply>GM.Andechs S</apply>
+        <apply>MO.Andechs S</apply>
     </point>
 
     <point feature="ROAD" cx="460" cy="460" baseLocation="NW">
@@ -150,7 +150,7 @@
         <apply>R2.RrII NE</apply>
         <apply>TO.RrRr.2 NW</apply>
         <apply>FL.Rr.SW.o SW</apply>
-        <apply>C2.RRRr SW</apply>
+        <apply>CC.RRRr SW</apply>
         <apply>WR.Rr SW</apply>
         <apply>WR.RrC SW</apply>
         <apply>HS.CRr.h SE</apply>
@@ -216,7 +216,7 @@
         <apply>FL.RFr.WE.o WE</apply>
     </point>
     <point feature="ROAD" cx="500" cy="800">
-        <apply>RP.RRrr _N</apply>
+        <apply>RU.RRrr _N</apply>
     </point>
     <point feature="ROAD" cx="530" cy="680">
         <apply>AM.RrC SW</apply>
@@ -248,7 +248,7 @@
     </point>
     <point feature="CITY" cx="250" cy="250">
         <apply>TO.CccR _S</apply>
-        <apply>BE.Ccc _S</apply>        
+        <apply>SI.Ccc _S</apply>
     </point>
     <point feature="CITY" cx="250" cy="500">
         <apply>BB.CFR! W</apply>
@@ -269,7 +269,7 @@
         <apply>AM.CCc+ N</apply>
         <apply>AM.CCRR W</apply>
         <apply>BB.CCCR N</apply>
-        <apply>C2.CFC N</apply>
+        <apply>CC.CFC N</apply>
         <apply>CC.CC.1 N</apply>
         <apply>CU.SCFR N</apply>
         <apply>CU.SC N</apply>
@@ -390,7 +390,7 @@
         <apply>CU.SCFR EL.ER.SL.SR.WL.WR</apply>
         <apply>CU.SC EL.ER.SL.SR.WL.WR</apply>
         <apply>CA.C! WL.WR.SL.SR</apply>
-        <apply>C2.RCR WL.SL.SR.ER</apply>
+        <apply>CC.RCR WL.SL.SR.ER</apply>
         <apply>WR.CFR WL.SL.SR</apply>
     </point>
     <point feature="FARM" cx="200" cy="200">
@@ -399,7 +399,7 @@
         <apply>CA.RRr.2 ER.SL.SR.WL.WR.NL</apply>
         <apply>CU.S NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>FL.RFr.NS.o NL.WR.WL.SR</apply>
-        <apply>C2.RRr NL.NR.EL.WR</apply>
+        <apply>CC.RRr NL.NR.EL.WR</apply>
         <apply>HS.LRrR ER.SL.SR.WL.WR.NL</apply>
     </point>
     <point feature="FARM" cx="200" cy="800">
@@ -449,7 +449,7 @@
         <apply>CO.1 NL.NR.EL.WR</apply>
     </point>
     <point feature="FARM" cx="500" cy="750">
-        <apply>BE.Ccc SL.SR</apply>
+        <apply>SI.Ccc SL.SR</apply>
         <apply>HS.Cc.h.1 SL.SR.EL.ER</apply>
     </point>
     <point feature="FARM" cx="600" cy="100" baseLocation="NL.NR"> <!-- small farm north from WE city -->
@@ -523,14 +523,14 @@
         <apply>CA.RrR.1 SR.WL.WR.NL.NR.EL</apply>
         <apply>FL.RFr.WE.o WR.NL.NR.EL</apply>
         <apply>FL.RFr.d WR.NL.NR.EL</apply>
-        <apply>GM.Andechs NL.NR.EL.ER.SL.SR.WL.WR</apply>
-        <apply>GM.Eberbach NL.NR.EL.ER.SL.SR.WL.WR</apply>
-        <apply>GM.Lorch NL.NR.EL.ER.SL.SR.WL.WR</apply>
-        <apply>GM.MariaLaach NL.NR.EL.ER.SL.SR.WL.WR</apply>
-        <apply>GM.Marienthal NL.NR.EL.ER.SL.SR.WL.WR</apply>
-        <apply>GM.Maulbronn NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>MO.Andechs NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>MO.Eberbach NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>MO.Lorch NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>MO.MariaLaach NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>MO.Marienthal NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>MO.Maulbronn NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>GO.LRr NL.NR.EL.SR.WL.WR</apply>
-        <apply>RP.L NL.NR.EL.ER.SL.SR.WL.WR</apply>
+        <apply>RU.L NL.NR.EL.ER.SL.SR.WL.WR</apply>
     </point>
     <point feature="FARM" cx="800" cy="800">
         <apply>BB.R.bi NL.NR.EL.ER.SL.SR.WL.WR</apply>

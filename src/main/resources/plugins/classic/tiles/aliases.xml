@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aliases xmlns="http://www.jcloisterzone.com/aliases">    
-    <alias for="BE.CRr" useGeometry="BA.CRr" />
-    <alias for="BE.RCc" useGeometry="TB.RCc.g" />
-    <alias for="BE.CcR" useGeometry="IC.CcR" />
+    <alias for="SI.CRr" useGeometry="BA.CRr" />
+    <alias for="SI.RCc" useGeometry="TB.RCc.g" />
+    <alias for="SI.CcR" useGeometry="IC.CcR" />
 
     <alias for="FE.CR" useGeometry="TB.CR" />
     <alias for="FE.CRCR" useGeometry="IC.CRCR" />

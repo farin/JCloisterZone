@@ -1,19 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <pack>
-    <tile id="CCc">
+    <tile id="FE/CCc">
         <festival/>
         <city>W E</city>
         <city castle-base="true">S</city>
         <farm city="W">NL NR</farm>
         <farm city="W S">INNER_FARM</farm>
     </tile>
-    <tile id="CcCc">
+    <tile id="FE/CcCc">
         <festival/>
         <city>N W</city>
         <city>S E</city>
         <farm city="N S">INNER_FARM</farm>
     </tile>
-    <tile id="CFR">
+    <tile id="FE/CFR">
         <festival/>
         <city castle-base="true">N</city>
         <road>S</road>
@@ -23,7 +23,7 @@
             <neighbouring>N S</neighbouring>
         </wagon-move>
     </tile>
-    <tile id="CR">
+    <tile id="FE/CR">
         <festival/>
         <city castle-base="true">N</city>
         <road>E</road>
@@ -33,7 +33,7 @@
             <neighbouring>N E</neighbouring>
         </wagon-move>
     </tile>
-    <tile id="CRCR">
+    <tile id="FE/CRCR">
         <festival/>
         <city castle-base="true">N</city>
         <city castle-base="true">S</city>
@@ -47,14 +47,14 @@
             <neighbouring>N S W E</neighbouring>
         </wagon-move>
     </tile>
-    <tile id="CRr">
+    <tile id="FE/CRr">
         <festival/>
         <road>E S</road>
         <city castle-base="true">N</city>
         <farm city="N">EL WL WR SR</farm>
         <farm>ER SL</farm>
     </tile>
-    <tile id="LRR">
+    <tile id="FE/LRR">
         <festival/>
         <cloister/>
         <road>S</road>
@@ -66,7 +66,7 @@
             <neighbouring>CLOISTER S</neighbouring>
         </wagon-move>
     </tile>
-    <tile id="RC">
+    <tile id="FE/RC">
         <festival/>
         <city castle-base="true">N</city>
         <road>W</road>
@@ -76,14 +76,14 @@
             <neighbouring>N W</neighbouring>
         </wagon-move>
     </tile>
-    <tile id="RrC">
+    <tile id="FE/RrC">
         <festival/>
         <road>S W</road>
         <city castle-base="true">N</city>
         <farm city="N">WR EL ER SL</farm>
         <farm>WL SR</farm>
     </tile>
-    <tile id="RrRr">
+    <tile id="FE/RrRr">
         <festival/>
         <road>N W</road>
         <road>S E</road>
@@ -91,4 +91,18 @@
         <farm>SL ER</farm>
         <farm>NR EL SR WL</farm>
     </tile>
+    <sets>
+        <tile-set id="festival">
+            <ref count="1" tile="FE/CCc" />
+            <ref count="1" tile="FE/CcCc" />
+            <ref count="1" tile="FE/CFR" />
+            <ref count="1" tile="FE/CR" />
+            <ref count="1" tile="FE/CRCR" />
+            <ref count="1" tile="FE/CRr" />
+            <ref count="1" tile="FE/LRR" />
+            <ref count="1" tile="FE/RC" />
+            <ref count="1" tile="FE/RrC" />
+            <ref count="1" tile="FE/RrRr" />
+        </tile-set>
+    </sets>
 </pack>
