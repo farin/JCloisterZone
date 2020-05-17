@@ -109,9 +109,7 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
         menu.setItemActionListener(MenuItem.SAVE, e -> handleSave());
         menu.setItemActionListener(MenuItem.UNDO, e -> {
             menu.setItemEnabled(MenuItem.UNDO, false);
-            List<WsReplayableMessage> replay = game.getUndoHistory().head().getReplay();
-            String lastMessageId = replay.isEmpty() ? "" : replay.last().getMessageId();
-            gc.getConnection().send(new UndoMessage(lastMessageId));
+            gc.getConnection().send(new UndoMessage());
         });
         menu.setItemActionListener(MenuItem.ZOOM_IN, e -> zoom(2.0));
         menu.setItemActionListener(MenuItem.ZOOM_OUT, e -> zoom(-2.0));

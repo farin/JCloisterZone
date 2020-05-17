@@ -8,7 +8,8 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class PlaceTileMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
-    private String messageId;
+    private long clock;
+    private String parentId;
 
     private String tileId;
     private Rotation rotation;
@@ -34,13 +35,23 @@ public class PlaceTileMessage extends AbstractWsMessage implements WsInGameMessa
     }
 
     @Override
-    public String getMessageId() {
-        return messageId;
+    public long getClock() {
+        return clock;
     }
 
     @Override
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setClock(long clock) {
+        this.clock = clock;
+    }
+
+    @Override
+    public String getParentId() {
+        return parentId;
+    }
+
+    @Override
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public String getTileId() {

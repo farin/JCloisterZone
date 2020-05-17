@@ -4,14 +4,12 @@ import static com.jcloisterzone.ui.I18nUtils._tr;
 
 import java.awt.Color;
 import java.awt.Image;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import com.jcloisterzone.wsio.message.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,10 +35,6 @@ import com.jcloisterzone.ui.view.GameView;
 import com.jcloisterzone.ui.view.StartView;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
-import com.jcloisterzone.wsio.message.LeaveGameMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-import com.jcloisterzone.wsio.message.WsMessage;
-import com.jcloisterzone.wsio.message.WsReplayableMessage;
 
 import io.vavr.collection.Array;
 import io.vavr.collection.Stream;
@@ -58,6 +52,7 @@ public class GameController extends EventProxyUiController<Game> {
 
     private GameView gameView;
     private Connection connProxy;
+    private String lastMessageId = "";
 
     public GameController(Client client, Game game) {
         super(client, game);
@@ -75,6 +70,10 @@ public class GameController extends EventProxyUiController<Game> {
 
     public GameStatus getGameStatus() {
         return gameStatus;
+    }
+
+    public String getLastMessageId() {
+        return lastMessageId;
     }
 
     public void setGameStatus(GameStatus gameStatus) {
@@ -281,11 +280,15 @@ public class GameController extends EventProxyUiController<Game> {
 
         @Override
         public void send(WsMessage msg) {
+            if (msg.getMessageId() == null) {
+                msg.setMessageId(UUID.randomUUID().toString());
+            }
             if (msg instanceof WsInGameMessage) {
                 ((WsInGameMessage) msg).setGameId(game.getGameId());
             }
-            if (msg instanceof WsReplayableMessage) {
-                ((WsReplayableMessage) msg).setMessageId(game.getMessageId());
+            if (msg instanceof WsChainedMessage) {
+                ((WsChainedMessage) msg).setParentId(lastMessageId);
+                lastMessageId = msg.getMessageId();
             }
             getConnection().send(msg);
         }

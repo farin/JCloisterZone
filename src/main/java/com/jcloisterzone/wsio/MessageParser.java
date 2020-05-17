@@ -46,9 +46,6 @@ public final class MessageParser {
                     obj.get("value") == null ? null : rule.unpackValue(obj.get("value").getAsString())
                 );
                 msg.setGameId(obj.get("gameId").getAsString());
-                if (obj.get("sequenceNumber") != null) {
-                    msg.setSequnceNumber(obj.get("sequenceNumber").getAsLong());
-                }
                 return msg;
             }
         });

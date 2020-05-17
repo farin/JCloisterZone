@@ -7,24 +7,18 @@ public class PlayerClock implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final long time;
-    private final boolean running;
-    private final long runningSince;
+    private long time;
+    private Long runningSince;
 
     /**
      * @param time in ms
      */
     public PlayerClock(long time) {
-        this(time, false, 0);
+        this(time, null);
     }
 
-    public PlayerClock(long time, boolean running) {
-        this(time, running, running ? System.currentTimeMillis() : 0);
-    }
-
-    public PlayerClock(long time, boolean running, long runningSince) {
+    public PlayerClock(long time, Long runningSince) {
         this.time = time;
-        this.running = running;
         this.runningSince = runningSince;
     }
 
@@ -32,36 +26,28 @@ public class PlayerClock implements Serializable {
     /**
      * @return playtime in ms
      */
-    public long getTime() {
-        if (running) {
-            return time + System.currentTimeMillis() - runningSince;
+    public long getTime(long clock) {
+        if (isRunning()) {
+            return time + clock - runningSince;
         } else {
             return time;
         }
     }
 
-    /**
-     * Returns time ignoring runningSince (which is reset to now)
-     */
-    public PlayerClock resetRunning() {
-        return new PlayerClock(time, running, System.currentTimeMillis());
+    public PlayerClock start(long clock) {
+        return new PlayerClock(time, clock);
     }
 
-    public PlayerClock setTime(long time) {
-        if (!running && this.time == time) {
-            return this;
+    public PlayerClock stop(long clock) {
+        if (!isRunning()) {
+            throw new IllegalStateException("Clock is not running");
         }
-        return new PlayerClock(time, running, running ? System.currentTimeMillis() : 0);
+        return new PlayerClock(time + clock - runningSince, null);
     }
+
 
     public boolean isRunning() {
-        return running;
+        return runningSince != null;
     }
 
-    public PlayerClock setRunning(boolean running) {
-        if (this.running == running) {
-            return this;
-        }
-        return new PlayerClock(time, running, running ? System.currentTimeMillis() : 0);
-    }
 }

@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import com.jcloisterzone.wsio.message.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,27 +47,9 @@ import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageListener;
 import com.jcloisterzone.wsio.WebSocketConnection;
 import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChannelMessage.ChannelMessageGame;
-import com.jcloisterzone.wsio.message.ChatMessage;
-import com.jcloisterzone.wsio.message.ClientUpdateMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
-import com.jcloisterzone.wsio.message.ErrorMessage;
-import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
-import com.jcloisterzone.wsio.message.GameSetupMessage;
-import com.jcloisterzone.wsio.message.GameUpdateMessage;
-import com.jcloisterzone.wsio.message.SetCapabilityMessage;
-import com.jcloisterzone.wsio.message.SetExpansionMessage;
-import com.jcloisterzone.wsio.message.SetRuleMessage;
-import com.jcloisterzone.wsio.message.SlotMessage;
-import com.jcloisterzone.wsio.message.StartGameMessage;
-import com.jcloisterzone.wsio.message.TakeSlotMessage;
-import com.jcloisterzone.wsio.message.UndoMessage;
-import com.jcloisterzone.wsio.message.WsInChannelMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-import com.jcloisterzone.wsio.message.WsMessage;
-import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.server.RemoteClient;
 
 
@@ -133,6 +116,11 @@ public class ClientMessageListener implements MessageListener {
         EventProxyUiController<?> controller = getController(msg);
         if (controller instanceof GameController) {
             GameController gc = (GameController) controller;
+            if (msg instanceof WsChainedMessage) {
+                if (((WsChainedMessage) msg).getParentId() != gc.getLastMessageId()) {
+                    // TODO verify
+                }
+            }
             Game game = gc.getGame();
             dispatcher.dispatch(msg, conn, this, game);
         } else {
@@ -217,9 +205,10 @@ public class ClientMessageListener implements MessageListener {
         return gc;
     }
 
-    private void handleGameStarted(final GameController gc, io.vavr.collection.List<WsReplayableMessage> replay) throws InvocationTargetException, InterruptedException {
+    private void handleGameStarted(final GameController gc, long clockStart, io.vavr.collection.List<WsReplayableMessage> replay) throws InvocationTargetException, InterruptedException {
         conn.getReportingTool().setGame(gc.getGame());
         HashMap<String, Object> annotations = gc.getClient().getSavedGameAnnotations();
+        gc.getGame().setClockStart(clockStart);
         gc.getGame().start(gc, replay, annotations);
 
         if (!"false".equals(System.getProperty("showGameDebugModeInfo"))) {
@@ -297,7 +286,7 @@ public class ClientMessageListener implements MessageListener {
                 } else {
                     replay = io.vavr.collection.List.ofAll(msg.getReplay());
                 }
-                handleGameStarted(gc, replay);
+                handleGameStarted(gc, msg.getClockStart(), replay);
                 break;
             }
         }

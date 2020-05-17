@@ -9,7 +9,8 @@ public class BazaarBuyOrSellMessage extends AbstractWsMessage implements WsInGam
     public enum BuyOrSellOption { BUY, SELL }
 
     private String gameId;
-    private String messageId;
+    private long clock;
+    private String parentId;
     private BuyOrSellOption value;
 
     public BazaarBuyOrSellMessage() {
@@ -30,13 +31,23 @@ public class BazaarBuyOrSellMessage extends AbstractWsMessage implements WsInGam
     }
 
     @Override
-    public String getMessageId() {
-        return messageId;
+    public long getClock() {
+        return clock;
     }
 
     @Override
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setClock(long clock) {
+        this.clock = clock;
+    }
+
+    @Override
+    public String getParentId() {
+        return parentId;
+    }
+
+    @Override
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public BuyOrSellOption getValue() {

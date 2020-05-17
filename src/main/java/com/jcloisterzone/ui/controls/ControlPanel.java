@@ -400,9 +400,7 @@ public class ControlPanel extends JPanel implements UIEventListener {
         timer.stop();
         if (ev.isClockRunning() && game.getSetup().getRules().get(Rule.CLOCK_PLAYER_TIME).isDefined()) {
             PlayerClock runningClock = ev.getClocks().get(ev.getRunning());
-            //this solution is not much accurate - TODO fix
-            //+clean time from round trip!!!
-            timer.setInitialDelay((int) runningClock.getTime() % 1000);
+            timer.setInitialDelay((int) runningClock.getTime(game.getClockStart()) % 1000);
             timer.start();
         }
     }

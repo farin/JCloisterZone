@@ -11,7 +11,9 @@ public class ReturnMeepleMessage extends AbstractWsMessage implements WsInGameMe
     }
 
     private String gameId;
-    private String messageId;
+    private long clock;
+    private String parentId;
+
     private MeeplePointer pointer;
     private ReturnMeepleSource source;
 
@@ -34,13 +36,23 @@ public class ReturnMeepleMessage extends AbstractWsMessage implements WsInGameMe
     }
 
     @Override
-    public String getMessageId() {
-        return messageId;
+    public long getClock() {
+        return clock;
     }
 
     @Override
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setClock(long clock) {
+        this.clock = clock;
+    }
+
+    @Override
+    public String getParentId() {
+        return parentId;
+    }
+
+    @Override
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public MeeplePointer getPointer() {

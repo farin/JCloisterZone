@@ -7,7 +7,6 @@ import com.jcloisterzone.wsio.message.CaptureFollowerMessage;
 import com.jcloisterzone.wsio.message.ChannelMessage;
 import com.jcloisterzone.wsio.message.ChatMessage;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage;
-import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.CommitMessage;
 import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
 import com.jcloisterzone.wsio.message.CreateGameMessage;
@@ -39,7 +38,6 @@ import com.jcloisterzone.wsio.message.SetRuleMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
 import com.jcloisterzone.wsio.message.StartGameMessage;
 import com.jcloisterzone.wsio.message.TakeSlotMessage;
-import com.jcloisterzone.wsio.message.ToggleClockMessage;
 import com.jcloisterzone.wsio.message.UndoMessage;
 import com.jcloisterzone.wsio.message.WelcomeMessage;
 import com.jcloisterzone.wsio.message.WsMessage;
@@ -80,8 +78,6 @@ public class WsCommandRegistry {
             .put(t(GameOverMessage.class))
             .put(t(PingMessage.class))
             .put(t(PongMessage.class))
-            .put(t(ToggleClockMessage.class))
-            .put(t(ClockMessage.class))
             .put(t(CommitMessage.class))
             .put(t(PassMessage.class))
             .put(t(PlaceTileMessage.class))
