@@ -322,8 +322,7 @@ public class ClientMessageListener implements MessageListener {
             GameController gc = (GameController) getController(msg.getGame());
             if (gc != null) {
                 gc.setGameStatus(status);
-                logger.warn("Unexpected state - should never happen");
-                return; //can't happen now - but eq. rename etc is possible in future
+                return;
             }
             handleGame(msg.getGame(), true);
         } else {
