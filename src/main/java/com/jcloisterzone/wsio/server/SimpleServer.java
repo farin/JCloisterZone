@@ -1,24 +1,11 @@
 package com.jcloisterzone.wsio.server;
 
-import java.net.InetSocketAddress;
-import java.util.*;
-
-import org.java_websocket.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.ai.AiPlayer;
 import com.jcloisterzone.config.ConfigLoader;
-import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
-import com.jcloisterzone.game.GameSetup;
-import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.*;
 import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.save.SavedGame;
 import com.jcloisterzone.game.save.SavedGame.SavedGamePlayerSlot;
@@ -26,49 +13,22 @@ import com.jcloisterzone.ui.JCloisterZone;
 import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.BazaarBidMessage;
-import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage;
-import com.jcloisterzone.wsio.message.CaptureFollowerMessage;
-import com.jcloisterzone.wsio.message.ChatMessage;
-import com.jcloisterzone.wsio.message.ClientUpdateMessage;
+import com.jcloisterzone.wsio.message.*;
 import com.jcloisterzone.wsio.message.ClientUpdateMessage.ClientState;
-import com.jcloisterzone.wsio.message.CommitMessage;
-import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
-import com.jcloisterzone.wsio.message.DeployFlierMessage;
-import com.jcloisterzone.wsio.message.DeployMeepleMessage;
-import com.jcloisterzone.wsio.message.ErrorMessage;
-import com.jcloisterzone.wsio.message.ExchangeFollowerChoiceMessage;
-import com.jcloisterzone.wsio.message.FlockMessage;
-import com.jcloisterzone.wsio.message.GameMessage;
 import com.jcloisterzone.wsio.message.GameMessage.GameStatus;
-import com.jcloisterzone.wsio.message.GameOverMessage;
-import com.jcloisterzone.wsio.message.GameSetupMessage;
-import com.jcloisterzone.wsio.message.HelloMessage;
-import com.jcloisterzone.wsio.message.LeaveSlotMessage;
-import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
-import com.jcloisterzone.wsio.message.PassMessage;
-import com.jcloisterzone.wsio.message.PayRansomMessage;
-import com.jcloisterzone.wsio.message.PingMessage;
-import com.jcloisterzone.wsio.message.PlaceTileMessage;
-import com.jcloisterzone.wsio.message.PlaceTokenMessage;
-import com.jcloisterzone.wsio.message.PongMessage;
-import com.jcloisterzone.wsio.message.PostChatMessage;
-import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
-import com.jcloisterzone.wsio.message.SetCapabilityMessage;
-import com.jcloisterzone.wsio.message.SetExpansionMessage;
-import com.jcloisterzone.wsio.message.SetRuleMessage;
-import com.jcloisterzone.wsio.message.SlotMessage;
-import com.jcloisterzone.wsio.message.StartGameMessage;
-import com.jcloisterzone.wsio.message.TakeSlotMessage;
-import com.jcloisterzone.wsio.message.UndoMessage;
-import com.jcloisterzone.wsio.message.WelcomeMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-import com.jcloisterzone.wsio.message.WsMessage;
-import com.jcloisterzone.wsio.message.WsReplayableMessage;
-import com.jcloisterzone.wsio.message.WsSaltMessage;
-
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
+import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.WebSocketServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public class SimpleServer extends WebSocketServer  {
 
@@ -89,6 +49,7 @@ public class SimpleServer extends WebSocketServer  {
     private SavedGame savedGame;
     private boolean gameStarted;
     private Long clockStart;
+    private String chainMessageId;
 
     protected Map<WebSocket, ServerRemoteClient> connections = HashMap.empty();
     protected java.util.Set<String> alreadyReceived = new java.util.HashSet();
@@ -222,6 +183,14 @@ public class SimpleServer extends WebSocketServer  {
         if (alreadyReceived.contains(msg.getMessageId())) {
             logger.info("Dropping already received message.");
         } else {
+            if (msg instanceof WsChainedMessage) {
+                String parentId = ((WsChainedMessage) msg).getParentId();
+                if (parentId != null && !parentId.equals(chainMessageId)) {
+                    logger.info("Invalid parent id");
+                    return;
+                }
+                chainMessageId = msg.getMessageId();
+            }
             alreadyReceived.add(msg.getMessageId());
             dispatcher.dispatch(msg, ws, this);
         }
@@ -509,6 +478,11 @@ public class SimpleServer extends WebSocketServer  {
     }
 
     @WsSubscribe
+    public void handleSyncGame(WebSocket ws, SyncGameMessage msg) {
+        send(ws, newGameMessage(gameStarted));
+    }
+
+    @WsSubscribe
     public void handleDeployFlier(WebSocket ws, DeployFlierMessage msg) {
         handleInGameMessage(msg);
     }
@@ -592,18 +566,7 @@ public class SimpleServer extends WebSocketServer  {
     public void handleUndo(WebSocket ws, UndoMessage msg) {
         if (!msg.getGameId().equals(gameId)) throw new IllegalArgumentException("Invalid game id.");
         if (!gameStarted) throw new IllegalArgumentException("Game is not started.");
-
-        List<WsReplayableMessage> trimmed = new ArrayList<>();
-        if (!"".equals(msg.getParentId())) {
-            for (WsReplayableMessage m : replay) {
-                trimmed.add(m);
-                // m.getMessageId() can be null for loaded game!
-                if (msg.getParentId().equals(m.getMessageId())) {
-                    break;
-                }
-            }
-        }
-        replay = trimmed;
+        replay.remove(replay.size() - 1);
         broadcast(msg);
     }
 

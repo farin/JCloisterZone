@@ -117,9 +117,13 @@ public class ClientMessageListener implements MessageListener {
         if (controller instanceof GameController) {
             GameController gc = (GameController) controller;
             if (msg instanceof WsChainedMessage) {
-                if (((WsChainedMessage) msg).getParentId() != gc.getLastMessageId()) {
-                    // TODO verify
+                String parentId = ((WsChainedMessage) msg).getParentId();
+                if (gc.getChainMessageId() != null && parentId != gc.getChainMessageId()) {
+                    logger.info("Unexpected game id. Expected %s, received %s", gc.getChainMessageId(), parentId);
+                    conn.send(new SyncGameMessage(gc.getGame().getGameId()));
+                    return;
                 }
+                gc.setChainMessageId(msg.getMessageId());
             }
             Game game = gc.getGame();
             dispatcher.dispatch(msg, conn, this, game);

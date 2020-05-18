@@ -52,7 +52,7 @@ public class GameController extends EventProxyUiController<Game> {
 
     private GameView gameView;
     private Connection connProxy;
-    private String lastMessageId = "";
+    private String chainMessageId = "";
 
     public GameController(Client client, Game game) {
         super(client, game);
@@ -72,8 +72,12 @@ public class GameController extends EventProxyUiController<Game> {
         return gameStatus;
     }
 
-    public String getLastMessageId() {
-        return lastMessageId;
+    public String getChainMessageId() {
+        return chainMessageId;
+    }
+
+    public void setChainMessageId(String chainMessageId) {
+        this.chainMessageId = chainMessageId;
     }
 
     public void setGameStatus(GameStatus gameStatus) {
@@ -133,6 +137,8 @@ public class GameController extends EventProxyUiController<Game> {
             logger.warn("gameView is null");
             return;
         }
+        // reset chaing, eg after resync
+        chainMessageId = null;
         GameState state = ev.getCurrentState();
 
         if (ev.hasDiscardedTilesChanged()) {
@@ -287,8 +293,7 @@ public class GameController extends EventProxyUiController<Game> {
                 ((WsInGameMessage) msg).setGameId(game.getGameId());
             }
             if (msg instanceof WsChainedMessage) {
-                ((WsChainedMessage) msg).setParentId(lastMessageId);
-                lastMessageId = msg.getMessageId();
+                ((WsChainedMessage) msg).setParentId(chainMessageId);
             }
             getConnection().send(msg);
         }
