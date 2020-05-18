@@ -291,6 +291,14 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
     }
 
     private boolean dispatchReptable(KeyEvent e, boolean pressed) {
+        if (e.getKeyChar() == '+') {
+            repeatZoomIn = pressed;
+            return true;
+        }
+        if (e.getKeyChar() == '-') {
+            repeatZoomOut = pressed;
+            return true;
+        }
         if (e.getModifiers() != 0) return false;
         switch (e.getKeyCode()) {
         case KeyEvent.VK_LEFT:
@@ -308,14 +316,6 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
         case KeyEvent.VK_UP:
         case KeyEvent.VK_W:
             repeatUp = pressed;
-            return true;
-        }
-        if (e.getKeyChar() == '+') {
-            repeatZoomIn = pressed;
-            return true;
-        }
-        if (e.getKeyChar() == '-') {
-            repeatZoomOut = pressed;
             return true;
         }
         return false;
@@ -449,10 +449,10 @@ public class GameView extends AbstractUiView implements WindowStateListener, Gam
                 gridPanel.moveCenter(0, 1);
             }
             if (repeatZoomIn) {
-                gridPanel.zoom(0.8);
+                gridPanel.zoom(0.3);
             }
             if (repeatZoomOut) {
-                gridPanel.zoom(-0.8);
+                gridPanel.zoom(-0.3);
             }
         }
     }
