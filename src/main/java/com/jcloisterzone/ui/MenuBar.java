@@ -34,8 +34,8 @@ public class MenuBar extends JMenuBar {
         QUIT(_tr("Quit"), KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
         //Game
         UNDO(_tr("Undo"), KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask())),
-        ZOOM_IN(_tr("Zoom In"), KeyStroke.getKeyStroke('+')),
-        ZOOM_OUT(_tr("Zoom Out"), KeyStroke.getKeyStroke('-')),
+        ZOOM_IN(_tr("Zoom In")),
+        ZOOM_OUT(_tr("Zoom Out")),
         ROTATE_BOARD(_tr("Rotate Board"), KeyStroke.getKeyStroke('/')),
         GAME_EVENTS(_tr("Show Game Events"), KeyStroke.getKeyStroke('e')),
         LAST_PLACEMENTS(_tr("Show Last Placements"), KeyStroke.getKeyStroke('x')),
