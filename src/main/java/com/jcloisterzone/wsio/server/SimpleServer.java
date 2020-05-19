@@ -579,14 +579,7 @@ public class SimpleServer extends WebSocketServer  {
         broadcast(reMsg);
     }
 
-    public void send(WebSocket ws, WsMessage msg) {
-        if (msg.getMessageId() == null) {
-            msg.setMessageId(UUID.randomUUID().toString());
-        }
-        ws.send(parser.toJson(msg));
-    }
-
-    public void broadcast(WsMessage msg) {
+    private void beforeSend(WsMessage msg) {
         if (msg.getMessageId() == null) {
             msg.setMessageId(UUID.randomUUID().toString());
         }
@@ -594,6 +587,14 @@ public class SimpleServer extends WebSocketServer  {
             replay.add((WsReplayableMessage) msg);
             ((WsReplayableMessage) msg).setClock(System.currentTimeMillis() - clockStart);
         }
+    }
+
+    public void send(WebSocket ws, WsMessage msg) {
+        beforeSend(msg);
+        ws.send(parser.toJson(msg));
+    }
+
+    public void broadcast(WsMessage msg) {
         for (WebSocket ws : connections.keySet()) {
             if (ws.isOpen()) { //prevent exception when server is closing
                 send(ws, msg);
