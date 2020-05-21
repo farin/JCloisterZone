@@ -118,12 +118,13 @@ public class ClientMessageListener implements MessageListener {
             GameController gc = (GameController) controller;
             if (msg instanceof WsChainedMessage) {
                 String parentId = ((WsChainedMessage) msg).getParentId();
-                if (gc.getChainMessageId() != null && parentId != gc.getChainMessageId()) {
-                    logger.info("Unexpected game id. Expected %s, received %s", gc.getChainMessageId(), parentId);
+                String chainMessageId = gc.getChainMessageIdRef().get();
+                if (chainMessageId != null && !parentId.equals(chainMessageId)) {
+                    logger.info("Unexpected game id. Expected {}, received {}", chainMessageId, parentId);
                     conn.send(new SyncGameMessage(gc.getGame().getGameId()));
                     return;
                 }
-                gc.setChainMessageId(msg.getMessageId());
+                gc.getChainMessageIdRef().set(msg.getMessageId());
             }
             Game game = gc.getGame();
             dispatcher.dispatch(msg, conn, this, game);
@@ -277,6 +278,7 @@ public class ClientMessageListener implements MessageListener {
         }
 
         gc.setGameStatus(msg.getStatus());
+        gc.getChainMessageIdRef().set(null);
         if (!channelList) {
             switch (msg.getStatus()) {
             case OPEN:

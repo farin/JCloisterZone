@@ -5,6 +5,7 @@ import static com.jcloisterzone.ui.I18nUtils._tr;
 import java.awt.Color;
 import java.awt.Image;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -52,7 +53,7 @@ public class GameController extends EventProxyUiController<Game> {
 
     private GameView gameView;
     private Connection connProxy;
-    private String chainMessageId = "";
+    private AtomicReference<String> chainMessageId = new AtomicReference<>();
 
     public GameController(Client client, Game game) {
         super(client, game);
@@ -72,13 +73,9 @@ public class GameController extends EventProxyUiController<Game> {
         return gameStatus;
     }
 
-    public String getChainMessageId() {
+    public AtomicReference<String> getChainMessageIdRef() {
         return chainMessageId;
-    }
-
-    public void setChainMessageId(String chainMessageId) {
-        this.chainMessageId = chainMessageId;
-    }
+     }
 
     public void setGameStatus(GameStatus gameStatus) {
         this.gameStatus = gameStatus;
@@ -138,7 +135,6 @@ public class GameController extends EventProxyUiController<Game> {
             return;
         }
         // reset chaing, eg after resync
-        chainMessageId = null;
         GameState state = ev.getCurrentState();
 
         if (ev.hasDiscardedTilesChanged()) {
@@ -293,7 +289,7 @@ public class GameController extends EventProxyUiController<Game> {
                 ((WsInGameMessage) msg).setGameId(game.getGameId());
             }
             if (msg instanceof WsChainedMessage) {
-                ((WsChainedMessage) msg).setParentId(chainMessageId);
+                ((WsChainedMessage) msg).setParentId(chainMessageId.get());
             }
             getConnection().send(msg);
         }
