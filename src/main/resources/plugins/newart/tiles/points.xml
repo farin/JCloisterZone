@@ -70,6 +70,9 @@
     <point feature="ROAD" cx="500" cy="150">
         <apply>IC.CRcR+ N</apply>
     </point>
+    <point feature="ROAD" cx="500" cy="500">
+        <apply>LA.Rrrr NWSE</apply>
+    </point>
     <point feature="ROAD" cx="520" cy="762">
         <apply>IC.RrC.i SW</apply>
     </point>
@@ -193,6 +196,12 @@
     </point>
     <point feature="FARM" cx="750" cy="100" baseLocation="NR">
         <apply>TB.CcR!.w ER</apply>
+    </point>
+    <point feature="FARM" cx="20" cy="250" baseLocation="WR.NL">
+        <apply>LA.Rrrr WR.NL</apply>
+        <apply>LA.Rrrr NR.EL</apply>
+        <apply>LA.Rrrr ER.SL</apply>
+        <apply>LA.Rrrr SR.WL</apply>
     </point>
 
     <point feature="FARM" cx="100" cy="820" >

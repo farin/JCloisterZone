@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+    <tile id="Rrrr">
+        <road labyrinth="true">N W E S</road>
+        <farm>WR NL</farm>
+        <farm>NR EL</farm>
+        <farm>ER SL</farm>
+        <farm>SR WL</farm>
+    </tile>
+</pack>

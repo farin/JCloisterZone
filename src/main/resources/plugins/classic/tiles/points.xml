@@ -129,6 +129,9 @@
         <apply>TB.RRrr WE</apply>
         <apply>TO.CRcr NS</apply>
     </point>
+    <point feature="ROAD" cx="500" cy="500">
+        <apply>LA.Rrrr NWSE</apply>
+    </point>
     <point feature="ROAD" cx="700" cy="700" baseLocation="SE">
         <apply>SI.CcRr SE</apply>
         <apply>FL.Rr.d SE</apply>
@@ -357,6 +360,12 @@
         <apply>GQ.CRcR.1 NR</apply>
         <apply>GQ.CRcR.1 SR</apply>
         <apply>GO.CRcr SR</apply>
+    </point>
+    <point feature="FARM" cx="20" cy="250" baseLocation="WR.NL">
+        <apply>LA.Rrrr WR.NL</apply>
+        <apply>LA.Rrrr NR.EL</apply>
+        <apply>LA.Rrrr ER.SL</apply>
+        <apply>LA.Rrrr SR.WL</apply>
     </point>
     <point feature="FARM" cx="80" cy="300">
         <apply>DG.CCc+.p WL.WR</apply>
@@ -591,7 +600,6 @@
     <point feature="FARM" cx="860" cy="80">
         <apply>GO.LRrRr NR.EL</apply>
     </point>
-
 
     <point feature="TOWER" cx="545" cy="455">
         <apply>* TOWER</apply>
