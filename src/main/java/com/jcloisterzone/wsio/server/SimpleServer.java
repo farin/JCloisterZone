@@ -178,10 +178,10 @@ public class SimpleServer extends WebSocketServer  {
 
     @Override
     synchronized public void onMessage(WebSocket ws, String payload) {
-        //logger.info(payload);
+        logger.info(payload);
         WsMessage msg = parser.fromJson(payload);
         if (alreadyReceived.contains(msg.getMessageId())) {
-            logger.info("Dropping already received message.");
+            logger.info("Dropping already received message. " + payload);
         } else {
             if (msg instanceof WsChainedMessage) {
                 String parentId = ((WsChainedMessage) msg).getParentId();

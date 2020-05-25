@@ -5,7 +5,7 @@
 
 * added Labyrinth promo (including advanced rules)
 * fixed #319: Game stats: time percentage is counted incorrectly (thx chrissy0 for contribution)
-* fixed: unsetting time limit during game configuration
+* fixed: time limit setup checkbox glitches
 
 ## 4.5.1
 *2020-05-01*
