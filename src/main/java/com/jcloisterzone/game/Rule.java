@@ -40,6 +40,8 @@ public enum Rule {
 
     BULDINGS_DIFFERENT_VALUE(Expansion.LITTLE_BUILDINGS, Boolean.class, _tr("Add 3/2/1 points for tower/house/shed.")),
 
+    ADVANCED_LABYRINTH(Expansion.LABYRINTH, Boolean.class, _tr("Advanced labyrinth variant")),
+
     CLOCK_PLAYER_TIME(null, Integer.class, null);
 
 
@@ -81,7 +83,8 @@ public enum Rule {
         return HashMap.of(
             PIG_HERD_ON_GQ_FARM, true,
             TUNNELIZE_ALL_EXPANSIONS, true,
-            MORE_TUNNEL_TOKENS, true
+            MORE_TUNNEL_TOKENS, true,
+            ADVANCED_LABYRINTH, true
         );
     }
 

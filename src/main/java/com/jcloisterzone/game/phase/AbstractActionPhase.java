@@ -8,15 +8,12 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.FlierRollEvent;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.feature.Cloister;
-import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.FlyingMachine;
-import com.jcloisterzone.feature.Structure;
-import com.jcloisterzone.feature.Tower;
+import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.BarnCapability;
+import com.jcloisterzone.game.capability.LabyrinthCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
@@ -115,7 +112,24 @@ public abstract class AbstractActionPhase extends Phase {
                         if (isOccupied) return false;
                     }
                     // Shepherd is not interacting with other meeples
-                    return t._2.getMeeples(state).find(m -> !(m instanceof Shepherd)).isEmpty();
+                    if (t._2.getMeeples(state).find(m -> !(m instanceof Shepherd)).isEmpty()) {
+                        // no meeples except Shepherd is on feature
+                        return true;
+                    };
+                    if (t._2 instanceof Road && ((Road) t._2).isLabyrinth()) {
+                        // find if there is empty labyrinth segment
+                        Set<FeaturePointer> segment = ((Road) t._2).findSegmentBorderedBy(state, t._1,
+                                fp -> ((Road)state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth()).toSet();
+                        boolean segmentIsEmpty = Stream.ofAll(state.getDeployedMeeples())
+                                .filter(x -> !(x._1 instanceof Shepherd))
+                                .filter(x -> segment.contains(x._2))
+                                .isEmpty();
+                        if (segmentIsEmpty) {
+                            // whole road is occupied but segment divided by labyrinth is free
+                            return true;
+                        }
+                    }
+                    return false;
                 })
                 .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
                 .map(t -> t._1)
