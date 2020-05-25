@@ -10,4 +10,5 @@ public interface GridMouseListener {
     void tileExited(MouseEvent e, Position p);
 
     void mouseClicked(MouseEvent e, Position p);
+    default void mouseMoved(MouseEvent e, Position p) {}
 }

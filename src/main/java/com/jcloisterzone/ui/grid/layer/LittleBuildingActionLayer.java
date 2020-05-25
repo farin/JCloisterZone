@@ -146,38 +146,28 @@ public class LittleBuildingActionLayer extends AbstractGridLayer implements Acti
 
     }
 
-    private class MoveTrackingGridMouseAdapter extends GridMouseAdapter {
-
-        public MoveTrackingGridMouseAdapter(GridPanel gridPanel, GridMouseListener listener) {
-            super(gridPanel, listener);
-        }
-
-        @Override
-        public void mouseMoved(MouseEvent e) {
-            super.mouseMoved(e);
-            Point2D point = gridPanel.getRelativePoint(e.getPoint());
-            int x = (int) point.getX();
-            int y = (int) point.getY();
-            LittleBuilding newValue = null;
-            for (Entry<LittleBuilding, Rectangle> entry : areas.entrySet()) {
-                if (entry.getValue().contains(x, y)) {
-                    newValue = entry.getKey();
-                    break;
-                }
-            }
-            if (newValue != selected) {
-                selected = newValue;
-                gridPanel.repaint();
+    @Override
+    public void mouseMoved(MouseEvent e, Position p) {
+        Point2D point = gridPanel.getRelativePoint(e.getPoint());
+        int x = (int) point.getX();
+        int y = (int) point.getY();
+        LittleBuilding newValue = null;
+        for (Entry<LittleBuilding, Rectangle> entry : areas.entrySet()) {
+            if (entry.getValue().contains(x, y)) {
+                newValue = entry.getKey();
+                break;
             }
         }
-
+        if (newValue != selected) {
+            selected = newValue;
+            gridPanel.repaint();
+        }
     }
 
     @Override
     public void onShow() {
         super.onShow();
-        //TODO extract listener from this
-        attachMouseInputListener(new MoveTrackingGridMouseAdapter(gridPanel, this));
+        attachMouseInputListener(new GridMouseAdapter(gridPanel, this));
     }
 
     @Override

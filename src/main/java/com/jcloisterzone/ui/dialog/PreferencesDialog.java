@@ -65,6 +65,7 @@ public class PreferencesDialog extends JDialog {
 
     private JComboBox<StringOption> langComboBox;
     private JComboBox<StringOption> themeComboBox;
+    private JComboBox<EnumOption<Config.MousePlacement>> mousePlacementComboBox;
     private JTextField aiPlaceTileDelay;
     private JTextField scoreDisplayDuration;
     private List<PluginModel> pluginRows = new ArrayList<>();
@@ -78,6 +79,25 @@ public class PreferencesDialog extends JDialog {
         }
 
         public String getKey() {
+            return key;
+        }
+
+        @Override
+        public String toString() {
+            return title;
+        }
+    }
+
+    private static class EnumOption<T extends Enum> {
+        private final String title;
+        private final T key;
+
+        public EnumOption(T key, String title) {
+            this.key = key;
+            this.title = title;
+        }
+
+        public T getKey() {
             return key;
         }
 
@@ -142,6 +162,19 @@ public class PreferencesDialog extends JDialog {
         initialTheme = config.getTheme();
     }
 
+    private void initRotateBasedOnMousePositionOptions(JComboBox<EnumOption<Config.MousePlacement>> comboBox) {
+        List<EnumOption> result = new ArrayList<>();
+        result.add(new EnumOption(Config.MousePlacement.PLACE, _tr("Place tile")));
+        result.add(new EnumOption(Config.MousePlacement.PLACE_AND_ROTATE, _tr("Place and rotate tile")));
+
+        for (EnumOption<Config.MousePlacement> opt : result) {
+            comboBox.addItem(opt);
+            if (opt.getKey() == config.getMouse_placement()) {
+                comboBox.setSelectedItem(opt);
+            }
+        }
+    }
+
     private String valueOf(Object obj) {
         if (obj == null) return "";
         return obj.toString();
@@ -158,6 +191,8 @@ public class PreferencesDialog extends JDialog {
         config.setLocale(opt.getKey());
         opt = (StringOption) themeComboBox.getSelectedItem();
         config.setTheme(opt.getKey());
+        EnumOption<Config.MousePlacement> mousePlacementOption = (EnumOption<Config.MousePlacement>) mousePlacementComboBox.getSelectedItem();
+        config.setMouse_placement(mousePlacementOption.key);
         //TODO error handling
         config.getAi().setPlace_tile_delay(intValue(aiPlaceTileDelay.getText()));
         config.setScore_display_duration(intValue(scoreDisplayDuration.getText()));
@@ -229,6 +264,12 @@ public class PreferencesDialog extends JDialog {
         themeHint.setFont(HINT_FONT);
         themeHint.setForeground(client.getTheme().getHintColor());
         panel.add(themeHint, "sx 2, wrap");
+
+        panel.add(new ThemedJLabel(_tr("Tile placement via mouse")), "alignx trailing");
+
+        mousePlacementComboBox = new JComboBox();
+        initRotateBasedOnMousePositionOptions(mousePlacementComboBox);
+        panel.add(mousePlacementComboBox, "wrap, growx");
 
         panel.add(new ThemedJLabel(_tr("AI placement delay (ms)")), "gaptop 10, alignx trailing");
 

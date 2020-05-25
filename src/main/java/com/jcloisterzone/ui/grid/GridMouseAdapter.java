@@ -46,6 +46,7 @@ public class GridMouseAdapter extends MouseAdapter implements MouseInputListener
             currentPosition = p;
             listener.tileEntered(e, currentPosition);
         }
+        listener.mouseMoved(e, p);
     }
 
     @Override
