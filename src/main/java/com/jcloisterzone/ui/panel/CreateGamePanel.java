@@ -298,11 +298,14 @@ public class CreateGamePanel extends ThemedJPanel implements UIEventListener {
             timeLimitChbox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    timeLimitSpinner.setEnabled(timeLimitChbox.isSelected());
-                    int value = timeLimitChbox.isSelected()
-                        ? 60 * timeLimitModel.getNumber().intValue()
-                        : null;
-                    SetRuleMessage msg = new SetRuleMessage(Rule.CLOCK_PLAYER_TIME, value);
+                    boolean selected = timeLimitChbox.isSelected();
+                    SetRuleMessage msg;
+                    if (selected) {
+                        int value =  60 * timeLimitModel.getNumber().intValue();
+                        msg = new SetRuleMessage(Rule.CLOCK_PLAYER_TIME, value);
+                    } else {
+                        msg = new SetRuleMessage(Rule.CLOCK_PLAYER_TIME, null);
+                    }
                     gc.getConnection().send(msg);
                 }
             });
