@@ -198,12 +198,15 @@ public class ThemeGeometry {
         return area;
     }
 
-    public boolean isFarmComplement(String tileId, Location loc) {
+    public Boolean isFarmComplement(String tileId, Location loc) {
         FeatureDescriptor lookups[] = getLookups(tileId, Farm.class, loc);
         for (FeatureDescriptor fd : lookups) {
-            if (complementFarms.contains(fd)) return true;
+            if (areas.containsKey(fd)) return Boolean.FALSE;
         }
-        return false;
+        for (FeatureDescriptor fd : lookups) {
+            if (complementFarms.contains(fd)) return Boolean.TRUE;
+        }
+        return null;
     }
 
     public ImmutablePoint getMeeplePlacement(String tileId, Class<? extends Feature> feature, Location location) {

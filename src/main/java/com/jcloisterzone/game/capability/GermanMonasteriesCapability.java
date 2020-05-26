@@ -20,8 +20,8 @@ public class GermanMonasteriesCapability extends Capability<Void> {
 
     @Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
-        if (feature instanceof Cloister) {
-            feature = ((Cloister)feature).setMonastery(attributeBoolValue(xml, "monastery"));
+        if (feature instanceof Cloister && attributeBoolValue(xml, "monastery")) {
+            feature = ((Cloister)feature).setMonastery(true);
         }
         return feature;
     }

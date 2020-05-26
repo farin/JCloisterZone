@@ -37,13 +37,15 @@
         <apply>CU.SCFR CLOISTER</apply>
         <apply>CU.SRCR CLOISTER</apply>
     </point>
+    <point feature="CLOISTER" cx="500" cy="630">
+        <apply>DA.LRR CLOISTER</apply>
+    </point>
     <point feature="CLOISTER" cx="500" cy="650">
         <apply>KR.LC CLOISTER</apply>
     </point>         
     <point feature="CLOISTER" cx="740" cy="640">
         <apply>GO.LCc CLOISTER</apply>
     </point>
-
 
     <point feature="ROAD" cx="430" cy="140" baseLocation="N"> <!-- short / under _N regular right -->
         <apply>TB.CcR!.w E</apply>
@@ -94,6 +96,7 @@
         <apply>C2.CFR S</apply>
         <apply>HS.LRrR S</apply>
         <apply>HS.RRr.v S</apply>
+        <apply>DA.LRR S</apply>
     </point>
     <point feature="ROAD" cx="530" cy="140" baseLocation="N"> <!-- short / under _N little left -->
         <apply>TB.CRcR.w N</apply>
@@ -245,6 +248,22 @@
     <point feature="ROAD" cx="900" cy="500">
         <apply>TO.RCr WE</apply>
     </point>
+    <point feature="ROAD" cx="920" cy="600">
+        <apply>DA.LRR E</apply>
+    </point>
+
+    <point feature="ROAD" cx="595" cy="95">
+        <apply>DA.LRRRR N</apply>
+    </point>
+    <point feature="ROAD" cx="910" cy="580">
+        <apply>DA.LRRRR E</apply>
+    </point>
+    <point feature="ROAD" cx="520" cy="920">
+        <apply>DA.LRRRR S</apply>
+    </point>
+    <point feature="ROAD" cx="105" cy="530">
+        <apply>DA.LRRRR W</apply>
+    </point>
 
     <point feature="CITY" cx="200" cy="200">
         <apply>HS.CC!.v NW</apply>
@@ -389,6 +408,7 @@
         <apply>CU.SR NL.NR.WL.WR.SL.SR.EL.ER</apply>
         <apply>CU.SRFR NL.SR.WL.WR</apply>
         <apply>TU.RRRR NL.NR.EL.WR</apply>
+        <apply>DA.LRR SR.WL.WR.NL.NR.EL</apply>
     </point>
     <point feature="FARM" cx="180" cy="450">
         <apply>AM.CRr SR.WL.WR</apply>
@@ -567,6 +587,9 @@
         <apply>FL.RFr.WE.o ER.SL.SR.WL</apply>
         <apply>HS.RFR.h NR.EL.ER.SL</apply>
     </point>
+    <point feature="FARM" cx="820" cy="915">
+        <apply>DA.LRR ER.SL</apply>
+    </point>
     <point feature="FARM" cx="840" cy="350">
         <apply>HS.Cc.v EL.ER.SL.SR</apply>
     </point>
@@ -599,6 +622,9 @@
     </point>
     <point feature="FARM" cx="860" cy="80">
         <apply>GO.LRrRr NR.EL</apply>
+    </point>
+    <point feature="FARM" cx="860" cy="180">
+        <apply>DA.LRRRR NR.EL</apply>
     </point>
 
     <point feature="TOWER" cx="545" cy="455">

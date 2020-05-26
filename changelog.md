@@ -4,6 +4,7 @@
 *upcoming*
 
 * added Labyrinth promo (including advanced rules)
+* added Darmstadt promo
 * put back legacy rule "score tiny city for 2 points"
 * fixed #319: Game stats: time percentage is counted incorrectly (thx chrissy0 for contribution)
 * fixed: time limit setup checkbox glitches

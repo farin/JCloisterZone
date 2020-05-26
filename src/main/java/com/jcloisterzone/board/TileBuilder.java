@@ -195,7 +195,8 @@ public class TileBuilder {
         City city = new City(
             List.of(place),
             openEdges,
-            attributeIntValue(e, "pennant", 0)
+            attributeIntValue(e, "pennant", 0),
+            attributeIntValue(e, "extra-points", 0)
         );
 
         city = (City) initFeature(tileId, city, e);

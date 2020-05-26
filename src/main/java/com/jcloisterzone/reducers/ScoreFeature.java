@@ -9,15 +9,16 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.game.BonusPoints;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
+import io.vavr.collection.*;
+
+import java.util.Objects;
 
 /** Score feature followers */
 public abstract class ScoreFeature implements ScoreFeatureReducer {
@@ -36,98 +37,68 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
 
     abstract protected int getFeaturePoints(GameState state, Player player);
 
-    private GameState scorePlayer(GameState state, Player p, Follower nextToFairy, boolean finalScoring) {
-        int points = getFeaturePoints(state, p);
-        PointCategory pointCategory = feature.getPointCategory();
-
-        state = (new AddPoints(p, points, pointCategory)).apply(state);
-
-        Follower follower = nextToFairy == null ? feature.getSampleFollower(state, p) : nextToFairy;
-        ScoreEvent scoreEvent;
-
-
-        if (nextToFairy != null && !finalScoring) {
-            state = (new AddPoints(
-                p, FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY
-            )).apply(state);
-
-            scoreEvent = new ScoreEvent(
-                points+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT,
-                points+" + "+FairyCapability.FAIRY_POINTS_FINISHED_OBJECT,
-                pointCategory,
-                finalScoring,
-                follower.getDeployment(state),
-                follower
-            );
-        } else {
-            scoreEvent = new ScoreEvent(
-                points,
-                pointCategory,
-                finalScoring,
-                follower.getDeployment(state),
-                follower
-            );
-        }
-
-        state = state.appendEvent(scoreEvent);
-        return state;
-    }
 
     @Override
     public GameState apply(GameState state) {
+        PointCategory pointCategory = feature.getPointCategory();
         owners = feature.getOwners(state);
+
+        List<BonusPoints> bonusPoints = List.empty();
+        for (Capability<?> cap : state.getCapabilities().toSeq()) {
+            bonusPoints = cap.appendBonusPoints(state, bonusPoints, feature, isFinal);
+        }
+
+        Map<Player, List<ScoreEventSource>> playerPoints = HashMap.empty();
+
         if (owners.isEmpty()) {
-            Stream<Tuple2<Follower, FeaturePointer>> followers = feature.getFollowers2(state);
-            if (!followers.isEmpty()) {
-                for (Seq<Tuple2<Follower, FeaturePointer>> l : followers.groupBy(t -> t._1.getPlayer()).values()) {
-                    Tuple2<Follower, FeaturePointer> t = l.get();
-                    ScoreEvent scoreEvent = new ScoreEvent(0, feature.getPointCategory(), isFinal, t._2, t._1);
-                    state = state.appendEvent(scoreEvent);
-                }
+            // not owners but still followers can exist - eg. Mayor on city without pennants
+            //Stream<Tuple2<Follower, FeaturePointer>> followers = feature.getFollowers2(state);
+            for (Player player : feature.getFollowers(state).map(Follower::getPlayer).distinct()) {
+                playerPoints = playerPoints.put(player, List.of(new ScoreEventSource(0, null, null)));
             }
-            return state;
-        }
-
-        HashMap<Player, Follower> playersWithFairyBonus = HashMap.empty();
-
-        BoardPointer ptr = state.getNeutralFigures().getFairyDeployment();
-        if (ptr != null && !isFinal) {
-            boolean onTileRule = ptr instanceof Position;
-            FeaturePointer fairyFp = ptr.asFeaturePointer();
-
-            for (Tuple2<Follower, FeaturePointer> t : feature.getFollowers2(state)) {
-                Follower m = t._1;
-                if (!t._2.equals(fairyFp)) continue;
-
-                if (!onTileRule) {
-                    if (!((MeeplePointer) ptr).getMeepleId().equals(m.getId())) continue;
-                }
-
-                playersWithFairyBonus = playersWithFairyBonus.put(m.getPlayer(), m);
+        } else {
+            for (Player player : owners) {
+                int points = getFeaturePoints(state, player);
+                state = (new AddPoints(player, points, pointCategory)).apply(state);
+                playerPoints = playerPoints.put(player, List.of(new ScoreEventSource(points, null, null)));
             }
         }
 
-        for (Player pl : owners) {
-            Follower nextToFairy = playersWithFairyBonus.get(pl).getOrNull();
-            state = scorePlayer(state, pl, nextToFairy, isFinal);
+        for (BonusPoints bonus : bonusPoints) {
+            Player player = bonus.getPlayer();
+            state = (new AddPoints(player, bonus.getPoints(), bonus.getPointCategory())).apply(state);
+            List<ScoreEventSource> sources = playerPoints.get(player).getOrElse(List.empty());
+            playerPoints = playerPoints.put(player, sources.append(new ScoreEventSource(bonus.getPoints(), bonus.getFollower(), bonus.getSource())));
         }
 
-        for (Player pl : playersWithFairyBonus.keySet().removeAll(owners)) {
-            // player is not owner but next to fairy -> add just fairy points
-            Follower nextToFairy = playersWithFairyBonus.get(pl).getOrNull();
+        for (Tuple2<Player, List<ScoreEventSource>> t: playerPoints) {
+            Player player = t._1;
+            List<ScoreEventSource> sources = t._2;
+            Follower sample = sources.filter(s -> s.getFollower() != null).map(ScoreEventSource::getFollower).getOrNull();
+            if (sample == null) {
+                sample = feature.getSampleFollower(state, player);
+            }
+            for (ScoreEventSource s : sources.filter(s -> s.getFollower() == null)) {
+                s.setFollower(sample);
+            }
+            for (Tuple2<Follower, List<ScoreEventSource>> g : sources.groupBy(ScoreEventSource::getFollower)) {
+                Follower follower = g._1;
+                List<Integer> pointValues = g._2.map(ScoreEventSource::getPoints);
+                int points = pointValues.sum().intValue();
+                String label = String.join(" + ", pointValues.map(Objects::toString));
+                ScoreEvent scoreEvent = new ScoreEvent(points, label, pointCategory, isFinal, follower.getDeployment(state), follower);
 
-            state = (new AddPoints(
-                pl, FairyCapability.FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY
-            )).apply(state);
-
-            ScoreEvent scoreEvent = new ScoreEvent(
-                FairyCapability.FAIRY_POINTS_FINISHED_OBJECT,
-                PointCategory.FAIRY,
-                false,
-                nextToFairy.getDeployment(state),
-                nextToFairy
-            );
-            state = state.appendEvent(scoreEvent);
+                // hack
+                // when ScoreEvent is bound to Follower it means two things
+                // 1. - points are displayed next to follwer on board (that's ok for darmstadt church bonus)
+                // 2. - event panel displays follower's feture on hover (that's not ok) - source overrides this. Anyway implementation of this is bad
+                //      whole ScoreEvent shoul be refactored - TODO do it with new 5.0.0 client
+                List<Position> source = g._2.get().getSource();
+                if (source != null) {
+                    scoreEvent = scoreEvent.setSource(source);
+                }
+                state = state.appendEvent(scoreEvent);
+            }
         }
 
         return state;
@@ -141,5 +112,42 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
     @Override
     public Set<Player> getOwners() {
         return owners;
+    }
+
+    static class ScoreEventSource {
+        private int points;
+        private Follower follower;
+        private List<Position> source;
+
+
+        public ScoreEventSource(int points, Follower follower, List<Position> source) {
+            this.points = points;
+            this.follower = follower;
+            this.source = source;
+        }
+
+        public int getPoints() {
+            return points;
+        }
+
+        public void setPoints(int points) {
+            this.points = points;
+        }
+
+        public Follower getFollower() {
+            return follower;
+        }
+
+        public void setFollower(Follower follower) {
+            this.follower = follower;
+        }
+
+        public List<Position> getSource() {
+            return source;
+        }
+
+        public void setSource(List<Position> source) {
+            this.source = source;
+        }
     }
 }

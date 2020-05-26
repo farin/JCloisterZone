@@ -60,7 +60,7 @@ public class ScoringPhase extends Phase {
             must take care about B & C
 
 
-           -A - B    -->     -A  B        B (disconnected] is now completed must be score
+           -A - B    -->     -A  B        B (disconnected) is now completed must be score
                 C              \ C
 
            -A - B    -->     -A  /B
