@@ -5,6 +5,7 @@
 
 * added Labyrinth promo (including advanced rules)
 * added Darmstadt promo
+* added option to disable farmers (no placement on fields, ignore market quarter and corn circle related to fields)
 * put back legacy rule "score tiny city for 2 points"
 * fixed #319: Game stats: time percentage is counted incorrectly (thx chrissy0 for contribution)
 * fixed: time limit setup checkbox glitches

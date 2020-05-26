@@ -20,7 +20,7 @@ public class LabyrinthCapability extends Capability<Void> {
 
     @Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
-        if (state.getRules().containsKey(Rule.ADVANCED_LABYRINTH)) {
+        if (state.getBooleanValue(Rule.ADVANCED_LABYRINTH)) {
             if (feature instanceof Road) {
                 feature = ((Road) feature).setLabyrinth(attributeBoolValue(xml, "labyrinth"));
             }

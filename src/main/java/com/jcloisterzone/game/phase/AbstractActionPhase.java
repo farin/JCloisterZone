@@ -12,6 +12,7 @@ import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.LabyrinthCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
@@ -69,6 +70,10 @@ public abstract class AbstractActionPhase extends Phase {
             }
 
             Stream<Tuple2<Location, Structure>> places = state.getTileFeatures2(pos, Structure.class);
+
+            if (!state.getBooleanValue(Rule.FARMERS)) {
+                places = places.filter(t -> !(t._2 instanceof Farm));
+            }
 
             //towers are handled by Tower capability (needs collect towers on all tiles)
             places = places.filter(t -> !(t._2 instanceof Tower));
