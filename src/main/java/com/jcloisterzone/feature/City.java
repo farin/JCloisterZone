@@ -8,6 +8,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.ShortEdge;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.TradeGoodsCapability.TradeGoods;
 import com.jcloisterzone.game.state.GameState;
 
@@ -179,7 +180,14 @@ public class City extends CompletableFeature<City> {
         int tileCount = getTilePositions().size();
 
         int pointsPerUnit = 2;
-        if (besieged) pointsPerUnit--;
+        if (completed && tileCount == 2 && state.getRules().containsKey(Rule.TINY_CITY_2_POINTS)) {
+            pointsPerUnit = 1;
+        } else{
+            if (besieged) {
+                pointsPerUnit--;
+            }
+        }
+
         if (completed) {
             if (cathedral) pointsPerUnit++;
         } else {

@@ -251,18 +251,23 @@ public class CreateGamePanel extends ThemedJPanel implements UIEventListener {
         rulesPanel.setLayout(new MigLayout("", "[]", "[]"));
         scrolled.add(rulesPanel, "cell 2 0,grow");
 
+        boolean legacySection = false;
         Expansion prev = Expansion.BASIC;
         for (Rule rule : Rule.values()) {
             if (rule.getExpansion() == null) continue;
-            if (prev != rule.getExpansion()) {
+            if (prev != rule.getExpansion() && !legacySection) {
                 prev = rule.getExpansion();
-                JLabel label = new ThemedJLabel(prev.toString());
+                JLabel label = new ThemedJLabel(rule == Rule.TINY_CITY_2_POINTS ? _tr("Legacy Rules") : prev.toString());
                 label.setFont(FONT_RULE_SECTION);
                 rulesPanel.add(label, "wrap, growx, gaptop 10, gapbottom 7");
             }
             JCheckBox chbox = createRuleCheckbox(rule, mutableSlots);
             rulesPanel.add(chbox, "wrap");
             ruleCheckboxes.put(rule, chbox);
+
+            if (rule == Rule.TINY_CITY_2_POINTS) {
+                legacySection = true;
+            }
         }
 
         JScrollPane scroll = new JScrollPane(scrolled);

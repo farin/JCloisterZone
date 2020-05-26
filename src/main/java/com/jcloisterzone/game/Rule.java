@@ -42,6 +42,9 @@ public enum Rule {
 
     ADVANCED_LABYRINTH(Expansion.LABYRINTH, Boolean.class, _tr("Advanced labyrinth variant")),
 
+    // legacy rules
+    TINY_CITY_2_POINTS(Expansion.BASIC, Boolean.class, _tr("Tiny city is scored only for 2 points.")),
+
     CLOCK_PLAYER_TIME(null, Integer.class, null);
 
 
