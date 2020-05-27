@@ -7,6 +7,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.capability.VineyardCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -15,6 +16,7 @@ import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
+import io.vavr.collection.Stream;
 
 /**
  * Cloister or Shrine
@@ -86,6 +88,15 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
     }
 
     @Override
+    public Stream<Tuple2<Meeple, FeaturePointer>> getMeeples2(GameState state) {
+        FeaturePointer place = places.get();
+        Set<FeaturePointer> fps = isMonastery()
+                ? HashSet.of(place, new FeaturePointer(place.getPosition(), Location.MONASTERY))
+                : HashSet.of(place);
+        return Stream.ofAll(state.getDeployedMeeples()).filter(t -> fps.contains(t._2));
+    }
+
+    @Override
     public int getPoints(GameState state) {
     	boolean scoreVineyards = state.hasCapability(VineyardCapability.class);
         Position p = places.get().getPosition();
@@ -99,16 +110,6 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
         }
         int vineyardPoints = adjacent == 8 ? adjacentVineyards * 3 : 0;
         return adjacent + 1 + vineyardPoints + getLittleBuildingPoints(state);
-    }
-
-    @Override
-    public Set<Position> getTilePositions() {
-        return HashSet.of(places.get().getPosition());
-    }
-
-    @Override
-    public PointCategory getPointCategory() {
-        return PointCategory.CLOISTER;
     }
 
     public static String name() {

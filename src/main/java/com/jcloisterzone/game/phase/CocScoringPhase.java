@@ -96,7 +96,7 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
                 }
 
                 if (f instanceof Cloister) { // Cloister, not CloisterLike
-                    Position cloisterPos = f.getPlaces().get().getPosition();
+                    Position cloisterPos = ((Cloister) f).getPosition();
                     if (!Position.ADJACENT_AND_DIAGONAL
                         .map(t -> cloisterPos.add(t._2))
                         .filter(p -> p.equals(lastPlacedPos))

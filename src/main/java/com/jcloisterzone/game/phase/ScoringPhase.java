@@ -166,7 +166,7 @@ public class ScoringPhase extends Phase {
 
 
         for (CloisterLike cloister : state.getFeatures(CloisterLike.class)) {
-            if (neighbourPositions.contains(cloister.getPlaces().get().getPosition())) {
+            if (neighbourPositions.contains(cloister.getPosition())) {
                 state = scoreCompleted(state, cloister, null);
             }
         }

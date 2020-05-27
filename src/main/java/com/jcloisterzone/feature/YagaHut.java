@@ -59,16 +59,6 @@ public class YagaHut extends TileFeature implements Completable, CloisterLike {
         return 9 - state.getAdjacentAndDiagonalTiles2(p).size() + getLittleBuildingPoints(state);
     }
 
-    @Override
-    public Set<Position> getTilePositions() {
-        return HashSet.of(places.get().getPosition());
-    }
-
-    @Override
-    public PointCategory getPointCategory() {
-        return PointCategory.CLOISTER;
-    }
-
     public static String name() {
         return _tr("Yaga's Hut");
     }

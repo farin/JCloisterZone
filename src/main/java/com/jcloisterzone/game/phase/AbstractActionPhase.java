@@ -16,6 +16,7 @@ import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.LabyrinthCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
+import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
@@ -27,10 +28,7 @@ import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.PayRansomMessage;
 
 import io.vavr.Tuple2;
-import io.vavr.collection.List;
-import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
-import io.vavr.collection.Vector;
+import io.vavr.collection.*;
 
 public abstract class AbstractActionPhase extends Phase {
 
@@ -47,6 +45,86 @@ public abstract class AbstractActionPhase extends Phase {
         return true;
     }
 
+    private Stream<Tuple2<FeaturePointer, Structure>> getAvailableStructures(GameState state, Stream<PlacedTile> tiles, Set<Position> allowCompletedOn) {
+        return tiles.flatMap(tile -> {
+            Position pos = tile.getPosition();
+            //boolean isCurrentTile = pos.equals(currentTilePos);
+
+            if (!isMeepleDeploymentAllowedByCapabilities(state, pos)) {
+                return Stream.empty();
+            }
+
+            Stream<Tuple2<Location, Structure>> places = state.getTileFeatures2(pos, Structure.class);
+
+            if (!state.getBooleanValue(Rule.FARMERS)) {
+                places = places.filter(t -> !(t._2 instanceof Farm));
+            }
+
+            // Placing as abbot is implemented through virtual MONASTERY location.
+            places = places.flatMap(t -> {
+                Structure struct = t._2;
+                if (struct instanceof Cloister && ((Cloister)struct).isMonastery()) {
+                    return List.of(t, new Tuple2<>(Location.MONASTERY, t._2));
+                }
+                return List.of(t);
+            });
+
+            boolean allowCompleted = allowCompletedOn.contains(pos);
+
+            if (!allowCompleted) {
+                //exclude completed
+                places = places.filter(t -> {
+                    if (t._1 == Location.MONASTERY) {
+                        // monastery is never completed
+                        return true;
+                    }
+                    return !(t._2 instanceof Completable) || ((Completable)t._2).isOpen(state);
+                });
+            }
+
+            if (state.hasFlag(Flag.FLYING_MACHINE_USED) || !allowCompleted) {
+                places = places.filter(t -> t._1 != Location.FLYING_MACHINE);
+            }
+
+            return places.map(t -> t.map1(loc -> new FeaturePointer(pos, loc)));
+        });
+    }
+
+    private Set<FeaturePointer> getMeepleAvailableStructures(GameState state, Meeple meeple, Stream<Tuple2<FeaturePointer, Structure>> structures, boolean includeOccupied) {
+        if (!includeOccupied) {
+            structures = structures.filter(t -> {
+                if (meeple instanceof Special) {
+                    return true;
+                }
+                Structure struct = t._2;
+                // Shepherd is not interacting with other meeples
+                if (struct.getMeeples(state).find(m -> !(m instanceof Shepherd)).isEmpty()) {
+                    // no meeples except Shepherd is on feature
+                    return true;
+                };
+                if (struct instanceof Road && ((Road) struct).isLabyrinth()) {
+                    // find if there is empty labyrinth segment
+                    Set<FeaturePointer> segment = ((Road) struct).findSegmentBorderedBy(state, t._1,
+                            fp -> ((Road)state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth()).toSet();
+                    boolean segmentIsEmpty = Stream.ofAll(state.getDeployedMeeples())
+                            .filter(x -> !(x._1 instanceof Shepherd))
+                            .filter(x -> segment.contains(x._2))
+                            .isEmpty();
+                    if (segmentIsEmpty) {
+                        // whole road is occupied but segment divided by labyrinth is free
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+
+        return structures
+            .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
+            .map(t -> t._1)
+            .toSet();
+    }
+
     protected Vector<PlayerAction<?>> prepareMeepleActions(GameState state, Vector<Class<? extends Meeple>> meepleTypes) {
         Player player = state.getTurnPlayer();
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
@@ -61,85 +139,12 @@ public abstract class AbstractActionPhase extends Phase {
             tiles = Stream.of(lastPlaced);
         }
 
-        Stream<Tuple2<FeaturePointer, Structure>> placesFp = tiles.flatMap(tile -> {
-            Position pos = tile.getPosition();
-            boolean isCurrentTile = pos.equals(currentTilePos);
-
-            if (!isMeepleDeploymentAllowedByCapabilities(state, pos)) {
-                return Stream.empty();
-            }
-
-            Stream<Tuple2<Location, Structure>> places = state.getTileFeatures2(pos, Structure.class);
-
-            if (!state.getBooleanValue(Rule.FARMERS)) {
-                places = places.filter(t -> !(t._2 instanceof Farm));
-            }
-
-            //towers are handled by Tower capability (needs collect towers on all tiles)
-            places = places.filter(t -> !(t._2 instanceof Tower));
-            places = places.flatMap(t -> {
-               Structure struct = t._2;
-               if (struct instanceof Cloister && ((Cloister)struct).isMonastery()) {
-                   return List.of(t, new Tuple2<>(Location.MONASTERY, t._2));
-               }
-               return List.of(t);
-            });
-
-
-            if (!isCurrentTile) {
-                //exclude completed
-                places = places.filter(t -> {
-                    if (t._1 == Location.MONASTERY) {
-                        return true;
-                    }
-                    return !(t._2 instanceof Completable) || ((Completable)t._2).isOpen(state);
-                });
-            }
-
-            if (state.hasFlag(Flag.FLYING_MACHINE_USED)) {
-                places = places.filter(t -> t._1 != Location.FLYING_MACHINE);
-            }
-
-            return places.map(t -> t.map1(loc -> new FeaturePointer(pos, loc)));
-        });
+        Stream<Tuple2<FeaturePointer, Structure>> structures = getAvailableStructures(state, tiles, HashSet.of(currentTilePos))
+                //towers are handled by Tower capability (needs collect towers on all tiles)
+                .filter(t -> !(t._2 instanceof Tower));
 
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
-            Set<FeaturePointer> locations = placesFp
-                .filter(t -> {
-                    if (meeple instanceof Special) return true;
-                    Structure struct = t._2;
-                    boolean isMonastery = struct instanceof Cloister && ((Cloister)struct).isMonastery();
-                    if (isMonastery) {
-                        boolean isOccupied = !state.getDeployedMeeples()
-                           .values()
-                           .filter(fp -> fp.getPosition().equals(t._1.getPosition()) && (fp.getLocation() == Location.MONASTERY || fp.getLocation() == Location.CLOISTER))
-                           .isEmpty();
-                        if (isOccupied) return false;
-                    }
-                    // Shepherd is not interacting with other meeples
-                    if (t._2.getMeeples(state).find(m -> !(m instanceof Shepherd)).isEmpty()) {
-                        // no meeples except Shepherd is on feature
-                        return true;
-                    };
-                    if (t._2 instanceof Road && ((Road) t._2).isLabyrinth()) {
-                        // find if there is empty labyrinth segment
-                        Set<FeaturePointer> segment = ((Road) t._2).findSegmentBorderedBy(state, t._1,
-                                fp -> ((Road)state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth()).toSet();
-                        boolean segmentIsEmpty = Stream.ofAll(state.getDeployedMeeples())
-                                .filter(x -> !(x._1 instanceof Shepherd))
-                                .filter(x -> segment.contains(x._2))
-                                .isEmpty();
-                        if (segmentIsEmpty) {
-                            // whole road is occupied but segment divided by labyrinth is free
-                            return true;
-                        }
-                    }
-                    return false;
-                })
-                .filter(t -> meeple.isDeploymentAllowed(state, t._1, t._2) == DeploymentCheckResult.OK)
-                .map(t -> t._1)
-                .toSet();
-
+            Set<FeaturePointer> locations = getMeepleAvailableStructures(state, meeple, structures, false);
             PlayerAction<?> action = new MeepleAction(meeple, locations);
             return action;
         });
@@ -192,7 +197,7 @@ public abstract class AbstractActionPhase extends Phase {
         Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
 
         int distance = getRandom().nextInt(3) + 1;
-        state = state.addFlag(Flag.FLYING_MACHINE_USED);
+        state = state.addFlag(Flag.FLYING_MACHINE_USED);  // flying machine can't be used again by phantom
         state = state.appendEvent(new FlierRollEvent(
             PlayEventMeta.createWithActivePlayer(state), placedTile.getPosition(), distance)
         );
@@ -204,20 +209,37 @@ public abstract class AbstractActionPhase extends Phase {
             return next(state);
         }
 
-        GameState _state = state;
-        Set<FeaturePointer> options = state.getTileFeatures2(target, Completable.class)
-            .filter(t -> t._2.isOpen(_state))
-            .filter(t -> meeple.isDeploymentAllowed(_state, new FeaturePointer(target, t._1), t._2) == DeploymentCheckResult.OK)
-            .filter(t -> t._1 != Location.FLYING_MACHINE) // no chained flier
-            .map(t -> new FeaturePointer(target, t._1))
-            .toSet();
+        Set<FeaturePointer> occupiedTowers = state.getDeployedMeeples()
+                .filter(t -> t._2.getLocation().equals(Location.TOWER))
+                .map(Tuple2::_2)
+                .toSet();
+
+        Set<FeaturePointer> allowedTowers = Stream.ofAll(state.getFeatureMap())
+                .filter(t -> (t._2 instanceof Tower))
+                .filter(t -> !occupiedTowers.contains(t._1))
+                .filter(t -> ((Tower)t._2).getHeight() > 0)
+                .map(Tuple2::_1)
+                .toSet();
+
+        Stream<Tuple2<FeaturePointer, Structure>> structures = getAvailableStructures(state, Stream.of(targetTile), HashSet.empty());
+        structures = structures
+                .filter(t -> {
+                    if (t._2 instanceof Farm) {
+                        return false;
+                    }
+                    if (t._2 instanceof Tower) {
+                        return allowedTowers.contains(t._1);
+                    }
+                    return true;
+                });
+        Set<FeaturePointer> options = getMeepleAvailableStructures(state, meeple, structures, true);
 
         if (options.isEmpty()) {
             return next(state);
         }
 
         PlayerAction<?> action = new MeepleAction(meeple, options);
-        state = state.setPlayerActions(new ActionsState(state.getTurnPlayer(), action, false));
+        state = state.setPlayerActions(new ActionsState(state.getTurnPlayer(), action, true));
         return promote(state);
     }
 }

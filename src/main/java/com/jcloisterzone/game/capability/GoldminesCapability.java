@@ -59,7 +59,7 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
 
     private Set<Position> getFeatureClaimPositions(GameState state, Scoreable feature) {
         if (feature instanceof CloisterLike) {
-            Position cloisterPosition = feature.getPlaces().get().getPosition();
+            Position cloisterPosition = ((CloisterLike) feature).getPosition();
             return state.getAdjacentAndDiagonalTiles(cloisterPosition)
                 .map(PlacedTile::getPosition)
                 .append(cloisterPosition) // and add also central tile
