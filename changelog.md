@@ -8,9 +8,8 @@
 * added option to disable farmers (no placement on fields, ignore market quarter and corn circle related to fields)
 * put back legacy rule "score tiny city for 2 points"
 * Flier update
-    - if landed on germnan monastery user can choose monk/abbot (#318),
+    - if landed on german monastery user can choose monk/abbot (#318),
     - deployment on target tile is optional
-    - flier can land on open tower
 * fixed #319: Game stats: time percentage is counted incorrectly (thx chrissy0 for contribution)
 * fixed: time limit setup checkbox glitches
 

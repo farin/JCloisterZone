@@ -60,6 +60,10 @@ public abstract class AbstractActionPhase extends Phase {
                 places = places.filter(t -> !(t._2 instanceof Farm));
             }
 
+            // towers are handled by Tower capability separately (needs collect towers on all tiles)
+            // (and flier or magic portal use is also not allowed to be placed on tower
+            places = places.filter(t -> !(t._2 instanceof Tower));
+
             // Placing as abbot is implemented through virtual MONASTERY location.
             places = places.flatMap(t -> {
                 Structure struct = t._2;
@@ -139,10 +143,7 @@ public abstract class AbstractActionPhase extends Phase {
             tiles = Stream.of(lastPlaced);
         }
 
-        Stream<Tuple2<FeaturePointer, Structure>> structures = getAvailableStructures(state, tiles, HashSet.of(currentTilePos))
-                //towers are handled by Tower capability (needs collect towers on all tiles)
-                .filter(t -> !(t._2 instanceof Tower));
-
+        Stream<Tuple2<FeaturePointer, Structure>> structures = getAvailableStructures(state, tiles, HashSet.of(currentTilePos));
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
             Set<FeaturePointer> locations = getMeepleAvailableStructures(state, meeple, structures, false);
             PlayerAction<?> action = new MeepleAction(meeple, locations);
@@ -209,29 +210,8 @@ public abstract class AbstractActionPhase extends Phase {
             return next(state);
         }
 
-        Set<FeaturePointer> occupiedTowers = state.getDeployedMeeples()
-                .filter(t -> t._2.getLocation().equals(Location.TOWER))
-                .map(Tuple2::_2)
-                .toSet();
-
-        Set<FeaturePointer> allowedTowers = Stream.ofAll(state.getFeatureMap())
-                .filter(t -> (t._2 instanceof Tower))
-                .filter(t -> !occupiedTowers.contains(t._1))
-                .filter(t -> ((Tower)t._2).getHeight() > 0)
-                .map(Tuple2::_1)
-                .toSet();
-
         Stream<Tuple2<FeaturePointer, Structure>> structures = getAvailableStructures(state, Stream.of(targetTile), HashSet.empty());
-        structures = structures
-                .filter(t -> {
-                    if (t._2 instanceof Farm) {
-                        return false;
-                    }
-                    if (t._2 instanceof Tower) {
-                        return allowedTowers.contains(t._1);
-                    }
-                    return true;
-                });
+        structures = structures.filter(t -> !(t._2 instanceof Farm));
         Set<FeaturePointer> options = getMeepleAvailableStructures(state, meeple, structures, true);
 
         if (options.isEmpty()) {
