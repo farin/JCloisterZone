@@ -10,6 +10,7 @@
 * Flier update
     - if landed on german monastery user can choose monk/abbot (#318),
     - deployment on target tile is optional
+* added experimental option to rotate tile using mouse move (go to settings to enable) - (contibution by marekventur)
 * fixed #321: Castle may not be scored in turn when is created
 * fixed #319: Game stats: time percentage is counted incorrectly (thx chrissy0 for contribution)
 * fixed: time limit setup checkbox glitches

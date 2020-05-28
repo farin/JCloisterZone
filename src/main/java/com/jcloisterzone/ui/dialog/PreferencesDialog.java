@@ -165,7 +165,7 @@ public class PreferencesDialog extends JDialog {
     private void initRotateBasedOnMousePositionOptions(JComboBox<EnumOption<Config.MousePlacement>> comboBox) {
         List<EnumOption> result = new ArrayList<>();
         result.add(new EnumOption(Config.MousePlacement.PLACE, _tr("Place tile")));
-        result.add(new EnumOption(Config.MousePlacement.PLACE_AND_ROTATE, _tr("Place and rotate tile")));
+        result.add(new EnumOption(Config.MousePlacement.PLACE_AND_ROTATE, _tr("Place and rotate tile") + " (experimental)"));
 
         for (EnumOption<Config.MousePlacement> opt : result) {
             comboBox.addItem(opt);
