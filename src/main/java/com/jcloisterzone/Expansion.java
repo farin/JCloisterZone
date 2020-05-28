@@ -20,8 +20,6 @@ public class Expansion {
     // Basic sets
     public static Expansion BASIC = new Expansion("BASIC", "BA", _tr("Basic game"),
             new Class[] { StandardGameCapability.class }, ExpansionType.BASIC);
-    @NotImplemented public static Expansion BASIC_2_0 = new Expansion("BASIC_2_0", "B2", _tr("Basic game (2.0)"), ExpansionType.BASIC);
-    @NotImplemented public static Expansion WHEEL_OF_FORTUNE = new Expansion("WHEEL_OF_FORTUNE", "WF", _tr("Wheel of Fortune"), ExpansionType.BASIC);
 
     // Winter branch
     public static Expansion WINTER = new Expansion("WINTER", "WI", _tr("Winter Edition"), ExpansionType.BASIC_EXT);

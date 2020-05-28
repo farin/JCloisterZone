@@ -47,11 +47,11 @@ public class Config {
     private String secret;
     private String play_online_host;
 
-    public enum MousePlacement {
-        PLACE,
-        PLACE_AND_ROTATE
+    public enum TileRotationControls {
+        TAB_RCLICK,
+        TAB_RCLICK_MOUSEMOVE
     }
-    private MousePlacement mouse_placement;
+    private TileRotationControls tile_rotation;
 
     private ConfirmConfig confirm;
     private AiConfig ai;
@@ -442,12 +442,12 @@ public class Config {
         this.beep_alert = beep_alert;
     }
 
-    public MousePlacement getMouse_placement() {
-        return mouse_placement;
+    public TileRotationControls getTile_rotation() {
+        return tile_rotation;
     }
 
-    public void setMouse_placement(MousePlacement mouse_placement) {
-        this.mouse_placement = mouse_placement;
+    public void setTile_rotation(TileRotationControls tile_rotation) {
+        this.tile_rotation = tile_rotation;
     }
 
     public PluginsConfig getPlugins() {

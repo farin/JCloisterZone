@@ -257,7 +257,7 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
 
     @Override
     public void tileEntered(MouseEvent e, Position p) {
-        rotateWihtMouse = getConfig().getMouse_placement() == Config.MousePlacement.PLACE_AND_ROTATE; // get current value from config
+        rotateWihtMouse = getConfig().getTile_rotation() == Config.TileRotationControls.TAB_RCLICK_MOUSEMOVE; // get current value from config
         realRotation = null;
         if (availablePositions.contains(p)) {
             previewPosition = p;

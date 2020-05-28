@@ -65,7 +65,7 @@ public class PreferencesDialog extends JDialog {
 
     private JComboBox<StringOption> langComboBox;
     private JComboBox<StringOption> themeComboBox;
-    private JComboBox<EnumOption<Config.MousePlacement>> mousePlacementComboBox;
+    private JComboBox<EnumOption<Config.TileRotationControls>> mousePlacementComboBox;
     private JTextField aiPlaceTileDelay;
     private JTextField scoreDisplayDuration;
     private List<PluginModel> pluginRows = new ArrayList<>();
@@ -162,14 +162,14 @@ public class PreferencesDialog extends JDialog {
         initialTheme = config.getTheme();
     }
 
-    private void initRotateBasedOnMousePositionOptions(JComboBox<EnumOption<Config.MousePlacement>> comboBox) {
+    private void initRotateBasedOnMousePositionOptions(JComboBox<EnumOption<Config.TileRotationControls>> comboBox) {
         List<EnumOption> result = new ArrayList<>();
-        result.add(new EnumOption(Config.MousePlacement.PLACE, _tr("Place tile")));
-        result.add(new EnumOption(Config.MousePlacement.PLACE_AND_ROTATE, _tr("Place and rotate tile") + " (experimental)"));
+        result.add(new EnumOption(Config.TileRotationControls.TAB_RCLICK, _tr("TAB / right click")));
+        result.add(new EnumOption(Config.TileRotationControls.TAB_RCLICK_MOUSEMOVE, _tr("+ mouse over spot") + " " + _tr("(experimental)")));
 
-        for (EnumOption<Config.MousePlacement> opt : result) {
+        for (EnumOption<Config.TileRotationControls> opt : result) {
             comboBox.addItem(opt);
-            if (opt.getKey() == config.getMouse_placement()) {
+            if (opt.getKey() == config.getTile_rotation()) {
                 comboBox.setSelectedItem(opt);
             }
         }
@@ -191,8 +191,8 @@ public class PreferencesDialog extends JDialog {
         config.setLocale(opt.getKey());
         opt = (StringOption) themeComboBox.getSelectedItem();
         config.setTheme(opt.getKey());
-        EnumOption<Config.MousePlacement> mousePlacementOption = (EnumOption<Config.MousePlacement>) mousePlacementComboBox.getSelectedItem();
-        config.setMouse_placement(mousePlacementOption.key);
+        EnumOption<Config.TileRotationControls> mousePlacementOption = (EnumOption<Config.TileRotationControls>) mousePlacementComboBox.getSelectedItem();
+        config.setTile_rotation(mousePlacementOption.key);
         //TODO error handling
         config.getAi().setPlace_tile_delay(intValue(aiPlaceTileDelay.getText()));
         config.setScore_display_duration(intValue(scoreDisplayDuration.getText()));
@@ -265,7 +265,7 @@ public class PreferencesDialog extends JDialog {
         themeHint.setForeground(client.getTheme().getHintColor());
         panel.add(themeHint, "sx 2, wrap");
 
-        panel.add(new ThemedJLabel(_tr("Tile placement via mouse")), "alignx trailing");
+        panel.add(new ThemedJLabel(_tr("Tile rotation")), "alignx trailing");
 
         mousePlacementComboBox = new JComboBox();
         initRotateBasedOnMousePositionOptions(mousePlacementComboBox);

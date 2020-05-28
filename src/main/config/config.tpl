@@ -10,7 +10,7 @@ locale: ${locale}
 score_display_duration: ${score_display_duration} # seconds
 theme: ${theme}
 
-mouse_placement: ${mouse_placement}
+tile_rotation: ${tile_rotation}
 beep_alert: ${beep_alert}
 confirm: ${confirm}
 
