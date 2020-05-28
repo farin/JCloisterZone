@@ -1,12 +1,15 @@
 package com.jcloisterzone.feature;
 
+import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.state.GameState;
 
+import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
+import io.vavr.collection.Set;
 
 /**
  * Any feature completed when it is surrounded by eight land tiles.
@@ -15,8 +18,21 @@ public interface CloisterLike extends Completable {
 
     @Override
     default boolean isOpen(GameState state) {
-        Position pos = getPlaces().get().getPosition();
-        return state.getAdjacentAndDiagonalTiles2(pos).size() < 8;
+        return state.getAdjacentAndDiagonalTiles2(getPosition()).size() < 8;
+    }
+
+    default Position getPosition() {
+        return getPlaces().get().getPosition();
+    }
+
+    @Override
+    default Set<Position> getTilePositions() {
+        return HashSet.of(getPosition());
+    }
+
+    @Override
+    default PointCategory getPointCategory() {
+        return PointCategory.CLOISTER;
     }
 
     @Override
@@ -30,7 +46,7 @@ public interface CloisterLike extends Completable {
         if (buildings == null) {
             return 0;
         }
-        Position cloisterPos = getPlaces().get().getPosition();
+        Position cloisterPos = getPosition();
         Seq<LittleBuilding> buldingsSeq = buildings.filterKeys(pos ->
             Math.abs(pos.x - cloisterPos.x) <= 1 && Math.abs(pos.y - cloisterPos.y) <= 1
         ).values();

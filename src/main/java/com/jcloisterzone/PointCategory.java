@@ -2,6 +2,14 @@ package com.jcloisterzone;
 
 public enum PointCategory {
 
+    // TODO use untyped string with subtype ?
+    // eg.
+    // cloister
+    // cloister.church
+    // cloister.yaga-hut
+    // foiry.turn
+    // fairy.finished-object
+
     ROAD(true),
     CITY(true),
     FARM(true),
@@ -21,8 +29,8 @@ public enum PointCategory {
     /** flag for resolving The Count*/
     boolean landscapeSource;
 
-    PointCategory(boolean landspaceSource) {
-        this.landscapeSource = landspaceSource;
+    PointCategory(boolean landscapeSource) {
+        this.landscapeSource = landscapeSource;
     }
 
     public boolean hasLandscapeSource() {

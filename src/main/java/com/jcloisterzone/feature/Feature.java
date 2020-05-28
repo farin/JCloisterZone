@@ -19,7 +19,6 @@ public interface Feature {
         return getPlaces().map(fp -> fp.getPosition()).toSet();
     }
 
-
     static String getLocalizedNamefor(Class<? extends Feature> feature) {
         try {
             Method m = feature.getMethod("name");

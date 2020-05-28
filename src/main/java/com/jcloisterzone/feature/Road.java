@@ -28,10 +28,11 @@ public class Road extends CompletableFeature<Road> {
     private static final long serialVersionUID = 1L;
 
     private final boolean inn;
+    private final boolean labyrinth;
     private final Set<FeaturePointer> openTunnelEnds;
 
     public Road(List<FeaturePointer> places, Set<Edge> openEdges) {
-        this(places, openEdges, HashSet.empty(), false, HashSet.empty());
+        this(places, openEdges, HashSet.empty(), false, false, HashSet.empty());
     }
 
     public Road(
@@ -39,10 +40,12 @@ public class Road extends CompletableFeature<Road> {
             Set<Edge> openEdges,
             Set<FeaturePointer> neighboring,
             boolean inn,
+            boolean labyrinth,
             Set<FeaturePointer> openTunnelEnds
         ) {
         super(places, openEdges, neighboring);
         this.inn = inn;
+        this.labyrinth = labyrinth;
         this.openTunnelEnds = openTunnelEnds;
     }
 
@@ -59,6 +62,7 @@ public class Road extends CompletableFeature<Road> {
             mergeEdges(road),
             mergeNeighboring(road),
             inn || road.inn,
+            labyrinth || road.labyrinth,
             mergeTunnelEnds(road)
         );
     }
@@ -70,6 +74,7 @@ public class Road extends CompletableFeature<Road> {
             openEdges.remove(edge),
             neighboring,
             inn,
+            labyrinth,
             openTunnelEnds
         );
     }
@@ -81,6 +86,7 @@ public class Road extends CompletableFeature<Road> {
             openEdges,
             neighboring,
             inn,
+            labyrinth,
             openTunnelEnds
         );
     }
@@ -106,6 +112,7 @@ public class Road extends CompletableFeature<Road> {
             placeOnBoardEdges(pos, rot),
             placeOnBoardNeighboring(pos, rot),
             inn,
+            labyrinth,
             placeOnBoardTunnelEnds(pos, rot)
         );
     }
@@ -116,7 +123,16 @@ public class Road extends CompletableFeature<Road> {
 
     public Road setInn(boolean inn) {
         if (this.inn == inn) return this;
-        return new Road(places, openEdges, neighboring, inn, openTunnelEnds);
+        return new Road(places, openEdges, neighboring, inn, labyrinth, openTunnelEnds);
+    }
+
+    public boolean isLabyrinth() {
+        return labyrinth;
+    }
+
+    public Road setLabyrinth(boolean labyrinth) {
+        if (this.labyrinth == labyrinth) return this;
+        return new Road(places, openEdges, neighboring, inn, labyrinth, openTunnelEnds);
     }
 
     public Set<FeaturePointer> getOpenTunnelEnds() {
@@ -125,22 +141,26 @@ public class Road extends CompletableFeature<Road> {
 
     public Road setOpenTunnelEnds(Set<FeaturePointer> openTunnelEnds) {
         if (this.openTunnelEnds == openTunnelEnds) return this;
-        return new Road(places, openEdges, neighboring, inn, openTunnelEnds);
+        return new Road(places, openEdges, neighboring, inn, labyrinth, openTunnelEnds);
     }
 
     @Override
     public Road setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
-        return new Road(places, openEdges, neighboring, inn, openTunnelEnds);
+        return new Road(places, openEdges, neighboring, inn, labyrinth, openTunnelEnds);
     }
 
     private int getBasePoints(GameState state, boolean completed) {
         int tileCount = getTilePositions().size();
-        if (inn) {
-            return completed ? tileCount * 2 : 0;
-        } else {
-            return tileCount;
+        if (inn && !completed) {
+            return 0;
         }
+        int points = inn ? tileCount * 2 : tileCount;
+        if (labyrinth && completed) {
+            points += 2 * getMeeples(state).size();
+        }
+        return points;
+
     }
 
     @Override
@@ -172,12 +192,11 @@ public class Road extends CompletableFeature<Road> {
         return null;
     }
 
-    public List<FeaturePointer> findNearest(GameState state, FeaturePointer from, Function<FeaturePointer, Boolean> predicate) {
+    private void iterateParts(GameState state, FeaturePointer from, Function<FeaturePointer, Boolean> callback) {
         java.util.Set<FeaturePointer> places = this.places.toJavaSet();
         places.remove(from);
         Deque<FeaturePointer> queue = new ArrayDeque<FeaturePointer>();
         queue.push(from);
-        java.util.Set<FeaturePointer> result = new java.util.HashSet<>();
 
         Map<FeaturePointer, PlacedTunnelToken> placedTunnels = state.getCapabilityModel(TunnelCapability.class);
         FerriesCapabilityModel ferriesModel = state.getCapabilityModel(FerriesCapability.class);
@@ -185,8 +204,7 @@ public class Road extends CompletableFeature<Road> {
         while (!queue.isEmpty()) {
             FeaturePointer fp = queue.pop();
 
-            if (predicate.apply(fp)) {
-                result.add(fp);
+            if (!callback.apply(fp)) {
                 continue;
             }
 
@@ -201,13 +219,13 @@ public class Road extends CompletableFeature<Road> {
                 PlacedTunnelToken placedTunnel = placedTunnels.get(fp).getOrNull();
                 if (placedTunnel != null) {
                     FeaturePointer place = placedTunnels
-                        .find(t ->
-                            t._2 != null && t._2 != placedTunnel
-                            && t._2.getToken() == placedTunnel.getToken()
-                            && t._2.getPlayerIndex() == placedTunnel.getPlayerIndex()
-                        )
-                        .map(Tuple2::_1)
-                        .getOrNull();
+                            .find(t ->
+                                    t._2 != null && t._2 != placedTunnel
+                                            && t._2.getToken() == placedTunnel.getToken()
+                                            && t._2.getPlayerIndex() == placedTunnel.getPlayerIndex()
+                            )
+                            .map(Tuple2::_1)
+                            .getOrNull();
                     if (place != null && places.remove(place)) {
                         queue.push(place);
                     }
@@ -225,6 +243,35 @@ public class Road extends CompletableFeature<Road> {
                 }
             }
         }
+    }
+
+    /**
+     * Follow road up to nearest parts matching given predicate
+     */
+    public List<FeaturePointer> findNearest(GameState state, FeaturePointer from, Function<FeaturePointer, Boolean> predicate) {
+        java.util.Set<FeaturePointer> result = new java.util.HashSet<>();
+
+        iterateParts(state, from, fp -> {
+            boolean match = predicate.apply(fp);
+            if (match) {
+                result.add(fp);
+                return false;
+            }
+            return true;
+        });
+        return List.ofAll(result);
+    }
+
+    public List<FeaturePointer> findSegmentBorderedBy(GameState state, FeaturePointer from, Function<FeaturePointer, Boolean> predicate) {
+        java.util.Set<FeaturePointer> result = new java.util.HashSet<>();
+        iterateParts(state, from, fp -> {
+            boolean match = predicate.apply(fp);
+            if (match) {
+                return false;
+            }
+            result.add(fp);
+            return true;
+        });
         return List.ofAll(result);
     }
 

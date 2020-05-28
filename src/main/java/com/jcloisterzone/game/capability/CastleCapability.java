@@ -54,7 +54,13 @@ public class CastleCapability extends Capability<Void> {
         Array<Tuple2<Completable, ScoreFeatureReducer>> scored = Array.ofAll(completed).sortBy(t -> -t._2.getFeaturePoints());
         HashMap<Castle, ScoreFeatureReducer> allScoredCastled = HashMap.empty();
 
+        Position placedThisTurn = state.getLastPlaced().getPosition();
+
         for (Castle castle : getOccupiedCastles(state)) {
+            if (castle.getTilePositions().contains(placedThisTurn)) {
+                continue;
+            }
+
             Set<Position> vicinity = castle.getVicinity();
             for (Tuple2<Completable, ScoreFeatureReducer> t : scored) {
                 if (!vicinity.intersect(t._1.getTilePositions()).isEmpty()) {

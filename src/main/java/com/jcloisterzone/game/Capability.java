@@ -3,6 +3,7 @@ package com.jcloisterzone.game;
 import java.io.Serializable;
 import java.util.function.Function;
 
+import io.vavr.collection.*;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Immutable;
@@ -21,11 +22,6 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.plugin.Plugin;
 import com.jcloisterzone.ui.Client;
-
-import io.vavr.collection.HashMap;
-import io.vavr.collection.List;
-import io.vavr.collection.Set;
-import io.vavr.collection.Vector;
 
 @Immutable
 public abstract class Capability<T> implements Serializable {
@@ -86,6 +82,10 @@ public abstract class Capability<T> implements Serializable {
 
     public GameState onTilePlaced(GameState state, PlacedTile placedTile) {
         return state;
+    }
+
+    public List<BonusPoints> appendBonusPoints(GameState state, List<BonusPoints> bonusPoints, Scoreable feature, boolean isFinal) {
+        return bonusPoints;
     }
 
     /**

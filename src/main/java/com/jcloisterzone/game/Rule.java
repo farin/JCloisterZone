@@ -15,6 +15,7 @@ import io.vavr.collection.Map;
 public enum Rule {
     RANDOM_SEATING_ORDER(null, Boolean.class,  _tr("Randomize seating order")),
 
+    FARMERS(Expansion.BASIC, Boolean.class, _tr("Play farmers")),
     USE_PIG_HERDS_INDEPENDENTLY(Expansion.BASIC, Boolean.class, _tr("Use pig herds independently (without T&B expansion)")),
 
     PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, Boolean.class, _tr("Princess MUST remove a knight from city.") + " (RGG, ZMG)"),
@@ -39,6 +40,11 @@ public enum Rule {
     KEEP_CLOISTERS(Expansion.GERMAN_MONASTERIES, Boolean.class, _tr("Keep basic cloisters in the game.")),
 
     BULDINGS_DIFFERENT_VALUE(Expansion.LITTLE_BUILDINGS, Boolean.class, _tr("Add 3/2/1 points for tower/house/shed.")),
+
+    ADVANCED_LABYRINTH(Expansion.LABYRINTH, Boolean.class, _tr("Advanced labyrinth variant")),
+
+    // legacy rules
+    TINY_CITY_2_POINTS(Expansion.BASIC, Boolean.class, _tr("Tiny city is scored only for 2 points.")),
 
     CLOCK_PLAYER_TIME(null, Integer.class, null);
 
@@ -79,9 +85,11 @@ public enum Rule {
 
     public static Map<Rule, Object> getDefaultRules() {
         return HashMap.of(
+            FARMERS, true,
             PIG_HERD_ON_GQ_FARM, true,
             TUNNELIZE_ALL_EXPANSIONS, true,
-            MORE_TUNNEL_TOKENS, true
+            MORE_TUNNEL_TOKENS, true,
+            ADVANCED_LABYRINTH, true
         );
     }
 

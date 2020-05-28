@@ -73,6 +73,7 @@ public class ChangeFerry implements Reducer {
                             .placeOnBoard(fp.getPosition(), pt.getRotation());
                    });
            boolean isInn = initialFeatures.foldLeft(false, (res, road) -> res || road.isInn());
+           boolean isLabyrinth = initialFeatures.foldLeft(false, (res, road) -> res || road.isLabyrinth());
            Set<FeaturePointer> openTunnelEnds = merged.getOpenTunnelEnds().intersect(places.toSet());
            Set<Edge> openEdges = merged.getOpenEdges().intersect(
                initialFeatures.flatMap(f -> f.getOpenEdges()).toSet()
@@ -80,7 +81,7 @@ public class ChangeFerry implements Reducer {
            Set<FeaturePointer> neighbouring = merged.getNeighboring().intersect(
                initialFeatures.flatMap(f -> f.getNeighboring()).toSet()
            );
-           return new Road(places, openEdges, neighbouring, isInn, openTunnelEnds);
+           return new Road(places, openEdges, neighbouring, isInn, isLabyrinth, openTunnelEnds);
         });
 
         // handle special case, ferry connected two ends of same road (after disconnect)

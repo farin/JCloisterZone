@@ -1,5 +1,19 @@
 # Version history
 
+## 4.6.0
+*upcoming*
+
+* added Labyrinth promo (including advanced rules)
+* added Darmstadt promo
+* added option to disable farmers (no placement on fields, ignore market quarter and corn circle related to fields)
+* put back legacy rule "score tiny city for 2 points"
+* Flier update
+    - if landed on german monastery user can choose monk/abbot (#318),
+    - deployment on target tile is optional
+* fixed #321: Castle may not be scored in turn when is created
+* fixed #319: Game stats: time percentage is counted incorrectly (thx chrissy0 for contribution)
+* fixed: time limit setup checkbox glitches
+
 ## 4.5.1
 *2020-05-01*
 

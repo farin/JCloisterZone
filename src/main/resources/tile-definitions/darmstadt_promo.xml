@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack>
+    <tile id="Cccc">
+        <city extra-points="3">N W S E</city>
+    </tile>
+    <tile id="LRRRR">
+        <cloister church="true"/>
+        <road>N</road>
+        <road>W</road>
+        <road>S</road>
+        <road>E</road>
+        <farm>WR NL</farm>
+        <farm>NR EL</farm>
+        <farm>ER SL</farm>
+        <farm>SR WL</farm>
+        <wagon-move>
+            <neighbouring>CLOISTER N</neighbouring>
+            <neighbouring>CLOISTER W</neighbouring>
+            <neighbouring>CLOISTER E</neighbouring>
+            <neighbouring>CLOISTER S</neighbouring>
+        </wagon-move>
+    </tile>
+    <tile id="LRR">
+        <cloister church="true" />
+        <road>E</road>
+        <road>S</road>
+        <farm>NL NR EL SR WL WR</farm>
+        <farm>ER SL</farm>
+        <wagon-move>
+            <neighbouring>CLOISTER E</neighbouring>
+            <neighbouring>CLOISTER S</neighbouring>
+        </wagon-move>
+    </tile>
+</pack>
