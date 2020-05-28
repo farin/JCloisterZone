@@ -123,7 +123,10 @@ public final class MessageParser {
                     JsonObject obj = (JsonObject) json;
                     Class<? extends WsMessage> cls = WsCommandRegistry.TYPES.get(obj.get("type").getAsString()).get();
                     WsMessage msg = context.deserialize(obj.get("payload"), cls);
-                    msg.setMessageId(obj.get("payload").getAsJsonObject().get("messageId").getAsString());
+                    JsonElement msgId = obj.get("payload").getAsJsonObject().get("messageId");
+                    if (msgId != null) {
+                        msg.setMessageId(msgId.getAsString());
+                    }
                     return msg;
                 } catch (RuntimeException e) {
                     System.err.println(json);

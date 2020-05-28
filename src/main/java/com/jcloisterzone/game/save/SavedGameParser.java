@@ -43,7 +43,15 @@ public class SavedGameParser {
 
     public SavedGame fromJson(JsonReader reader) {
         SavedGame sg = gson.fromJson(reader, SavedGame.class);
-        sg.getReplay().forEach(msg -> msg.setGameId(sg.getGameId()));
+        int msgIdCounter = 1;
+        for (WsReplayableMessage msg : sg.getReplay()) {
+            msg.setGameId(sg.getGameId());
+            // adapter to old or test saves
+            if (msg.getMessageId() == null) {
+                msg.setMessageId("msg" + msgIdCounter);
+                msgIdCounter++;
+            }
+        }
         return sg;
     }
 
