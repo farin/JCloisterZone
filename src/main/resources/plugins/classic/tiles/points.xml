@@ -42,7 +42,7 @@
     </point>
     <point feature="CLOISTER" cx="500" cy="650">
         <apply>KR.LC CLOISTER</apply>
-    </point>         
+    </point>
     <point feature="CLOISTER" cx="740" cy="640">
         <apply>GO.LCc CLOISTER</apply>
     </point>
@@ -249,7 +249,7 @@
         <apply>TO.RCr WE</apply>
     </point>
     <point feature="ROAD" cx="920" cy="600">
-        <apply>DA.LRR E</apply>
+        <apply>DA.LRR SE</apply>
     </point>
 
     <point feature="ROAD" cx="595" cy="95">
@@ -270,7 +270,7 @@
     </point>
     <point feature="CITY" cx="250" cy="250">
         <apply>TO.CccR _S</apply>
-        <apply>BE.Ccc _S</apply>        
+        <apply>BE.Ccc _S</apply>
     </point>
     <point feature="CITY" cx="250" cy="500">
         <apply>BB.CFR! W</apply>
@@ -317,7 +317,7 @@
     </point>
     <point feature="CITY" cx="500" cy="140" baseLocation="N">
         <apply>R1.CICI N</apply>
-        <apply>R1.CICI S</apply> 
+        <apply>R1.CICI S</apply>
     </point>
     <point feature="CITY" cx="500" cy="400">
         <apply>TB.CCc.w WE</apply>
@@ -325,7 +325,7 @@
     </point>
     <point feature="CITY" cx="500" cy="500">
         <apply>TB.RCc!.g NW</apply>
-        <apply>TB.CcRR!.c NW</apply> 
+        <apply>TB.CcRR!.c NW</apply>
     </point>
     <point feature="CITY" cx="550" cy="100" baseLocation="N">
         <apply>HS.CFC.h N</apply>
@@ -538,7 +538,7 @@
         <apply>TB.CCc.c INNER_FARM</apply>
         <apply>TO.CccC+ INNER_FARM</apply>
         <apply>HS.RRr.v ER.SL.SR.WL</apply>
-    </point>    
+    </point>
     <point feature="FARM" cx="780" cy="220">
         <apply>AM.R NL.NR.EL.ER.SL.SR.WL.WR</apply>
         <apply>BB.F.b NL.NR.EL.ER.SL.SR.WL.WR</apply>

@@ -22,13 +22,11 @@
     </tile>
     <tile id="LRR">
         <cloister church="true" />
-        <road>E</road>
-        <road>S</road>
+        <road>E S</road>
         <farm>NL NR EL SR WL WR</farm>
         <farm>ER SL</farm>
         <wagon-move>
             <neighbouring>CLOISTER E</neighbouring>
-            <neighbouring>CLOISTER S</neighbouring>
         </wagon-move>
     </tile>
 </pack>

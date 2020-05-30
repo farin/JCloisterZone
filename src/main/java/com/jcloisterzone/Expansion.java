@@ -78,7 +78,7 @@ public class Expansion {
     @NotImplemented public static Expansion SCHOOL = new Expansion("SCHOOL", "SC", _tr("The School"), ExpansionType.PROMO);
     @NotImplemented public static Expansion LA_PORXADA = new Expansion("LA_PORXADA", "PX", _tr("La Porxada"), ExpansionType.PROMO);
     public static Expansion RUSSIAN_PROMOS = new Expansion("RUSSIAN_PROMOS", "RP", _tr("Russian Promos"), new Class[] { YagaCapability.class }, ExpansionType.PROMO);
-    public static Expansion DARMSTADT_PROMO = new Expansion("DARMSTADT_PROMO", "DA", _tr("Darmstadt Promo"), new Class[] { ChurchCapability.class }, ExpansionType.PROMO);
+    public static Expansion DARMSTADT = new Expansion("DARMSTADT", "DA", _tr("Darmstadt Promo"), new Class[] { ChurchCapability.class }, ExpansionType.PROMO);
     public static Expansion LABYRINTH = new Expansion("LABYRINTH", "LA", _tr("Labyrinth"), new Class[] { LabyrinthCapability.class }, ExpansionType.PROMO);
 
     @NotImplemented public static Expansion _MISSING_PLACEHOLDER = new Expansion("(Unknown expansion)", "??", _tr("(Unknown expansion)"), ExpansionType.UNKNOWN);
@@ -90,7 +90,7 @@ public class Expansion {
         KING_AND_ROBBER_BARON, RIVER, RIVER_II, CATHARS, BESIEGERS, COUNT, GQ11, CULT, TUNNEL,
         CORN_CIRCLES, PHANTOM, FESTIVAL, LITTLE_BUILDINGS, WIND_ROSE, GERMAN_MONASTERIES,
         FLIER, FERRIES, GOLDMINES, MAGE_AND_WITCH, CORN_CIRCLES_II,
-        RUSSIAN_PROMOS, DARMSTADT_PROMO, LABYRINTH
+        RUSSIAN_PROMOS, DARMSTADT, LABYRINTH
     );
 
     private final String name;
