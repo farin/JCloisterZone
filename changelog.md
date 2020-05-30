@@ -1,7 +1,7 @@
 # Version history
 
 ## 4.6.0
-*upcoming*
+*2020-05-30*
 
 * added Labyrinth promo (including advanced rules)
 * added Darmstadt promo
