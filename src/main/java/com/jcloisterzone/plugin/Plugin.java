@@ -525,8 +525,14 @@ public class Plugin implements ResourceManager {
     }
 
     private boolean isFarmComplement(String tileId, Location loc) {
-        if (pluginGeometry.isFarmComplement(tileId, loc)) return true;
-        if (DEFAULT_GEOMETRY.isFarmComplement(tileId, loc)) return true;
+        Boolean value = pluginGeometry.isFarmComplement(tileId, loc);
+        if (value != null) {
+            return value;
+        }
+        value = DEFAULT_GEOMETRY.isFarmComplement(tileId, loc);
+        if (value != null) {
+            return value;
+        }
         return false;
     }
 

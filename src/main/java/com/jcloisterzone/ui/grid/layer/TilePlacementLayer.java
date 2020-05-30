@@ -1,11 +1,9 @@
 package com.jcloisterzone.ui.grid.layer;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
+import java.awt.geom.Point2D;
 
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.Location;
@@ -14,6 +12,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.TileSymmetry;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.ui.controls.ActionPanel;
 import com.jcloisterzone.ui.controls.action.ActionWrapper;
@@ -26,6 +25,8 @@ import com.jcloisterzone.ui.grid.GridPanel;
 import com.jcloisterzone.ui.resources.FeatureArea;
 import com.jcloisterzone.ui.resources.TileImage;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
 public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer, GridMouseListener, ForwardBackwardListener {
@@ -34,12 +35,14 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
     private static final Composite DISALLOWED_PREVIEW = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .4f);
     private static final Composite BRIDGE_PREVIEW_FILL_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .75f);
 
+    private boolean rotateWihtMouse = false;
     private boolean active;
     private Set<Position> availablePositions;
     private Position previewPosition;
 
     private TilePlacementActionWrapper actionWrapper;
 
+    private Set<PlacementOption> allowedRotations;
     private boolean allowedRotation;
     private Rotation realRotation;
     private Rotation previewRotation;
@@ -97,11 +100,59 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
         g2.setComposite(compositeBackup);
     }
 
+    // Draws circles for all valid rotations that show the user where to move their
+    // mouse to.
+    private void drawRotationHandle(Graphics2D g2, Position previewPosition) {
+        Set<Rotation> allowed = allowedRotations.map(PlacementOption::getRotation);
+        List.of(Rotation.values())
+                .filter(r -> allowed.contains(realRotation.add(r)))
+                .forEach(rotation -> {
+                    Point2D p = getRotationHandlePositions(previewPosition, rotation);
+                    g2.setColor(new Color(0f, 0f, 0f, 0.5f));
+                    if (realRotation.add(rotation).equals(previewRotation)) {
+                        // Draw a filled oval for the current one...
+                        g2.fillOval(
+                                (int) p.getX() - getTileWidth() / 20,
+                                (int) p.getY() - getTileHeight() / 20,
+                                getTileWidth() / 9,
+                                getTileHeight() / 9
+                        );
+                    } else {
+                        // ...otherwise just draw the outlines
+                        g2.setStroke(new BasicStroke((int)Math.ceil(getTileWidth() / 75.0)));
+                        g2.drawOval(
+                                (int) p.getX() - getTileWidth() / 20,
+                                (int) p.getY() - getTileHeight() / 20,
+                                getTileWidth() / 9,
+                                getTileHeight() / 9
+                        );
+                    }
+        });
+
+    }
+
+    private Point2D getRotationHandlePositions(Position p, Rotation r) {
+        int w = getTileWidth(),
+            h = getTileHeight();
+        switch (r) {
+            case R0: return new Point(p.x * w + w / 2, p.y * h + h * 5 / 6);
+            case R180: return new Point(p.x * w + w / 2, p.y * h + h / 6);
+            case R90: return new Point(p.x * w + w / 6, p.y * h + h / 2);
+            case R270: return new Point(p.x * w + w * 5 / 6, p.y * h + h / 2);
+        }
+        throw new NullPointerException("Rotation can't be null");
+    }
+
+    private double getSquareDistanceToRotationHandle(Position p, Rotation r, Point2D point) {
+        Point2D handle = getRotationHandlePositions(p, r);
+        return Math.pow(handle.getX() - point.getX(), 2) + Math.pow(handle.getY() - point.getY(), 2);
+    }
+
     private void preparePreviewRotation(Position p) {
         realRotation = getActionWrapper().getTileRotation();
         previewRotation = realRotation;
 
-        Set<PlacementOption> allowedRotations = getAction().getOptions().filter(tp -> tp.getPosition().equals(p));
+        allowedRotations = getAction().getOptions().filter(tp -> tp.getPosition().equals(p));
         PlacementOption matchingPlacement = allowedRotations
             .find(tp -> tp.getRotation().equals(previewRotation))
             .getOrNull();
@@ -159,7 +210,7 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
         getActionWrapper().setTileRotation(next);
         ActionPanel panel = gc.getGameView().getControlPanel().getActionPanel();
         panel.refreshImageCache();
-        gc.getGameView().getGridPanel().repaint();
+        gridPanel.repaint();
     }
 
     @Override
@@ -183,6 +234,9 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
 
         if (previewPosition != null) {
             drawPreviewIcon(g2, previewPosition);
+            if (rotateWihtMouse) {
+                drawRotationHandle(g2, previewPosition);
+            }
         }
     }
 
@@ -203,6 +257,7 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
 
     @Override
     public void tileEntered(MouseEvent e, Position p) {
+        rotateWihtMouse = getConfig().getTile_rotation() == Config.TileRotationControls.TAB_RCLICK_MOUSEMOVE; // get current value from config
         realRotation = null;
         if (availablePositions.contains(p)) {
             previewPosition = p;
@@ -226,6 +281,35 @@ public class TilePlacementLayer extends AbstractGridLayer implements ActionLayer
             if (getPreviewPosition() != null && isActive() && allowedRotation) {
                 e.consume();
                 gc.getConnection().send(getAction().select(new PlacementOption(p, previewRotation, null)));
+            }
+        }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e, Position p) {
+        if (rotateWihtMouse && realRotation != null) {
+            Point2D point = gridPanel.getRelativePoint(e.getPoint());
+            Tuple2<Rotation, Double> closest = List.of(Rotation.values())
+                    .map(r -> new Tuple2<>(r, getSquareDistanceToRotationHandle(p, r, point)))
+                    .minBy(Tuple2::_2)
+                    .getOrNull();
+
+            if (closest != null) {
+                Rotation rot = closest._1;
+                double distance = closest._2;
+
+                if (distance <= getTileWidth() * getTileHeight() / 40) {
+                    Rotation combinedRot = realRotation.add(rot);
+                    if (previewRotation != combinedRot) {
+                        PlacementOption matchingPlacement = allowedRotations.filter(opt -> opt.getRotation() == combinedRot).getOrNull();
+                        if (matchingPlacement != null) {
+                            previewRotation = combinedRot;
+                            previewBridge = matchingPlacement.getMandatoryBridge();
+                            allowedRotation = true;
+                            gridPanel.repaint();
+                        }
+                    }
+                }
             }
         }
     }

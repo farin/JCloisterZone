@@ -272,7 +272,7 @@ public class GridPanel extends JPanel implements ForwardBackwardListener, UIEven
         addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                zoom(-e.getWheelRotation());
+                zoom(-e.getWheelRotation() * 0.5);
             }
         });
     }

@@ -6,8 +6,9 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class PayRansomMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
+    private long clock;
+    private String parentId;
     private String meepleId;
-    private String messageId;
 
     public PayRansomMessage() {
     }
@@ -28,13 +29,23 @@ public class PayRansomMessage extends AbstractWsMessage implements WsInGameMessa
     }
 
     @Override
-    public String getMessageId() {
-        return messageId;
+    public long getClock() {
+        return clock;
     }
 
     @Override
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setClock(long clock) {
+        this.clock = clock;
+    }
+
+    @Override
+    public String getParentId() {
+        return parentId;
+    }
+
+    @Override
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public String getMeepleId() {

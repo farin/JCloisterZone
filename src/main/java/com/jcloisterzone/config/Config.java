@@ -47,6 +47,12 @@ public class Config {
     private String secret;
     private String play_online_host;
 
+    public enum TileRotationControls {
+        TAB_RCLICK,
+        TAB_RCLICK_MOUSEMOVE
+    }
+    private TileRotationControls tile_rotation;
+
     private ConfirmConfig confirm;
     private AiConfig ai;
     private PlayersConfig players;
@@ -436,6 +442,13 @@ public class Config {
         this.beep_alert = beep_alert;
     }
 
+    public TileRotationControls getTile_rotation() {
+        return tile_rotation;
+    }
+
+    public void setTile_rotation(TileRotationControls tile_rotation) {
+        this.tile_rotation = tile_rotation;
+    }
 
     public PluginsConfig getPlugins() {
         if (plugins == null) {

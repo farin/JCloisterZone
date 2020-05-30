@@ -8,12 +8,14 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 
+import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
 @RequiredCapability(CountCapability.class)
@@ -30,10 +32,11 @@ public class CocCountPhase extends Phase {
         Position quarterPos = state.getCapabilityModel(CountCapability.class).getQuarterPosition();
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
 
-        Set<FeaturePointer> options = Location.QUARTERS
-            .filter(loc -> loc != countFp.getLocation())
-            .map(loc -> new FeaturePointer(quarterPos, loc))
-            .toSet();
+        List<Location> quarters = Location.QUARTERS.filter(loc -> loc != countFp.getLocation());
+        if (!state.getBooleanValue(Rule.FARMERS)) {
+            quarters = quarters.remove(Location.QUARTER_MARKET);
+        }
+        Set<FeaturePointer> options = quarters.map(loc -> new FeaturePointer(quarterPos, loc)).toSet();
         NeutralFigureAction action = new NeutralFigureAction(count, options);
 
         state = state.setPlayerActions(new ActionsState(player, action, true));

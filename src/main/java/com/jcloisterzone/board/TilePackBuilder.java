@@ -157,8 +157,12 @@ public class TilePackBuilder {
     protected Element getExpansionDefinition(Expansion expansion) {
         Element root = parsedDefinitions.get(expansion);
         if (root == null) {
-            root = XMLUtils.parseDocument(getTilesConfig(expansion)).getDocumentElement();
-            parsedDefinitions.put(expansion, root);
+            try {
+                root = XMLUtils.parseDocument(getTilesConfig(expansion)).getDocumentElement();
+                parsedDefinitions.put(expansion, root);
+            } catch (Exception e) {
+                logger.error("Can't parse definition for " + expansion.name(), e);
+            }
         }
         return root;
     }

@@ -4,6 +4,8 @@ import java.util.function.Predicate;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
+import com.jcloisterzone.event.play.PlayEvent;
+import com.jcloisterzone.event.play.RansomPaidEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.Flag;
@@ -55,6 +57,9 @@ public class PayRansom implements Reducer {
         state = (new AddPoints(player, -TowerCapability.RANSOM_POINTS, PointCategory.TOWER_RANSOM)).apply(state);
         state = (new AddPoints(jailer, TowerCapability.RANSOM_POINTS, PointCategory.TOWER_RANSOM)).apply(state);
         state = state.addFlag(Flag.RANSOM_PAID);
+        state = state.appendEvent(
+                new RansomPaidEvent(PlayEvent.PlayEventMeta.createWithActivePlayer(state), follower, jailer)
+        );
         //TODO add PlayEvent
 
         return state;

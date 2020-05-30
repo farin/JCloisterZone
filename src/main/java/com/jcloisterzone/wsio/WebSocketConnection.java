@@ -1,6 +1,7 @@
 package com.jcloisterzone.wsio;
 
 import java.net.URI;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -31,7 +32,6 @@ public class WebSocketConnection implements Connection {
     private URI uri;
     private final MessageListener listener;
 
-    private long msgSequence;
     private String sessionId;
     private String clientId;
     private String secret; //TODO will be used for message signing
@@ -40,6 +40,8 @@ public class WebSocketConnection implements Connection {
     private boolean closedByUser;
     private int pingInterval = 0;
     private String maintenance;
+    private java.util.Set<String> alreadyReceived = new java.util.HashSet<>();
+
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> pingFuture;
@@ -97,17 +99,22 @@ public class WebSocketConnection implements Connection {
                 return;
             }
 
+            if (alreadyReceived.contains(msg.getMessageId())) {
+                logger.info("Already received message dropped: " + payload);
+                return;
+            }
+
             if (logger.isInfoEnabled()) {
                 logger.info(payload);
             }
 
-            if (msgSequence != msg.getSequenceNumber()) {
-                String errMessage = String.format("Message lost. Received #%s but expected #%s.", msg.getSequenceNumber(), msgSequence);
-                listener.onWebsocketError(new MessageLostException(errMessage));
-                close(Connection.CLOSE_MESSAGE_LOST, errMessage);
-                return;
-            }
-            msgSequence = msg.getSequenceNumber() + 1;
+//            if (msgSequence != msg.getSequenceNumber()) {
+//                String errMessage = String.format("Message lost. Received #%s but expected #%s.", msg.getSequenceNumber(), msgSequence);
+//                listener.onWebsocketError(new MessageLostException(errMessage));
+//                close(Connection.CLOSE_MESSAGE_LOST, errMessage);
+//                return;
+//            }
+//            msgSequence = msg.getSequenceNumber() + 1;
 
             if (msg instanceof WelcomeMessage) {
                 WelcomeMessage welcome = (WelcomeMessage) msg;
@@ -121,7 +128,6 @@ public class WebSocketConnection implements Connection {
 
         @Override
         public void onOpen(ServerHandshake arg0) {
-            msgSequence = 1L;
             WebSocketConnection.this.send(new HelloMessage(username, clientId, secret));
             if (reconnectGameId != null) {
                 JoinGameMessage msg = new JoinGameMessage();
@@ -187,13 +193,16 @@ public class WebSocketConnection implements Connection {
     }
 
     @Override
-    public void send(WsMessage arg) {
+    public void send(WsMessage msg) {
         if (ws.isClosed() || ws.isClosing()) {
             return;
         }
         schedulePing();
         try {
-            ws.send(parser.toJson(arg));
+            if (msg.getMessageId() == null) {
+                msg.setMessageId(UUID.randomUUID().toString());
+            }
+            ws.send(parser.toJson(msg));
         } catch (WebsocketNotConnectedException ex) {
             listener.onWebsocketClose(0, ex.getMessage(), true);
         }

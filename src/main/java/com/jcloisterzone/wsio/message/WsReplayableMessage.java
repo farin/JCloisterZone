@@ -1,8 +1,8 @@
 package com.jcloisterzone.wsio.message;
 
-public interface WsReplayableMessage extends WsInGameMessage {
+public interface WsReplayableMessage extends WsChainedMessage, WsInGameMessage {
 
-    String getMessageId();
-    void setMessageId(String messageId);
+    long getClock();
+    void setClock(long currentTime);
 
 }

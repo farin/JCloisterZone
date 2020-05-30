@@ -146,6 +146,7 @@ public class ConfigLoader {
         config.getAi().setClass_name(DEFAULT_AI_CLASS_NAME);
         config.setTheme(DEFAULT_THEME);
         config.setClient_name("");
+        config.setTile_rotation(Config.TileRotationControls.TAB_RCLICK);
         config.setPlay_online_host(DEFAULT_PLAY_ONLINE_HOST);
         config.setClient_id(KeyUtils.createRandomId());
         config.setSecret(KeyUtils.createRandomId());
@@ -185,6 +186,7 @@ public class ConfigLoader {
         model.put("score_display_duration", config.getScore_display_duration());
         model.put("theme", config.getTheme());
         model.put("beep_alert", config.getBeep_alert());
+        model.put("tile_rotation", config.getTile_rotation());
         model.put("client_name", config.getClient_name());
         model.put("play_online_host", config.getPlay_online_host());
         model.put("client_id", config.getClient_id());

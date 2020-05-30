@@ -8,7 +8,8 @@ public class CornCircleRemoveOrDeployMessage extends AbstractWsMessage implement
     public enum CornCircleOption { DEPLOY, REMOVE }
 
     private String gameId;
-    private String messageId;
+    private long clock;
+    private String parentId;
     private CornCircleOption value;
 
     public CornCircleRemoveOrDeployMessage() {
@@ -29,13 +30,23 @@ public class CornCircleRemoveOrDeployMessage extends AbstractWsMessage implement
     }
 
     @Override
-    public String getMessageId() {
-        return messageId;
+    public long getClock() {
+        return clock;
     }
 
     @Override
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setClock(long clock) {
+        this.clock = clock;
+    }
+
+    @Override
+    public String getParentId() {
+        return parentId;
+    }
+
+    @Override
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public CornCircleOption getValue() {

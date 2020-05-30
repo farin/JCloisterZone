@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-16 21:19+0200\n"
+"POT-Creation-Date: 2020-05-28 22:35+0200\n"
 "PO-Revision-Date: 2015-10-22 13:05+0100\n"
 "Last-Translator: Joan Josep\n"
 "Language-Team: \n"
@@ -45,186 +45,190 @@ msgstr ""
 msgid "Bug report failed"
 msgstr "Ha fallat l''informe d''error."
 
-#: src/main/java/com/jcloisterzone/Expansion.java:60
+#: src/main/java/com/jcloisterzone/Expansion.java:21
 msgid "Basic game"
 msgstr "Joc base"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:62
+#: src/main/java/com/jcloisterzone/Expansion.java:23
 msgid "Basic game (2.0)"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/Expansion.java:63
+#: src/main/java/com/jcloisterzone/Expansion.java:24
 msgid "Wheel of Fortune"
 msgstr "La roda de la fortuna"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:66
+#: src/main/java/com/jcloisterzone/Expansion.java:27
 msgid "Winter Edition"
 msgstr "Edició d''hivern"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:67
+#: src/main/java/com/jcloisterzone/Expansion.java:28
 msgid "The Gingerbread Man"
 msgstr "L''home de gingebre"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:70
+#: src/main/java/com/jcloisterzone/Expansion.java:31
 msgid "Inns & Cathedrals"
 msgstr "Posades i catedrals"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:72
+#: src/main/java/com/jcloisterzone/Expansion.java:33
 msgid "Traders & Builders"
 msgstr "Mercaders i constructors"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:74
+#: src/main/java/com/jcloisterzone/Expansion.java:35
 msgid "The Princess & The Dragon"
 msgstr "La princesa i el drac"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:76
+#: src/main/java/com/jcloisterzone/Expansion.java:37
 msgid "The Tower"
 msgstr "La torre"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:78
+#: src/main/java/com/jcloisterzone/Expansion.java:39
 msgid "Abbey & Mayor"
 msgstr "L''abadia i l''alcalde"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:80
+#: src/main/java/com/jcloisterzone/Expansion.java:41
 msgid "The Catapult"
 msgstr "La catapulta"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:81
+#: src/main/java/com/jcloisterzone/Expansion.java:42
 msgid "Bridges, Castles and Bazaars"
 msgstr "Ponts, castells i basars"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:83
+#: src/main/java/com/jcloisterzone/Expansion.java:44
 msgid "Hills and Sheep"
 msgstr "Turons i ovelles"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:85
+#: src/main/java/com/jcloisterzone/Expansion.java:46
 msgid "Under the Big Top"
 msgstr "Sota la carpa de circ"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:88
+#: src/main/java/com/jcloisterzone/Expansion.java:49
 msgid "King and Robber Baron"
 msgstr "El rei i el baró bandoler"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:89
+#: src/main/java/com/jcloisterzone/Expansion.java:50
 msgid "The River"
 msgstr "El riu"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:90
+#: src/main/java/com/jcloisterzone/Expansion.java:51
 msgid "The River II"
 msgstr "El riu II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:91
+#: src/main/java/com/jcloisterzone/Expansion.java:52
 msgid "The Cathars / Siege"
 msgstr "Els càtars"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:92
+#: src/main/java/com/jcloisterzone/Expansion.java:53
 msgid "The Besiegers"
 msgstr "El setge"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:93
+#: src/main/java/com/jcloisterzone/Expansion.java:54
 msgid "The Count of Carcassonne"
 msgstr "El comte de Carcassonne"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:94
+#: src/main/java/com/jcloisterzone/Expansion.java:55
 msgid "The Mini Expansion (GQ11)"
 msgstr "La miniexpansió (GQ11)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:95
+#: src/main/java/com/jcloisterzone/Expansion.java:56
 msgid "The Cult"
 msgstr "El culte"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:96
+#: src/main/java/com/jcloisterzone/Expansion.java:57
 msgid "The Tunnel"
 msgstr "El túnel"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:97
+#: src/main/java/com/jcloisterzone/Expansion.java:58
 msgid "The Corn Circles"
 msgstr "Els cercles de les collites"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:98
+#: src/main/java/com/jcloisterzone/Expansion.java:59
 msgid "The Plague"
 msgstr "La pesta"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:99
+#: src/main/java/com/jcloisterzone/Expansion.java:60
 msgid "The Phantom"
 msgstr "El fantasma"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:100
+#: src/main/java/com/jcloisterzone/Expansion.java:61
 msgid "The Festival (10th an.)"
 msgstr "El festival (10è aniv.)"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:101
+#: src/main/java/com/jcloisterzone/Expansion.java:62
 msgid "Little Buildings"
 msgstr "Edificis petits"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:102
+#: src/main/java/com/jcloisterzone/Expansion.java:63
 msgid "The Wind Rose"
 msgstr "La rosa dels vents"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:103
+#: src/main/java/com/jcloisterzone/Expansion.java:64
 msgid "The German Monasteries"
 msgstr "Monestirs alemanys"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:104
+#: src/main/java/com/jcloisterzone/Expansion.java:65
 msgid "Castles in Germany"
 msgstr "Castells alemanys"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:105
-#: src/main/java/com/jcloisterzone/Expansion.java:106
+#: src/main/java/com/jcloisterzone/Expansion.java:66
+#: src/main/java/com/jcloisterzone/Expansion.java:67
 msgid "Halfings"
 msgstr "Mitges llosetes"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:107
+#: src/main/java/com/jcloisterzone/Expansion.java:68
 msgid "The Watchtower"
 msgstr "La torre de vigilància"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:110
+#: src/main/java/com/jcloisterzone/Expansion.java:71
 msgid "The Flier"
 msgstr "Màquines voladores"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:111
+#: src/main/java/com/jcloisterzone/Expansion.java:72
 msgid "The Messages"
 msgstr "Els despatxos"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:112
+#: src/main/java/com/jcloisterzone/Expansion.java:73
 msgid "The Ferries"
 msgstr "Els transbordadors"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:113
+#: src/main/java/com/jcloisterzone/Expansion.java:74
 msgid "The Goldmines"
 msgstr "Les mines d''or"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:114
+#: src/main/java/com/jcloisterzone/Expansion.java:75
 msgid "Mage & Witch"
 msgstr "El mag i la bruixa"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:115
+#: src/main/java/com/jcloisterzone/Expansion.java:76
 msgid "The Robbers"
 msgstr "Els lladres"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:116
+#: src/main/java/com/jcloisterzone/Expansion.java:77
 msgid "The Corn Circles II"
 msgstr "Els cercles de les collites II"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:119
+#: src/main/java/com/jcloisterzone/Expansion.java:80
 msgid "The School"
 msgstr "L''escola"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:120
+#: src/main/java/com/jcloisterzone/Expansion.java:81
 msgid "La Porxada"
 msgstr "La porxada"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:121
+#: src/main/java/com/jcloisterzone/Expansion.java:82
 msgid "Russian Promos"
 msgstr "Promocionals russes"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:122
+#: src/main/java/com/jcloisterzone/Expansion.java:83
 msgid "Darmstadt Promo"
 msgstr "Promocionals Darmstadt"
 
-#: src/main/java/com/jcloisterzone/Expansion.java:123
+#: src/main/java/com/jcloisterzone/Expansion.java:84
 msgid "Labyrinth"
 msgstr "Laberint"
+
+#: src/main/java/com/jcloisterzone/Expansion.java:86
+msgid "(Unknown expansion)"
+msgstr ""
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:34
 msgid "Bridge"
@@ -234,19 +238,19 @@ msgstr "Pont"
 msgid "Castle"
 msgstr "Castell"
 
-#: src/main/java/com/jcloisterzone/feature/City.java:211
+#: src/main/java/com/jcloisterzone/feature/City.java:228
 msgid "City"
 msgstr "Ciutat"
 
-#: src/main/java/com/jcloisterzone/feature/Cloister.java:104
+#: src/main/java/com/jcloisterzone/feature/Cloister.java:116
 msgid "Cloister"
 msgstr "Monestir"
 
-#: src/main/java/com/jcloisterzone/feature/Farm.java:127
+#: src/main/java/com/jcloisterzone/feature/Farm.java:148
 msgid "Farm"
 msgstr "Camp"
 
-#: src/main/java/com/jcloisterzone/feature/Road.java:163
+#: src/main/java/com/jcloisterzone/feature/Road.java:183
 msgid "Road"
 msgstr "Camí"
 
@@ -254,7 +258,7 @@ msgstr "Camí"
 msgid "Tower"
 msgstr "Torre"
 
-#: src/main/java/com/jcloisterzone/feature/YagaHut.java:73
+#: src/main/java/com/jcloisterzone/feature/YagaHut.java:63
 msgid "Yaga's Hut"
 msgstr "La cabana de Yaga"
 
@@ -263,112 +267,124 @@ msgid "Randomize seating order"
 msgstr "Situa els jugadors aleatòriament"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:18
+msgid "Play farmers"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/game/Rule.java:19
 msgid "Use pig herds independently (without T&B expansion)"
 msgstr "Usa porcades independentment (sense expansió de mercaders)"
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:20
+#: src/main/java/com/jcloisterzone/game/Rule.java:21
 msgid "Princess MUST remove a knight from city."
 msgstr "La princesa ha de retirar un cavaller de la ciutat."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:21
+#: src/main/java/com/jcloisterzone/game/Rule.java:22
 msgid "Dragon movement occurs after scoring."
 msgstr "El drac es mou després de puntuar."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:22
+#: src/main/java/com/jcloisterzone/game/Rule.java:23
 msgid "Place fairy on the tile. (instead of next to a follower)"
 msgstr "Posa la fada a la nova lloseta, no al costat d''un seguidor."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:24
+#: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
 "Allow direct barn placement on a farm where another barn is already placed."
 msgstr ""
 "Permet posar directament un graner en un camp on ja n''hi hagi un altre."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:26
+#: src/main/java/com/jcloisterzone/game/Rule.java:27
 msgid "No bazaar bidding. Each player just chooses one tile."
 msgstr ""
 "Quan apareix el basar, no hi ha subhasta: cada jugador només escull la seva "
 "lloseta."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:28
+#: src/main/java/com/jcloisterzone/game/Rule.java:29
 msgid "Count number of followers on hill as tiebreaker."
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:30
+#: src/main/java/com/jcloisterzone/game/Rule.java:31
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
 msgstr ""
 "El monestir de fugida pot ser qualsevol lloseta adjacent de la ciutat "
 "assetjada."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:32
+#: src/main/java/com/jcloisterzone/game/Rule.java:33
 msgid "The Pig herd is present on the farm tile."
 msgstr "La porcada està present a la lloseta del camp."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:34
+#: src/main/java/com/jcloisterzone/game/Rule.java:35
 msgid "Apply tunnel rule on tunnels from other expansions."
 msgstr "Aplica la regla del túnel als túnels d''altres expansions."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:35
+#: src/main/java/com/jcloisterzone/game/Rule.java:36
 msgid "Assign 3/2 tunnel set in game of two/three players."
 msgstr "Assigna un conjunt de 3/2 túnels per partides de 2/3 jugadors."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:37
+#: src/main/java/com/jcloisterzone/game/Rule.java:38
 msgid "Only follower can be returned by festival (instead of any figure)"
 msgstr "El festival només retorna seguidors (en lloc de qualsevol figura)."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:39
+#: src/main/java/com/jcloisterzone/game/Rule.java:40
 msgid "Keep basic cloisters in the game."
 msgstr "Mantén els monestirs bàsics al joc."
 
-#: src/main/java/com/jcloisterzone/game/Rule.java:41
+#: src/main/java/com/jcloisterzone/game/Rule.java:42
 msgid "Add 3/2/1 points for tower/house/shed."
 msgstr "Afegeix 3/2/1 punts per torre/casa/sopluig."
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:296
-#: src/main/java/com/jcloisterzone/ui/Client.java:299
-#: src/main/java/com/jcloisterzone/ui/Client.java:303
-#: src/main/java/com/jcloisterzone/ui/Client.java:306
+#: src/main/java/com/jcloisterzone/game/Rule.java:44
+msgid "Advanced labyrinth variant"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/game/Rule.java:47
+msgid "Tiny city is scored only for 2 points."
+msgstr "Cada ciutat petita (de dues llosetes) val sols 2 punts."
+
+#: src/main/java/com/jcloisterzone/ui/Client.java:280
+#: src/main/java/com/jcloisterzone/ui/Client.java:283
+#: src/main/java/com/jcloisterzone/ui/Client.java:287
+#: src/main/java/com/jcloisterzone/ui/Client.java:290
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:155
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:68
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:69
 msgid "Leave game"
 msgstr "Abandona la partida"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:296
-#: src/main/java/com/jcloisterzone/ui/Client.java:303
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:377
+#: src/main/java/com/jcloisterzone/ui/Client.java:280
+#: src/main/java/com/jcloisterzone/ui/Client.java:287
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:418
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:298
+#: src/main/java/com/jcloisterzone/ui/Client.java:282
 msgid ""
 "The game is not finished. Do you really want to stop game and disconnect all "
 "other players?"
 msgstr ""
 "La partida no ha acabat. Voleu parar i desconnectar-vos dels altres jugadors?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:305
+#: src/main/java/com/jcloisterzone/ui/Client.java:289
 msgid "The game is not finished. Do you really want to leave it?"
 msgstr "La partida no ha acabat. Voleu realment sortir?"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:434
-#: src/main/java/com/jcloisterzone/ui/Client.java:486
-#: src/main/java/com/jcloisterzone/ui/Client.java:652
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:393
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:428
+#: src/main/java/com/jcloisterzone/ui/Client.java:418
+#: src/main/java/com/jcloisterzone/ui/Client.java:470
+#: src/main/java/com/jcloisterzone/ui/Client.java:636
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:392
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:427
 msgid "Error"
 msgstr "S''ha produït un error."
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:471
+#: src/main/java/com/jcloisterzone/ui/Client.java:455
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:84
 msgid "Load game"
 msgstr "Carrega una partida"
 
-#: src/main/java/com/jcloisterzone/ui/Client.java:644
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:232
+#: src/main/java/com/jcloisterzone/ui/Client.java:628
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:230
 msgid "Connection lost"
 msgstr "S''ha perdut la connexió."
 
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:466
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:472
 msgid ""
 "Online play server is not compatible with your application. Please upgrade "
 "JCloisterZone to the latest version."
@@ -377,7 +393,7 @@ msgstr ""
 "aplicació. Cal que actualitzeu el JCloisterZone a l''última versió "
 "disponible."
 
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:468
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:474
 msgid ""
 "Remote JCloisterZone is not compatible with local application. Please "
 "upgrade both applications to same version."
@@ -385,11 +401,11 @@ msgstr ""
 "La versió remota del JCloisterZone no és compatible amb la local. Si us "
 "plau, feu servir la mateixa versió en tots els ordinadors."
 
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:470
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:476
 msgid "Incompatible versions"
 msgstr "Versions incompatibles"
 
-#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:473
+#: src/main/java/com/jcloisterzone/ui/ClientMessageListener.java:479
 msgid "Invalid password"
 msgstr "Contrasenya no vàlida"
 
@@ -414,7 +430,7 @@ msgid "Skip"
 msgstr "Passa"
 
 #: src/main/java/com/jcloisterzone/ui/controls/ControlPanel.java:73
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:185
 msgid "Continue"
 msgstr "Continua"
 
@@ -460,7 +476,7 @@ msgid "Game setup"
 msgstr "Configuració del joc"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/GameSetupDialog.java:37
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:240
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:242
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:229
 msgid "Expansions"
 msgstr "Expansions"
@@ -475,49 +491,65 @@ msgstr "Regles de joc especials"
 msgid "Controls"
 msgstr "Controls"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:92
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:112
 msgid "Use system language"
 msgstr "Empra l''idioma del sistema"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:189
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:167
+msgid "TAB / right click"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:168
+msgid "+ mouse over spot"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:168
+msgid "(experimental)"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:224
 msgid "Language"
 msgstr "Idioma"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:205
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:240
 msgid "To apply new language you must restart the application"
 msgstr "Cal reiniciar l''aplicació per aplicar el nou idioma."
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:211
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:246
 msgid "Theme"
 msgstr "Tema"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:227
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:262
 msgid "To apply new theme you must restart the application"
 msgstr "Cal reiniciar l''aplicació per aplicar el nou tema."
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:233
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:268
+msgid "Tile rotation"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:274
 msgid "AI placement delay (ms)"
 msgstr "Retard de la col·locació de l''IA (en ms)"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:239
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:280
 msgid "Score display duration (sec)"
 msgstr "Duració de la visualització de la puntuació (en s)"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:342
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:383
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:53
 msgid "Preferences"
 msgstr "Preferències"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:355
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:396
 msgid "Interface"
 msgstr "Interfície"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:355
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:396
 msgid "Plugins"
 msgstr "Connectors"
 
-#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:385
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:382
+#: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:426
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:390
 msgid "Save"
 msgstr "Desa"
 
@@ -526,7 +558,7 @@ msgstr "Desa"
 msgid "Tile Distribution"
 msgstr "Distribució de llosetes"
 
-#: src/main/java/com/jcloisterzone/ui/GameController.java:193
+#: src/main/java/com/jcloisterzone/ui/GameController.java:194
 msgid "%d tiles left"
 msgstr "Queden %d llosetes."
 
@@ -818,20 +850,20 @@ msgstr "Si no poseu contrasenya, tothom s''hi podrà connectar."
 msgid "Create game"
 msgstr "Crea la partida"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:184
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:185
 msgid "Join game"
 msgstr "Afegeix-me a la partida"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:199
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:204
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:201
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:206
 msgid "Remove game"
 msgstr "Esborra la partida"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:204
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:206
 msgid "Do you want to remove game permanently?"
 msgstr "Voleu realment esborrar la partida?"
 
-#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:233
+#: src/main/java/com/jcloisterzone/ui/panel/ChannelPanel.java:235
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:199
 msgid "Players"
 msgstr "Jugadors"
@@ -890,27 +922,31 @@ msgstr "Inicia la partida"
 msgid "Click twice on a slot button to add a computer player."
 msgstr "Cliqueu dos cops en la ranura per afegir un jugador IA."
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:280
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:260
+msgid "Legacy Rules"
+msgstr ""
+
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:285
 msgid "Clock"
 msgstr "Rellotge"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:285
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:290
 msgid "player time limit"
 msgstr "Temps límit de cada jugador:"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:296
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:301
 msgid "minutes"
 msgstr "min"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:328
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:336
 msgid "Presets"
 msgstr "Ajustaments predefinits"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:349
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:357
 msgid "Preset name"
 msgstr "Nom de l''ajustament"
 
-#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:410
+#: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:418
 msgid "Delete"
 msgstr "Esborra"
 
@@ -942,87 +978,87 @@ msgstr "Jugador IA remot"
 msgid "Open player slot"
 msgstr "Afegeix una vacant"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:78
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:79
 msgid "Play again"
 msgstr "Juga un altre cop"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:142
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
 msgid "Player"
 msgstr "Jugador"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:143
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
 msgid "Rank"
 msgstr "Posició"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:144
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
 msgid "Total points"
 msgstr "Punts totals"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:145
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
 msgid "Tiles placed"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:147
 msgid "Time consumed:(Player/Game)"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:147
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
 msgid "Time consumed:(Percentage)"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
 msgid "Roads"
 msgstr "Camins"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
 msgid "Cities"
 msgstr "Ciutats"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:150
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:151
 msgid "Cloisters"
 msgstr "Monestirs"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:151
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:152
 msgid "Farms"
 msgstr "Camps"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:153
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:154
 msgid "Castles"
 msgstr "Castells"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:157
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:158
 msgid "The biggest city"
 msgstr "Rei per la ciutat més gran"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:158
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:159
 msgid "The longest road"
 msgstr "Baró bandoler pel camí més llarg"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:162
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:163
 msgid "Trade goods"
 msgstr "Mercaderies"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:165
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:166
 msgid "Gold"
 msgstr "Or"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:168
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:169
 msgid "Sheep"
 msgstr ""
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:171
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:172
 msgid "Fairy"
 msgstr "Fada"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:174
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:175
 msgid "Tower ransom"
 msgstr "Rescat per la torre"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:177
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:178
 msgid "Bazaars"
 msgstr "Basars"
 
-#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:180
+#: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:181
 msgid "Wind rose"
 msgstr "Rosa dels vents"
 
@@ -1110,11 +1146,11 @@ msgstr "Juga en línia"
 msgid "JCloisterZone saved games"
 msgstr "Partides desades del JCloisterZone"
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:232
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:230
 msgid "Reconnecting..."
 msgstr "Tornant a connectar..."
 
-#: src/main/java/com/jcloisterzone/ui/view/GameView.java:375
+#: src/main/java/com/jcloisterzone/ui/view/GameView.java:374
 msgid "Save game"
 msgstr "Desa la partida"
 
@@ -1124,9 +1160,6 @@ msgstr "JCloisterZone"
 
 #~ msgid "tiles only"
 #~ msgstr "només llosetes"
-
-#~ msgid "Tiny city is scored only for 2 points."
-#~ msgstr "Cada ciutat petita (de dues llosetes) val sols 2 punts."
 
 #~ msgid "Pay ransom"
 #~ msgstr "Paga un rescat"

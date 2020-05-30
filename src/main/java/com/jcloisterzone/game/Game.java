@@ -35,10 +35,8 @@ import com.jcloisterzone.game.state.GameStateBuilder;
 import com.jcloisterzone.ui.GameController;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.WsSubscribe;
-import com.jcloisterzone.wsio.message.ClockMessage;
 import com.jcloisterzone.wsio.message.GameOverMessage;
 import com.jcloisterzone.wsio.message.SlotMessage;
-import com.jcloisterzone.wsio.message.ToggleClockMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.message.WsSaltMessage;
 
@@ -65,6 +63,7 @@ public class Game implements EventProxy {
 
     private GameSetup setup;
     private GameState state;
+    private long clockStart;
     private Array<PlayerClock> clocks;
     private GameStatePhaseReducer phaseReducer;
     private List<WsReplayableMessage> replay; // game messages (in reversed order because of List performance)
@@ -78,9 +77,6 @@ public class Game implements EventProxy {
 
     private final EventBus eventBus = new EventBus(new EventBusExceptionHandler("game event bus"));
 
-    private int idSequenceCurrVal = 0;
-    /** message counter in current phase */
-    private int messageIdTurnSequence = 0;
 
     public Game(String gameId, long randomSeed) {
         this.gameId = gameId;
@@ -143,15 +139,9 @@ public class Game implements EventProxy {
         GameState prev = this.state;
         this.state = state;
 
-        Player player = state.getActivePlayer();
-        if (player != null && !player.equals(prev.getActivePlayer()) && player.getSlot().isOwn()) {
-            connection.send(new ToggleClockMessage(player.getIndex()));
-        }
-
         boolean gameIsOver = isOver();
         if (gameIsOver) {
             if (state.getTurnPlayer().getSlot().isOwn()) { // send messages only from one client
-                connection.send(new ToggleClockMessage(null));
                 connection.send(new GameOverMessage());
             }
         }
@@ -234,7 +224,7 @@ public class Game implements EventProxy {
     }
 
     private String getMessageId(GameState state) {
-        return String.format("%s.%s", state.getTurnNumber(), messageIdTurnSequence);
+        return String.format("%s.%s", state.getTurnNumber());
     }
 
     @WsSubscribe
@@ -271,36 +261,37 @@ public class Game implements EventProxy {
         boolean undoAllowed = !(msg instanceof WsSaltMessage) &&
                 newActivePlayer != null && newActivePlayer.equals(oldActivePlayer);
 
-        updateMessageIdSequence(state, newState);
         if (undoAllowed) {
             markUndo();
         } else {
             clearUndo();
         }
         replay = replay.prepend(msg);
+
+        Player player = newState.getActivePlayer();
+        if (state.getActivePlayer() != player) {
+            updateClocks(player == null ? -1 : player.getIndex(), msg.getClock());
+        }
+
         replaceState(newState);
     }
 
-    private void updateMessageIdSequence(GameState oldState, GameState newState) {
-        if (oldState.getTurnNumber() == newState.getTurnNumber()) {
-            messageIdTurnSequence++;
-        } else {
-            messageIdTurnSequence = 0;
-        }
-    }
 
-    @WsSubscribe
-    public void handleClockMessage(ClockMessage msg) {
-        long[] clockValues = msg.getClocks();
-        for (int i = 0; i < clockValues.length; i++) {
-            boolean running = msg.getRunning() != null && msg.getRunning() == i;
-            PlayerClock clock = clocks.get(i);
-            PlayerClock newClock = clock.setRunning(running).setTime(clockValues[i]);
-            if (clock != newClock) {
-                clocks = clocks.update(i, newClock);
+    public void updateClocks(int runIndex, long clock) {
+        for (int i = 0; i < clocks.size(); i++) {
+            PlayerClock pc = clocks.get(i);
+            if (pc.isRunning()) {
+                if (runIndex != i) {
+                    clocks = clocks.update(i, pc.stop(clock));
+                }
+            } else {
+                if (runIndex == i) {
+                    clocks = clocks.update(i, pc.start(clock));
+                }
             }
+
         }
-        post(new ClockUpdateEvent(clocks, msg.getRunning()));
+        post(new ClockUpdateEvent(clocks, runIndex));
     }
 
 
@@ -370,14 +361,13 @@ public class Game implements EventProxy {
         state = state.setPhase(firstPhase.getClass());
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
         for (WsReplayableMessage msg : replay) {
-            msg.setMessageId(getMessageId(state));
             if (msg instanceof WsSaltMessage) {
                 phaseReducer.getRandom().setSalt(((WsSaltMessage) msg).getSalt());
             }
             GameState prev = state;
             state = phaseReducer.apply(state, msg);
-            updateMessageIdSequence(prev, state);
         }
+        updateClocks(state.getActivePlayer().getIndex(), 0);
         replaceState(state);
     }
 
@@ -440,11 +430,15 @@ public class Game implements EventProxy {
         return getPhase() instanceof GameOverPhase;
     }
 
-    public int idSequnceNextVal() {
-        return ++idSequenceCurrVal;
-    }
-
     public java.util.HashMap<String, Object> getGameAnnotations() {
         return gameAnnotations;
+    }
+
+    public long getClockStart() {
+        return clockStart;
+    }
+
+    public void setClockStart(long clockStart) {
+        this.clockStart = clockStart;
     }
 }

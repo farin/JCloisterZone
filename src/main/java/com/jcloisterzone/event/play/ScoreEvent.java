@@ -1,12 +1,15 @@
 package com.jcloisterzone.event.play;
 
+import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Meeple;
+import io.vavr.collection.List;
 
+@Immutable
 public class ScoreEvent extends PlayEvent  {
 
     private static final long serialVersionUID = 1L;
@@ -19,10 +22,11 @@ public class ScoreEvent extends PlayEvent  {
     private final BoardPointer pointer;
     private final Meeple meeple;
     private final Player receiver;
+    private final List<Position> source;
 
 
     public ScoreEvent(int points, String label, PointCategory category, boolean isFinal,
-            BoardPointer pointer, Meeple meeple, Player receiver) {
+            BoardPointer pointer, Meeple meeple, Player receiver, List<Position> source) {
         super(PlayEventMeta.createWithoutPlayer());
         this.points = points;
         this.category = category;
@@ -31,6 +35,7 @@ public class ScoreEvent extends PlayEvent  {
         this.pointer = pointer;
         this.meeple = meeple;
         this.receiver = receiver;
+        this.source = source;
     }
 
     public ScoreEvent(
@@ -39,7 +44,7 @@ public class ScoreEvent extends PlayEvent  {
     ) {
         this(
             points, points + "", category, isFinal,
-            fp, meeple, meeple.getPlayer()
+            fp, meeple, meeple.getPlayer(), null
         );
     }
 
@@ -49,7 +54,7 @@ public class ScoreEvent extends PlayEvent  {
     ) {
         this(
             points, label, category, isFinal,
-            fp, meeple, meeple.getPlayer()
+            fp, meeple, meeple.getPlayer(), null
         );
     }
 
@@ -59,7 +64,7 @@ public class ScoreEvent extends PlayEvent  {
     ) {
         this(
             points, label, category, isFinal,
-            position, null, receiver
+            position, null, receiver, null
         );
     }
 
@@ -93,6 +98,17 @@ public class ScoreEvent extends PlayEvent  {
 
     public Player getReceiver() {
         return receiver;
+    }
+
+    public List<Position> getSource() {
+        return source;
+    }
+
+    public ScoreEvent setSource(List<Position> source) {
+        if (source == this.source) {
+            return this;
+        }
+        return new ScoreEvent(points, label, category, isFinal, pointer, meeple, receiver, source);
     }
 
     @Override

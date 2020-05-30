@@ -227,7 +227,7 @@ public class PlayerPanel extends MouseTrackingComponent implements RegionMouseLi
 
         if (timeLimit != null) {
             PlayerClock clock = game.getClocks().get(player.getIndex());
-            long remainingMs = timeLimit*1000 - clock.getTime();
+            long remainingMs = timeLimit*1000 - clock.getTime(System.currentTimeMillis() - game.getClockStart());
             if (remainingMs <= 0) {
                 drawTimeTextBox("00.00", Color.RED);
             } else {

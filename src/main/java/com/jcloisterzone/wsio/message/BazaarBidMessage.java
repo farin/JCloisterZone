@@ -6,7 +6,8 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class BazaarBidMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
-    private String messageId;
+    private long clock;
+    private String parentId;
     private int supplyIndex;
     private int price;
 
@@ -29,13 +30,23 @@ public class BazaarBidMessage extends AbstractWsMessage implements WsInGameMessa
     }
 
     @Override
-    public String getMessageId() {
-        return messageId;
+    public long getClock() {
+        return clock;
     }
 
     @Override
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setClock(long clock) {
+        this.clock = clock;
+    }
+
+    @Override
+    public String getParentId() {
+        return parentId;
+    }
+
+    @Override
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public int getSupplyIndex() {

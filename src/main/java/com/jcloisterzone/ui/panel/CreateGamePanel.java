@@ -251,18 +251,23 @@ public class CreateGamePanel extends ThemedJPanel implements UIEventListener {
         rulesPanel.setLayout(new MigLayout("", "[]", "[]"));
         scrolled.add(rulesPanel, "cell 2 0,grow");
 
+        boolean legacySection = false;
         Expansion prev = Expansion.BASIC;
         for (Rule rule : Rule.values()) {
             if (rule.getExpansion() == null) continue;
-            if (prev != rule.getExpansion()) {
+            if (prev != rule.getExpansion() && !legacySection) {
                 prev = rule.getExpansion();
-                JLabel label = new ThemedJLabel(prev.toString());
+                JLabel label = new ThemedJLabel(rule == Rule.TINY_CITY_2_POINTS ? _tr("Legacy Rules") : prev.toString());
                 label.setFont(FONT_RULE_SECTION);
                 rulesPanel.add(label, "wrap, growx, gaptop 10, gapbottom 7");
             }
             JCheckBox chbox = createRuleCheckbox(rule, mutableSlots);
             rulesPanel.add(chbox, "wrap");
             ruleCheckboxes.put(rule, chbox);
+
+            if (rule == Rule.TINY_CITY_2_POINTS) {
+                legacySection = true;
+            }
         }
 
         JScrollPane scroll = new JScrollPane(scrolled);
@@ -298,11 +303,14 @@ public class CreateGamePanel extends ThemedJPanel implements UIEventListener {
             timeLimitChbox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    timeLimitSpinner.setEnabled(timeLimitChbox.isSelected());
-                    int value = timeLimitChbox.isSelected()
-                        ? 60 * timeLimitModel.getNumber().intValue()
-                        : null;
-                    SetRuleMessage msg = new SetRuleMessage(Rule.CLOCK_PLAYER_TIME, value);
+                    boolean selected = timeLimitChbox.isSelected();
+                    SetRuleMessage msg;
+                    if (selected) {
+                        int value =  60 * timeLimitModel.getNumber().intValue();
+                        msg = new SetRuleMessage(Rule.CLOCK_PLAYER_TIME, value);
+                    } else {
+                        msg = new SetRuleMessage(Rule.CLOCK_PLAYER_TIME, null);
+                    }
                     gc.getConnection().send(msg);
                 }
             });

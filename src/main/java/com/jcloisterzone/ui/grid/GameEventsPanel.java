@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import com.jcloisterzone.event.play.*;
+import com.jcloisterzone.ui.grid.eventpanel.RansomPaidEventItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,22 +23,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.GameChangedEvent;
-import com.jcloisterzone.event.play.CastleCreated;
-import com.jcloisterzone.event.play.DoubleTurnEvent;
-import com.jcloisterzone.event.play.FlierRollEvent;
-import com.jcloisterzone.event.play.FollowerCaptured;
-import com.jcloisterzone.event.play.MeepleDeployed;
-import com.jcloisterzone.event.play.MeepleReturned;
-import com.jcloisterzone.event.play.NeutralFigureMoved;
-import com.jcloisterzone.event.play.NeutralFigureReturned;
-import com.jcloisterzone.event.play.PlayEvent;
-import com.jcloisterzone.event.play.PlayerTurnEvent;
-import com.jcloisterzone.event.play.PrisonersExchangeEvent;
-import com.jcloisterzone.event.play.ScoreEvent;
-import com.jcloisterzone.event.play.TileDiscardedEvent;
-import com.jcloisterzone.event.play.TilePlacedEvent;
-import com.jcloisterzone.event.play.TokenPlacedEvent;
-import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Count;
@@ -114,6 +100,7 @@ public class GameEventsPanel extends JPanel {
         mapping = mapping.put(TokenPlacedEvent.class, this::processTokenPlacedEvent);
         mapping = mapping.put(TokenReceivedEvent.class, this::processTokenReceivedEvent);
         mapping = mapping.put(CastleCreated.class, this::processCastleCreatedEvent);
+        mapping = mapping.put(RansomPaidEvent.class, this::processRansomPaidEvent);
         mapping = mapping.put(PrisonersExchangeEvent.class, ev -> null);
         mapping = mapping.put(DoubleTurnEvent.class, ev -> null);
         mapping = mapping.put(FlierRollEvent.class, ev -> null);
@@ -163,13 +150,20 @@ public class GameEventsPanel extends JPanel {
     private EventItem processScoreEvent(PlayEvent _ev) {
         ScoreEvent ev = (ScoreEvent) _ev;
         ScoreEventItem item = new ScoreEventItem(theme, ev, turnColor, triggeringColor);
-
-        if (ev.getCategory() == PointCategory.FAIRY || ev.getFeaturePointer() == null) {
+        if (ev.getSource() != null) {
+            item.setHighlightedPositions(ev.getSource().toVector());
+        } else if (ev.getCategory() == PointCategory.FAIRY || ev.getFeaturePointer() == null) {
             item.setHighlightedPositions(Vector.of(ev.getPosition()));
         } else {
             Feature feature = state.getFeature(ev.getFeaturePointer());
             item.setHighlightedFeature(feature);
         }
+        return item;
+    }
+
+    private EventItem processRansomPaidEvent(PlayEvent _ev) {
+        RansomPaidEvent ev = (RansomPaidEvent) _ev;
+        RansomPaidEventItem item = new RansomPaidEventItem(theme, ev, turnColor, triggeringColor);
         return item;
     }
 

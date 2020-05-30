@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.capability;
 
+import com.jcloisterzone.game.Rule;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.XMLUtils;
@@ -51,6 +52,9 @@ public class CornCircleCapability extends Capability<CornCircleOption> {
             	modifier = CORN_CIRCLE_CITY;
             	break;
             case "Farm":
+            	if (!state.getBooleanValue(Rule.FARMERS)) {
+            		return tile;
+				}
             	modifier = CORN_CIRCLE_FARM;
             	break;
             default:

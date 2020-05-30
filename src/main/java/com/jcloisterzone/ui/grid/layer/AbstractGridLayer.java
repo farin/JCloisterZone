@@ -22,6 +22,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.config.Config;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.state.GameState;
@@ -215,6 +216,10 @@ public abstract class AbstractGridLayer implements GridLayer, UIEventListener {
 
     protected Game getGame() {
         return gc.getGame();
+    }
+
+    protected Config getConfig() {
+        return gc.getConfig();
     }
 
     @Deprecated //TODO use absolute coordinates instead

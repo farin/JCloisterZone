@@ -204,7 +204,7 @@ public class GameOverPanel extends JPanel {
                 Playtime playtime = new Playtime(game, player, totalSecondsPlayed);
                 add(new JLabel(formatPlaytimeString(playtime), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel(formatPercentageString(playtime), SwingConstants.CENTER), getSpec(gridx, gridy++));
-                
+
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.ROAD), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CITY), SwingConstants.CENTER), getSpec(gridx, gridy++));
                 add(new JLabel("" +player.getPointsInCategory(state, PointCategory.CLOISTER), SwingConstants.CENTER), getSpec(gridx, gridy++));
@@ -294,7 +294,7 @@ public class GameOverPanel extends JPanel {
      * @return playtime in seconds
      */
     static int getPlaytimeByPlayer(Game game, Player player) {
-        return (int) (game.getClocks().get(player.getIndex()).getTime() / 1000);
+        return (int) (game.getClocks().get(player.getIndex()).getTime(game.getClockStart()) / 1000);
     }
 }
 

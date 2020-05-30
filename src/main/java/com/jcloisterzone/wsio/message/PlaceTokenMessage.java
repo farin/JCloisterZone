@@ -10,7 +10,9 @@ import com.jcloisterzone.wsio.message.adapters.TokenAdapter;
 public class PlaceTokenMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     private String gameId;
-    private String messageId;
+    private long clock;
+    private String parentId;
+
     @JsonAdapter(TokenAdapter.class)
     private Token token;
     private BoardPointer pointer;
@@ -34,13 +36,23 @@ public class PlaceTokenMessage extends AbstractWsMessage implements WsInGameMess
     }
 
     @Override
-    public String getMessageId() {
-        return messageId;
+    public long getClock() {
+        return clock;
     }
 
     @Override
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
+    public void setClock(long clock) {
+        this.clock = clock;
+    }
+
+    @Override
+    public String getParentId() {
+        return parentId;
+    }
+
+    @Override
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public BoardPointer getPointer() {

@@ -2,11 +2,11 @@
 <pack>
     <tiles>
         <tile id="LA/Rrrr">
-          <road labyrinth="true">N W E S</road>
-          <farm>WR NL</farm>
-          <farm>NR EL</farm>
-          <farm>ER SL</farm>
-          <farm>SR WL</farm>
+            <road labyrinth="true">N W E S</road>
+            <farm>WR NL</farm>
+            <farm>NR EL</farm>
+            <farm>ER SL</farm>
+            <farm>SR WL</farm>
         </tile>
     </tiles>
     <sets>
@@ -14,4 +14,4 @@
             <ref count="1" tile="LA/Rrrr" />
         </tile-set>
     </sets>
-  </pack>
+</pack>

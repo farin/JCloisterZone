@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
@@ -15,6 +16,7 @@ import com.jcloisterzone.figure.Phantom;
 import com.jcloisterzone.figure.SmallFollower;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
@@ -65,8 +67,9 @@ public class CocFollowerPhase extends Phase {
             Wagon.class, Mayor.class
         );
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
+        boolean marketAllowed = state.getBooleanValue(Rule.FARMERS);
         Stream<Tuple2<FeaturePointer, Quarter>> quarters = state.getTileFeatures2(quarterPos)
-            .filter(t -> t._1.isCityOfCarcassonneQuarter())
+            .filter(t -> t._1.isCityOfCarcassonneQuarter() && (marketAllowed || t._1 != Location.QUARTER_MARKET))
             .map(t -> new Tuple2<>(new FeaturePointer(quarterPos, t._1), (Quarter) t._2));
 
         GameState _state = state;

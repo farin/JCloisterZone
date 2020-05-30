@@ -21,6 +21,7 @@ public class GameMessage extends AbstractWsMessage implements WsInGameMessage {
     private GameSetupMessage gameSetup;
     private SlotMessage[] slots;
 
+    private Long clockStart;
     private long initialSeed;
     private List<WsReplayableMessage> replay;
 
@@ -107,5 +108,13 @@ public class GameMessage extends AbstractWsMessage implements WsInGameMessage {
 
     public void setReplay(List<WsReplayableMessage> replay) {
         this.replay = replay;
+    }
+
+    public Long getClockStart() {
+        return clockStart;
+    }
+
+    public void setClockStart(Long clockStart) {
+        this.clockStart = clockStart;
     }
 }

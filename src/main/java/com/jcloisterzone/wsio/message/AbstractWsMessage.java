@@ -4,16 +4,16 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 
 public abstract class AbstractWsMessage implements WsMessage {
 
-    private Long sequenceNumber;
+    private String messageId;
 
     @Override
-    public Long getSequenceNumber() {
-        return sequenceNumber;
+    public String getMessageId() {
+        return messageId;
     }
 
     @Override
-    public void setSequnceNumber(Long sequenceNumber) {
-        this.sequenceNumber = sequenceNumber;
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     @Override

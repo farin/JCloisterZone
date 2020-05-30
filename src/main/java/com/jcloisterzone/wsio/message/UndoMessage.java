@@ -3,18 +3,12 @@ package com.jcloisterzone.wsio.message;
 import com.jcloisterzone.wsio.WsMessageCommand;
 
 @WsMessageCommand("UNDO")
-public class UndoMessage extends AbstractWsMessage implements WsInGameMessage {
+public class UndoMessage extends AbstractWsMessage implements WsChainedMessage, WsInGameMessage {
 
     private String gameId;
-    /** notifies server hot to cut replay history,
-     *  because server doesn't understand game rules */
-    private String lastMessageId;
+    private String parentId;
 
     public UndoMessage() {
-    }
-
-    public UndoMessage(String lastMessageId) {
-        this.lastMessageId = lastMessageId;
     }
 
     @Override
@@ -27,11 +21,13 @@ public class UndoMessage extends AbstractWsMessage implements WsInGameMessage {
         this.gameId = gameId;
     }
 
-    public String getLastMessageId() {
-        return lastMessageId;
+    @Override
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setLastMessageId(String lastMessageId) {
-        this.lastMessageId = lastMessageId;
+    @Override
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

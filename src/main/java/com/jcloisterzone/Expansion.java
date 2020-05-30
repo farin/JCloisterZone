@@ -2,50 +2,11 @@ package com.jcloisterzone;
 
 import static com.jcloisterzone.ui.I18nUtils._tr;
 
+import com.jcloisterzone.game.capability.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.capability.AbbeyCapability;
-import com.jcloisterzone.game.capability.BarnCapability;
-import com.jcloisterzone.game.capability.BazaarCapability;
-import com.jcloisterzone.game.capability.BigFollowerCapability;
-import com.jcloisterzone.game.capability.BridgeCapability;
-import com.jcloisterzone.game.capability.BuilderCapability;
-import com.jcloisterzone.game.capability.CastleCapability;
-import com.jcloisterzone.game.capability.CathedralCapability;
-import com.jcloisterzone.game.capability.CornCircleCapability;
-import com.jcloisterzone.game.capability.CountCapability;
-import com.jcloisterzone.game.capability.DragonCapability;
-import com.jcloisterzone.game.capability.FairyCapability;
-import com.jcloisterzone.game.capability.FerriesCapability;
-import com.jcloisterzone.game.capability.FestivalCapability;
-import com.jcloisterzone.game.capability.FlierCapability;
-import com.jcloisterzone.game.capability.GermanMonasteriesCapability;
-import com.jcloisterzone.game.capability.GoldminesCapability;
-import com.jcloisterzone.game.capability.HillCapability;
-import com.jcloisterzone.game.capability.InnCapability;
-import com.jcloisterzone.game.capability.KingAndRobberBaronCapability;
-import com.jcloisterzone.game.capability.LittleBuildingsCapability;
-import com.jcloisterzone.game.capability.MageAndWitchCapability;
-import com.jcloisterzone.game.capability.MayorCapability;
-import com.jcloisterzone.game.capability.PhantomCapability;
-import com.jcloisterzone.game.capability.PigCapability;
-import com.jcloisterzone.game.capability.PigHerdCapability;
-import com.jcloisterzone.game.capability.PortalCapability;
-import com.jcloisterzone.game.capability.PrincessCapability;
-import com.jcloisterzone.game.capability.RiverCapability;
-import com.jcloisterzone.game.capability.SheepCapability;
-import com.jcloisterzone.game.capability.ShrineCapability;
-import com.jcloisterzone.game.capability.SiegeCapability;
-import com.jcloisterzone.game.capability.StandardGameCapability;
-import com.jcloisterzone.game.capability.TowerCapability;
-import com.jcloisterzone.game.capability.TradeGoodsCapability;
-import com.jcloisterzone.game.capability.TunnelCapability;
-import com.jcloisterzone.game.capability.VineyardCapability;
-import com.jcloisterzone.game.capability.WagonCapability;
-import com.jcloisterzone.game.capability.WindRoseCapability;
-import com.jcloisterzone.game.capability.YagaCapability;
 import com.jcloisterzone.plugin.Plugin;
 
 import io.vavr.collection.Vector;
@@ -59,6 +20,7 @@ public class Expansion {
     // Basic sets
     public static Expansion BASIC = new Expansion("BASIC", "BA", _tr("Basic game"),
             new Class[] { StandardGameCapability.class }, ExpansionType.BASIC);
+
     // Winter branch
     public static Expansion WINTER = new Expansion("WINTER", "WI", _tr("Winter Edition"), ExpansionType.BASIC_EXT);
 
@@ -115,8 +77,9 @@ public class Expansion {
 //    @NotImplemented public static Expansion SCHOOL = new Expansion("SCHOOL", "SC", _tr("The School"), ExpansionType.PROMO);
 //    @NotImplemented public static Expansion LA_PORXADA = new Expansion("LA_PORXADA", "PX", _tr("La Porxada"), ExpansionType.PROMO);
     public static Expansion RUSSIAN_PROMOS = new Expansion("RUSSIAN_PROMOS", "RP", _tr("Russian Promos"), new Class[] { YagaCapability.class }, ExpansionType.PROMO);
-//    @NotImplemented public static Expansion DARMSTADT_PROMO = new Expansion("DARMSTADT_PROMO", "DP", _tr("Darmstadt Promo"), ExpansionType.PROMO);
-//    @NotImplemented public static Expansion LABYRINTH = new Expansion("LABYRINTH", "LA", _tr("Labyrinth"), ExpansionType.PROMO);
+    public static Expansion DARMSTADT = new Expansion("DARMSTADT", "DA", _tr("Darmstadt Promo"), new Class[] { ChurchCapability.class }, ExpansionType.PROMO);
+    public static Expansion LABYRINTH = new Expansion("LABYRINTH", "LA", _tr("Labyrinth"), new Class[] { LabyrinthCapability.class }, ExpansionType.PROMO);
+
 
     @NotImplemented public static Expansion _MISSING_PLACEHOLDER = new Expansion("(Unknown expansion)", "??", _tr("(Unknown expansion)"), ExpansionType.UNKNOWN);
 
@@ -127,7 +90,7 @@ public class Expansion {
         KING_AND_ROBBER_BARON, RIVER, RIVER_II, CATHARS, BESIEGERS, COUNT, GQ11, CULT, TUNNEL,
         CORN_CIRCLES, PHANTOM, FESTIVAL, LITTLE_BUILDINGS, WIND_ROSE, GERMAN_MONASTERIES,
         FLIER, FERRIES, GOLDMINES, MAGE_AND_WITCH, CORN_CIRCLES_II,
-        RUSSIAN_PROMOS
+        RUSSIAN_PROMOS, DARMSTADT, LABYRINTH
     );
 
     private final String name;
