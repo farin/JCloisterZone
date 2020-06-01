@@ -4,6 +4,7 @@
 *upcoming*
 
 * user can't deselect default plugin (classic) It works as fallback for incomplete artworks.
+* support loading saved games created in app with version before 4.6.0
 
 ## 4.6.0
 *2020-05-30*
