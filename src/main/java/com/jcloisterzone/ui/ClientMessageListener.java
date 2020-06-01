@@ -119,7 +119,7 @@ public class ClientMessageListener implements MessageListener {
             if (msg instanceof WsChainedMessage) {
                 String parentId = ((WsChainedMessage) msg).getParentId();
                 String chainMessageId = gc.getChainMessageIdRef().get();
-                if (chainMessageId != null && !parentId.equals(chainMessageId)) {
+                if (chainMessageId != null && !chainMessageId.equals(parentId)) {
                     logger.info("Unexpected game id. Expected {}, received {}", chainMessageId, parentId);
                     conn.send(new SyncGameMessage(gc.getGame().getGameId()));
                     return;
