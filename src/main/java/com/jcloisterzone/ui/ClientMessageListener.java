@@ -226,6 +226,9 @@ public class ClientMessageListener implements MessageListener {
                     }
                     gc.getGameView().getGridPanel().showInfoMessage(msg, "GAME-IN-DEBUG-MODE");
                 }
+                if (gc.getGame().isCorrupted()) {
+                    gc.getGameView().getGridPanel().showInfoMessage("Game state is inconsistent. Loaded with ignoring (possible) duplicate record. Anyway please provide saved game to farin@farin.cz to help improving app.", "GAME-INCONSISTENT");
+                }
             });
         }
     }

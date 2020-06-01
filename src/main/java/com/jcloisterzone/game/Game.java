@@ -76,6 +76,7 @@ public class Game implements EventProxy {
     private List<UndoHistoryItem> undoHistory = List.empty();
 
     private final EventBus eventBus = new EventBus(new EventBusExceptionHandler("game event bus"));
+    boolean corrupted;
 
 
     public Game(String gameId, long randomSeed) {
@@ -361,14 +362,22 @@ public class Game implements EventProxy {
         state = state.setPhase(firstPhase.getClass());
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
         for (WsReplayableMessage msg : replay) {
-            if (msg instanceof WsSaltMessage) {
-                phaseReducer.getRandom().setSalt(((WsSaltMessage) msg).getSalt());
+            try {
+                if (msg instanceof WsSaltMessage) {
+                    phaseReducer.getRandom().setSalt(((WsSaltMessage) msg).getSalt());
+                }
+                GameState prev = state;
+                state = phaseReducer.apply(state, msg);
+            } catch (MessageNotHandledException ex) {
+                corrupted = true;
             }
-            GameState prev = state;
-            state = phaseReducer.apply(state, msg);
         }
         updateClocks(state.getActivePlayer().getIndex(), 0);
         replaceState(state);
+
+        if (corrupted) {
+            logger.error("Game is inconsistent. Loaded anyway ignoring invalid messages.");
+        }
     }
 
     private void createAiPlayers(GameController gc) {
@@ -440,5 +449,9 @@ public class Game implements EventProxy {
 
     public void setClockStart(long clockStart) {
         this.clockStart = clockStart;
+    }
+
+    public boolean isCorrupted() {
+        return corrupted;
     }
 }
