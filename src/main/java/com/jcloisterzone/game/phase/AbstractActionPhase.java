@@ -101,8 +101,15 @@ public abstract class AbstractActionPhase extends Phase {
                     return true;
                 }
                 Structure struct = t._2;
+                Stream<Meeple> meeples;
+                if (struct instanceof Cloister) {
+                    meeples = ((Cloister) struct).getMeeplesIncludingMonastery(state);
+                } else {
+                    meeples = struct.getMeeples(state);
+                }
+
                 // Shepherd is not interacting with other meeples
-                if (struct.getMeeples(state).find(m -> !(m instanceof Shepherd)).isEmpty()) {
+                if (meeples.find(m -> !(m instanceof Shepherd)).isEmpty()) {
                     // no meeples except Shepherd is on feature
                     return true;
                 };

@@ -3,6 +3,9 @@
 ## 4.6.1
 *upcoming*
 
+* fixed monasteries scoring -
+    - fixed regression when monasteries are scored additinally like cloister at end of game
+    - Monasteries + Flier interaction - majority take count when scoring abbots on monasteries
 * user can't deselect default plugin (classic) It works as fallback for incomplete artworks.
 * support loading saved games created in app with version before 4.6.0
 
