@@ -1,5 +1,10 @@
 # Version history
 
+## 4.6.1
+*upcoming*
+
+* user can't deselect default plugin (classic) It works as fallback for incomplete artworks.
+
 ## 4.6.0
 *2020-05-30*
 

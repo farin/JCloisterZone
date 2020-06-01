@@ -250,7 +250,8 @@ public class Plugin implements ResourceManager {
     }
 
     public boolean isDefault() {
-        return path.getFileName().toString().matches("^classic\\b");
+        String fileName = path.getFileName().toString().trim();
+        return fileName.endsWith("classic.jar") || fileName.endsWith("classic");
     }
 
     public boolean isLoaded() {
