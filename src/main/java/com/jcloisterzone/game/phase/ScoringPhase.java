@@ -31,11 +31,7 @@ import com.jcloisterzone.reducers.UndeployMeeples;
 
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.List;
-import io.vavr.collection.Map;
-import io.vavr.collection.Queue;
-import io.vavr.collection.Set;
+import io.vavr.collection.*;
 import io.vavr.control.Option;
 
 
@@ -224,6 +220,20 @@ public class ScoringPhase extends Phase {
         }
 
         if (completable.isCompleted(state) && !completedMutable.containsKey(completable)) {
+            /*
+              When playing with German / Dutch & Belgian Monasteries: Because an abbot scores only at the end of the game,
+              and this monastery is never considered completed, a monastery with an abbot will not score points for a follower in a castle. (5/2014)
+
+              Also this complicates with flying machines.
+            */
+            if (completable instanceof Cloister && ((Cloister) completable).isMonastery()) {
+                Cloister monastery = (Cloister) completable;
+                List<Tuple2<Meeple, FeaturePointer>> meeples = monastery.getMeeplesIncludingMonastery2(state).toList();
+                if (meeples.size() > 0 && meeples.filter(t -> t._2.getLocation() == Location.CLOISTER).size() == 0) {
+                    // only abbots on monastery
+                    return state;
+                }
+            }
             ScoreCompletable scoreReducer = new ScoreCompletable(completable, false);
             state = scoreReducer.apply(state);
             state = (new UndeployMeeples(completable, false)).apply(state);

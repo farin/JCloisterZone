@@ -88,11 +88,18 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
         return new Cloister(places, neighboring, shrine, monastery, church);
     }
 
-    public Stream<Meeple> getMeeplesIncludingMonastery(GameState state) {
+    public Stream<Tuple2<Meeple, FeaturePointer>> getMeeplesIncludingMonastery2(GameState state) {
         if (isMonastery()) {
             FeaturePointer place = places.get();
             Set<FeaturePointer> fps = HashSet.of(place, new FeaturePointer(place.getPosition(), Location.MONASTERY));
-            return Stream.ofAll(state.getDeployedMeeples()).filter(t -> fps.contains(t._2)).map(Tuple2::_1);
+            return Stream.ofAll(state.getDeployedMeeples()).filter(t -> fps.contains(t._2));
+        }
+        return getMeeples2(state);
+    }
+
+    public Stream<Meeple> getMeeplesIncludingMonastery(GameState state) {
+        if (isMonastery()) {
+            return getMeeplesIncludingMonastery2(state).map(Tuple2::_1);
         }
         return getMeeples(state);
     }
