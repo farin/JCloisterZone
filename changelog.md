@@ -3,16 +3,16 @@
 ## 4.6.1
 *2020-06-02*
 
-* fixed monasteries scoring -
-    - fixed regression when monasteries are scored additionally like cloister at end of game
-    - Monasteries + Flier interaction - majority take count when scoring abbots on monasteries
+* fixed monasteries scoring
+    - fixed regression when monasteries are scored additionally like cloister at the end of game
+    - Monasteries + Flier interaction - majority take count when scoring abbots on the monasteries
 * fixed monasteries and castle interaction - monastery should not trigger castle scoring when only abbots are deployed there
     - see note http://wikicarpedia.com/index.php/Bridges,_Castles_and_Bazaars_(1st_edition)#cite_note-28
-* fixed: wagon -> castle move
+* fixed: wagon -> castle move (game crashed when castle was connected to finished feature with wagon)
 * and hopefully final fix for annoying "Message PlaceTileMessage hasn't been handled by ActionPhase phase"
-* display followers properly when both monastery abbot and monk are both deployed on monaster (via flier)
-* user can't deselect default plugin (classic) It works as fallback for incomplete artworks.
-* support loading saved games created in app with version before 4.6.0
+* display followers properly when both monastery abbot and monk are deployed on the monastery (via flier)
+* user can't deselect default plugin (classic) It works as fallback for incomplete artworks. (regression)
+* support loading of saved games created in app with version before 4.6.0
 
 ## 4.6.0
 *2020-05-30*
