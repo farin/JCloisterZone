@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
@@ -41,8 +42,16 @@ public class WagonPhase extends Phase {
                 GameState _state = state;
                 Set<FeaturePointer> options = ((Completable)feature).getNeighboring()
                     .filter(fp -> {
-                        Completable nei = (Completable) _state.getFeature(fp);
-                        return nei != null && !nei.isCompleted(_state) && !nei.isOccupied(_state);
+                        Feature f = _state.getFeature(fp);
+                        if (f instanceof Castle) {
+                            Castle castle = (Castle) f;
+                            return !castle.isOccupied(_state);
+                        }
+                        if (f instanceof Completable) {
+                            Completable nei = (Completable) f;
+                            return !nei.isCompleted(_state) && !nei.isOccupied(_state);
+                        }
+                        return false; // eg f == null
                     });
 
                 if (!options.isEmpty()) {
