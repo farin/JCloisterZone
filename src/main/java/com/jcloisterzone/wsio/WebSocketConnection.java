@@ -42,7 +42,6 @@ public class WebSocketConnection implements Connection {
     private String maintenance;
     private java.util.Set<String> alreadyReceived = new java.util.HashSet<>();
 
-
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private ScheduledFuture<?> pingFuture;
     private ScheduledFuture<?> reconnectFuture;

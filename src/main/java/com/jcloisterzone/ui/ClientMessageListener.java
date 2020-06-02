@@ -116,18 +116,24 @@ public class ClientMessageListener implements MessageListener {
         EventProxyUiController<?> controller = getController(msg);
         if (controller instanceof GameController) {
             GameController gc = (GameController) controller;
-            if (msg instanceof WsChainedMessage) {
-                String parentId = ((WsChainedMessage) msg).getParentId();
-                String chainMessageId = gc.getChainMessageIdRef().get();
-                if (chainMessageId != null && !chainMessageId.equals(parentId)) {
-                    logger.info("Unexpected game id. Expected {}, received {}", chainMessageId, parentId);
-                    conn.send(new SyncGameMessage(gc.getGame().getGameId()));
-                    return;
+            try {
+                gc.getActionLock().set(true);
+                if (msg instanceof WsChainedMessage) {
+                    String parentId = ((WsChainedMessage) msg).getParentId();
+                    String chainMessageId = gc.getChainMessageIdRef().get();
+                    if (chainMessageId != null && !chainMessageId.equals(parentId)) {
+                        logger.info("Unexpected game id. Expected {}, received {}", chainMessageId, parentId);
+                        conn.send(new SyncGameMessage(gc.getGame().getGameId()));
+                        return;
+                    }
+                    gc.getChainMessageIdRef().set(msg.getMessageId());
                 }
-                gc.getChainMessageIdRef().set(msg.getMessageId());
+
+                Game game = gc.getGame();
+                dispatcher.dispatch(msg, conn, this, game);
+            } finally {
+                gc.getActionLock().set(false);
             }
-            Game game = gc.getGame();
-            dispatcher.dispatch(msg, conn, this, game);
         } else {
             dispatcher.dispatch(msg, conn, this);
         }

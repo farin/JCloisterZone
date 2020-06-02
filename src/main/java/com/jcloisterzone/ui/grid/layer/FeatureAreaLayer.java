@@ -109,6 +109,10 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
         FeaturePointer fp = (FeaturePointer) ptr;
         Position pos = fp.getPosition();
 
+        if (gc.getActionLock().get()) {
+            return;
+        }
+
         if (action instanceof MeepleAction) {
             boolean isMonasteryLocataion = fp.getLocation() == Location.CLOISTER || fp.getLocation() == Location.MONASTERY;
 
@@ -135,7 +139,7 @@ public class FeatureAreaLayer extends AbstractAreaLayer {
                 }
             }
         }
+
         gc.getConnection().send(action.select(fp));
-        return;
     }
 }

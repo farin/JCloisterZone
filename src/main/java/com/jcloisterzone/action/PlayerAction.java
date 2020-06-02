@@ -18,7 +18,6 @@ import io.vavr.collection.Set;
  */
 public interface PlayerAction<T> extends Iterable<T>, Serializable {
 
-
     /**
      * Generates a WebSocket message that informs the receiver that the player chose the given {@code option}.
      *

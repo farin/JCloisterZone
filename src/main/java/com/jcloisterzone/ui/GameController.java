@@ -5,6 +5,7 @@ import static com.jcloisterzone.ui.I18nUtils._tr;
 import java.awt.Color;
 import java.awt.Image;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JOptionPane;
@@ -54,6 +55,7 @@ public class GameController extends EventProxyUiController<Game> {
     private GameView gameView;
     private Connection connProxy;
     private AtomicReference<String> chainMessageId = new AtomicReference<>();
+    private AtomicBoolean actionLock = new AtomicBoolean();
 
     public GameController(Client client, Game game) {
         super(client, game);
@@ -76,6 +78,10 @@ public class GameController extends EventProxyUiController<Game> {
     public AtomicReference<String> getChainMessageIdRef() {
         return chainMessageId;
      }
+
+    public AtomicBoolean getActionLock() {
+        return actionLock;
+    }
 
     public void setGameStatus(GameStatus gameStatus) {
         this.gameStatus = gameStatus;
