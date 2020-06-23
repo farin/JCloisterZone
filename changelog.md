@@ -1,5 +1,9 @@
 # Version history
 
+## upcoming
+
+* fix flier and magic portal regression - do not allow meeple placement on castle by flier and magic portal
+
 ## 4.6.1
 *2020-06-02*
 
