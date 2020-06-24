@@ -130,7 +130,7 @@ public class XMLUtils {
     }
 
     public static String getTileId(Expansion expansion, Element xml) {
-        return expansion.getCode() + "." + xml.getAttribute("id");
+        return xml.getAttribute("id");
     }
 
     public static  Location union(String[] locations) {

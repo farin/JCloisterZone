@@ -24,7 +24,6 @@ public class Tile implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final Expansion origin;
     private final String id;
     private final EdgePattern edgePattern;
     private final TileSymmetry symmetry;
@@ -35,29 +34,21 @@ public class Tile implements Serializable {
     /**
      * Instantiates a new {@code TileDefinition}
      *
-     * @param origin          the {@link Expansion} this tile belongs to
      * @param id              the identifier of the tile
      * @param initialFeatures the {@link Feature}s of the tile
      */
-    public Tile(Expansion origin, String id, Map<Location, Feature> initialFeatures) {
-        this(origin, id, initialFeatures, HashSet.empty());
+    public Tile(String id, Map<Location, Feature> initialFeatures) {
+        this(id, initialFeatures, HashSet.empty());
     }
 
     /**
      * Instantiates a new {@code TileDefinition}.
      *
-     * @param origin          the {@link Expansion} this tile belongs to
      * @param id              the identifier of the tile
      * @param initialFeatures the {@link Feature}s of the tile
-     * @param trigger         the tile trigger (a tag for some special behavior)
-     * @param flier           the direction pointed by of the flier ({@see FlierCapability})
-     * @param windRose        the direction pointed by the wind rose ({@see WindRoseCapability})
-     * @param cornCircle      the feature on the corn circle, if any ({@see CornCircleCapability})
+     * @param modifiers
      */
-    public Tile(Expansion origin, String id,
-        Map<Location, Feature> initialFeatures,
-        Set<TileModifier> modifiers) {
-        this.origin = origin;
+    public Tile(String id, Map<Location, Feature> initialFeatures, Set<TileModifier> modifiers) {
         this.id = id;
         this.initialFeatures = initialFeatures;
         this.modifiers = modifiers;
@@ -66,14 +57,9 @@ public class Tile implements Serializable {
         this.symmetry = this.edgePattern.getSymmetry();
     }
 
-    /**
-     * Sets the tile trigger
-     *
-     * @param trigger the trigger to set
-     * @return a new instance with the trigger set
-     */
+
     public Tile addTileModifier(TileModifier modifier) {
-        return new Tile(origin, id, initialFeatures, modifiers.add(modifier));
+        return new Tile(id, initialFeatures, modifiers.add(modifier));
     }
 
     /**
@@ -83,7 +69,7 @@ public class Tile implements Serializable {
      * @return a new instance with the features set
      */
     public Tile setInitialFeatures(Map<Location, Feature> initialFeatures) {
-        return new Tile(origin, id, initialFeatures, modifiers);
+        return new Tile(id, initialFeatures, modifiers);
     }
 
     /**
@@ -103,14 +89,6 @@ public class Tile implements Serializable {
         return Objects.hashCode(id, initialFeatures);
     }
 
-    /**
-     * Gets the {@link Expansion} this tile belongs to.
-     *
-     * @return the {@link Expansion} this tile belongs to
-     */
-    public Expansion getOrigin() {
-        return origin;
-    }
 
     /**
      * Gets the id of this tile.

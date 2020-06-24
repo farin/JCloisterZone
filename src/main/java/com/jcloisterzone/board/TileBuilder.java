@@ -54,7 +54,7 @@ public class TileBuilder {
         this.state = state;
     }
 
-    public Tile createTile(Expansion expansion, String tileId, Vector<Element> tileElements, boolean isTunnelActive) {
+    public Tile createTile(String tileId, Vector<Element> tileElements, boolean isTunnelActive) {
 
         features = new java.util.HashMap<>();
         multiEdges = new java.util.ArrayList<>();
@@ -111,7 +111,7 @@ public class TileBuilder {
         }
 
         io.vavr.collection.HashMap<Location, Feature> _features = io.vavr.collection.HashMap.ofAll(features);
-        Tile tileDef = new Tile(expansion, tileId, _features);
+        Tile tileDef = new Tile(tileId, _features);
 
         features = null;
         tileId = null;

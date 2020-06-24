@@ -111,7 +111,6 @@ public class Engine implements  Runnable {
             //err.println("RECEIVED:" + line);
 
             WsMessage msg = parser.fromJson(line);
-            msg = adaptMessage(msg);
             Player oldActivePlayer = state.getActivePlayer();
 
             if (msg instanceof WsReplayableMessage) {
@@ -119,7 +118,7 @@ public class Engine implements  Runnable {
                     phaseReducer.getRandom().setSalt(((WsSaltMessage) msg).getSalt());
                 }
                 state = phaseReducer.apply(state, (WsInGameMessage) msg);
-                
+
                 Player newActivePlayer = state.getActivePlayer();
                 boolean undoAllowed = !(msg instanceof WsSaltMessage) &&
                         newActivePlayer != null && newActivePlayer.equals(oldActivePlayer);
@@ -141,14 +140,6 @@ public class Engine implements  Runnable {
 
             out.println(gson.toJson(game));
         }
-    }
-
-    private WsMessage adaptMessage(WsMessage msg) {
-        if (msg instanceof PlaceTileMessage) {
-            PlaceTileMessage m = (PlaceTileMessage) msg;
-            m.setTileId(m.getTileId().replace("/", "."));
-        }
-        return msg;
     }
 
     public static void main(String[] args) {

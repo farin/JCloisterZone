@@ -206,7 +206,7 @@ public class TilePackBuilder {
         }
         usedIds.add(tileId);
 
-        Tile tile = tileBuilder.createTile(expansion, tileId, tileElements, isTunnelActive(expansion));
+        Tile tile = tileBuilder.createTile(tileId, tileElements, isTunnelActive(expansion));
         return initTile(tile, tileElements);
     }
 
