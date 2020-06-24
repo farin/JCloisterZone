@@ -152,7 +152,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
         MessageParser parser = new MessageParser();
         logger.warn("Unhandled message:\n\t" +  parser.toJson(message));
-        throw new IllegalArgumentException(String.format("Message %s hasn't been handled by %s phase.", message.getClass().getSimpleName(), phase));
+        throw new MessageNotHandledException(String.format("Message %s hasn't been handled by %s phase.", message.getClass().getSimpleName(), phase));
     }
 
     public GameState applyStepResult(StepResult stepResult) {
@@ -182,4 +182,6 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
     public RandomGenerator getRandom() {
         return random;
     }
+
+
 }

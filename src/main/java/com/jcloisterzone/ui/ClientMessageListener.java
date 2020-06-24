@@ -116,18 +116,24 @@ public class ClientMessageListener implements MessageListener {
         EventProxyUiController<?> controller = getController(msg);
         if (controller instanceof GameController) {
             GameController gc = (GameController) controller;
-            if (msg instanceof WsChainedMessage) {
-                String parentId = ((WsChainedMessage) msg).getParentId();
-                String chainMessageId = gc.getChainMessageIdRef().get();
-                if (chainMessageId != null && !parentId.equals(chainMessageId)) {
-                    logger.info("Unexpected game id. Expected {}, received {}", chainMessageId, parentId);
-                    conn.send(new SyncGameMessage(gc.getGame().getGameId()));
-                    return;
+            try {
+                gc.getActionLock().set(true);
+                if (msg instanceof WsChainedMessage) {
+                    String parentId = ((WsChainedMessage) msg).getParentId();
+                    String chainMessageId = gc.getChainMessageIdRef().get();
+                    if (chainMessageId != null && !chainMessageId.equals(parentId)) {
+                        logger.info("Unexpected game id. Expected {}, received {}", chainMessageId, parentId);
+                        conn.send(new SyncGameMessage(gc.getGame().getGameId()));
+                        return;
+                    }
+                    gc.getChainMessageIdRef().set(msg.getMessageId());
                 }
-                gc.getChainMessageIdRef().set(msg.getMessageId());
+
+                Game game = gc.getGame();
+                dispatcher.dispatch(msg, conn, this, game);
+            } finally {
+                gc.getActionLock().set(false);
             }
-            Game game = gc.getGame();
-            dispatcher.dispatch(msg, conn, this, game);
         } else {
             dispatcher.dispatch(msg, conn, this);
         }
@@ -225,6 +231,9 @@ public class ClientMessageListener implements MessageListener {
                         msg = String.format("%s Tiles: %s ...", msg, String.join(", ", ((ForcedDrawTilePack)tilePack).getDrawQueue().slice(0, 5)));
                     }
                     gc.getGameView().getGridPanel().showInfoMessage(msg, "GAME-IN-DEBUG-MODE");
+                }
+                if (gc.getGame().isCorrupted()) {
+                    gc.getGameView().getGridPanel().showInfoMessage("Game state is inconsistent. Loaded with ignoring (possible) duplicate record. Anyway please provide saved game to farin@farin.cz to help improving app.", "GAME-INCONSISTENT");
                 }
             });
         }

@@ -7,6 +7,9 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
+import com.jcloisterzone.VersionComparator;
+import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.ui.JCloisterZone;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.message.AbstractWsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
@@ -43,6 +46,11 @@ public class SavedGameParser {
 
     public SavedGame fromJson(JsonReader reader) {
         SavedGame sg = gson.fromJson(reader, SavedGame.class);
+
+        if (!"dev-snapshot".equals(sg.getAppVersion()) && (new VersionComparator()).compare(sg.getAppVersion(), "4.6.0") < 0) {
+            sg.getSetup().getRules().put(Rule.FARMERS, Boolean.TRUE);
+        }
+
         int msgIdCounter = 1;
         for (WsReplayableMessage msg : sg.getReplay()) {
             msg.setGameId(sg.getGameId());

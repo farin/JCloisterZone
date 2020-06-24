@@ -1,14 +1,12 @@
 package com.jcloisterzone.reducers;
 
+import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
-import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Farm;
-import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -55,19 +53,16 @@ public class FinalScoring implements Reducer {
             state = (new ScoreCastle(castle, 0, true)).apply(state);
         }
 
-        LinkedHashMap<Meeple, FeaturePointer> abbots = state.getDeployedMeeples()
-                .filterValues(fp -> fp.getLocation() == Location.MONASTERY);
-        for (Tuple2<Meeple, FeaturePointer> t : abbots) {
-            Follower follower = (Follower) t._1;
-            Position pos = t._2.getPosition();
-            int points = getMonasteryPoints(state, pos);
+        Stream<Cloister> monasteries = state.getFeatures().filter(f -> f instanceof Cloister && ((Cloister) f).isMonastery()).map(f -> (Cloister) f);
 
-            state = (new AddPoints(
-                follower.getPlayer(), points, PointCategory.CLOISTER
-            )).apply(state);
-
-            ScoreEvent scoreEvent = new ScoreEvent(points, PointCategory.CLOISTER, true, t._2, follower);
-            state = state.appendEvent(scoreEvent);
+        for (Cloister monastery: monasteries) {
+            int points = getMonasteryPoints(state, monastery.getPosition());
+            for (Player player : monastery.getMonasteryOwners(state)) {
+                Follower follower = monastery.getMonasterySampleFollower(state, player);
+                state = (new AddPoints(player, points, PointCategory.CLOISTER)).apply(state);
+                ScoreEvent scoreEvent = new ScoreEvent(points, PointCategory.CLOISTER, true, monastery.getPlace(), follower);
+                state = state.appendEvent(scoreEvent);
+            }
         }
 
         for (Farm farm : getOccupiedScoreables(state, Farm.class)) {

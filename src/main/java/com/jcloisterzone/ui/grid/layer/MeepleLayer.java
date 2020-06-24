@@ -96,6 +96,13 @@ public class MeepleLayer extends AbstractGridLayer {
             //TODO rearrange
 
             int order = 0;
+            if (fp.getLocation() == Location.MONASTERY) {
+                // MONASTERY and CLOSTER share same feature
+                LinkedList<Figure<?>> cloisterMeeples = onFeature.get(fp.setLocation(Location.CLOISTER));
+                if (cloisterMeeples != null) {
+                    order += cloisterMeeples.size();
+                }
+            }
 
             for (Figure<?> fig : list) {
                 PlacedTile placedTile = state.getPlacedTile(fp.getPosition());

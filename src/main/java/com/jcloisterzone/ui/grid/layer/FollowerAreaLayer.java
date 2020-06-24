@@ -87,6 +87,8 @@ public class FollowerAreaLayer extends AbstractAreaLayer {
 
     @Override
     protected void performAction(BoardPointer ptr) {
-        gc.getConnection().send(getAction().select((MeeplePointer) ptr));
+        if (!gc.getActionLock().get()) {
+            gc.getConnection().send(getAction().select((MeeplePointer) ptr));
+        }
     }
 }

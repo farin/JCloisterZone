@@ -183,8 +183,10 @@ public class LittleBuildingActionLayer extends AbstractGridLayer implements Acti
     public void mouseClicked(MouseEvent e, Position p) {
         if (e.getButton() == MouseEvent.BUTTON1) {
             if (selected != null) {
-                gc.getConnection().send(getAction().select(selected));
                 e.consume();
+                if (!gc.getActionLock().get()) {
+                    gc.getConnection().send(getAction().select(selected));
+                }
             }
         }
     }

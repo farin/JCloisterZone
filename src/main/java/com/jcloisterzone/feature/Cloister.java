@@ -2,21 +2,22 @@ package com.jcloisterzone.feature;
 
 import static com.jcloisterzone.ui.I18nUtils._tr;
 
+import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.HillCapability;
 import com.jcloisterzone.game.capability.VineyardCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 
 import io.vavr.Tuple2;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.List;
-import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
+import io.vavr.collection.*;
 
 /**
  * Cloister or Shrine
@@ -87,13 +88,49 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
         return new Cloister(places, neighboring, shrine, monastery, church);
     }
 
-    @Override
-    public Stream<Tuple2<Meeple, FeaturePointer>> getMeeples2(GameState state) {
-        FeaturePointer place = places.get();
-        Set<FeaturePointer> fps = isMonastery()
-                ? HashSet.of(place, new FeaturePointer(place.getPosition(), Location.MONASTERY))
-                : HashSet.of(place);
-        return Stream.ofAll(state.getDeployedMeeples()).filter(t -> fps.contains(t._2));
+    public Stream<Tuple2<Meeple, FeaturePointer>> getMeeplesIncludingMonastery2(GameState state) {
+        if (isMonastery()) {
+            FeaturePointer place = places.get();
+            Set<FeaturePointer> fps = HashSet.of(place, new FeaturePointer(place.getPosition(), Location.MONASTERY));
+            return Stream.ofAll(state.getDeployedMeeples()).filter(t -> fps.contains(t._2));
+        }
+        return getMeeples2(state);
+    }
+
+    public Stream<Meeple> getMeeplesIncludingMonastery(GameState state) {
+        if (isMonastery()) {
+            return getMeeplesIncludingMonastery2(state).map(Tuple2::_1);
+        }
+        return getMeeples(state);
+    }
+
+    public Stream<Tuple2<Follower, FeaturePointer>> getMonasteryFollowers2(GameState state) {
+        FeaturePointer place = getPlace().setLocation(Location.MONASTERY);
+        return Stream.ofAll(state.getDeployedMeeples()).filter(t -> t._1 instanceof Follower && t._2.equals(place)).map(t -> t.map1(f -> (Follower) f));
+    }
+
+    public HashMap<Player, Integer> getMonasteryPowers(GameState state) {
+        return getMonasteryFollowers2(state).foldLeft(HashMap.<Player, Integer>empty(), (acc, follower2) -> {
+                Follower follower = follower2._1;
+                FeaturePointer fp = follower2._2;
+                Player player = follower.getPlayer();
+                int power = follower.getPower(state, this);
+                Integer p = acc.get(player).getOrElse(0);
+                return acc.put(player, p + power);
+            });
+    }
+
+    public Set<Player> getMonasteryOwners(GameState state) {
+        HashMap<Player, Integer> powers = getMonasteryPowers(state);
+        int maxPower = powers.values().max().getOrElse(0);
+        if (maxPower == 0) {
+            return HashSet.empty();
+        }
+        return powers.filterValues(p -> p == maxPower).keySet();
+    }
+
+    public Follower getMonasterySampleFollower(GameState state, Player player) {
+        return getMonasteryFollowers2(state).map(Tuple2::_1).find(f -> f.getPlayer().equals(player)).getOrNull();
     }
 
     @Override
