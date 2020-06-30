@@ -1,6 +1,7 @@
 package com.jcloisterzone.engine;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.Player;
@@ -21,7 +22,9 @@ import io.vavr.collection.List;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -72,20 +75,33 @@ public class Engine implements  Runnable {
         return slots;
     }
 
-    @Override
-    public void run() {
-        Config config = new Config();
-        PlayerSlot[] slots = createPlayerSlots(2);
-        // debug seeds
-        // initialSeed = 4125305802896227250L; // RR
-        initialSeed = -5589071459783070185L; // CFC.2
-
+    private GameSetup createSetupFromMessage(GameSetupMessage2 setupMsg) {
+        // TODO implement
         GameSetup gameSetup = new GameSetup(
                 io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
                 //io.vavr.collection.HashSet.of(StandardGameCapability.class, BridgeCapability.class),
                 io.vavr.collection.HashSet.of(StandardGameCapability.class),
                 Rule.getDefaultRules()
         );
+        return gameSetup;
+    }
+
+    @Override
+    public void run() {
+        Config config = new Config();
+
+        initialSeed = random.nextLong();
+        // debug seeds
+        // initialSeed = 4125305802896227250L; // RR
+        // initialSeed = -5589071459783070185L; // CFC.2
+
+        String line = in.nextLine();
+        GameSetupMessage2 setupMsg = (GameSetupMessage2) parser.fromJson(line);
+        err.println(setupMsg);
+
+
+        PlayerSlot[] slots = createPlayerSlots(setupMsg.getSlots().size());
+        GameSetup gameSetup = createSetupFromMessage(setupMsg);
         game = new Game(gameSetup);
 
 
@@ -104,7 +120,7 @@ public class Engine implements  Runnable {
         out.println(gson.toJson(game));
 
         while (true) {
-            String line = in.nextLine();
+            line = in.nextLine();
             if (line.length() == 0) {
                 break;
             }

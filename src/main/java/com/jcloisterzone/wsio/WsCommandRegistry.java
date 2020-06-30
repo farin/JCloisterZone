@@ -21,6 +21,7 @@ public class WsCommandRegistry {
             .put(t(AbandonGameMessage.class))
             .put(t(GameMessage.class))
             .put(t(GameSetupMessage.class))
+            .put(t(GameSetupMessage2.class))
             .put(t(TakeSlotMessage.class))
             .put(t(LeaveSlotMessage.class))
             .put(t(SlotMessage.class))
