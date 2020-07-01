@@ -67,7 +67,7 @@ public class Engine implements  Runnable {
         return slots;
     }
 
-    private GameSetup createSetupFromMessage(GameSetupMessage2 setupMsg) {
+    private GameSetup createSetupFromMessage(GameSetupMessage setupMsg) {
         // TODO implement
         GameSetup gameSetup = new GameSetup(
                 io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
@@ -89,10 +89,8 @@ public class Engine implements  Runnable {
         err.println("initial seed is " + initialSeed);
 
         String line = in.nextLine();
-        GameSetupMessage2 setupMsg = (GameSetupMessage2) parser.fromJson(line);
-        err.println(setupMsg);
-
-
+        GameSetupMessage setupMsg = (GameSetupMessage) parser.fromJson(line);
+        
         PlayerSlot[] slots = createPlayerSlots(setupMsg.getPlayers().size());
         GameSetup gameSetup = createSetupFromMessage(setupMsg);
         game = new Game(gameSetup);

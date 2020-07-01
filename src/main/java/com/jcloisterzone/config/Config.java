@@ -14,10 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.wsio.Connection;
-import com.jcloisterzone.wsio.message.GameSetupMessage;
 
 /**
  * Snakeyaml not supporting mapping to camel-case properties.
@@ -141,30 +139,6 @@ public class Config {
         }
         public void setCapabilities(List<String> capabilities) {
             this.capabilities = capabilities;
-        }
-        public void updateGameSetup(Connection conn, String gameId) {
-            Set<Class<? extends Capability<?>>> capabilities = new HashSet<>();
-            if (this.capabilities != null) {
-                for (String clsName : this.capabilities) {
-                    try {
-                        Class<? extends Capability<?>> cls = Capability.classForName(clsName);
-                        capabilities.add(cls);
-                    } catch (ClassNotFoundException ex) {
-                        logger.error("Unable to find capability class.", ex);
-                    }
-                }
-            }
-
-            Map<Expansion, Integer> expansions = io.vavr.collection.HashMap.ofAll(this.expansions)
-                .mapKeys(name -> Expansion.valueOf(name))
-                .toJavaMap();
-
-            GameSetupMessage msg = new GameSetupMessage(
-                rules, capabilities, expansions
-
-            );
-            msg.setGameId(gameId);
-            conn.send(msg);
         }
     }
 

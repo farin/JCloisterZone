@@ -1,68 +1,56 @@
 package com.jcloisterzone.wsio.message;
 
-import java.util.Map;
-import java.util.Set;
 
-import com.google.gson.annotations.JsonAdapter;
-import com.jcloisterzone.Expansion;
-import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.wsio.WsMessageCommand;
-import com.jcloisterzone.wsio.message.adapters.CapabilitiesSetAdapter;
-import com.jcloisterzone.wsio.message.adapters.ExpansionMapAdapter;
-import com.jcloisterzone.wsio.message.adapters.RulesMapAdapter;
+
+import java.util.ArrayList;
+import java.util.Map;
+
 
 @WsMessageCommand("GAME_SETUP")
-public class GameSetupMessage extends AbstractWsMessage implements WsInGameMessage  {
-    private String gameId;
-    @JsonAdapter(RulesMapAdapter.class)
-    private Map<Rule, Object> rules;
-    @JsonAdapter(ExpansionMapAdapter.class)
-    private Map<Expansion, Integer> expansions;
-    @JsonAdapter(CapabilitiesSetAdapter.class)
-    private Set<Class<? extends Capability<?>>> capabilities;
+public class GameSetupMessage extends AbstractWsMessage implements WsMessage {
 
-    public GameSetupMessage() {
+    private Map<String, Integer> sets;
+    private Map<String, Object> elements;
+    private Map<String, Object> rules;
+    private Map<String, Object> timer;
+    private ArrayList<PlayerSetup> players;
+
+    public Map<String, Integer> getSets() {
+        return sets;
     }
 
-    public GameSetupMessage(Map<Rule, Object> rules, Set<Class<? extends Capability<?>>> capabilities, Map<Expansion, Integer> expansions) {
-        this.rules = rules;
-        this.expansions = expansions;
-        this.capabilities = capabilities;
+    public Map<String, Object> getElements() {
+        return elements;
     }
 
-    @Override
-    public String getGameId() {
-        return gameId;
-    }
-
-    @Override
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public Map<Rule, Object> getRules() {
+    public Map<String, Object> getRules() {
         return rules;
     }
 
-    public void setRules(Map<Rule, Object> rules) {
-        this.rules = rules;
+    public Map<String, Object> getTimer() {
+        return timer;
     }
 
-    public Map<Expansion, Integer> getExpansions() {
-        return expansions;
+    public ArrayList<PlayerSetup> getPlayers() {
+        return players;
     }
 
-    public void setExpansions(Map<Expansion, Integer> expansions) {
-        this.expansions = expansions;
-    }
+    public static class PlayerSetup {
+        private int slot;
+        private String state;
+        private String name;
 
-    public Set<Class<? extends Capability<?>>> getCapabilities() {
-        return capabilities;
-    }
+        public int getSlot() {
+            return slot;
+        }
 
-    public void setCapabilities(Set<Class<? extends Capability<?>>> capabilities) {
-        this.capabilities = capabilities;
-    }
+        public String getState() {
+            return state;
+        }
 
+        public String getName() {
+            return name;
+        }
+    }
 }

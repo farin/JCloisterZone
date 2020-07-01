@@ -1,7 +1,6 @@
 package com.jcloisterzone.wsio;
 
 import com.jcloisterzone.wsio.message.*;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
@@ -21,7 +20,6 @@ public class WsCommandRegistry {
             .put(t(AbandonGameMessage.class))
             .put(t(GameMessage.class))
             .put(t(GameSetupMessage.class))
-            .put(t(GameSetupMessage2.class))
             .put(t(TakeSlotMessage.class))
             .put(t(LeaveSlotMessage.class))
             .put(t(SlotMessage.class))
