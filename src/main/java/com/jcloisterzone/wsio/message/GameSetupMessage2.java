@@ -14,7 +14,7 @@ public class GameSetupMessage2 extends AbstractWsMessage implements WsMessage {
     private Map<String, Object> elements;
     private Map<String, Object> rules;
     private Map<String, Object> timer;
-    private ArrayList<Slot> slots;
+    private ArrayList<PlayerSetup> players;
 
     public Map<String, Integer> getSets() {
         return sets;
@@ -32,18 +32,17 @@ public class GameSetupMessage2 extends AbstractWsMessage implements WsMessage {
         return timer;
     }
 
-    public ArrayList<Slot> getSlots() {
-        return slots;
+    public ArrayList<PlayerSetup> getPlayers() {
+        return players;
     }
 
-    public static class Slot {
-        private int number;
+    public static class PlayerSetup {
+        private int slot;
         private String state;
         private String name;
-        private Integer order;
 
-        public int getNumber() {
-            return number;
+        public int getSlot() {
+            return slot;
         }
 
         public String getState() {
@@ -52,10 +51,6 @@ public class GameSetupMessage2 extends AbstractWsMessage implements WsMessage {
 
         public String getName() {
             return name;
-        }
-
-        public Integer getOrder() {
-            return order;
         }
     }
 }

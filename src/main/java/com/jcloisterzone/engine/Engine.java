@@ -94,16 +94,16 @@ public class Engine implements  Runnable {
         // debug seeds
         // initialSeed = 4125305802896227250L; // RR
         // initialSeed = -5589071459783070185L; // CFC.2
+        err.println("initial seed is " + initialSeed);
 
         String line = in.nextLine();
         GameSetupMessage2 setupMsg = (GameSetupMessage2) parser.fromJson(line);
         err.println(setupMsg);
 
 
-        PlayerSlot[] slots = createPlayerSlots(setupMsg.getSlots().size());
+        PlayerSlot[] slots = createPlayerSlots(setupMsg.getPlayers().size());
         GameSetup gameSetup = createSetupFromMessage(setupMsg);
         game = new Game(gameSetup);
-
 
         GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialSeed);
         GameStateBuilder builder = new GameStateBuilder(gameSetup, slots, config);

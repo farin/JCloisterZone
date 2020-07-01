@@ -34,10 +34,6 @@ public class StateGsonBuilder {
         return builder.create();
     }
 
-    String adaptTileId(String id) {
-        return id.replaceFirst("\\.", "/");
-    }
-
     private int rotationToPrimitive(Rotation rot) {
         return rot.ordinal() * 90;
     }
@@ -64,7 +60,7 @@ public class StateGsonBuilder {
             JsonObject obj = new JsonObject();
             obj.add("position", context.serialize(pos));
             obj.addProperty("rotation", rotationToPrimitive(placedTile.getRotation()));
-            obj.addProperty("id", adaptTileId(placedTile.getTile().getId()));
+            obj.addProperty("id", placedTile.getTile().getId());
             tiles.add(obj);
         });
         return tiles;
@@ -73,7 +69,7 @@ public class StateGsonBuilder {
     private JsonElement serializeDiscardedTiles(List<Tile> state, JsonSerializationContext context) {
         JsonArray tiles = new JsonArray();
         state.forEach(t -> {
-            tiles.add(adaptTileId(t.getId()));
+            tiles.add(t.getId());
         });
         return tiles;
     }
@@ -164,7 +160,7 @@ public class StateGsonBuilder {
         public JsonElement serialize(TilePlacementAction action, Type type, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
             json.addProperty("type", "TilePlacement");
-            json.addProperty("tileId", adaptTileId(action.getTile().getId()));
+            json.addProperty("tileId", action.getTile().getId());
             JsonArray options = new JsonArray();
             action.getOptions().groupBy(PlacementOption::getPosition).forEach((pos, group) -> {
                 JsonObject opt = new JsonObject();
