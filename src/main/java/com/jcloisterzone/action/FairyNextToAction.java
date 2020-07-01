@@ -1,13 +1,10 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
-
 import io.vavr.collection.Set;
 
-@LinkedImage("actions/fairy")
 public class FairyNextToAction extends SelectFollowerAction {
 
     private final String figureId;

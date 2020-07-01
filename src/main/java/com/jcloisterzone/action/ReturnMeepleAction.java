@@ -1,14 +1,11 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.ui.annotations.LinkedImage;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
-
 import io.vavr.collection.Set;
 
-@LinkedImage("actions/undeploy")
 public class ReturnMeepleAction extends SelectFollowerAction {
 
     private final ReturnMeepleSource source;

@@ -2,8 +2,6 @@ package com.jcloisterzone.game;
 
 import java.io.Serializable;
 
-import com.jcloisterzone.ui.PlayerColors;
-
 /**
  * Represents a slot for a player. Slots can be "open" if no player is in the slot, "own" if the slot is used by the
  * player running the application or "remote" if an artificial intelligence or a remote player is in control of the
@@ -47,7 +45,7 @@ public class PlayerSlot implements Serializable {
     private SlotState state = SlotState.OPEN;
     private String aiClassName;
 
-    private transient PlayerColors colors;
+    //private transient PlayerColors colors;
     //private transient AiPlayer aiPlayer; //ai player instance, set only on owner host
 
     /**
@@ -185,23 +183,23 @@ public class PlayerSlot implements Serializable {
         this.aiClassName = aiClassName;
     }
 
-    /**
-     * Gets the colors associated with this slot.
-     *
-     * @return the colors associated with this slot
-     */
-    public PlayerColors getColors() {
-        return colors;
-    }
-
-    /**
-     * Sets the colors associated with this slot.
-     *
-     * @param colors the colors associated with this slot
-     */
-    public void setColors(PlayerColors colors) {
-        this.colors = colors;
-    }
+//    /**
+//     * Gets the colors associated with this slot.
+//     *
+//     * @return the colors associated with this slot
+//     */
+//    public PlayerColors getColors() {
+//        return colors;
+//    }
+//
+//    /**
+//     * Sets the colors associated with this slot.
+//     *
+//     * @param colors the colors associated with this slot
+//     */
+//    public void setColors(PlayerColors colors) {
+//        this.colors = colors;
+//    }
 
     @Override
     public String toString() {

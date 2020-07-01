@@ -2,7 +2,6 @@ package com.jcloisterzone.action;
 
 import com.jcloisterzone.wsio.message.CommitMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
-
 import io.vavr.collection.HashSet;
 
 public class ConfirmAction extends AbstractPlayerAction<Boolean> {

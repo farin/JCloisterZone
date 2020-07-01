@@ -16,7 +16,6 @@ import com.jcloisterzone.Expansion;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.ui.PlayerColors;
 import com.jcloisterzone.wsio.Connection;
 import com.jcloisterzone.wsio.message.GameSetupMessage;
 
@@ -361,20 +360,6 @@ public class Config {
         }
         public void setAi_names(List<String> ai_names) {
             this.ai_names = ai_names;
-        }
-    }
-
-    public PlayerColors getPlayerColor(PlayerSlot slot) {
-        return getPlayerColor(slot.getNumber());
-    }
-
-    public PlayerColors getPlayerColor(int slotNumber) {
-        try {
-            ColorConfig cfg = players.getColors().get(slotNumber);
-            return new PlayerColors(cfg, darkTheme);
-        } catch (IndexOutOfBoundsException ex) {
-            logger.warn("Too few player colors defined in config");
-            return new PlayerColors();
         }
     }
 

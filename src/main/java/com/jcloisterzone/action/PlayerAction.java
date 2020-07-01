@@ -1,12 +1,11 @@
 package com.jcloisterzone.action;
 
-import java.io.Serializable;
-
 import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
-
 import io.vavr.collection.Iterator;
 import io.vavr.collection.Set;
+
+import java.io.Serializable;
 
 // TODO rename to PlayerChoice?
 /**

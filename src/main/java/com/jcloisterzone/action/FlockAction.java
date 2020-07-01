@@ -1,16 +1,12 @@
 package com.jcloisterzone.action;
 
-import java.util.Arrays;
-
-import com.jcloisterzone.ui.annotations.LinkedPanel;
-import com.jcloisterzone.ui.grid.actionpanel.FlockPanel;
 import com.jcloisterzone.wsio.message.FlockMessage;
 import com.jcloisterzone.wsio.message.FlockMessage.FlockOption;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
-
 import io.vavr.collection.HashSet;
 
-@LinkedPanel(FlockPanel.class)
+import java.util.Arrays;
+
 public class FlockAction extends AbstractPlayerAction<FlockOption> {
 
 	public FlockAction() {

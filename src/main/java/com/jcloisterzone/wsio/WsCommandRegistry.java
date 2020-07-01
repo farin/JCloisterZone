@@ -35,7 +35,6 @@ public class WsCommandRegistry {
             .put(t(GameUpdateMessage.class))
             .put(t(PostChatMessage.class))
             .put(t(ChatMessage.class))
-            .put(t(ChannelMessage.class))
             .put(t(GameOverMessage.class))
             .put(t(PingMessage.class))
             .put(t(PongMessage.class))

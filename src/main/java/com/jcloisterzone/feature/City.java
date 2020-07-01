@@ -1,7 +1,5 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._tr;
-
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
@@ -225,7 +223,7 @@ public class City extends CompletableFeature<City> {
     }
 
     public static String name() {
-        return _tr("City");
+        return "City";
     }
 
     protected Set<Tuple2<ShortEdge, FeaturePointer>> mergeMultiEdges(City city) {

@@ -1,7 +1,5 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._tr;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.Function;
@@ -180,7 +178,7 @@ public class Road extends CompletableFeature<Road> {
     }
 
     public static String name() {
-        return _tr("Road");
+        return "Road";
     }
 
     private FeaturePointer findPartOf(Iterable<FeaturePointer> list, FeaturePointer fp) {

@@ -1,7 +1,5 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._tr;
-
 import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -31,6 +29,6 @@ public class Bridge extends Road {
     }
 
     public static String name() {
-        return _tr("Bridge");
+        return "Bridge";
     }
 }

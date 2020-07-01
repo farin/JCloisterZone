@@ -1,5 +1,22 @@
 package com.jcloisterzone.config;
 
+import com.floreysoft.jmte.Engine;
+import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
+import com.google.common.io.Resources;
+import com.jcloisterzone.KeyUtils;
+import com.jcloisterzone.config.Config.ColorConfig;
+import com.jcloisterzone.config.Config.DebugConfig;
+import com.jcloisterzone.config.Config.PlayersConfig;
+import com.jcloisterzone.config.Config.PresetConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.parser.ParserException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,26 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.DumperOptions.FlowStyle;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.nodes.Tag;
-import org.yaml.snakeyaml.parser.ParserException;
-
-import com.floreysoft.jmte.Engine;
-import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
-import com.google.common.io.Resources;
-import com.jcloisterzone.KeyUtils;
-import com.jcloisterzone.ai.player.LegacyAiPlayer;
-import com.jcloisterzone.config.Config.ColorConfig;
-import com.jcloisterzone.config.Config.DebugConfig;
-import com.jcloisterzone.config.Config.PlayersConfig;
-import com.jcloisterzone.config.Config.PresetConfig;
-import com.jcloisterzone.ui.Client;
-
 
 public class ConfigLoader {
 
@@ -41,7 +38,7 @@ public class ConfigLoader {
     public static final int DEFAULT_PORT = 37447;
     public static final int DEFAULT_SCORE_DISPLAY_DURATION = 9;
     public static final int DEFAULT_AI_PLACE_TILE_DELAY = 250;
-    public static final String DEFAULT_AI_CLASS_NAME = LegacyAiPlayer.class.getName();
+    // public static final String DEFAULT_AI_CLASS_NAME = LegacyAiPlayer.class.getName();
     public static final String DEFAULT_THEME = "light";
     public static final int DEFAULT_SCREENSHOT_SCALE = 120;
     public static final String DEFAULT_PLAY_ONLINE_HOST = "play.jcloisterzone.com";
@@ -61,7 +58,7 @@ public class ConfigLoader {
         if (configFile != null) {
             File file = Paths.get(configFile).toFile();
             if (!file.exists()) { //for dev purposes try to load also from classpath
-                URL resource = Client.class.getClassLoader().getResource(configFile);
+                URL resource = ConfigLoader.class.getClassLoader().getResource(configFile);
                 if (resource != null) {
                     file = new File(resource.getFile());
                 }
@@ -143,7 +140,7 @@ public class ConfigLoader {
         config.setPort(DEFAULT_PORT);
         config.setScore_display_duration(DEFAULT_SCORE_DISPLAY_DURATION);
         config.getAi().setPlace_tile_delay(DEFAULT_AI_PLACE_TILE_DELAY);
-        config.getAi().setClass_name(DEFAULT_AI_CLASS_NAME);
+        // config.getAi().setClass_name(DEFAULT_AI_CLASS_NAME);
         config.setTheme(DEFAULT_THEME);
         config.setClient_name("");
         config.setTile_rotation(Config.TileRotationControls.TAB_RCLICK);
@@ -177,7 +174,7 @@ public class ConfigLoader {
     }
 
     public String fillTemplate(Config config) throws IOException {
-        String template = Resources.toString(Client.class.getClassLoader().getResource("config.tpl"), Charsets.UTF_8);
+        String template = Resources.toString(ConfigLoader.class.getClassLoader().getResource("config.tpl"), Charsets.UTF_8);
         Engine engine = new Engine();
         Map<String, Object> model = new HashMap<>();
         model.put("update", config.getUpdate());

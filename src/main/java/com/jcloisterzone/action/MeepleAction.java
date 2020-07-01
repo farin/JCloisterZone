@@ -3,19 +3,15 @@ package com.jcloisterzone.action;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.ui.annotations.LinkedGridLayer;
-import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
-@LinkedGridLayer(FeatureAreaLayer.class)
 public class MeepleAction implements SelectFeatureAction {
 
     private static final long serialVersionUID = 1L;

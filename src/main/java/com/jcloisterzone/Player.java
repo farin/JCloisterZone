@@ -1,22 +1,20 @@
 package com.jcloisterzone;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
-import java.util.Objects;
-
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.ui.PlayerColors;
-
 import io.vavr.Predicates;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 import io.vavr.control.Option;
+
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+import java.util.Objects;
 
 /**
  * Represents a player.
@@ -68,15 +66,6 @@ public class Player implements Serializable {
      */
     public PlayerSlot getSlot() {
         return slot;
-    }
-
-    /**
-     * Gets the colors of the player.
-     *
-     * @return the colors of the player
-     */
-    public PlayerColors getColors() {
-        return slot.getColors();
     }
 
     /**

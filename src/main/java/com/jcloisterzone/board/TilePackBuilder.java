@@ -138,10 +138,6 @@ public class TilePackBuilder {
         }
         if (fileName == null) {
             fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
-            if (expansion.getOrigin() != null) {
-                // expansion is created by plugin
-                return expansion.getOrigin().getLoader().getResource(fileName);
-            }
         }
         if (fileName.startsWith("/")) {
             try {

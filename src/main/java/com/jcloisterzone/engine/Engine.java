@@ -1,30 +1,22 @@
 package com.jcloisterzone.engine;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.KeyUtils;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.game.*;
-import com.jcloisterzone.game.capability.BridgeCapability;
+import com.jcloisterzone.game.GameSetup;
+import com.jcloisterzone.game.GameStatePhaseReducer;
+import com.jcloisterzone.game.PlayerSlot;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.StandardGameCapability;
 import com.jcloisterzone.game.phase.Phase;
-import com.jcloisterzone.game.save.SavedGame;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.GameStateBuilder;
-import com.jcloisterzone.wsio.MessageDispatcher;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.message.*;
-import com.jcloisterzone.wsio.server.ServerPlayerSlot;
-import io.vavr.Tuple2;
-import io.vavr.collection.List;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 

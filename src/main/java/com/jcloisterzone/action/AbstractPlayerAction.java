@@ -1,7 +1,6 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
-
 import io.vavr.collection.Set;
 
 

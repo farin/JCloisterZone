@@ -9,7 +9,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.jcloisterzone.VersionComparator;
 import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.ui.JCloisterZone;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.message.AbstractWsMessage;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;

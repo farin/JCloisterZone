@@ -20,8 +20,6 @@ import com.jcloisterzone.figure.MeepleIdProvider;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.plugin.Plugin;
-import com.jcloisterzone.ui.Client;
 
 @Immutable
 public abstract class Capability<T> implements Serializable {
@@ -131,16 +129,16 @@ public abstract class Capability<T> implements Serializable {
         try {
             return classForName(name, defaultLoader);
         } catch (ClassNotFoundException ex) {
-            for (Plugin p : Client.getInstance().getPlugins()) {
-                if (!p.isEnabled() || p.getLoader().equals(defaultLoader)) {
-                    continue;
-                }
-                try {
-                    return classForName(name, p.getLoader());
-                } catch (ClassNotFoundException nested) {
-                    // do nothing
-                }
-            }
+//            for (Plugin p : Client.getInstance().getPlugins()) {
+//                if (!p.isEnabled() || p.getLoader().equals(defaultLoader)) {
+//                    continue;
+//                }
+//                try {
+//                    return classForName(name, p.getLoader());
+//                } catch (ClassNotFoundException nested) {
+//                    // do nothing
+//                }
+//            }
             throw ex;
         }
     }

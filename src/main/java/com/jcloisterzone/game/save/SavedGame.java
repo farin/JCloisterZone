@@ -10,13 +10,11 @@ import java.util.Set;
 
 import com.google.gson.annotations.JsonAdapter;
 import com.jcloisterzone.Expansion;
-import com.jcloisterzone.PlayerClock;
+import com.jcloisterzone.engine.Game;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Game;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.ui.JCloisterZone;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
 import com.jcloisterzone.wsio.message.adapters.CapabilitiesSetAdapter;
 import com.jcloisterzone.wsio.message.adapters.ExpansionMapAdapter;
@@ -53,29 +51,30 @@ public class SavedGame implements Serializable {
      * @param game the game to store
      */
     public SavedGame(Game game) {
-        gameId = game.getGameId();
-        name = game.getName();
-        appVersion = JCloisterZone.VERSION;
-        initialSeed = game.getInitialSeed();
-        created = new Date();
-        slots = new ArrayList<>();
-        for (PlayerSlot slot : game.getPlayerSlots()) {
-            if (slot != null && slot.isOccupied()) {
-                slots.add(new SavedGamePlayerSlot(
-                    slot.getNumber(),
-                    slot.getSerial(),
-                    slot.getClientId(),
-                    slot.getNickname(),
-                    slot.getAiClassName()
-                ));
-            }
-        }
-        clock = System.currentTimeMillis() - game.getClockStart();
-        setup = new SavedGameSetup();
-        setup.setExpansions(game.getSetup().getExpansions().toJavaMap());
-        setup.setRules(game.getSetup().getRules().toJavaMap());
-        setup.setCapabilities(game.getSetup().getCapabilities().toJavaSet());
-        replay = game.getReplay().reverse().toJavaList();
+        // TODO
+//        gameId = game.getGameId();
+//        name = game.getName();
+//        appVersion = JCloisterZone.VERSION;
+//        initialSeed = game.getInitialSeed();
+//        created = new Date();
+//        slots = new ArrayList<>();
+//        for (PlayerSlot slot : game.getPlayerSlots()) {
+//            if (slot != null && slot.isOccupied()) {
+//                slots.add(new SavedGamePlayerSlot(
+//                    slot.getNumber(),
+//                    slot.getSerial(),
+//                    slot.getClientId(),
+//                    slot.getNickname(),
+//                    slot.getAiClassName()
+//                ));
+//            }
+//        }
+//        clock = System.currentTimeMillis() - game.getClockStart();
+//        setup = new SavedGameSetup();
+//        setup.setExpansions(game.getSetup().getExpansions().toJavaMap());
+//        setup.setRules(game.getSetup().getRules().toJavaMap());
+//        setup.setCapabilities(game.getSetup().getCapabilities().toJavaSet());
+//        replay = game.getReplay().reverse().toJavaList();
     }
 
     /**

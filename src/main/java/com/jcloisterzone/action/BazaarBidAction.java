@@ -1,10 +1,7 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.ui.annotations.LinkedPanel;
-import com.jcloisterzone.ui.grid.actionpanel.BazaarPanel;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
 
-@LinkedPanel(BazaarPanel.class)
 public class BazaarBidAction extends AbstractPlayerAction<Void> {
 
     public BazaarBidAction() {

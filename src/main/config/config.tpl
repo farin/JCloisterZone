@@ -25,9 +25,6 @@ ai:
   class_name: ${ai_class_name}
 
 players:
-  # Colors as Java awt.Color constant or in hex-value. (third-party themes can ignore these colors)
-  colors: ${colors}
-
   # You can declare default player names
   names: ${player_names}
   ai_names: ${ai_names}
