@@ -1,15 +1,7 @@
 package com.jcloisterzone.game.state;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.board.TilePackBuilder;
-import com.jcloisterzone.board.TilePackBuilder.Tiles;
+import com.jcloisterzone.board.*;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
@@ -20,12 +12,19 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.reducers.PlaceTile;
-
+import com.jcloisterzone.wsio.message.GameSetupMessage.PlacedTileItem;
 import io.vavr.Predicates;
+import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
 
 
 public class GameStateBuilder {
@@ -50,7 +49,6 @@ public class GameStateBuilder {
     private final Config config;
 
     private Array<Player> players;
-    private Seq<PlacedTile> preplacedTiles;
     private Map<String, Object> gameAnnotations;
 
     private GameState state;
@@ -92,8 +90,11 @@ public class GameStateBuilder {
     }
 
     public GameState createReadyState(GameState state) {
-        for (PlacedTile pt : preplacedTiles) {
-            state = (new PlaceTile(pt.getTile(), pt.getPosition(), pt.getRotation())).apply(state);
+        for (PlacedTileItem pt : setup.getStart()) {
+            Tuple2<Tile, TilePack> draw = state.getTilePack().drawTile(pt.getTile());
+            Rotation rot = Rotation.valueOf("R" + pt.getRotation());
+            state = state.setTilePack(draw._2);
+            state = (new PlaceTile(draw._1, new Position(pt.getX(), pt.getY()), rot)).apply(state);
         }
         state = state.appendEvent(new PlayerTurnEvent(PlayEventMeta.createWithoutPlayer(), state.getTurnPlayer()));
         return state;
@@ -139,12 +140,14 @@ public class GameStateBuilder {
         TilePackBuilder tilePackBuilder = new TilePackBuilder();
         tilePackBuilder.setGameState(state);
         tilePackBuilder.setConfig(config);
-        tilePackBuilder.setExpansions(setup.getExpansions());
+        tilePackBuilder.setTileSets(setup.getTileSets());
 
-        Tiles tiles = tilePackBuilder.createTilePack();
-        TilePack tilePack = tiles.getTilePack();
-        state = state.setTilePack(tilePack);
-        preplacedTiles = tiles.getPreplacedTiles();
+        try {
+            TilePack tilePack = tilePackBuilder.createTilePack();
+            state = state.setTilePack(tilePack);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't parse tile definitions", e);
+        }
     }
 
     private Capability<?> createCapabilityInstance(Class<? extends Capability<?>> clazz) {

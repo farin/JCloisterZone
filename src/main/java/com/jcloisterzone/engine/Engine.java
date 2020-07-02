@@ -68,15 +68,19 @@ public class Engine implements  Runnable {
     }
 
     private GameSetup createSetupFromMessage(GameSetupMessage setupMsg) {
-        // TODO implement
+        // TODO implement capabilities rules
         GameSetup gameSetup = new GameSetup(
-                io.vavr.collection.HashMap.of(Expansion.BASIC, 1),
+                io.vavr.collection.HashMap.ofAll(setupMsg.getSets()),
                 //io.vavr.collection.HashSet.of(StandardGameCapability.class, BridgeCapability.class),
                 io.vavr.collection.HashSet.of(StandardGameCapability.class),
-                Rule.getDefaultRules()
+                Rule.getDefaultRules(),
+                io.vavr.collection.List.ofAll(setupMsg.getStart())
         );
         return gameSetup;
     }
+
+    // sample setup
+    // {"type":"GAME_SETUP","payload":{"sets":{"basic":1,"inns-and-cathedrals":1},"elements":{"small-follower":7,"farmers":true,"big-follower":1,"cathedral":true,"inn":true},"rules":{"princess-action":"may","fairy-placement":"next-follower","dragon-move":"before-scoring","barn-placement":"not-occupied","bazaar-auction":false,"hill-tiebreaker":"at-least-one-follower","espace-variant":"any-tile","gq11-pig-herd":"pig","tunnelize-other-expansions":true,"more-tunnel-tokens":"3/2","festival-return":"meeple","keep-monasteries":"replace","labyrinth-variant":"advanced","little-buildings-scoring":"1/1/1","king-and-robber-baron-scoring":"default","tiny-city-scoring":"4"},"timer":null,"start":[{"tile":"BA/RCr","x":0,"y":0,"rotation":0}],"players":[{"state":"local","name":"Grace","slot":5},{"state":"local","name":"Grace","slot":1}]}}
 
     @Override
     public void run() {
@@ -90,7 +94,7 @@ public class Engine implements  Runnable {
 
         String line = in.nextLine();
         GameSetupMessage setupMsg = (GameSetupMessage) parser.fromJson(line);
-        
+
         PlayerSlot[] slots = createPlayerSlots(setupMsg.getPlayers().size());
         GameSetup gameSetup = createSetupFromMessage(setupMsg);
         game = new Game(gameSetup);

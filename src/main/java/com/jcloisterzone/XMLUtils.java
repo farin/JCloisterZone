@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,17 @@ import io.vavr.collection.Vector;
 public class XMLUtils {
 
     private XMLUtils() {}
+
+    public static Document parseDocument(Path path) {
+        try {
+            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+            docBuilderFactory.setNamespaceAware(true);
+            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+            return docBuilder.parse(path.toFile());
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static Document parseDocument(URL url) {
         try (InputStream is = url.openStream()){
@@ -129,6 +141,7 @@ public class XMLUtils {
         return Location.valueOf(tokens[0]);
     }
 
+    @Deprecated
     public static String getTileId(Expansion expansion, Element xml) {
         return xml.getAttribute("id");
     }

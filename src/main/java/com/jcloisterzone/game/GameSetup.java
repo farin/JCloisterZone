@@ -9,6 +9,8 @@ import com.jcloisterzone.Immutable;
 import com.jcloisterzone.game.capability.PigHerdCapability;
 import com.jcloisterzone.game.state.mixins.RulesMixin;
 
+import com.jcloisterzone.wsio.message.GameSetupMessage.PlacedTileItem;
+import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
@@ -18,32 +20,34 @@ public class GameSetup implements Serializable, RulesMixin {
 
     private static final long serialVersionUID = 1L;
 
-    private final Map<Expansion, Integer> expansions;
+    private final Map<String, Integer> tileSets;
     private final Map<Rule, Object> rules;
     private final Set<Class<? extends Capability<?>>> capabilities;
+    private final List<PlacedTileItem> start;
 
-    public GameSetup(Map<Expansion, Integer> expansions, Set<Class<? extends Capability<?>>> capabilities, Map<Rule, Object> rules) {
-        this.expansions = expansions;
+    public GameSetup(Map<String, Integer> tileSets, Set<Class<? extends Capability<?>>> capabilities, Map<Rule, Object> rules, List<PlacedTileItem> start) {
+        this.tileSets = tileSets;
         this.capabilities = capabilities;
         this.rules = rules;
+        this.start = start;
     }
 
-    public boolean hasExpansion(Expansion expansion) {
-        return expansions.containsKey(expansion);
+//    public boolean hasExpansion(Expansion expansion) {
+//        return expansions.containsKey(expansion);
+//    }
+
+    public Map<String, Integer> getTileSets() {
+        return tileSets;
     }
 
-    public Map<Expansion, Integer> getExpansions() {
-        return expansions;
+    public GameSetup setTileSets(Map<String, Integer> tileSets) {
+        if (this.tileSets == tileSets) return this;
+        return new GameSetup(tileSets, capabilities, rules, start);
     }
 
-    public GameSetup setExpansions(Map<Expansion, Integer> expansions) {
-        if (this.expansions == expansions) return this;
-        return new GameSetup(expansions, capabilities, rules);
-    }
-
-    public GameSetup mapExpansions(Function<Map<Expansion, Integer>, Map<Expansion, Integer>> mapper) {
-        return setExpansions(mapper.apply(expansions));
-    }
+//    public GameSetup mapExpansions(Function<Map<Expansion, Integer>, Map<Expansion, Integer>> mapper) {
+//        return setExpansions(mapper.apply(expansions));
+//    }
 
     @Override
     public Map<Rule, Object> getRules() {
@@ -52,7 +56,7 @@ public class GameSetup implements Serializable, RulesMixin {
 
     public GameSetup setRules(Map<Rule, Object> rules) {
         if (this.rules == rules) return this;
-        return new GameSetup(expansions, capabilities, rules);
+        return new GameSetup(tileSets, capabilities, rules, start);
     }
 
     public GameSetup mapRules(Function<Map<Rule, Object>, Map<Rule, Object>> mapper) {
@@ -65,7 +69,7 @@ public class GameSetup implements Serializable, RulesMixin {
 
     public GameSetup setCapabilities(Set<Class<? extends Capability<?>>> capabilities) {
         if (this.capabilities == capabilities) return this;
-        return new GameSetup(expansions, capabilities, rules);
+        return new GameSetup(tileSets, capabilities, rules, start);
     }
 
     public GameSetup mapCapabilities(Function<Set<Class<? extends Capability<?>>>, Set<Class<? extends Capability<?>>>> mapper) {
@@ -82,5 +86,9 @@ public class GameSetup implements Serializable, RulesMixin {
         }
 
         return capabilities;
+    }
+
+    public List<PlacedTileItem> getStart() {
+        return start;
     }
 }
