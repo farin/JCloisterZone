@@ -188,7 +188,7 @@ public class TilePackBuilder {
                 int setCount = tileSets.getOrElse(tileSetId, 0);
                 if (setCount > 0) {
                     XMLUtils.elementStream(element.getElementsByTagName("ref")).forEach(refElement -> {
-                        String tileId = refElement.getAttribute("id");
+                        String tileId = refElement.getAttribute("tile");
                         try {
                             int tileCount = Integer.parseInt(refElement.getAttribute("count"));
                             tilesCount.put(tileId, tilesCount.getOrDefault(tileId, 0) + setCount * tileCount);
