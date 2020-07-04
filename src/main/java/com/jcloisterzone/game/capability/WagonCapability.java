@@ -40,11 +40,6 @@ public class WagonCapability extends Capability<Queue<Tuple2<Wagon, FeaturePoint
     }
 
     @Override
-    public List<Follower> createPlayerFollowers(Player player, MeepleIdProvider idProvider) {
-        return List.of(new Wagon(idProvider.generateId(Wagon.class), player));
-    }
-
-    @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         for (Element moveEl : XMLUtils.getElementStreamByTagName(tileElements, "wagon-move")) {
             String tileId = tile.getId();

@@ -59,11 +59,6 @@ public class SheepCapability extends Capability<Map<FeaturePointer, List<SheepTo
         return setModel(state, HashMap.empty());
     }
 
-	@Override
-    public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
-        return List.of(new Shepherd(idProvider.generateId(Barn.class), player));
-    }
-
 	public Vector<SheepToken> getBagConent(GameState state) {
 		Map<SheepToken, Integer> bagCount = getModel(state)
 			.values()

@@ -23,11 +23,6 @@ public class BuilderCapability extends Capability<BuilderState> {
     }
 
     @Override
-    public List<Special> createPlayerSpecialMeeples(Player p, MeepleIdProvider idProvider) {
-        return List.of(new Builder(idProvider.generateId(Builder.class), p));
-    }
-
-    @Override
     public GameState onTurnPartCleanUp(GameState state) {
         return updateModel(state, bs -> {
             if (bs == BuilderState.USED) {

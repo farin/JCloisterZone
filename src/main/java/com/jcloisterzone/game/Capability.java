@@ -61,14 +61,6 @@ public abstract class Capability<T> implements Serializable {
         return null;
     }
 
-    public List<Follower> createPlayerFollowers(Player player, MeepleIdProvider idProvider) {
-        return List.empty();
-    }
-
-    public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
-        return List.empty();
-    }
-
     @Deprecated
     public Set<FeaturePointer> extendFollowOptions(Set<FeaturePointer> locations) {
         return locations;

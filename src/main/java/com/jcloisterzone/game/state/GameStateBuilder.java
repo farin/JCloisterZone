@@ -5,9 +5,7 @@ import com.jcloisterzone.board.*;
 import com.jcloisterzone.config.Config;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
-import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.MeepleIdProvider;
-import com.jcloisterzone.figure.Special;
+import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.PlayerSlot;
@@ -15,14 +13,13 @@ import com.jcloisterzone.reducers.PlaceTile;
 import com.jcloisterzone.wsio.message.GameSetupMessage.PlacedTileItem;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
-import io.vavr.collection.Array;
-import io.vavr.collection.LinkedHashMap;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Stream;
+import io.vavr.collection.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -71,9 +68,9 @@ public class GameStateBuilder {
 
         state = state.mapPlayers(ps ->
             ps.setFollowers(
-                players.map(p -> createPlayerFollowers(p, capabilities))
+                players.map(p -> createPlayerFollowers(p))
             ).setSpecialMeeples(
-                players.map(p -> createPlayerSpecialMeeples(p, capabilities))
+                players.map(p -> createPlayerSpecialMeeples(p))
             )
         );
 
@@ -164,16 +161,41 @@ public class GameStateBuilder {
         );
     }
 
-    private io.vavr.collection.List<Follower> createPlayerFollowers(Player p, Seq<Capability<?>> capabilities) {
+    private io.vavr.collection.List<Follower> createPlayerFollowers(Player p) {
         MeepleIdProvider idProvider = new MeepleIdProvider(p);
         io.vavr.collection.List<Follower> followers = io.vavr.collection.List.empty();
-        followers = followers.appendAll(capabilities.flatMap(c -> c.createPlayerFollowers(p, idProvider)));
+
+        for (Tuple2<Class<? extends Meeple>, Integer> t: setup.getMeeples()) {
+            if (Follower.class.isAssignableFrom(t._1)) {
+                try {
+                    for (int i = 0; i < t._2; i++) {
+                        Constructor<? extends Meeple> ctor = t._1.getConstructor(String.class, Player.class);
+                        followers = followers.append((Follower) ctor.newInstance(idProvider.generateId(t._1), p));
+                    }
+                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    new RuntimeException(e);
+                }
+            }
+        }
         return followers;
     }
 
-    public Seq<Special> createPlayerSpecialMeeples(Player p, Seq<Capability<?>> capabilities) {
+    public Seq<Special> createPlayerSpecialMeeples(Player p) {
         MeepleIdProvider idProvider = new MeepleIdProvider(p);
-        return capabilities.flatMap(c -> c.createPlayerSpecialMeeples(p, idProvider));
+        io.vavr.collection.List<Special> specials = io.vavr.collection.List.empty();
+        for (Tuple2<Class<? extends Meeple>, Integer> t: setup.getMeeples()) {
+            if (Special.class.isAssignableFrom(t._1)) {
+                try {
+                    for (int i = 0; i < t._2; i++) {
+                        Constructor<? extends Meeple> ctor = t._1.getConstructor(String.class, Player.class);
+                        specials = specials.append((Special) ctor.newInstance(idProvider.generateId(t._1), p));
+                    }
+                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    new RuntimeException(e);
+                }
+            }
+        }
+        return specials;
     }
 
     public Map<String, Object> getGameAnnotations() {

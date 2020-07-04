@@ -1,19 +1,20 @@
 package com.jcloisterzone.engine;
 
 import com.google.gson.Gson;
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.game.GameSetup;
-import com.jcloisterzone.game.GameStatePhaseReducer;
-import com.jcloisterzone.game.PlayerSlot;
-import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.game.capability.StandardGameCapability;
+import com.jcloisterzone.figure.*;
+import com.jcloisterzone.game.*;
+import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.GameStateBuilder;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.message.*;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Map;
+import io.vavr.collection.Set;
 
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -67,12 +68,53 @@ public class Engine implements  Runnable {
         return slots;
     }
 
+    private Map<Class<? extends Meeple>, Integer> addMeeples(
+            Map<Class<? extends Meeple>, Integer> meeples, GameSetupMessage setupMsg, String key, Class<? extends Meeple> cls) {
+        Object cnt = setupMsg.getElements().get(key);
+        if (cnt == null) {
+            return meeples;
+        }
+        int count = Integer.parseInt(cnt.toString().split("\\.")[0]);
+        if (count <= 0) {
+            return meeples;
+        }
+        return meeples.put(cls, count);
+    }
+
+    private Set<Class<? extends Capability<?>>> addCapabilities(
+            Set<Class<? extends Capability<?>>> capabilties, GameSetupMessage setupMsg, String key, Class<? extends Capability<?>> cls) {
+        Object value = setupMsg.getElements().get(key);
+        if (value == null) {
+            return capabilties;
+        }
+        return capabilties.add(cls);
+    }
+
     private GameSetup createSetupFromMessage(GameSetupMessage setupMsg) {
+        Map<Class<? extends Meeple>, Integer> meeples = HashMap.empty();
+        meeples = addMeeples(meeples, setupMsg, "small-follower", SmallFollower.class);
+        // meeples = addMeeples(meeples, setupMsg, "abbot", Abbot.class);
+        meeples = addMeeples(meeples, setupMsg, "phantom", Phantom.class);
+        meeples = addMeeples(meeples, setupMsg, "big-follower", BigFollower.class);
+        meeples = addMeeples(meeples, setupMsg, "builder", Builder.class);
+        meeples = addMeeples(meeples, setupMsg, "pig", Pig.class);
+        meeples = addMeeples(meeples, setupMsg, "barn", Barn.class);
+        meeples = addMeeples(meeples, setupMsg, "wagon", Wagon.class);
+        meeples = addMeeples(meeples, setupMsg, "mayor", Mayor.class);
+        meeples = addMeeples(meeples, setupMsg, "shepherd", Shepherd.class);
+
+        Set<Class<? extends Capability<?>>> capabilities = HashSet.empty();
+        capabilities = addCapabilities(capabilities, setupMsg,"barn", BarnCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"builder", BuilderCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"phantom", PhantomCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"shepherd", SheepCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"wagon", WagonCapability.class);
+
         // TODO implement capabilities rules
         GameSetup gameSetup = new GameSetup(
-                io.vavr.collection.HashMap.ofAll(setupMsg.getSets()),
-                //io.vavr.collection.HashSet.of(StandardGameCapability.class, BridgeCapability.class),
-                io.vavr.collection.HashSet.of(StandardGameCapability.class),
+                HashMap.ofAll(setupMsg.getSets()),
+                meeples,
+                capabilities,
                 Rule.getDefaultRules(),
                 io.vavr.collection.List.ofAll(setupMsg.getStart())
         );

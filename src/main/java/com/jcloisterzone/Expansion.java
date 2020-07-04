@@ -14,22 +14,22 @@ public class Expansion {
 
     // Basic sets
     public static Expansion BASIC = new Expansion("BASIC", "BA", "Basic game",
-            new Class[] { StandardGameCapability.class }, ExpansionType.BASIC);
+            new Class[] { }, ExpansionType.BASIC);
 
     // Winter branch
     public static Expansion WINTER = new Expansion("WINTER", "WI", "Winter Edition", ExpansionType.BASIC_EXT);
 
     // Big expansions
     public static Expansion INNS_AND_CATHEDRALS = new Expansion("INNS_AND_CATHEDRALS", "IC", "Inns & Cathedrals",
-            new Class[] { BigFollowerCapability.class, InnCapability.class, CathedralCapability.class}, ExpansionType.MAJOR);
+            new Class[] { InnCapability.class, CathedralCapability.class}, ExpansionType.MAJOR);
     public static Expansion TRADERS_AND_BUILDERS = new Expansion("TRADERS_AND_BUILDERS", "TB", "Traders & Builders",
-            new Class[] { PigCapability.class, BuilderCapability.class, TradeGoodsCapability.class, PigHerdCapability.class }, ExpansionType.MAJOR);
+            new Class[] { BuilderCapability.class, TradeGoodsCapability.class, PigHerdCapability.class }, ExpansionType.MAJOR);
     public static Expansion PRINCESS_AND_DRAGON = new Expansion("PRINCESS_AND_DRAGON", "DG", "The Princess & The Dragon",
             new Class[] { FairyCapability.class, DragonCapability.class, PortalCapability.class, PrincessCapability.class }, ExpansionType.MAJOR);
     public static Expansion TOWER = new Expansion("TOWER", "TO", "The Tower",
             new Class[] { TowerCapability.class }, ExpansionType.MAJOR);
     public static Expansion ABBEY_AND_MAYOR = new Expansion("ABBEY_AND_MAYOR", "AM", "Abbey & Mayor",
-            new Class[] { AbbeyCapability.class, WagonCapability.class, MayorCapability.class, BarnCapability.class }, ExpansionType.MAJOR);
+            new Class[] { AbbeyCapability.class, WagonCapability.class, BarnCapability.class }, ExpansionType.MAJOR);
     // @NotImplemented public static Expansion CATAPULT = new Expansion("CATAPULT", "CA", "The Catapult", ExpansionType.MAJOR);
     public static Expansion BRIDGES_CASTLES_AND_BAZAARS = new Expansion("BRIDGES_CASTLES_AND_BAZAARS", "BB", "Bridges, Castles and Bazaars",
             new Class[] { BridgeCapability.class, CastleCapability.class, BazaarCapability.class }, ExpansionType.MAJOR);

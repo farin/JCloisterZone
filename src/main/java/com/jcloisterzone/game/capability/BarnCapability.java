@@ -27,10 +27,6 @@ public final class BarnCapability extends Capability<FeaturePointer> {
 
 	private static final long serialVersionUID = 1L;
 
-    @Override
-    public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
-        return List.of(new Barn(idProvider.generateId(Barn.class), player));
-    }
 
     @Override
     public GameState onActionPhaseEntered(GameState state) {
