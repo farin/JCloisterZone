@@ -38,7 +38,7 @@ public class Expansion {
     // @NotImplemented public static Expansion UNDER_THE_BIG_TOP = new Expansion("UNDER_THE_BIG_TOP", "UN", "Under the Big Top", ExpansionType.MAJOR);
 
     // Small expansion
-    public static Expansion KING_AND_ROBBER_BARON = new Expansion("KING_AND_ROBBER_BARON", "KR", "King and Robber Baron", new Class[] { KingAndRobberBaronCapability.class }, ExpansionType.MINOR);
+    public static Expansion KING_AND_ROBBER_BARON = new Expansion("KING_AND_ROBBER_BARON", "KR", "King and Robber Baron", new Class[] { KingCapability.class }, ExpansionType.MINOR);
     public static Expansion RIVER = new Expansion("RIVER", "R1", "The River", new Class[] { RiverCapability.class }, ExpansionType.MINOR);
     public static Expansion RIVER_II = new Expansion("RIVER_II", "R2", "The River II", new Class[] { RiverCapability.class }, ExpansionType.MINOR);
     public static Expansion CATHARS = new Expansion("CATHARS", "SI", "The Cathars / Siege", new Class[] { SiegeCapability.class }, ExpansionType.MINOR);

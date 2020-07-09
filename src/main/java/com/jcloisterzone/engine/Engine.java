@@ -110,12 +110,46 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"shepherd", SheepCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"wagon", WagonCapability.class);
 
+        capabilities = addCapabilities(capabilities, setupMsg,"dragon", DragonCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"fairy", FairyCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"count", CountCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"mage", MageAndWitchCapability.class);
+
+        capabilities = addCapabilities(capabilities, setupMsg,"abbey", AbbeyCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"bridge", BridgeCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"castle", CastleCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"little-buildings", LittleBuildingsCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"tower", TowerCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"tunnel", TunnelCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"ferry", FerriesCapability.class);
+
+        capabilities = addCapabilities(capabilities, setupMsg,"traders", TradeGoodsCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"king", KingCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"robber-baron", RobberBaronCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"gold", GoldminesCapability.class);
+
+        capabilities = addCapabilities(capabilities, setupMsg,"cathedral", CathedralCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"inn", InnCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"princess", PrincessCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"portal", PortalCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"pig-herd", PigHerdCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"bazaar", BazaarCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"hill", HillCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"vineyard", VineyardCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"shrine", ShrineCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"festival", FestivalCapability.class);
+
+        //TODO escape
+        // capabilities = addCapabilities(capabilities, setupMsg,"escape", EscapeCapability.class);
+
         boolean containsRiver = setupMsg.getSets().keySet().stream().anyMatch(s -> s.startsWith("river/"));
         if (containsRiver) {
             capabilities = capabilities.add(RiverCapability.class);
         }
 
         //capabilities.forEach(c -> { System.err.println(c.getSimpleName()); });
+
+        // TODO farmers and gardens
 
         // TODO implement capabilities rules
         GameSetup gameSetup = new GameSetup(

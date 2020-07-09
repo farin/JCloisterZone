@@ -6,11 +6,10 @@ import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.game.BiggestFeatureAward;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.MemoizedValue;
 import com.jcloisterzone.game.state.PlayersState;
@@ -20,27 +19,17 @@ import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 
-public final class KingAndRobberBaronCapability extends Capability<Void> {
-
-	public static enum BiggestFeatureAward implements Token {
-		KING,
-		ROBBER;
-	}
+public final class KingCapability extends Capability<Void> {
 
     @Override
     public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
         Set<Scoreable> completedFeatures = completed.keySet();
         int maxCitySize = getMaxSize(state, City.class, completedFeatures);
-        int maxRoadSize = getMaxSize(state, Road.class, completedFeatures);
         City biggestCityCompleted = null;
-        Road longestRoadCompleted = null;
 
         for (Scoreable feature : completed.keySet()) {
             if (feature instanceof City && feature.getTilePositions().size() > maxCitySize) {
                 biggestCityCompleted = (City) feature;
-            }
-            if (feature instanceof Road && feature.getTilePositions().size() > maxRoadSize) {
-                longestRoadCompleted = (Road) feature;
             }
         }
 
@@ -55,15 +44,6 @@ public final class KingAndRobberBaronCapability extends Capability<Void> {
             ev.setSourceFeature(biggestCityCompleted);
             state = state.appendEvent(ev);
         }
-        if (longestRoadCompleted != null) {
-            for (Player p : ps.getPlayers()) {
-                ps = ps.setTokenCount(p.getIndex(), BiggestFeatureAward.ROBBER, p.equals(turnPlayer) ? 1 : 0);
-            }
-            TokenReceivedEvent ev = new TokenReceivedEvent(
-                    PlayEventMeta.createWithActivePlayer(state), turnPlayer, BiggestFeatureAward.ROBBER, 1);
-            ev.setSourceFeature(longestRoadCompleted);
-            state = state.appendEvent(ev);
-        }
         return state.setPlayers(ps);
     }
 
@@ -74,9 +54,6 @@ public final class KingAndRobberBaronCapability extends Capability<Void> {
         for (Player player: ps.getPlayers()) {
             if (ps.getPlayerTokenCount(player.getIndex(), BiggestFeatureAward.KING) > 0) {
                 state = (new AddPoints(player, countCompletedCities(state), PointCategory.BIGGEST_CITY)).apply(state);
-            }
-            if (ps.getPlayerTokenCount(player.getIndex(), BiggestFeatureAward.ROBBER) > 0) {
-                state = (new AddPoints(player, countCompletedRoads(state), PointCategory.LONGEST_ROAD)).apply(state);
             }
         }
         return state;
@@ -107,18 +84,6 @@ public final class KingAndRobberBaronCapability extends Capability<Void> {
         }
 
         return count;
-    }
-
-    public int countCompletedRoads(GameState state) {
-        return state.getFeatures(Road.class)
-            .filter(c -> c.isCompleted(state))
-            .size();
-    }
-
-    private MemoizedValue<Integer> _getLongestRoadSize = new MemoizedValue<>(state -> getMaxSize(state, Road.class, HashSet.empty()));
-
-    public int getLongestRoadSize(GameState state) {
-        return _getLongestRoadSize.apply(state);
     }
 }
 
