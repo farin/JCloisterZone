@@ -89,18 +89,6 @@ public class GameSetup implements Serializable, RulesMixin {
         return setCapabilities(mapper.apply(capabilities));
     }
 
-    public static Set<Class<? extends Capability<?>>> getCapabilitiesForExpansionsAndRules(Map<Expansion, Integer> expansions, Map<Rule, Object> rules) {
-        Set<Class<? extends Capability<?>>> capabilities = Stream.ofAll(expansions.keySet())
-            .flatMap(exp -> Arrays.asList(exp.getCapabilities()))
-            .toSet();
-
-        if ((Boolean) rules.get(Rule.USE_PIG_HERDS_INDEPENDENTLY).getOrElse(Boolean.FALSE)) {
-            capabilities = capabilities.add(PigHerdCapability.class);
-        }
-
-        return capabilities;
-    }
-
     public List<PlacedTileItem> getStart() {
         return start;
     }

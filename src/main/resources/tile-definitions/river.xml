@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pack>
     <tiles>
-        <tile id="RI.1/I.s" max="1">
+        <tile id="RI/s" max="1" group="river-spring">
             <farm>NL NR EL ER SL SR WL WR</farm>
             <river>E</river>
             <position x="0" y="0" priority="2"/>
@@ -72,11 +72,6 @@
             <river>W S</river>
         </tile>
 
-        <tile id="RI.2/I.s" max="1">
-            <farm>NL NR EL ER SL SR WL WR</farm>
-            <river>E</river>
-            <position x="0" y="0" priority="3"/>
-        </tile>
         <tile id="RI.2/IFC" group="river">
             <city castle-base="true">E</city>
             <farm city="E">NL NR WR</farm>
@@ -152,7 +147,7 @@
     </tiles>
     <sets>
         <tile-set id="river/1" max="1"> <!-- allow more then one -->
-            <ref count="1" tile="RI.1/I.s" />
+            <ref count="1" tile="RI/s" />
             <ref count="1" tile="RI.1/I.e" />
             <ref count="1" tile="RI.1/CICI" />
             <ref count="1" tile="RI.1/CIRI" />
@@ -165,10 +160,9 @@
         </tile-set>
 
         <tile-set id="river/2" max="1">
-            <distile tile="RI.1/I.s"/>
             <distile tile="RI.1/I.e"/>
 
-            <ref count="1" tile="RI.2/I.s" />
+            <ref count="1" tile="RI/s" />
             <ref count="1" tile="RI.2/IFC" />
             <ref count="1" tile="RI.2/I.v"/>
             <ref count="1" tile="RI.2/III" />

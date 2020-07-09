@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pack>
     <tiles>
-        <tile id="GQ/RFI">
+        <tile id="GQ/RFI" group="river-spring">
             <river>E</river>
             <road>W</road>
             <farm>WR NL NR EL</farm>

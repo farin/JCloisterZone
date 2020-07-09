@@ -74,6 +74,7 @@ public class Expansion {
     public static Expansion RUSSIAN_PROMOS = new Expansion("RUSSIAN_PROMOS", "RP", "Russian Promos", new Class[] { YagaCapability.class }, ExpansionType.PROMO);
     public static Expansion DARMSTADT = new Expansion("DARMSTADT", "DA", "Darmstadt Promo", new Class[] { ChurchCapability.class }, ExpansionType.PROMO);
     public static Expansion LABYRINTH = new Expansion("LABYRINTH", "LA", "Labyrinth", new Class[] { LabyrinthCapability.class }, ExpansionType.PROMO);
+    public static Expansion SPIEL_DOCH = new Expansion("SPIEL_DOCH", "SD", "Spiel Doch", new Class[] {}, ExpansionType.PROMO);
 
 
     @NotImplemented public static Expansion _MISSING_PLACEHOLDER = new Expansion("(Unknown expansion)", "??", "(Unknown expansion)", ExpansionType.UNKNOWN);
@@ -85,7 +86,7 @@ public class Expansion {
         KING_AND_ROBBER_BARON, RIVER, RIVER_II, CATHARS, BESIEGERS, COUNT, GQ11, CULT, TUNNEL,
         CORN_CIRCLES, PHANTOM, FESTIVAL, LITTLE_BUILDINGS, WIND_ROSE, GERMAN_MONASTERIES,
         FLIER, FERRIES, GOLDMINES, MAGE_AND_WITCH, CORN_CIRCLES_II,
-        RUSSIAN_PROMOS, DARMSTADT, LABYRINTH
+        RUSSIAN_PROMOS, DARMSTADT, LABYRINTH, SPIEL_DOCH
     );
 
     private final String name;

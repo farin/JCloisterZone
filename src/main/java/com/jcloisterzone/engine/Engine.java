@@ -110,6 +110,13 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"shepherd", SheepCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"wagon", WagonCapability.class);
 
+        boolean containsRiver = setupMsg.getSets().keySet().stream().anyMatch(s -> s.startsWith("river/"));
+        if (containsRiver) {
+            capabilities = capabilities.add(RiverCapability.class);
+        }
+
+        //capabilities.forEach(c -> { System.err.println(c.getSimpleName()); });
+
         // TODO implement capabilities rules
         GameSetup gameSetup = new GameSetup(
                 HashMap.ofAll(setupMsg.getSets()),
@@ -123,6 +130,7 @@ public class Engine implements  Runnable {
 
     // sample setup
     // {"type":"GAME_SETUP","payload":{"sets":{"basic":1,"inns-and-cathedrals":1},"elements":{"small-follower":7,"farmers":true,"big-follower":1,"cathedral":true,"inn":true},"rules":{"princess-action":"may","fairy-placement":"next-follower","dragon-move":"before-scoring","barn-placement":"not-occupied","bazaar-auction":false,"hill-tiebreaker":"at-least-one-follower","espace-variant":"any-tile","gq11-pig-herd":"pig","tunnelize-other-expansions":true,"more-tunnel-tokens":"3/2","festival-return":"meeple","keep-monasteries":"replace","labyrinth-variant":"advanced","little-buildings-scoring":"1/1/1","king-and-robber-baron-scoring":"default","tiny-city-scoring":"4"},"timer":null,"start":[{"tile":"BA/RCr","x":0,"y":0,"rotation":0}],"players":[{"state":"local","name":"Grace","slot":5},{"state":"local","name":"Grace","slot":1}]}}
+    // {"type":"GAME_SETUP","payload":{"sets":{"basic":1,"river/1":1},"elements":{"small-follower":7,"farmers":true,"big-follower":1,"cathedral":true,"inn":true},"rules":{"princess-action":"may","fairy-placement":"next-follower","dragon-move":"before-scoring","barn-placement":"not-occupied","bazaar-auction":false,"hill-tiebreaker":"at-least-one-follower","espace-variant":"any-tile","gq11-pig-herd":"pig","tunnelize-other-expansions":true,"more-tunnel-tokens":"3/2","festival-return":"meeple","keep-monasteries":"replace","labyrinth-variant":"advanced","little-buildings-scoring":"1/1/1","king-and-robber-baron-scoring":"default","tiny-city-scoring":"4"},"timer":null,"start":[{"tile":"RI/s","x":0,"y":0,"rotation":0}],"players":[{"state":"local","name":"Grace","slot":5},{"state":"local","name":"Grace","slot":1}]}}
 
     @Override
     public void run() {
@@ -130,6 +138,7 @@ public class Engine implements  Runnable {
 
         initialSeed = random.nextLong();
         // debug seeds
+        // initialSeed = -1507029652130839674L; // L
         // initialSeed = 4125305802896227250L; // RR
         // initialSeed = -5589071459783070185L; // CFC.2
         err.println("initial seed is " + initialSeed);
