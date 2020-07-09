@@ -75,6 +75,12 @@ public class GameStateBuilder {
         );
 
         createTilePack();
+        for (PlacedTileItem pt : setup.getStart()) {
+            Tuple2<Tile, TilePack> draw = state.getTilePack().drawTile(pt.getTile());
+            Rotation rot = Rotation.valueOf("R" + pt.getRotation());
+            state = state.setTilePack(draw._2);
+            state = (new PlaceTile(draw._1, new Position(pt.getX(), pt.getY()), rot)).apply(state);
+        }
 
         for (Capability<?> cap : state.getCapabilities().toSeq()) {
             state = cap.onStartGame(state);
@@ -83,16 +89,6 @@ public class GameStateBuilder {
         //prepareAiPlayers(muteAi);
 
         state = processGameAnnotations(state);
-        return state;
-    }
-
-    public GameState createReadyState(GameState state) {
-        for (PlacedTileItem pt : setup.getStart()) {
-            Tuple2<Tile, TilePack> draw = state.getTilePack().drawTile(pt.getTile());
-            Rotation rot = Rotation.valueOf("R" + pt.getRotation());
-            state = state.setTilePack(draw._2);
-            state = (new PlaceTile(draw._1, new Position(pt.getX(), pt.getY()), rot)).apply(state);
-        }
         state = state.appendEvent(new PlayerTurnEvent(PlayEventMeta.createWithoutPlayer(), state.getTurnPlayer()));
         return state;
     }

@@ -156,7 +156,6 @@ public class Engine implements  Runnable {
 
         GameState state = builder.createInitialState();
         Phase firstPhase = phaseReducer.getFirstPhase();
-        state = builder.createReadyState(state);
         state = state.setPhase(firstPhase.getClass());
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
         game.replaceState(state);
