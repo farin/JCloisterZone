@@ -13,7 +13,8 @@ import io.vavr.collection.Map;
 public enum Rule {
     // RANDOM_SEATING_ORDER(null, Boolean.class,  "Randomize seating order"),
 
-    FARMERS("farmers", Boolean.class, null),
+    FARMERS(null, Boolean.class, null),
+    ESCAPE(null, Boolean.class, null),
 
     // USE_PIG_HERDS_INDEPENDENTLY(Expansion.BASIC, Boolean.class, "Use pig herds independently (without T&B expansion)"),
     // TODO set with capability
@@ -64,8 +65,9 @@ public enum Rule {
     }
 
     public static Rule byKey(String key) {
+        assert key != null;
         for (Rule r : Rule.values()) {
-            if (r.key.equals(key)) {
+            if (key.equals(r.key)) {
                 return r;
             }
         }

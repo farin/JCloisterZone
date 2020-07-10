@@ -119,10 +119,10 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"abbey", AbbeyCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"bridge", BridgeCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"castle", CastleCapability.class);
-        capabilities = addCapabilities(capabilities, setupMsg,"little-buildings", LittleBuildingsCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"tower", TowerCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"tunnel", TunnelCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"ferry", FerriesCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"little-buildings", LittleBuildingsCapability.class);
 
         capabilities = addCapabilities(capabilities, setupMsg,"traders", TradeGoodsCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"king", KingCapability.class);
@@ -144,8 +144,18 @@ public class Engine implements  Runnable {
         // capabilities = addCapabilities(capabilities, setupMsg,"escape", EscapeCapability.class);
 
         boolean containsRiver = setupMsg.getSets().keySet().stream().anyMatch(s -> s.startsWith("river/"));
+        boolean containsCornCircle = setupMsg.getSets().keySet().stream().anyMatch(s -> s.startsWith("corn-circles/"));
         if (containsRiver) {
             capabilities = capabilities.add(RiverCapability.class);
+        }
+        if (containsCornCircle) {
+            capabilities = capabilities.add(CornCircleCapability.class);
+        }
+        if (setupMsg.getSets().containsKey("darmstadt")) {
+            capabilities = capabilities.add(ChurchCapability.class);
+        }
+        if (setupMsg.getSets().containsKey("labyrinth")) {
+            capabilities = capabilities.add(LabyrinthCapability.class);
         }
 
         //capabilities.forEach(c -> { System.err.println(c.getSimpleName()); });
@@ -154,6 +164,9 @@ public class Engine implements  Runnable {
         Map<Rule, Object> rules = HashMap.empty();
         if (setupMsg.getElements().containsKey("farmers")) {
             rules = rules.put(Rule.FARMERS, true);
+        }
+        if (setupMsg.getElements().containsKey("escape")) {
+            rules = rules.put(Rule.ESCAPE, true);
         }
 
         for (Entry<String, Object> entry : setupMsg.getRules().entrySet()) {
@@ -184,6 +197,7 @@ public class Engine implements  Runnable {
         // initialSeed = -1507029652130839674L; // L
         // initialSeed = 4125305802896227250L; // RR
         // initialSeed = -5589071459783070185L; // CFC.2
+        // initialSeed = 5898276208915289755L; // Princess and volcano
         err.println("initial seed is " + initialSeed);
 
         String line = in.nextLine();

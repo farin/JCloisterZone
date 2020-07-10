@@ -67,7 +67,10 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
         next = last = addPhase(setup, next, CleanUpTurnPhase.class);
         next = addPhase(setup, next, BazaarPhase.class);
-        next = addPhase(setup, next, EscapePhase.class);
+
+        if (setup.getBooleanRule(Rule.ESCAPE)) {
+            next = addPhase(setup, next, EscapePhase.class);
+        }
         next = addPhase(setup, next, CleanUpTurnPartPhase.class);
         next = addPhase(setup, next, CornCirclePhase.class);
 
