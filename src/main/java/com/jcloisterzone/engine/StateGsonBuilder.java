@@ -7,10 +7,7 @@ import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.state.ActionsState;
-import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.game.state.PlayersState;
+import com.jcloisterzone.game.state.*;
 import com.jcloisterzone.wsio.MessageParser;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.List;
@@ -47,6 +44,7 @@ public class StateGsonBuilder {
             obj.add("placedTiles", serializePlacedTiles(state.getPlacedTiles(), context));
             obj.add("discardedTiles", serializeDiscardedTiles(state.getDiscardedTiles(), context));
             obj.add("deployedMeeples", serializeDeployedMeeples(state, context));
+            obj.add("neutralFigures", serializeNeutralFigures(state, context));
             obj.addProperty("phase", state.getPhase().getSimpleName());
             obj.add("action", context.serialize(state.getPlayerActions()));
             obj.addProperty("undo", game.isUndoAllowed());
@@ -127,6 +125,32 @@ public class StateGsonBuilder {
             meeples.add(json);
         });
         return meeples;
+    }
+
+    public JsonElement serializeNeutralFigures(GameState root, JsonSerializationContext context) {
+        NeutralFiguresState state = root.getNeutralFigures();
+        JsonObject neutral = new JsonObject();
+        Position pos = state.getDragonDeployment();
+        if (pos != null) {
+            neutral.add("dragon", context.serialize(pos));
+        }
+        BoardPointer bptr = state.getFairyDeployment();
+        if (bptr != null) {
+            neutral.add("fairy", context.serialize(bptr));
+        }
+        FeaturePointer fp = state.getMageDeployment();
+        if (fp != null) {
+            neutral.add("mage", context.serialize(fp));
+        }
+        fp = state.getWitchDeployment();
+        if (fp != null) {
+            neutral.add("witch", context.serialize(fp));
+        }
+        fp = state.getCountDeployment();
+        if (fp != null) {
+            neutral.add("count", context.serialize(fp));
+        }
+        return neutral;
 
     }
 
