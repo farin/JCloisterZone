@@ -55,7 +55,7 @@ public final class BarnCapability extends Capability<FeaturePointer> {
             .map(p -> getCornerFeature(state, p))
             .filter(Predicates.isNotNull())
             .filter(t -> {
-                if (state.getBooleanValue(Rule.MULTI_BARN_ALLOWED)) {
+                if ("occupied".equals(state.getStringRule(Rule.BARN_PLACEMENT))) {
                     return true;
                 }
                 return t._2.getSpecialMeeples(state)

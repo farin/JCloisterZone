@@ -33,7 +33,7 @@ public class CocCountPhase extends Phase {
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
 
         List<Location> quarters = Location.QUARTERS.filter(loc -> loc != countFp.getLocation());
-        if (!state.getBooleanValue(Rule.FARMERS)) {
+        if (!state.getBooleanRule(Rule.FARMERS)) {
             quarters = quarters.remove(Location.QUARTER_MARKET);
         }
         Set<FeaturePointer> options = quarters.map(loc -> new FeaturePointer(quarterPos, loc)).toSet();

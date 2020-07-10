@@ -38,7 +38,7 @@ public class FairyCapability extends Capability<Void> {
 
     @Override
     public GameState onActionPhaseEntered(GameState state) {
-        boolean fairyOnTile = state.getBooleanValue(Rule.FAIRY_ON_TILE);
+        boolean fairyOnTile = "on-tile".equals(state.getStringRule(Rule.FAIRY_PLACEMENT));
         Player activePlayer = state.getPlayerActions().getPlayer();
 
 

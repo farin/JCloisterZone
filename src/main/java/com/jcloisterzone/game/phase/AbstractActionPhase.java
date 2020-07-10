@@ -14,9 +14,7 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BarnCapability;
-import com.jcloisterzone.game.capability.LabyrinthCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
-import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
@@ -58,7 +56,7 @@ public abstract class AbstractActionPhase extends Phase {
 
             places = places.filter(t -> !(t._2 instanceof Castle));
 
-            if (!state.getBooleanValue(Rule.FARMERS)) {
+            if (!state.getBooleanRule(Rule.FARMERS)) {
                 places = places.filter(t -> !(t._2 instanceof Farm));
             }
 

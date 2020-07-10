@@ -8,7 +8,12 @@ public interface RulesMixin {
 
     Map<Rule, Object> getRules();
 
-    default boolean getBooleanValue(Rule rule) {
+    default String getStringRule(Rule rule) {
+        assert rule.getType().equals(String.class);
+        return (String) getRules().get(rule).getOrNull();
+    }
+
+    default boolean getBooleanRule(Rule rule) {
         assert rule.getType().equals(Boolean.class);
         return (Boolean) getRules().get(rule).getOrElse(Boolean.FALSE);
     }

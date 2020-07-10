@@ -28,8 +28,8 @@ public class GermanMonasteriesCapability extends Capability<Void> {
 
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) throws RemoveTileException {
-        if (!state.getBooleanValue(Rule.KEEP_CLOISTERS)) {
-            if (tile.getId().equals("BA.L") || tile.getId().equals("BA.LR")) {
+        if ("replace".equals(state.getBooleanRule(Rule.KEEP_MONASTERIES))) {
+            if (tile.getId().equals("BA/L") || tile.getId().equals("BA/LR")) {
                 throw new RemoveTileException();
             }
         }

@@ -18,7 +18,7 @@ public class PigHerdCapability extends Capability<Void> {
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
         if (feature instanceof Farm) {
             if (attributeBoolValue(xml, "pig")) {
-                if (state.getBooleanValue(Rule.PIG_HERD_ON_GQ_FARM) || !"GQ.F".equals(tileId)) {
+                if ("pig".equals(state.getStringRule(Rule.GQ11_PIG_HERD)) || !"GQ/F".equals(tileId)) {
                     feature = ((Farm) feature).setPigHerds(1);
                 }
             }

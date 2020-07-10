@@ -11,57 +11,40 @@ import io.vavr.collection.Map;
  *
  */
 public enum Rule {
-    RANDOM_SEATING_ORDER(null, Boolean.class,  "Randomize seating order"),
+    // RANDOM_SEATING_ORDER(null, Boolean.class,  "Randomize seating order"),
 
-    FARMERS(Expansion.BASIC, Boolean.class, "Play farmers"),
-    USE_PIG_HERDS_INDEPENDENTLY(Expansion.BASIC, Boolean.class, "Use pig herds independently (without T&B expansion)"),
+    FARMERS("farmers", Boolean.class, null),
 
-    PRINCESS_MUST_REMOVE_KNIGHT(Expansion.PRINCESS_AND_DRAGON, Boolean.class, "Princess MUST remove a knight from city." + " (RGG, ZMG)"),
-    DRAGON_MOVE_AFTER_SCORING(Expansion.PRINCESS_AND_DRAGON, Boolean.class, "Dragon movement occurs after scoring." + " (RGG)"),
-    FAIRY_ON_TILE(Expansion.PRINCESS_AND_DRAGON, Boolean.class, "Place fairy on the tile. (instead of next to a follower)" + " (RGG, ZMG)"),
+    // USE_PIG_HERDS_INDEPENDENTLY(Expansion.BASIC, Boolean.class, "Use pig herds independently (without T&B expansion)"),
+    // TODO set with capability
 
-    MULTI_BARN_ALLOWED(Expansion.ABBEY_AND_MAYOR, Boolean.class, "Allow direct barn placement on a farm where another barn is already placed."),
+    PRINCESS_ACTION("princess-action", String.class, new Object[] { "may", "must" }),
+    FAIRY_PLACEMENT("fairy-placement", String.class, new Object[] { "next-follower", "on-tile" }),
+    DRAGON_MOVEMENT("dragon-move", String.class, new Object[] { "before-scoring", "after-scoring" }),
+    BARN_PLACEMENT("barn-placement", String.class, new Object[] { "not-occupied", "occupied" }),
+    BAZAAR_NO_AUCTION("bazaar-no-auction", Boolean.class, null),
+    HILL_TIEBREAKER("hill-tiebreaker", String.class, new Object[] { "at-least-one-follower", "number-of-followers" }),
+    ESCAPE_VARIANT("espace-variant", String.class, new Object[] { "any-tile", "siege-tile" }),
+    // TODO what about use second tile set?
+    GQ11_PIG_HERD("gq11-pig-herd", String.class, new Object[] { "pig", "nothing" }),
+    TUNNELIZE_OTHER_EXPANSIONS("tunnelize-other-expansions", Boolean.class, null),
+    MORE_TUNNEL_TOKENS("more-tunnel-tokens", String.class, new Object[] { "3/2", "2/1", "1/1" }),
+    FESTIVAL_RETURN("festival-return", String.class, new Object[] { "meeple", "follower" }),
+    KEEP_MONASTERIES("keep-monasteries", String.class, new Object[] { "replace", "add" }),
+    LABYRINTH_VARIANT("labyrinth-variant", String.class, new Object[] { "basic", "advanced" }),
+    LITTLE_BUILDINGS_SCORING("little-buildings-scoring", String.class, new Object[] { "1/1/1", "3/2/1" }),
+    KING_AND_ROBBER_BARON_SCORING("king-and-robber-baron-scoring", String.class, new Object[] { "default", "10/20", "15/40", "continuosly" }),
+    TINY_CITY_SCORING("tiny-city-scoring", String.class, new Object[] { "4", "2" });
 
-    BAZAAR_NO_AUCTION(Expansion.BRIDGES_CASTLES_AND_BAZAARS, Boolean.class, "No bazaar bidding. Each player just chooses one tile."),
 
-    ON_HILL_NUMBER_TIEBREAKER(Expansion.HILLS_AND_SHEEP, Boolean.class, "Count number of followers on hill as tiebreaker." + " [house rule]"),
-
-    ESCAPE_RGG(Expansion.CATHARS, Boolean.class, "Escape cloister can be placed adjacent to any tile of a besieged city." + " (RGG)"),
-
-    PIG_HERD_ON_GQ_FARM(Expansion.GQ11, Boolean.class, "The Pig herd is present on the farm tile." + " [house rule]"),
-
-    TUNNELIZE_ALL_EXPANSIONS(Expansion.TUNNEL, Boolean.class, "Apply tunnel rule on tunnels from other expansions."),
-    MORE_TUNNEL_TOKENS(Expansion.TUNNEL, Boolean.class, "Assign 3/2 tunnel set in game of two/three players."),
-
-    FESTIVAL_FOLLOWER_ONLY(Expansion.FESTIVAL, Boolean.class, "Only follower can be returned by festival (instead of any figure)" + " (RGG)"),
-
-    KEEP_CLOISTERS(Expansion.GERMAN_MONASTERIES, Boolean.class, "Keep basic cloisters in the game."),
-
-    BULDINGS_DIFFERENT_VALUE(Expansion.LITTLE_BUILDINGS, Boolean.class, "Add 3/2/1 points for tower/house/shed."),
-
-    ADVANCED_LABYRINTH(Expansion.LABYRINTH, Boolean.class, "Advanced labyrinth variant"),
-
-    // legacy rules
-    TINY_CITY_2_POINTS(Expansion.BASIC, Boolean.class, "Tiny city is scored only for 2 points.");
-
-    // CLOCK_PLAYER_TIME(null, Integer.class, null);
-
-    String label;
+    String key;
     Class<?> type;
-    Expansion expansion;
+    Object[] allowedValues;
 
-    private Rule(Expansion expansion, Class<?> type, String label) {
-        this.expansion = expansion;
+    private Rule(String key, Class<?> type, Object[] allowedValues) {
+        this.key = key;
         this.type = type;
-        this.label = label;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public Expansion getExpansion() {
-        return expansion;
+        this.allowedValues = allowedValues;
     }
 
     public Class<?> getType() {
@@ -80,14 +63,23 @@ public enum Rule {
         }
     }
 
-    public static Map<Rule, Object> getDefaultRules() {
-        return HashMap.of(
-            FARMERS, true,
-            PIG_HERD_ON_GQ_FARM, true,
-            TUNNELIZE_ALL_EXPANSIONS, true,
-            MORE_TUNNEL_TOKENS, true,
-            ADVANCED_LABYRINTH, true
-        );
+    public static Rule byKey(String key) {
+        for (Rule r : Rule.values()) {
+            if (r.key.equals(key)) {
+                return r;
+            }
+        }
+        throw new IllegalArgumentException("Unknow key");
     }
+
+//    public static Map<Rule, Object> getDefaultRules() {
+//        return HashMap.of(
+//            FARMERS, true,
+//            PIG_HERD_ON_GQ_FARM, true,
+//            TUNNELIZE_ALL_EXPANSIONS, true,
+//            MORE_TUNNEL_TOKENS, true,
+//            ADVANCED_LABYRINTH, true
+//        );
+//    }
 
 }

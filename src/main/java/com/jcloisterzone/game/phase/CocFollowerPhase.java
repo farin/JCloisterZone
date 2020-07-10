@@ -67,7 +67,7 @@ public class CocFollowerPhase extends Phase {
             Wagon.class, Mayor.class
         );
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
-        boolean marketAllowed = state.getBooleanValue(Rule.FARMERS);
+        boolean marketAllowed = state.getBooleanRule(Rule.FARMERS);
         Stream<Tuple2<FeaturePointer, Quarter>> quarters = state.getTileFeatures2(quarterPos)
             .filter(t -> t._1.isCityOfCarcassonneQuarter() && (marketAllowed || t._1 != Location.QUARTER_MARKET))
             .map(t -> new Tuple2<>(new FeaturePointer(quarterPos, t._1), (Quarter) t._2));

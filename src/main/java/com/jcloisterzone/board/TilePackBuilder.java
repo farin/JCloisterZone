@@ -1,15 +1,12 @@
 package com.jcloisterzone.board;
 
 import static com.jcloisterzone.XMLUtils.attributeIntValue;
-import static com.jcloisterzone.XMLUtils.getTileId;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,21 +16,13 @@ import org.w3c.dom.NodeList;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.config.Config;
-import com.jcloisterzone.config.Config.DebugConfig;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.game.capability.RiverCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.game.state.PlacedTile;
 
-import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
 import io.vavr.collection.LinkedHashMap;
-import io.vavr.collection.List;
 import io.vavr.collection.Map;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
 
@@ -110,7 +99,7 @@ public class TilePackBuilder {
         if (!state.getCapabilities().contains(TunnelCapability.class)) {
             return false;
         }
-        return tileId.startsWith("TU/") || state.getBooleanValue(Rule.TUNNELIZE_ALL_EXPANSIONS);
+        return tileId.startsWith("TU/") || state.getBooleanRule(Rule.TUNNELIZE_OTHER_EXPANSIONS);
     }
 
     protected int getTileCount(Element tileEl, String tileId, int expansionCount) {

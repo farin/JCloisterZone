@@ -60,7 +60,7 @@ public class LittleBuildingsCapability extends Capability<Map<Position, LittleBu
     }
 
     public static int getBuildingsPoints(RulesMixin rules, Seq<LittleBuilding> buildings) {
-        if (rules.getBooleanValue(Rule.BULDINGS_DIFFERENT_VALUE)) {
+        if ("3/2/1".equals(rules.getStringRule(Rule.LITTLE_BUILDINGS_SCORING))) {
             return buildings
                 .map(token -> token.ordinal() + 1)
                 .sum().intValue();

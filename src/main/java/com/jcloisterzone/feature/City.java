@@ -186,7 +186,7 @@ public class City extends CompletableFeature<City> {
         int tileCount = getTilePositions().size();
 
         int pointsPerUnit = 2;
-        if (completed && tileCount == 2 && state.getBooleanValue(Rule.TINY_CITY_2_POINTS)) {
+        if (completed && tileCount == 2 && "2".equals(state.getStringRule(Rule.TINY_CITY_SCORING))) {
             pointsPerUnit = 1;
         } else{
             if (besieged) {

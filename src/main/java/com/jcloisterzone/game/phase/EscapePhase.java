@@ -54,7 +54,7 @@ public class EscapePhase extends Phase {
             .filter(c -> {
                 Stream<PlacedTile> cityTiles = Stream.ofAll(c.getTilePositions()).map(state::getPlacedTile);
 
-                if (!state.getBooleanValue(Rule.ESCAPE_RGG)) {
+                if ("siege-tile".equals(state.getStringRule(Rule.ESCAPE_VARIANT))) {
                     cityTiles = cityTiles.filter(pt ->
                         pt.getTile().hasModifier(SiegeCapability.SIEGE_ESCAPE_TILE)
                     );

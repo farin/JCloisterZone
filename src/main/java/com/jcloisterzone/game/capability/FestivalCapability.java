@@ -51,7 +51,7 @@ public class FestivalCapability extends Capability<Void> {
         Stream<Tuple2<Meeple, FeaturePointer>> meeples = Stream.ofAll(state.getDeployedMeeples())
             .filter(t -> t._1.getPlayer().equals(player));
 
-        if (state.getBooleanValue(Rule.FESTIVAL_FOLLOWER_ONLY)) {
+        if ("follower".equals(state.getStringRule(Rule.FESTIVAL_RETURN))) {
             meeples = meeples.filter(Predicates.instanceOf(Follower.class));
         }
 

@@ -18,6 +18,7 @@ import io.vavr.collection.Set;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -150,13 +151,21 @@ public class Engine implements  Runnable {
         //capabilities.forEach(c -> { System.err.println(c.getSimpleName()); });
 
         // TODO farmers and gardens
+        Map<Rule, Object> rules = HashMap.empty();
+        if (setupMsg.getElements().containsKey("farmers")) {
+            rules = rules.put(Rule.FARMERS, true);
+        }
+
+        for (Entry<String, Object> entry : setupMsg.getRules().entrySet()) {
+            rules = rules.put(Rule.byKey(entry.getKey()), entry.getValue());
+        }
 
         // TODO implement capabilities rules
         GameSetup gameSetup = new GameSetup(
                 HashMap.ofAll(setupMsg.getSets()),
                 meeples,
                 capabilities,
-                Rule.getDefaultRules(),
+                rules,
                 io.vavr.collection.List.ofAll(setupMsg.getStart())
         );
         return gameSetup;

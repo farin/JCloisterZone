@@ -73,7 +73,7 @@ public class ActionPhase extends AbstractActionPhase {
         }
 
         if (state.getCapabilities().contains(PrincessCapability.class) &&
-            state.getBooleanValue(Rule.PRINCESS_MUST_REMOVE_KNIGHT)) {
+                "must".equals(state.getStringRule(Rule.PRINCESS_ACTION))) {
             PrincessAction princessAction = (PrincessAction) actions.find(a -> a instanceof PrincessAction).getOrNull();
             if (princessAction != null) {
                 actions = Vector.of(princessAction);
@@ -90,7 +90,7 @@ public class ActionPhase extends AbstractActionPhase {
         if (fig instanceof Fairy) {
             // TODO validation against ActionState
 
-            assert (state.getBooleanValue(Rule.FAIRY_ON_TILE) ? Position.class : BoardPointer.class).isInstance(ptr);
+            assert ("on-tile".equals(state.getStringRule(Rule.FAIRY_PLACEMENT)) ? Position.class : BoardPointer.class).isInstance(ptr);
 
             Fairy fairy = (Fairy) fig;
             state = (new MoveNeutralFigure<BoardPointer>(fairy, ptr, state.getActivePlayer())).apply(state);
