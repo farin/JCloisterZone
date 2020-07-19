@@ -236,7 +236,7 @@ public class StateGsonBuilder {
         @Override
         public JsonElement serialize(FairyNextToAction action, Type type, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
-            json.addProperty("type", "MoveFairy");
+            json.addProperty("type", "MoveFairyNextTo");
             json.addProperty("figureId", action.getFigureId());
             JsonArray options = new JsonArray();
             action.getOptions().forEach(ptr -> {
@@ -251,7 +251,7 @@ public class StateGsonBuilder {
         @Override
         public JsonElement serialize(FairyOnTileAction action, Type type, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
-            json.addProperty("type", "MoveFairy");
+            json.addProperty("type", "MoveFairyOnTile");
             json.addProperty("figureId", action.getFigureId());
             JsonArray options = new JsonArray();
             action.getOptions().forEach(pos -> {
