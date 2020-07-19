@@ -220,6 +220,7 @@ public class StateGsonBuilder {
         @Override
         public JsonElement serialize(MoveDragonAction action, Type type, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
+            json.addProperty("figureId", action.getFigureId());
             JsonArray options = new JsonArray();
             action.getOptions().forEach(pos -> {
                 options.add(context.serialize(pos));

@@ -25,4 +25,7 @@ public class MoveDragonAction extends SelectTileAction {
         return "move " + figureId;
     }
 
+    public String getFigureId() {
+        return figureId;
+    }
 }
