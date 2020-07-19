@@ -2,6 +2,7 @@ package com.jcloisterzone.engine;
 
 import com.google.gson.*;
 import com.jcloisterzone.action.MeepleAction;
+import com.jcloisterzone.action.MoveDragonAction;
 import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.BoardPointer;
@@ -27,7 +28,7 @@ public class StateGsonBuilder {
         // actions
         builder.registerTypeAdapter(TilePlacementAction.class, new TilePlacementActionSerializer());
         builder.registerTypeAdapter(MeepleAction.class, new MeepleActionSerializer());
-
+        builder.registerTypeAdapter(MoveDragonAction.class, new MoveDragonActionSerializer());
         return builder.create();
     }
 
@@ -209,6 +210,19 @@ public class StateGsonBuilder {
             JsonArray options = new JsonArray();
             action.getOptions().forEach(fp -> {
                 options.add(context.serialize(fp));
+            });
+            json.add("options", options);
+            return json;
+        }
+    }
+
+    private class MoveDragonActionSerializer implements JsonSerializer<MoveDragonAction> {
+        @Override
+        public JsonElement serialize(MoveDragonAction action, Type type, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            JsonArray options = new JsonArray();
+            action.getOptions().forEach(pos -> {
+                options.add(context.serialize(pos));
             });
             json.add("options", options);
             return json;
