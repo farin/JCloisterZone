@@ -1,9 +1,7 @@
 package com.jcloisterzone.engine;
 
 import com.google.gson.*;
-import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.action.MoveDragonAction;
-import com.jcloisterzone.action.TilePlacementAction;
+import com.jcloisterzone.action.*;
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -28,7 +26,10 @@ public class StateGsonBuilder {
         // actions
         builder.registerTypeAdapter(TilePlacementAction.class, new TilePlacementActionSerializer());
         builder.registerTypeAdapter(MeepleAction.class, new MeepleActionSerializer());
+        builder.registerTypeAdapter(ReturnMeepleAction.class, new ReturnMeepleActionSerializer());
         builder.registerTypeAdapter(MoveDragonAction.class, new MoveDragonActionSerializer());
+        builder.registerTypeAdapter(FairyNextToAction.class, new FairyNextToActionSerializer());
+        builder.registerTypeAdapter(FairyOnTileAction.class, new FairyOnTileActionSerializer());
         return builder.create();
     }
 
@@ -220,10 +221,56 @@ public class StateGsonBuilder {
         @Override
         public JsonElement serialize(MoveDragonAction action, Type type, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
+            json.addProperty("type", "MoveDragon");
             json.addProperty("figureId", action.getFigureId());
             JsonArray options = new JsonArray();
             action.getOptions().forEach(pos -> {
                 options.add(context.serialize(pos));
+            });
+            json.add("options", options);
+            return json;
+        }
+    }
+
+    private class FairyNextToActionSerializer implements JsonSerializer<FairyNextToAction> {
+        @Override
+        public JsonElement serialize(FairyNextToAction action, Type type, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("type", "MoveFairy");
+            json.addProperty("figureId", action.getFigureId());
+            JsonArray options = new JsonArray();
+            action.getOptions().forEach(ptr -> {
+                options.add(context.serialize(ptr));
+            });
+            json.add("options", options);
+            return json;
+        }
+    }
+
+    private class FairyOnTileActionSerializer implements JsonSerializer<FairyOnTileAction> {
+        @Override
+        public JsonElement serialize(FairyOnTileAction action, Type type, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("type", "MoveFairy");
+            json.addProperty("figureId", action.getFigureId());
+            JsonArray options = new JsonArray();
+            action.getOptions().forEach(pos -> {
+                options.add(context.serialize(pos));
+            });
+            json.add("options", options);
+            return json;
+        }
+    }
+
+    private class ReturnMeepleActionSerializer implements JsonSerializer<ReturnMeepleAction> {
+        @Override
+        public JsonElement serialize(ReturnMeepleAction action, Type type, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("type", "ReturnMeeple");
+            json.addProperty("source", action.getSource().name());
+            JsonArray options = new JsonArray();
+            action.getOptions().forEach(ptr -> {
+                options.add(context.serialize(ptr));
             });
             json.add("options", options);
             return json;

@@ -2,6 +2,8 @@ package com.jcloisterzone.game.capability;
 
 import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
+import com.jcloisterzone.action.ReturnMeepleAction;
+import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.action.PrincessAction;
@@ -54,6 +56,6 @@ public class PrincessCapability extends Capability<Void> {
             return state;
         }
 
-        return state.appendAction(new PrincessAction(options));
+        return state.appendAction(new ReturnMeepleAction(options, ReturnMeepleSource.PRINCESS));
     }
 }

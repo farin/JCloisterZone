@@ -23,4 +23,8 @@ public class FairyOnTileAction extends SelectTileAction {
     public String toString() {
         return "move fairy";
     }
+
+    public String getFigureId() {
+        return figureId;
+    }
 }

@@ -24,4 +24,8 @@ public class ReturnMeepleAction extends SelectFollowerAction {
     public String toString() {
         return "return meeple";
     }
+
+    public ReturnMeepleSource getSource() {
+        return source;
+    }
 }

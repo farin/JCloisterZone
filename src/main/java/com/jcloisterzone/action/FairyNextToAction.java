@@ -24,4 +24,7 @@ public class FairyNextToAction extends SelectFollowerAction {
         return "move fairy";
     }
 
+    public String getFigureId() {
+        return figureId;
+    }
 }
