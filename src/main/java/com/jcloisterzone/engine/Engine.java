@@ -197,7 +197,7 @@ public class Engine implements  Runnable {
         // initialSeed = -1507029652130839674L; // L
         // initialSeed = 4125305802896227250L; // RR
         // initialSeed = -5589071459783070185L; // CFC.2
-        // initialSeed = 5898276208915289755L; // Princess and Dragon: early volcano + move, + also early princess
+        initialSeed = 5898276208915289755L; // Princess and Dragon: early volcano + move, + also early princess
         err.println("initial seed is " + initialSeed);
 
         String line = in.nextLine();

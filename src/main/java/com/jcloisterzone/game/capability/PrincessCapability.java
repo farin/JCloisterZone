@@ -6,7 +6,6 @@ import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
 import org.w3c.dom.Element;
 
-import com.jcloisterzone.action.PrincessAction;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;

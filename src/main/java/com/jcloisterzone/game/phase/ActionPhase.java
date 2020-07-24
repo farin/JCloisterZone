@@ -2,7 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.PrincessAction;
+import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -43,6 +43,7 @@ import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 import com.jcloisterzone.wsio.message.PlaceTokenMessage;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
 
+import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
 import io.vavr.Predicates;
 import io.vavr.collection.Vector;
 
@@ -74,7 +75,7 @@ public class ActionPhase extends AbstractActionPhase {
 
         if (state.getCapabilities().contains(PrincessCapability.class) &&
                 "must".equals(state.getStringRule(Rule.PRINCESS_ACTION))) {
-            PrincessAction princessAction = (PrincessAction) actions.find(a -> a instanceof PrincessAction).getOrNull();
+            ReturnMeepleAction princessAction = (ReturnMeepleAction) actions.find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.PRINCESS).getOrNull();
             if (princessAction != null) {
                 actions = Vector.of(princessAction);
             }
@@ -109,8 +110,8 @@ public class ActionPhase extends AbstractActionPhase {
 
         switch (msg.getSource()) {
         case PRINCESS:
-            PrincessAction princessAction = (PrincessAction) state.getPlayerActions()
-                .getActions().find(Predicates.instanceOf(PrincessAction.class))
+            ReturnMeepleAction princessAction = (ReturnMeepleAction) state.getPlayerActions()
+                .getActions().find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.PRINCESS)
                 .getOrElseThrow(() -> new IllegalArgumentException("Return meeple is not allowed"));
             if (princessAction.getOptions().contains(ptr)) {
                 state = state.addFlag(Flag.PRINCESS_USED);
