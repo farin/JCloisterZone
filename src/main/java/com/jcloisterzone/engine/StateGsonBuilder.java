@@ -31,6 +31,7 @@ public class StateGsonBuilder {
         builder.registerTypeAdapter(FairyNextToAction.class, new FairyNextToActionSerializer());
         builder.registerTypeAdapter(FairyOnTileAction.class, new FairyOnTileActionSerializer());
         builder.registerTypeAdapter(TowerPieceAction.class, new TowerPieceActionSerializer());
+        builder.registerTypeAdapter(CaptureFollowerAction.class, new CaptureFollowerActionSerializer());
         return builder.create();
     }
 
@@ -286,6 +287,20 @@ public class StateGsonBuilder {
             JsonArray options = new JsonArray();
             action.getOptions().forEach(pos -> {
                 options.add(context.serialize(pos));
+            });
+            json.add("options", options);
+            return json;
+        }
+    }
+
+    private class CaptureFollowerActionSerializer implements JsonSerializer<CaptureFollowerAction> {
+        @Override
+        public JsonElement serialize(CaptureFollowerAction action, Type type, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("type", "CaptureFollower");
+            JsonArray options = new JsonArray();
+            action.getOptions().forEach(ptr -> {
+                options.add(context.serialize(ptr));
             });
             json.add("options", options);
             return json;
