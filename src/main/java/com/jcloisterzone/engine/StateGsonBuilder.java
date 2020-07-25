@@ -5,6 +5,7 @@ import com.jcloisterzone.action.*;
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.state.*;
 import com.jcloisterzone.wsio.MessageParser;
@@ -49,6 +50,7 @@ public class StateGsonBuilder {
             obj.add("discardedTiles", serializeDiscardedTiles(state.getDiscardedTiles(), context));
             obj.add("deployedMeeples", serializeDeployedMeeples(state, context));
             obj.add("neutralFigures", serializeNeutralFigures(state, context));
+            obj.add("features", serializeFeatures(state, context));
             obj.addProperty("phase", state.getPhase().getSimpleName());
             obj.add("action", context.serialize(state.getPlayerActions()));
             obj.addProperty("undo", game.isUndoAllowed());
@@ -155,7 +157,28 @@ public class StateGsonBuilder {
             neutral.add("count", context.serialize(fp));
         }
         return neutral;
+    }
 
+    public JsonElement serializeFeatures(GameState root, JsonSerializationContext context) {
+        JsonArray features = new JsonArray();
+        root.getFeatures().forEach(f -> {
+            JsonObject item = new JsonObject();
+            item.addProperty("type", f.getClass().getSimpleName());
+            JsonArray places = new JsonArray();
+            f.getPlaces().forEach(fp -> {
+                JsonArray ptr = new JsonArray();
+                ptr.add(fp.getPosition().x);
+                ptr.add(fp.getPosition().y);
+                ptr.add(fp.getLocation().toString());
+                places.add(ptr);
+            });
+            item.add("places", places);
+            if (f instanceof Tower) {
+                item.addProperty("height", ((Tower) f).getHeight());
+            }
+            features.add(item);
+        });
+        return features;
     }
 
     private class TilePackSerializer implements JsonSerializer<TilePack> {
