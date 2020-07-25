@@ -7,10 +7,13 @@ import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.capability.DragonCapability;
+import com.jcloisterzone.game.phase.DragonMovePhase;
 import com.jcloisterzone.game.state.*;
 import com.jcloisterzone.wsio.MessageParser;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.List;
+import io.vavr.collection.Vector;
 
 import java.lang.reflect.Type;
 
@@ -138,23 +141,40 @@ public class StateGsonBuilder {
         JsonObject neutral = new JsonObject();
         Position pos = state.getDragonDeployment();
         if (pos != null) {
-            neutral.add("dragon", context.serialize(pos));
+            Vector<Position> visited =  root.getCapabilityModel(DragonCapability.class);
+            JsonObject data = new JsonObject();
+            data.add("position", context.serialize(pos));
+            if (root.getPhase().equals(DragonMovePhase.class)) {
+                JsonArray visitedData = new JsonArray();
+                visited.forEach(p -> visitedData.add(context.serialize(p)));
+                data.add("visited", visitedData);
+                data.addProperty("remaining", DragonCapability.DRAGON_MOVES - visited.length());
+            }
+            neutral.add("dragon", data);
         }
         BoardPointer bptr = state.getFairyDeployment();
         if (bptr != null) {
-            neutral.add("fairy", context.serialize(bptr));
+            JsonObject data = new JsonObject();
+            data.add("placement", context.serialize(bptr));
+            neutral.add("fairy", data);
         }
         FeaturePointer fp = state.getMageDeployment();
         if (fp != null) {
-            neutral.add("mage", context.serialize(fp));
+            JsonObject data = new JsonObject();
+            data.add("placement", context.serialize(fp));
+            neutral.add("mage", data);
         }
         fp = state.getWitchDeployment();
         if (fp != null) {
-            neutral.add("witch", context.serialize(fp));
+            JsonObject data = new JsonObject();
+            data.add("placement", context.serialize(fp));
+            neutral.add("witch", data);
         }
         fp = state.getCountDeployment();
         if (fp != null) {
-            neutral.add("count", context.serialize(fp));
+            JsonObject data = new JsonObject();
+            data.add("placement", context.serialize(fp));
+            neutral.add("count", data);
         }
         return neutral;
     }
