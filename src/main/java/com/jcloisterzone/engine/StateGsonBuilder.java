@@ -1,12 +1,15 @@
 package com.jcloisterzone.engine;
 
 import com.google.gson.*;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.action.*;
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.play.*;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.phase.DragonMovePhase;
 import com.jcloisterzone.game.state.*;
@@ -56,6 +59,7 @@ public class StateGsonBuilder {
             obj.add("features", serializeFeatures(state, context));
             obj.addProperty("phase", state.getPhase().getSimpleName());
             obj.add("action", context.serialize(state.getPlayerActions()));
+            obj.add("history", serializePlayEvents(state, context));
             obj.addProperty("undo", game.isUndoAllowed());
             return obj;
         }
@@ -199,6 +203,64 @@ public class StateGsonBuilder {
             features.add(item);
         });
         return features;
+    }
+
+    public JsonArray serializePlayEvents(GameState root, JsonSerializationContext context) {
+        JsonArray events = new JsonArray();
+        int turn = 0;
+        Player player = null;
+        JsonObject item = null;
+        JsonArray turnEvents = null;
+        JsonArray scoreEvents = null;
+        for (PlayEvent ev : root.getEvents()) {
+            if (ev instanceof PlayerTurnEvent) {
+                player = ((PlayerTurnEvent) ev).getPlayer();
+            }
+            if (ev instanceof PlayerTurnEvent || ev instanceof DoubleTurnEvent)  {
+                item = new JsonObject();
+                turnEvents = new JsonArray();
+                scoreEvents = new JsonArray();
+                item.addProperty("turn", ++turn);
+                item.addProperty("player", player.getIndex());
+                item.add("events", turnEvents);
+                item.add("score", scoreEvents);
+                events.add(item);
+                continue;
+            }
+            if (item == null) {
+                // ignore events before first turn
+                continue;
+            }
+            if (ev instanceof TilePlacedEvent) {
+                TilePlacedEvent tev = (TilePlacedEvent) ev;
+                JsonObject data = new JsonObject();
+                data.addProperty("type", "tile-placed");
+                data.addProperty("tile", tev.getTile().getId());
+                data.add("position", context.serialize(tev.getPosition()));
+                data.addProperty("rotation", rotationToPrimitive(tev.getRotation()));
+                turnEvents.add(data);
+                continue;
+            }
+            if (ev instanceof ScoreEvent) {
+                ScoreEvent sev = (ScoreEvent) ev;
+                JsonObject data = new JsonObject();
+                data.addProperty("player", sev.getReceiver().getIndex());
+                data.addProperty("points", sev.getPoints());
+                // TODO source
+                scoreEvents.add(data);
+                continue;
+            }
+            if (ev instanceof MeepleDeployed) {
+                MeepleDeployed mev = (MeepleDeployed) ev;
+                JsonObject data = new JsonObject();
+                data.addProperty("type", "meeple-deployed");
+                data.addProperty("meeple", mev.getMeeple().getClass().getSimpleName());
+                data.add("to", context.serialize(mev.getPointer()));
+                turnEvents.add(data);
+                continue;
+            }
+        }
+        return events;
     }
 
     private class TilePackSerializer implements JsonSerializer<TilePack> {
