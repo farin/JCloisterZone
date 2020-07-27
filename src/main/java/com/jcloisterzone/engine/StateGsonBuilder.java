@@ -58,6 +58,7 @@ public class StateGsonBuilder {
             obj.add("neutralFigures", serializeNeutralFigures(state, context));
             obj.add("features", serializeFeatures(state, context));
             obj.addProperty("phase", state.getPhase().getSimpleName());
+            obj.addProperty("turnPlayer", state.getTurnPlayer().getIndex());
             obj.add("action", context.serialize(state.getPlayerActions()));
             obj.add("history", serializePlayEvents(state, context));
             obj.addProperty("undo", game.isUndoAllowed());
