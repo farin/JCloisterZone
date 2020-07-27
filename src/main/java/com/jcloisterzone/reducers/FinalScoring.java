@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Follower;
@@ -16,6 +17,7 @@ import com.jcloisterzone.game.state.GameState;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
+import io.vavr.collection.List;
 import io.vavr.collection.Stream;
 
 public class FinalScoring implements Reducer {
@@ -57,12 +59,15 @@ public class FinalScoring implements Reducer {
 
         for (Cloister monastery: monasteries) {
             int points = getMonasteryPoints(state, monastery.getPosition());
+            List<ReceivedPoints> receivedPoints = List.empty();
+
             for (Player player : monastery.getMonasteryOwners(state)) {
                 Follower follower = monastery.getMonasterySampleFollower(state, player);
-                state = (new AddPoints(player, points, PointCategory.CLOISTER)).apply(state);
-                ScoreEvent scoreEvent = new ScoreEvent(points, PointCategory.CLOISTER, true, monastery.getPlace(), follower);
-                state = state.appendEvent(scoreEvent);
+                state = (new AddPoints(player, points)).apply(state);
+                receivedPoints = receivedPoints.append(new ReceivedPoints(points, null, player, follower.getDeployment(state)));
             }
+            ScoreEvent scoreEvent = new ScoreEvent(receivedPoints, "cloister.monastery", true, true);
+            state = state.appendEvent(scoreEvent);
         }
 
         for (Farm farm : getOccupiedScoreables(state, Farm.class)) {

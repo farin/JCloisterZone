@@ -7,6 +7,7 @@ import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.BonusPoints;
@@ -40,7 +41,6 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
 
     @Override
     public GameState apply(GameState state) {
-        PointCategory pointCategory = feature.getPointCategory();
         owners = feature.getOwners(state);
 
         List<BonusPoints> bonusPoints = List.empty();
@@ -59,17 +59,19 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
         } else {
             for (Player player : owners) {
                 int points = getFeaturePoints(state, player);
-                state = (new AddPoints(player, points, pointCategory)).apply(state);
+                state = (new AddPoints(player, points)).apply(state);
                 playerPoints = playerPoints.put(player, List.of(new ScoreEventSource(points, null, null)));
             }
         }
 
         for (BonusPoints bonus : bonusPoints) {
             Player player = bonus.getPlayer();
-            state = (new AddPoints(player, bonus.getPoints(), bonus.getPointCategory())).apply(state);
+            state = (new AddPoints(player, bonus.getPoints())).apply(state);
             List<ScoreEventSource> sources = playerPoints.get(player).getOrElse(List.empty());
             playerPoints = playerPoints.put(player, sources.append(new ScoreEventSource(bonus.getPoints(), bonus.getFollower(), bonus.getSource())));
         }
+
+        List<ReceivedPoints> receivedPoints = List.empty();
 
         for (Tuple2<Player, List<ScoreEventSource>> t: playerPoints) {
             Player player = t._1;
@@ -85,20 +87,29 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
                 Follower follower = g._1;
                 List<Integer> pointValues = g._2.map(ScoreEventSource::getPoints);
                 int points = pointValues.sum().intValue();
-                String label = String.join(" + ", pointValues.map(Objects::toString));
-                ScoreEvent scoreEvent = new ScoreEvent(points, label, pointCategory, isFinal, follower.getDeployment(state), follower);
+
+                // TODO handle fairy bonus and track different point category
+                receivedPoints = receivedPoints.append(new ReceivedPoints(points, null, player, follower.getDeployment(state)));
+
+
+                // String label = String.join(" + ", pointValues.map(Objects::toString));
+                // ScoreEvent scoreEvent = new ScoreEvent(points, label, pointCategory, isFinal, follower.getDeployment(state), follower);
 
                 // hack
                 // when ScoreEvent is bound to Follower it means two things
-                // 1. - points are displayed next to follwer on board (that's ok for darmstadt church bonus)
+                // 1. - points are displayed next to follower on board (that's ok for darmstadt church bonus)
                 // 2. - event panel displays follower's feture on hover (that's not ok) - source overrides this. Anyway implementation of this is bad
                 //      whole ScoreEvent shoul be refactored - TODO do it with new 5.0.0 client
-                List<Position> source = g._2.get().getSource();
-                if (source != null) {
-                    scoreEvent = scoreEvent.setSource(source);
-                }
-                state = state.appendEvent(scoreEvent);
+//                List<Position> source = g._2.get().getSource();
+//                if (source != null) {
+//                    scoreEvent = scoreEvent.setSource(source);
+//                }
+//                state = state.appendEvent(scoreEvent);
             }
+        }
+
+        if (!receivedPoints.isEmpty()) {
+            state = state.appendEvent(new ScoreEvent(receivedPoints, this.feature.getPointCategory(), true, isFinal));
         }
 
         return state;

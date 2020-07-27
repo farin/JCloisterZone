@@ -14,81 +14,32 @@ public class ScoreEvent extends PlayEvent  {
 
     private static final long serialVersionUID = 1L;
 
-    private final int points;
-    private final String label;
-    private final PointCategory category;
+    private final List<ReceivedPoints> points;
+    private final String category;
+    private final boolean landscapeSource;
     private final boolean isFinal;
 
-    private final BoardPointer pointer;
-    private final Meeple meeple;
-    private final Player receiver;
-    private final List<Position> source;
-
-
-    public ScoreEvent(int points, String label, PointCategory category, boolean isFinal,
-            BoardPointer pointer, Meeple meeple, Player receiver, List<Position> source) {
+    public ScoreEvent(List<ReceivedPoints> points, String category, boolean landscapeSource, boolean isFinal) {
         super(PlayEventMeta.createWithoutPlayer());
         this.points = points;
         this.category = category;
-        this.label = label;
+        this.landscapeSource = landscapeSource;
         this.isFinal = isFinal;
-        this.pointer = pointer;
-        this.meeple = meeple;
-        this.receiver = receiver;
-        this.source = source;
     }
 
-    public ScoreEvent(
-        int points, PointCategory category, boolean isFinal,
-        FeaturePointer fp, Meeple meeple
-    ) {
-        this(
-            points, points + "", category, isFinal,
-            fp, meeple, meeple.getPlayer(), null
-        );
+    public ScoreEvent(ReceivedPoints points, String category, boolean landscapeSource, boolean isFinal) {
+        this(List.of(points), category, landscapeSource, isFinal);
     }
 
-    public ScoreEvent(
-        int points, String label, PointCategory category, boolean isFinal,
-        FeaturePointer fp, Meeple meeple
-    ) {
-        this(
-            points, label, category, isFinal,
-            fp, meeple, meeple.getPlayer(), null
-        );
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
-    public ScoreEvent(
-        int points, String label, PointCategory category, boolean isFinal,
-        Position position, Player receiver
-    ) {
-        this(
-            points, label, category, isFinal,
-            position, null, receiver, null
-        );
-    }
-
-    public FeaturePointer getFeaturePointer() {
-        return (pointer instanceof FeaturePointer) ? (FeaturePointer) pointer : null;
-    }
-
-    public Position getPosition() {
-        return pointer.getPosition();
-    }
-
-    public int getPoints() {
+    public List<ReceivedPoints> getPoints() {
         return points;
     }
 
-    public String getLabel() {
-        return label == null ? points + "" : label;
-    }
-
-    public Meeple getMeeple() {
-        return meeple;
-    }
-
-    public PointCategory getCategory() {
+    public String getCategory() {
         return category;
     }
 
@@ -96,23 +47,39 @@ public class ScoreEvent extends PlayEvent  {
         return isFinal;
     }
 
-    public Player getReceiver() {
-        return receiver;
+    public boolean isLandscapeSource() {
+        return landscapeSource;
     }
 
-    public List<Position> getSource() {
-        return source;
-    }
+    @Immutable
+    public static class ReceivedPoints {
+        private final int points;
+        private final String expression;
+        private final Player receiver;
+        private final BoardPointer source;
 
-    public ScoreEvent setSource(List<Position> source) {
-        if (source == this.source) {
-            return this;
+        public ReceivedPoints(int points, String expression, Player receiver, BoardPointer source) {
+            this.points = points;
+            this.expression = expression;
+            this.receiver = receiver;
+            this.source = source;
         }
-        return new ScoreEvent(points, label, category, isFinal, pointer, meeple, receiver, source);
+
+        public int getPoints() {
+            return points;
+        }
+
+        public String getExpression() {
+            return expression;
+        }
+
+        public Player getReceiver() {
+            return receiver;
+        }
+
+        public BoardPointer getSource() {
+            return source;
+        }
     }
 
-    @Override
-    public String toString() {
-        return "ScoreEvent(  " + pointer +  ", " + points + ")";
-    }
 }

@@ -4,6 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Barn;
@@ -12,10 +13,7 @@ import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
 
 import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.Map;
-import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
+import io.vavr.collection.*;
 
 public class ScoreFarmBarn implements ScoreFeatureReducer {
 
@@ -42,16 +40,18 @@ public class ScoreFarmBarn implements ScoreFeatureReducer {
             .filter(t -> t._1 instanceof Barn);
 
         int points = farm.getBarnPoints(state);
-        PointCategory pointCategory = farm.getPointCategory();
+        List<ReceivedPoints> receivedPoints = List.empty();
 
         for (Tuple2<Special, FeaturePointer> t : barns) {
             Barn barn = (Barn) t._1;
-            state = (new AddPoints(barn.getPlayer(), points, pointCategory)).apply(state);
+            state = (new AddPoints(barn.getPlayer(), points)).apply(state);
             playerPoints = playerPoints.put(barn.getPlayer(), points);
 
-            ScoreEvent scoreEvent = new ScoreEvent(points, pointCategory, isFinal, t._2, barn);
-            state = state.appendEvent(scoreEvent);
+            receivedPoints = receivedPoints.append(new ReceivedPoints(points, null, barn.getPlayer(), t._2));
         }
+
+        ScoreEvent scoreEvent = new ScoreEvent(receivedPoints, "farm.barn", true, isFinal);
+        state = state.appendEvent(scoreEvent);
 
         return state;
     }

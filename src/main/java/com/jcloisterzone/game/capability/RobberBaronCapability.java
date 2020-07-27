@@ -54,7 +54,7 @@ public final class RobberBaronCapability extends Capability<Void> {
 
         for (Player player: ps.getPlayers()) {
             if (ps.getPlayerTokenCount(player.getIndex(), BiggestFeatureAward.ROBBER) > 0) {
-                state = (new AddPoints(player, countCompletedRoads(state), PointCategory.LONGEST_ROAD)).apply(state);
+                state = (new AddPoints(player, countCompletedRoads(state))).apply(state);
             }
         }
         return state;

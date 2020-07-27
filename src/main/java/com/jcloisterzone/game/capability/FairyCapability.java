@@ -80,7 +80,7 @@ public class FairyCapability extends Capability<Void> {
                     if (!((MeeplePointer) ptr).getMeepleId().equals(m.getId())) continue;
                 }
 
-                bonusPoints = bonusPoints.append(new BonusPoints(FAIRY_POINTS_FINISHED_OBJECT, PointCategory.FAIRY, m.getPlayer(), m, null));
+                bonusPoints = bonusPoints.append(new BonusPoints(FAIRY_POINTS_FINISHED_OBJECT, "fairy", m.getPlayer(), m, null));
             }
         }
 

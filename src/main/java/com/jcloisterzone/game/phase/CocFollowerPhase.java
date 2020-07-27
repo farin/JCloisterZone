@@ -7,6 +7,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.figure.BigFollower;
 import com.jcloisterzone.figure.DeploymentCheckResult;
@@ -41,18 +42,21 @@ public class CocFollowerPhase extends Phase {
         Stream<ScoreEvent> events = Stream.ofAll(state.getCurrentTurnPartEvents())
             .filter(Predicates.instanceOf(ScoreEvent.class))
             .map(ev -> (ScoreEvent) ev)
-            .filter(ev -> ev.getCategory().hasLandscapeSource())
-            .filter(ev -> ev.getPoints() > 0);
+            .filter(ev -> ev.isLandscapeSource());
 
         Player player = state.getTurnPlayer();
         boolean didReceived = false;
         boolean didCauseOpponentScoring = false;
         for (ScoreEvent ev : events) {
-            if (ev.getReceiver().equals(player)) {
-                didReceived = true;
-                break;
-            } else {
-                didCauseOpponentScoring = true;
+            for (ReceivedPoints rp : ev.getPoints()) {
+                if (rp.getPoints() == 0) {
+                    continue;
+                }
+                if (rp.getReceiver().equals(player)) {
+                    didReceived = true;
+                } else {
+                    didCauseOpponentScoring = true;
+                }
             }
         }
 

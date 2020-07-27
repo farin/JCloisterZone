@@ -5,7 +5,6 @@ import java.util.function.Predicate;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PlayerScore;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Token;
@@ -25,7 +24,7 @@ public class PlayersState implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final Array<Player> players;
-    private final Array<PlayerScore> score;
+    private final Array<Integer> score;
     private final Array<Map<Token, Integer>> tokens;
     private final int turnPlayerIndex;
 
@@ -42,7 +41,7 @@ public class PlayersState implements Serializable {
     public static PlayersState createInitial(Array<Player> players, int turnPlayerIndex) {
         return new PlayersState(
             players,
-            players.map(p -> new PlayerScore()),
+            players.map(p -> 0),
             players.map(p -> HashMap.empty()),
             turnPlayerIndex,
             null,
@@ -62,7 +61,7 @@ public class PlayersState implements Serializable {
      */
     public PlayersState(
             Array<Player> players,
-            Array<PlayerScore> score,
+            Array<Integer> score,
             Array<Map<Token, Integer>> tokens,
             int turnPlayerIndex,
             Array<Seq<Follower>> followers,
@@ -82,7 +81,7 @@ public class PlayersState implements Serializable {
      * @param score the scores
      * @return a new instance with the scores updated
      */
-    public PlayersState setScore(Array<PlayerScore> score) {
+    public PlayersState setScore(Array<Integer> score) {
         if (this.score == score) return this;
         return new PlayersState(
             players, score, tokens, turnPlayerIndex,
@@ -242,7 +241,7 @@ public class PlayersState implements Serializable {
      *
      * @return the scores of all players
      */
-    public Array<PlayerScore> getScore() {
+    public Array<Integer> getScore() {
         return score;
     }
 

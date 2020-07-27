@@ -1,5 +1,6 @@
 package com.jcloisterzone;
 
+@Deprecated
 public enum PointCategory {
 
     // TODO use untyped string with subtype ?

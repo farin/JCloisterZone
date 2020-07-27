@@ -173,8 +173,8 @@ public class Road extends CompletableFeature<Road> {
     }
 
     @Override
-    public PointCategory getPointCategory() {
-        return PointCategory.ROAD;
+    public String getPointCategory() {
+        return "road";
     }
 
     public static String name() {

@@ -7,6 +7,7 @@ import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.*;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.GameSetup;
@@ -93,7 +94,7 @@ public class StateGsonBuilder {
         JsonArray players = new JsonArray(playerCount);
         for (int i = 0; i < playerCount; i++) {
             JsonObject player = new JsonObject();
-            player.addProperty("points", state.getScore().get(i).getPoints());
+            player.addProperty("points", state.getScore().get(i));
 
             JsonObject tokens = new JsonObject();
             state.getTokens().get(i).forEach((token, count) -> {
@@ -243,9 +244,17 @@ public class StateGsonBuilder {
                 ScoreEvent sev = (ScoreEvent) ev;
                 JsonObject data = new JsonObject();
                 data.addProperty("type", "points");
-                data.addProperty("player", sev.getReceiver().getIndex());
-                data.addProperty("points", sev.getPoints());
-                // TODO source
+                data.addProperty("category", sev.getCategory());
+                JsonArray points = new JsonArray();
+                for (ReceivedPoints rp :  sev.getPoints()) {
+                    JsonObject pts = new JsonObject();
+                    pts.addProperty("player", rp.getReceiver().getIndex());
+                    pts.addProperty("points", rp.getPoints());
+                    pts.addProperty("expr", rp.getExpression());
+                    pts.add("ptr", context.serialize(rp.getSource()));
+                    points.add(pts);
+                }
+                data.add("points", points);
                 turnEvents.add(data);
                 continue;
             }

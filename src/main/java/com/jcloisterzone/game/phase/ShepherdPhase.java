@@ -5,6 +5,7 @@ import com.jcloisterzone.action.FlockAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Meeple;
@@ -110,13 +111,16 @@ public class ShepherdPhase extends Phase {
 			return placedTokens.get(fp).get().map(SheepToken::sheepCount).sum();
 		}).sum().intValue();
 
+		List<ReceivedPoints> receivedPoints = List.empty();
+
 		for (Tuple2<Meeple, FeaturePointer> t : shepherdsOnFarm) {
 		    Shepherd m = (Shepherd) t._1;
-		    state = (new AddPoints(m.getPlayer(), points, PointCategory.SHEEP)).apply(state);
-			ScoreEvent scoreEvent = new ScoreEvent(points, PointCategory.SHEEP, false, t._2, m);
-            state = state.appendEvent(scoreEvent);
+		    state = (new AddPoints(m.getPlayer(), points)).apply(state);
+		    receivedPoints = receivedPoints.append(new ReceivedPoints(points, null, m.getPlayer(), m.getDeployment(state)));
             state = (new UndeployMeeple(m, false)).apply(state);
 		}
+
+		state = state.appendEvent(new ScoreEvent(receivedPoints, "sheep", false, false));
 
 		return cap.setModel(
 			state,

@@ -98,8 +98,8 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
     }
 
     @Override
-    public PointCategory getPointCategory() {
-        return PointCategory.FARM;
+    public String getPointCategory() {
+        return "farm";
     }
 
     private int getPointsPerCity(GameState state, Player player, int basePoints) {

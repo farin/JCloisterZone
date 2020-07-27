@@ -44,6 +44,14 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
     }
 
     @Override
+    public String getPointCategory() {
+        if (church) {
+            return  "cloister.church";
+        }
+        return "cloister";
+    }
+
+    @Override
     public Cloister setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
         return new Cloister(places, neighboring, shrine, monastery, church);

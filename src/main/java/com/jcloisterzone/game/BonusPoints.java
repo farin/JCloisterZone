@@ -12,13 +12,13 @@ import io.vavr.collection.List;
 public class BonusPoints {
 
     private final int points;
-    private final PointCategory pointCategory;
+    private final String pointCategory;
     private final Player player;
     private final Follower follower;
     private final List<Position> source; // hack
 
 
-    public BonusPoints(int points, PointCategory pointCategory, Player player, Follower follower, List<Position> source) {
+    public BonusPoints(int points, String pointCategory, Player player, Follower follower, List<Position> source) {
         this.points = points;
         this.pointCategory = pointCategory;
         this.player = player;
@@ -30,7 +30,7 @@ public class BonusPoints {
         return points;
     }
 
-    public PointCategory getPointCategory() {
+    public String getPointCategory() {
         return pointCategory;
     }
 

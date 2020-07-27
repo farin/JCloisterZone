@@ -33,6 +33,11 @@ public class YagaHut extends TileFeature implements Completable, CloisterLike {
     }
 
     @Override
+    public String getPointCategory() {
+        return "cloister.yaga-hut";
+    }
+
+    @Override
     public YagaHut setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
         return new YagaHut(places, neighboring);

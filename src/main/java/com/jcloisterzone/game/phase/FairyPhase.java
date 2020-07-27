@@ -6,6 +6,7 @@ import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.FairyCapability;
@@ -41,16 +42,11 @@ public class FairyPhase extends Phase {
                 if (!((MeeplePointer) ptr).getMeepleId().equals(m.getId())) continue;
             }
 
-            state = new AddPoints(
-                m.getPlayer(),
-                FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN,
-                PointCategory.FAIRY
-            ).apply(state);
+            state = new AddPoints(m.getPlayer(), FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN).apply(state);
 
             state = state.appendEvent(new ScoreEvent(
-                FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN, PointCategory.FAIRY,
-                false, fairyFp, m
-            ));
+                    new ReceivedPoints(FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN, null, m.getPlayer(), fairyFp),
+                    "fairy", false, false));
         }
 
         return next(state);

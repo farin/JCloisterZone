@@ -92,7 +92,7 @@ public class TradeGoodsCapability extends Capability<Void> {
                 }
             }
             for (Player player: hiPlayers) {
-                state = (new AddPoints(player, 10, PointCategory.TRADE_GOODS)).apply(state);
+                state = (new AddPoints(player, 10)).apply(state);
             }
         }
         return state;

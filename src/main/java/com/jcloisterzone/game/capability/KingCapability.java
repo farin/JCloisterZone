@@ -53,7 +53,7 @@ public final class KingCapability extends Capability<Void> {
 
         for (Player player: ps.getPlayers()) {
             if (ps.getPlayerTokenCount(player.getIndex(), BiggestFeatureAward.KING) > 0) {
-                state = (new AddPoints(player, countCompletedCities(state), PointCategory.BIGGEST_CITY)).apply(state);
+                state = (new AddPoints(player, countCompletedCities(state))).apply(state);
             }
         }
         return state;

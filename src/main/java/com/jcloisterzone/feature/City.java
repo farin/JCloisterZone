@@ -218,8 +218,8 @@ public class City extends CompletableFeature<City> {
     }
 
     @Override
-    public PointCategory getPointCategory() {
-        return PointCategory.CITY;
+    public String getPointCategory() {
+        return "city";
     }
 
     public static String name() {

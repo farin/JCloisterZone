@@ -2,6 +2,7 @@ package com.jcloisterzone.game.capability;
 
 import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.PointCategory;
@@ -64,7 +65,9 @@ public final class ShrineCapability extends Capability<Void> {
                 continue;
             }
 
-            ScoreEvent scoreEvent = new ScoreEvent(0, PointCategory.CLOISTER, false, cloister.getPlace(), meeple);
+            ScoreEvent scoreEvent = new ScoreEvent(
+                    new ReceivedPoints(0, null, meeple.getPlayer(), meeple.getDeployment(state)),
+                    "cloister", true, false);
             state = state.appendEvent(scoreEvent);
             state = (new UndeployMeeples(cloister, true)).apply(state);
         }

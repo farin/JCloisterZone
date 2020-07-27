@@ -207,9 +207,9 @@ public class BazaarPhase extends Phase {
         assert !pSelecting.equals(pBidding) || option == BuyOrSellOption.BUY; //if same, buy is flag expected
         if (option == BuyOrSellOption.SELL) points *= -1;
 
-        state = (new AddPoints(pSelecting, -points, PointCategory.BAZAAR_AUCTION)).apply(state);
+        state = (new AddPoints(pSelecting, -points)).apply(state);
         if (!pSelecting.equals(pBidding)) {
-            state = (new AddPoints(pBidding, points, PointCategory.BAZAAR_AUCTION)).apply(state);
+            state = (new AddPoints(pBidding, points)).apply(state);
         }
 
         bi = bi.setOwner(option == BuyOrSellOption.BUY ? pSelecting : pBidding);

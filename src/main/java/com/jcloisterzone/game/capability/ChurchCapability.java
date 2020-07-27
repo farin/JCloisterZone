@@ -68,7 +68,7 @@ public class ChurchCapability extends Capability<Void> {
                 f = (Follower) followers.get()._1;
                 source = List.of(cloisterPosition);
             }
-            bonusPoints = bonusPoints.append(new BonusPoints(CHURCH_TILES_BONUS, PointCategory.CLOISTER, player, f, source));
+            bonusPoints = bonusPoints.append(new BonusPoints(CHURCH_TILES_BONUS, cloister.getPointCategory(), player, f, source));
         }
 
         return bonusPoints;

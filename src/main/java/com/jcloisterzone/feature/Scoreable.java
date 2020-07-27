@@ -27,7 +27,7 @@ import io.vavr.collection.Set;
  */
 public interface Scoreable extends Structure {
 
-    PointCategory getPointCategory();
+    String getPointCategory();
 
     /**
      * Map value is int tuple with power and tie breaking power

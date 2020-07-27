@@ -178,7 +178,7 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
             } else {
                 points = 4 * pieces;
             }
-            state = (new AddPoints(player, points, PointCategory.GOLD)).apply(state);
+            state = (new AddPoints(player, points)).apply(state);
         }
         return state;
     }

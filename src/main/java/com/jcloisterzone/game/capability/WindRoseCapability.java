@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.capability;
 
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import org.w3c.dom.Element;
 
 import com.jcloisterzone.Player;
@@ -63,15 +64,8 @@ public class WindRoseCapability extends Capability<PlacedTile> {
         rose = rose.rotateCW(ptRose.getRotation());
         if (isInProperQuadrant(rose, pt.getPosition(), ptRose.getPosition())) {
             Player p = state.getTurnPlayer();
-            state = (new AddPoints(p, WIND_ROSE_POINTS, PointCategory.WIND_ROSE)).apply(state);
-            ScoreEvent scoreEvent = new ScoreEvent(
-                WIND_ROSE_POINTS,
-                WIND_ROSE_POINTS + "",
-                PointCategory.WIND_ROSE,
-                false,
-                pt.getPosition(),
-                p
-            );
+            state = (new AddPoints(p, WIND_ROSE_POINTS)).apply(state);
+            ScoreEvent scoreEvent = new ScoreEvent(new ReceivedPoints(WIND_ROSE_POINTS, null, p, pt.getPosition()), "Wind-rose", false, false);
             state = state.appendEvent(scoreEvent);
         }
         return state;

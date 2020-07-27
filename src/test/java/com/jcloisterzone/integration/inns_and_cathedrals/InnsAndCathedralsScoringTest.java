@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.jcloisterzone.PlayerScore;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.integration.IntegrationTest;
 
@@ -21,21 +19,13 @@ public class InnsAndCathedralsScoringTest extends IntegrationTest {
     public void testInnsScoring() {
         GameState state = createGameState("saved-games/inns_and_cathedrals/innsScoring.jcz");
 
-        Array<PlayerScore> score = state.getPlayers().getScore();
-        PlayerScore alice = score.get(0);
-        PlayerScore bob = score.get(1);
+        Array<Integer> score = state.getPlayers().getScore();
+        int alice = score.get(0);
+        int bob = score.get(1);
 
-        assertEquals(8, alice.getPoints());
-        assertEquals(8, alice.getStats().get(PointCategory.ROAD).getOrElse(0).intValue());
-        assertEquals(0, alice.getStats().get(PointCategory.CITY).getOrElse(0).intValue());
-        assertEquals(0, alice.getStats().get(PointCategory.CLOISTER).getOrElse(0).intValue());
-        assertEquals(0, alice.getStats().get(PointCategory.FARM).getOrElse(0).intValue());
+        assertEquals(8, alice);
+        assertEquals(0, bob);
 
-        assertEquals(0, bob.getPoints());
-        assertEquals(0, bob.getStats().get(PointCategory.ROAD).getOrElse(0).intValue());
-        assertEquals(0, bob.getStats().get(PointCategory.CITY).getOrElse(0).intValue());
-        assertEquals(0, bob.getStats().get(PointCategory.CLOISTER).getOrElse(0).intValue());
-        assertEquals(0, bob.getStats().get(PointCategory.FARM).getOrElse(0).intValue());
     }
 
     /**
@@ -46,20 +36,12 @@ public class InnsAndCathedralsScoringTest extends IntegrationTest {
     public void testCathedralsScoring() {
         GameState state = createGameState("saved-games/inns_and_cathedrals/cathedralsScoring.jcz");
 
-        Array<PlayerScore> score = state.getPlayers().getScore();
-        PlayerScore alice = score.get(0);
-        PlayerScore bob = score.get(1);
+        Array<Integer> score = state.getPlayers().getScore();
+        int alice = score.get(0);
+        int bob = score.get(1);
 
-        assertEquals(15, alice.getPoints());
-        assertEquals(0, alice.getStats().get(PointCategory.ROAD).getOrElse(0).intValue());
-        assertEquals(15, alice.getStats().get(PointCategory.CITY).getOrElse(0).intValue());
-        assertEquals(0, alice.getStats().get(PointCategory.CLOISTER).getOrElse(0).intValue());
-        assertEquals(0, alice.getStats().get(PointCategory.FARM).getOrElse(0).intValue());
+        assertEquals(15, alice);
+        assertEquals(0, bob);
 
-        assertEquals(0, bob.getPoints());
-        assertEquals(0, bob.getStats().get(PointCategory.ROAD).getOrElse(0).intValue());
-        assertEquals(0, bob.getStats().get(PointCategory.CITY).getOrElse(0).intValue());
-        assertEquals(0, bob.getStats().get(PointCategory.CLOISTER).getOrElse(0).intValue());
-        assertEquals(0, bob.getStats().get(PointCategory.FARM).getOrElse(0).intValue());
     }
 }

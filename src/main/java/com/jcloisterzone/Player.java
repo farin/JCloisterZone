@@ -121,21 +121,9 @@ public class Player implements Serializable {
      * @return the score of the player
      */
     public int getPoints(GameState state) {
-        return state.getPlayers().getScore().get(index).getPoints();
+        return state.getPlayers().getScore().get(index);
     }
 
-    /**
-     * Gets the amount of points the player has in a given category.
-     *
-     * @param state the state of the game
-     * @param cat   the category of interest
-     * @return the amount of points in the given category
-     */
-    public int getPointsInCategory(GameState state, PointCategory cat) {
-        HashMap<PointCategory, Integer> pointStats = state.getPlayers().getScore().get(getIndex()).getStats();
-        Option<Integer> points = pointStats.get(cat);
-        return points.getOrElse(0);
-    }
 
     /**
      * Gets the followers of the player.

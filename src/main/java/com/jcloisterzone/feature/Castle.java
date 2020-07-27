@@ -21,8 +21,8 @@ public class Castle extends TileFeature implements Scoreable {
     }
 
     @Override
-    public PointCategory getPointCategory() {
-        return PointCategory.CASTLE;
+    public String getPointCategory() {
+        return "castle";
     }
 
     public Edge getEdge() {

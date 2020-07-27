@@ -30,10 +30,6 @@ public interface CloisterLike extends Completable {
         return HashSet.of(getPosition());
     }
 
-    @Override
-    default PointCategory getPointCategory() {
-        return PointCategory.CLOISTER;
-    }
 
     @Override
     default int getStructurePoints(GameState state, boolean completed) {
