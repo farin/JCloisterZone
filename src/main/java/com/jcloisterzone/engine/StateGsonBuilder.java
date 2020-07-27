@@ -211,7 +211,6 @@ public class StateGsonBuilder {
         Player player = null;
         JsonObject item = null;
         JsonArray turnEvents = null;
-        JsonArray scoreEvents = null;
         for (PlayEvent ev : root.getEvents()) {
             if (ev instanceof PlayerTurnEvent) {
                 player = ((PlayerTurnEvent) ev).getPlayer();
@@ -219,11 +218,9 @@ public class StateGsonBuilder {
             if (ev instanceof PlayerTurnEvent || ev instanceof DoubleTurnEvent)  {
                 item = new JsonObject();
                 turnEvents = new JsonArray();
-                scoreEvents = new JsonArray();
                 item.addProperty("turn", ++turn);
                 item.addProperty("player", player.getIndex());
                 item.add("events", turnEvents);
-                item.add("score", scoreEvents);
                 events.add(item);
                 continue;
             }
@@ -244,10 +241,11 @@ public class StateGsonBuilder {
             if (ev instanceof ScoreEvent) {
                 ScoreEvent sev = (ScoreEvent) ev;
                 JsonObject data = new JsonObject();
+                data.addProperty("type", "points");
                 data.addProperty("player", sev.getReceiver().getIndex());
                 data.addProperty("points", sev.getPoints());
                 // TODO source
-                scoreEvents.add(data);
+                turnEvents.add(data);
                 continue;
             }
             if (ev instanceof MeepleDeployed) {
