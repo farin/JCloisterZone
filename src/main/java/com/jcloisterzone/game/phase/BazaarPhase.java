@@ -1,7 +1,6 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.BazaarBidAction;
 import com.jcloisterzone.action.BazaarSelectBuyOrSellAction;
 import com.jcloisterzone.action.BazaarSelectTileAction;
@@ -21,7 +20,6 @@ import com.jcloisterzone.wsio.message.BazaarBidMessage;
 import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage;
 import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage.BuyOrSellOption;
 import com.jcloisterzone.wsio.message.PassMessage;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
 

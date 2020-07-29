@@ -1,10 +1,10 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.play.PointsExpression;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.figure.Meeple;
@@ -12,8 +12,9 @@ import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.AddPoints;
-
 import io.vavr.Tuple2;
+
+import java.awt.*;
 
 
 @RequiredCapability(FairyCapability.class)
@@ -44,9 +45,8 @@ public class FairyPhase extends Phase {
 
             state = new AddPoints(m.getPlayer(), FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN).apply(state);
 
-            state = state.appendEvent(new ScoreEvent(
-                    new ReceivedPoints(FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN, null, m.getPlayer(), fairyFp),
-                    "fairy", false, false));
+            PointsExpression expr = new PointsExpression(FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN, "fairy.turn");
+            state = state.appendEvent(new ScoreEvent(new ReceivedPoints(expr, m.getPlayer(), fairyFp), false, false));
         }
 
         return next(state);

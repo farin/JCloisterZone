@@ -12,7 +12,6 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.wsio.message.PlaceTokenMessage;
-
 import io.vavr.collection.Set;
 
 @RequiredCapability(GoldminesCapability.class)

@@ -2,7 +2,6 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.Array;
 
 public class AddPoints implements Reducer {

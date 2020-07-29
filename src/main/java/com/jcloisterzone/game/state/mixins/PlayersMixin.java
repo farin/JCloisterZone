@@ -1,11 +1,11 @@
 package com.jcloisterzone.game.state.mixins;
 
-import java.util.function.Function;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlayersState;
+
+import java.util.function.Function;
 
 public interface PlayersMixin extends ActionsMixin {
 

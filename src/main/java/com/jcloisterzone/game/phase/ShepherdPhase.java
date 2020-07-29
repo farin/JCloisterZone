@@ -1,9 +1,9 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.FlockAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.play.PointsExpression;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
@@ -20,7 +20,6 @@ import com.jcloisterzone.reducers.AddPoints;
 import com.jcloisterzone.reducers.UndeployMeeple;
 import com.jcloisterzone.wsio.message.FlockMessage;
 import com.jcloisterzone.wsio.message.FlockMessage.FlockOption;
-
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
@@ -113,14 +112,15 @@ public class ShepherdPhase extends Phase {
 
 		List<ReceivedPoints> receivedPoints = List.empty();
 
+		PointsExpression expr = new PointsExpression(points, "flock");
 		for (Tuple2<Meeple, FeaturePointer> t : shepherdsOnFarm) {
 		    Shepherd m = (Shepherd) t._1;
 		    state = (new AddPoints(m.getPlayer(), points)).apply(state);
-		    receivedPoints = receivedPoints.append(new ReceivedPoints(points, null, m.getPlayer(), m.getDeployment(state)));
+		    receivedPoints = receivedPoints.append(new ReceivedPoints(expr, m.getPlayer(), m.getDeployment(state)));
             state = (new UndeployMeeple(m, false)).apply(state);
 		}
 
-		state = state.appendEvent(new ScoreEvent(receivedPoints, "sheep", false, false));
+		state = state.appendEvent(new ScoreEvent(receivedPoints,false, false));
 
 		return cap.setModel(
 			state,

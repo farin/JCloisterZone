@@ -1,31 +1,24 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.function.Function;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Cloister;
-import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Farm;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.feature.*;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.wsio.message.PassMessage;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
+
+import java.util.function.Function;
 
 public abstract class AbstractCocScoringPhase extends Phase {
 

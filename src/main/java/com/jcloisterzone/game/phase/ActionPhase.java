@@ -10,15 +10,7 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.figure.BigFollower;
-import com.jcloisterzone.figure.Builder;
-import com.jcloisterzone.figure.Mayor;
-import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.figure.Pig;
-import com.jcloisterzone.figure.Shepherd;
-import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.figure.*;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Capability;
@@ -34,17 +26,11 @@ import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.MoveNeutralFigure;
-import com.jcloisterzone.reducers.PlaceBridge;
-import com.jcloisterzone.reducers.PlaceLittleBuilding;
-import com.jcloisterzone.reducers.PlaceTunnel;
-import com.jcloisterzone.reducers.UndeployMeeple;
+import com.jcloisterzone.reducers.*;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
 import com.jcloisterzone.wsio.message.PlaceTokenMessage;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
-
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
-import io.vavr.Predicates;
 import io.vavr.collection.Vector;
 
 

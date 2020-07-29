@@ -1,8 +1,5 @@
 package com.jcloisterzone.game.state;
 
-import java.io.Serializable;
-import java.util.function.Function;
-
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
@@ -15,24 +12,11 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.phase.Phase;
-import com.jcloisterzone.game.state.mixins.ActionsMixin;
-import com.jcloisterzone.game.state.mixins.BoardMixin;
-import com.jcloisterzone.game.state.mixins.CapabilitiesMixin;
-import com.jcloisterzone.game.state.mixins.EventsMixin;
-import com.jcloisterzone.game.state.mixins.FlagsMixin;
-import com.jcloisterzone.game.state.mixins.PlacementsMixin;
-import com.jcloisterzone.game.state.mixins.PlayersMixin;
-import com.jcloisterzone.game.state.mixins.RulesMixin;
+import com.jcloisterzone.game.state.mixins.*;
+import io.vavr.collection.*;
 
-import io.vavr.collection.Array;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.LinkedHashMap;
-import io.vavr.collection.List;
-import io.vavr.collection.Map;
-import io.vavr.collection.Queue;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Set;
+import java.io.Serializable;
+import java.util.function.Function;
 
 @Immutable
 public class GameState implements ActionsMixin, BoardMixin,

@@ -1,8 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.Location;
@@ -19,10 +16,12 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.UndeployMeeple;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
-
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 @RequiredCapability(SiegeCapability.class)

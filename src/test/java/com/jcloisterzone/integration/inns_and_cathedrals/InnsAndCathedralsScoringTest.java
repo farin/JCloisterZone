@@ -25,7 +25,6 @@ public class InnsAndCathedralsScoringTest extends IntegrationTest {
 
         assertEquals(8, alice);
         assertEquals(0, bob);
-
     }
 
     /**

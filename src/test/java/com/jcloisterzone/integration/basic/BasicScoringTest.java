@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.integration.IntegrationTest;
 

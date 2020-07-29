@@ -1,9 +1,6 @@
 package com.jcloisterzone.game.capability;
 
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.City;
@@ -15,11 +12,11 @@ import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlayersState;
 import com.jcloisterzone.reducers.AddPoints;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
+import org.w3c.dom.Element;
 
 public class TradeGoodsCapability extends Capability<Void> {
 

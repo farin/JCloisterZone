@@ -1,10 +1,10 @@
 package com.jcloisterzone.game.state.mixins;
 
-import java.util.function.Function;
-
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.CapabilitiesState;
 import com.jcloisterzone.game.state.GameState;
+
+import java.util.function.Function;
 
 public interface CapabilitiesMixin {
 

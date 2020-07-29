@@ -1,9 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XMLUtils.attributeBoolValue;
-
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.board.RemoveTileException;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Cloister;
@@ -11,8 +7,10 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
+
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 public class GermanMonasteriesCapability extends Capability<Void> {
 

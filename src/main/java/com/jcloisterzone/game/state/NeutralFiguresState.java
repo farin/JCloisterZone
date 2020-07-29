@@ -1,19 +1,13 @@
 package com.jcloisterzone.game.state;
 
-import java.io.Serializable;
-
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.figure.neutral.Count;
-import com.jcloisterzone.figure.neutral.Dragon;
-import com.jcloisterzone.figure.neutral.Fairy;
-import com.jcloisterzone.figure.neutral.Mage;
-import com.jcloisterzone.figure.neutral.NeutralFigure;
-import com.jcloisterzone.figure.neutral.Witch;
-
+import com.jcloisterzone.figure.neutral.*;
 import io.vavr.collection.LinkedHashMap;
+
+import java.io.Serializable;
 
 @Immutable
 public class NeutralFiguresState implements Serializable {

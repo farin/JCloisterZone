@@ -1,12 +1,11 @@
 package com.jcloisterzone.game;
 
-import java.io.Serializable;
-
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.wsio.message.WsReplayableMessage;
-
 import io.vavr.collection.List;
+
+import java.io.Serializable;
 
 @Immutable
 public class UndoHistoryItem implements Serializable {

@@ -1,23 +1,21 @@
 package com.jcloisterzone.game.capability;
 
-import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileModifier;
+import com.jcloisterzone.event.play.PointsExpression;
 import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.AddPoints;
-
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
 
 /** model contains placement of last placed rose */
 public class WindRoseCapability extends Capability<PlacedTile> {
@@ -65,7 +63,8 @@ public class WindRoseCapability extends Capability<PlacedTile> {
         if (isInProperQuadrant(rose, pt.getPosition(), ptRose.getPosition())) {
             Player p = state.getTurnPlayer();
             state = (new AddPoints(p, WIND_ROSE_POINTS)).apply(state);
-            ScoreEvent scoreEvent = new ScoreEvent(new ReceivedPoints(WIND_ROSE_POINTS, null, p, pt.getPosition()), "Wind-rose", false, false);
+            PointsExpression expr = new PointsExpression(WIND_ROSE_POINTS, "wind-rose", HashMap.empty());
+            ScoreEvent scoreEvent = new ScoreEvent(new ReceivedPoints(expr, p, pt.getPosition()), false, false);
             state = state.appendEvent(scoreEvent);
         }
         return state;

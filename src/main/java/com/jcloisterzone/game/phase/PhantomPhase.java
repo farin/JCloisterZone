@@ -9,7 +9,6 @@ import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Predicates;
 import io.vavr.collection.Vector;
 

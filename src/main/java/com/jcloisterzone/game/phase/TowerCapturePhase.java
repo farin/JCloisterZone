@@ -19,7 +19,6 @@ import com.jcloisterzone.reducers.CaptureMeeple;
 import com.jcloisterzone.reducers.PrisonersExchage;
 import com.jcloisterzone.wsio.message.CaptureFollowerMessage;
 import com.jcloisterzone.wsio.message.ExchangeFollowerChoiceMessage;
-
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;

@@ -7,7 +7,6 @@ import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.LinkedHashMap;
 
 public class DeployMeeple implements Reducer {

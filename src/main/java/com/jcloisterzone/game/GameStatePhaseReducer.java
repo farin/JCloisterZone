@@ -1,50 +1,17 @@
 package com.jcloisterzone.game;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
-import com.jcloisterzone.game.phase.AbbeyPhase;
-import com.jcloisterzone.game.phase.ActionPhase;
-import com.jcloisterzone.game.phase.BazaarPhase;
-import com.jcloisterzone.game.phase.CastlePhase;
-import com.jcloisterzone.game.phase.ChangeFerriesPhase;
-import com.jcloisterzone.game.phase.CleanUpTurnPartPhase;
-import com.jcloisterzone.game.phase.CleanUpTurnPhase;
-import com.jcloisterzone.game.phase.CocCountPhase;
-import com.jcloisterzone.game.phase.CocFinalScoringPhase;
-import com.jcloisterzone.game.phase.CocFollowerPhase;
-import com.jcloisterzone.game.phase.CocScoringPhase;
-import com.jcloisterzone.game.phase.CommitAbbeyPassPhase;
-import com.jcloisterzone.game.phase.CommitActionPhase;
-import com.jcloisterzone.game.phase.CornCirclePhase;
-import com.jcloisterzone.game.phase.DragonMovePhase;
-import com.jcloisterzone.game.phase.DragonPhase;
-import com.jcloisterzone.game.phase.EscapePhase;
-import com.jcloisterzone.game.phase.FairyPhase;
-import com.jcloisterzone.game.phase.GameOverPhase;
-import com.jcloisterzone.game.phase.GoldPiecePhase;
-import com.jcloisterzone.game.phase.MageAndWitchPhase;
-import com.jcloisterzone.game.phase.PhantomPhase;
-import com.jcloisterzone.game.phase.Phase;
-import com.jcloisterzone.game.phase.PhaseMessageHandler;
-import com.jcloisterzone.game.phase.PlaceFerryPhase;
-import com.jcloisterzone.game.phase.RequiredCapability;
-import com.jcloisterzone.game.phase.ScoringPhase;
-import com.jcloisterzone.game.phase.ShepherdPhase;
-import com.jcloisterzone.game.phase.StepResult;
-import com.jcloisterzone.game.phase.TilePhase;
-import com.jcloisterzone.game.phase.TowerCapturePhase;
-import com.jcloisterzone.game.phase.WagonPhase;
+import com.jcloisterzone.game.phase.*;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.wsio.MessageParser;
 import com.jcloisterzone.wsio.message.WsInGameMessage;
-
 import io.vavr.Function2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Derives new game state by applying WsMessage.

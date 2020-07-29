@@ -1,8 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import com.jcloisterzone.game.Rule;
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileModifier;
@@ -11,10 +8,11 @@ import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCircleOption;
-
 import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
 
 public class CornCircleCapability extends Capability<CornCircleOption> {
 

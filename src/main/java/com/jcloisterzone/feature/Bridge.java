@@ -5,7 +5,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileBuilder;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;

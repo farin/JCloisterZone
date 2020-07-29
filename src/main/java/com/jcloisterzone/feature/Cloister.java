@@ -1,19 +1,16 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.play.PointsExpression;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.game.capability.HillCapability;
 import com.jcloisterzone.game.capability.VineyardCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
 
@@ -41,14 +38,6 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
         this.shrine = shrine;
         this.monastery = monastery;
         this.church = church;
-    }
-
-    @Override
-    public String getPointCategory() {
-        if (church) {
-            return  "cloister.church";
-        }
-        return "cloister";
     }
 
     @Override
@@ -140,7 +129,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
     }
 
     @Override
-    public int getPoints(GameState state) {
+    public PointsExpression getPoints(GameState state) {
     	boolean scoreVineyards = state.hasCapability(VineyardCapability.class);
         Position p = places.get().getPosition();
         int adjacent = 0;
@@ -151,8 +140,14 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
         		adjacentVineyards++;
         	}
         }
-        int vineyardPoints = adjacent == 8 ? adjacentVineyards * 3 : 0;
-        return adjacent + 1 + vineyardPoints + getLittleBuildingPoints(state);
+
+        Map<String, Integer> args = HashMap.of("tiles", adjacent + 1);
+        int points = adjacent + 1;
+        if (adjacent == 8 && adjacentVineyards > 0) {
+            points += adjacentVineyards * 3;
+            args = args.put("vineyards", adjacentVineyards);
+        }
+        return new PointsExpression(points, "cloister", args).merge(getLittleBuildingPoints(state));
     }
 
     public static String name() {

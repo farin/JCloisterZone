@@ -224,7 +224,7 @@ public class Location implements Serializable {
         int mHi = (mask & 0xff00) << i; // shift higher bits
         mHi = (mHi | mHi >> 8) & 0xff00; // recover bits lost in the shift
 
-        return create((mask & ~0xffff) | mHi | mLo); // add all other bits (e.g., abbot, tower etc.) and return
+        return create((mask & ~0xffff) | mHi | mLo); // merge all other bits (e.g., abbot, tower etc.) and return
     }
 
     /**

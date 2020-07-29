@@ -10,11 +10,11 @@ import com.jcloisterzone.event.play.*;
 import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.phase.DragonMovePhase;
 import com.jcloisterzone.game.state.*;
 import com.jcloisterzone.wsio.MessageParser;
+import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Vector;
@@ -244,13 +244,17 @@ public class StateGsonBuilder {
                 ScoreEvent sev = (ScoreEvent) ev;
                 JsonObject data = new JsonObject();
                 data.addProperty("type", "points");
-                data.addProperty("category", sev.getCategory());
                 JsonArray points = new JsonArray();
                 for (ReceivedPoints rp :  sev.getPoints()) {
                     JsonObject pts = new JsonObject();
-                    pts.addProperty("player", rp.getReceiver().getIndex());
+                    pts.addProperty("player", rp.getPlayer().getIndex());
                     pts.addProperty("points", rp.getPoints());
-                    pts.addProperty("expr", rp.getExpression());
+                    pts.addProperty("name", rp.getExpression().getName());
+                    JsonObject args = new JsonObject();
+                    for (Tuple2<String, Integer> t : rp.getExpression().getArgs()) {
+                        args.addProperty(t._1, t._2);
+                    }
+                    pts.add("args", args);
                     pts.add("ptr", context.serialize(rp.getSource()));
                     points.add(pts);
                 }

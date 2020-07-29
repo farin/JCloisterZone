@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.ReturnMeepleAction;
@@ -16,12 +14,12 @@ import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
-
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
 
 public class FestivalCapability extends Capability<Void> {
 

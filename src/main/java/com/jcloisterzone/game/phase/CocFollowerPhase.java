@@ -9,13 +9,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.play.ScoreEvent;
 import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Quarter;
-import com.jcloisterzone.figure.BigFollower;
-import com.jcloisterzone.figure.DeploymentCheckResult;
-import com.jcloisterzone.figure.Mayor;
-import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.CountCapability;
@@ -23,7 +17,6 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
-
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
@@ -52,7 +45,7 @@ public class CocFollowerPhase extends Phase {
                 if (rp.getPoints() == 0) {
                     continue;
                 }
-                if (rp.getReceiver().equals(player)) {
+                if (rp.getPlayer().equals(player)) {
                     didReceived = true;
                 } else {
                     didCauseOpponentScoring = true;

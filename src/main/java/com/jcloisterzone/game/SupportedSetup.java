@@ -1,12 +1,12 @@
 package com.jcloisterzone.game;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.google.gson.annotations.JsonAdapter;
 import com.jcloisterzone.Expansion;
 import com.jcloisterzone.wsio.message.adapters.CapabilitiesSetAdapter;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SupportedSetup implements Serializable {
 

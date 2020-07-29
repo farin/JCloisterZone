@@ -1,17 +1,13 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XMLUtils.attributeBoolValue;
-
-import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
-import org.w3c.dom.Element;
-
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.play.PointsExpression;
 import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
@@ -20,12 +16,16 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.UndeployMeeples;
-
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Set;
+import org.w3c.dom.Element;
+
+import java.awt.*;
+
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 
 public final class ShrineCapability extends Capability<Void> {
@@ -65,9 +65,8 @@ public final class ShrineCapability extends Capability<Void> {
                 continue;
             }
 
-            ScoreEvent scoreEvent = new ScoreEvent(
-                    new ReceivedPoints(0, null, meeple.getPlayer(), meeple.getDeployment(state)),
-                    "cloister", true, false);
+            PointsExpression expr = new PointsExpression(0, "cloister.challenged");
+            ScoreEvent scoreEvent = new ScoreEvent(new ReceivedPoints(expr, meeple.getPlayer(), meeple.getDeployment(state)), true, false);
             state = state.appendEvent(scoreEvent);
             state = (new UndeployMeeples(cloister, true)).apply(state);
         }

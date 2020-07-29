@@ -1,19 +1,18 @@
 package com.jcloisterzone.game.state;
 
-import java.io.Serializable;
-import java.util.function.Predicate;
-
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Token;
-
 import io.vavr.collection.Array;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
 import io.vavr.control.Option;
+
+import java.io.Serializable;
+import java.util.function.Predicate;
 
 /**
  * Represents the state of all players in a game.
@@ -146,7 +145,7 @@ public class PlayersState implements Serializable {
      *
      * @param index the index of the player
      * @param token the token type to update
-     * @param count the amount to add
+     * @param count the amount to merge
      * @return a new instance with the token count updated
      */
     public PlayersState addTokenCount(int index, Token token, int count) {

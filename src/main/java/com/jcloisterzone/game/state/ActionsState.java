@@ -1,15 +1,14 @@
 package com.jcloisterzone.game.state;
 
-import java.io.Serializable;
-
 import com.google.common.base.Predicates;
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-
 import io.vavr.collection.Seq;
 import io.vavr.collection.Vector;
+
+import java.io.Serializable;
 
 /**
  * Represents all the sets of options a player can choose from in a certain turn.
@@ -101,7 +100,7 @@ public class ActionsState implements Serializable {
         ); // one MeepleAction per meeple type, each containing as options those of all other MeepleActions of the same meeple type
         actions = actions.appendAll(
             this.actions.filter(Predicates.instanceOf(MeepleAction.class).negate())
-        ); // add back all other non-MeepleActions
+        ); // merge back all other non-MeepleActions
         return setActions(actions);
     }
 

@@ -1,14 +1,9 @@
 package com.jcloisterzone.game.capability;
 
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.PlacementOption;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.*;
 import com.jcloisterzone.feature.River;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;

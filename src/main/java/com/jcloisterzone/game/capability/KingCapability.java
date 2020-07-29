@@ -1,7 +1,6 @@
 package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenReceivedEvent;
 import com.jcloisterzone.feature.City;
@@ -14,7 +13,6 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.MemoizedValue;
 import com.jcloisterzone.game.state.PlayersState;
 import com.jcloisterzone.reducers.AddPoints;
-
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;

@@ -1,13 +1,6 @@
 package com.jcloisterzone.game.capability;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map.Entry;
-
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
@@ -24,12 +17,16 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.game.state.PlayersState;
 import com.jcloisterzone.reducers.AddPoints;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map.Entry;
 
 /**
  * Model is map of placed gold tokens.
@@ -62,7 +59,7 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
             Position cloisterPosition = ((CloisterLike) feature).getPosition();
             return state.getAdjacentAndDiagonalTiles(cloisterPosition)
                 .map(PlacedTile::getPosition)
-                .append(cloisterPosition) // and add also central tile
+                .append(cloisterPosition) // and merge also central tile
                 .toSet();
         }
         if (feature instanceof Castle) {

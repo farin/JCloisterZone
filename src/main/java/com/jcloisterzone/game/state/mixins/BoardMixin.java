@@ -1,8 +1,5 @@
 package com.jcloisterzone.game.state.mixins;
 
-import java.awt.Rectangle;
-import java.util.function.Function;
-
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -11,12 +8,14 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Stream;
+
+import java.awt.*;
+import java.util.function.Function;
 
 public interface BoardMixin {
 

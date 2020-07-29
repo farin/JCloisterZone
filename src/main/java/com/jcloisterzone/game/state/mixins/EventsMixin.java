@@ -4,7 +4,6 @@ import com.jcloisterzone.event.play.DoubleTurnEvent;
 import com.jcloisterzone.event.play.PlayEvent;
 import com.jcloisterzone.event.play.PlayerTurnEvent;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.List;
 import io.vavr.collection.Queue;
 

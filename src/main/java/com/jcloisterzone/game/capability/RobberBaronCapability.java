@@ -1,17 +1,14 @@
 package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.play.TokenReceivedEvent;
-import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.BiggestFeatureAward;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
-import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.MemoizedValue;
 import com.jcloisterzone.game.state.PlayersState;

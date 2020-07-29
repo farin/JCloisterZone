@@ -2,25 +2,23 @@ package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.FairyNextToAction;
 import com.jcloisterzone.action.FairyOnTileAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.play.PointsExpression;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.neutral.Fairy;
-import com.jcloisterzone.game.BonusPoints;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.List;
-import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
 @Immutable
@@ -65,22 +63,20 @@ public class FairyCapability extends Capability<Void> {
     }
 
     @Override
-    public List<BonusPoints> appendBonusPoints(GameState state, List<BonusPoints> bonusPoints, Scoreable feature, boolean isFinal) {
+    public List<ReceivedPoints> appendBonusPoints(GameState state, List<ReceivedPoints> bonusPoints, Scoreable feature, boolean isFinal) {
         BoardPointer ptr = state.getNeutralFigures().getFairyDeployment();
 
         if (ptr != null && !isFinal) {
             boolean onTileRule = ptr instanceof Position;
-            FeaturePointer fairyFp = ptr.asFeaturePointer();
 
             for (Tuple2<Follower, FeaturePointer> t : feature.getFollowers2(state)) {
                 Follower m = t._1;
-                if (!t._2.equals(fairyFp)) continue;
 
-                if (!onTileRule) {
-                    if (!((MeeplePointer) ptr).getMeepleId().equals(m.getId())) continue;
-                }
+                if (onTileRule && !ptr.getPosition().equals(t._2.getPosition())) continue;
+                if (!onTileRule && !((MeeplePointer) ptr).getMeepleId().equals(m.getId())) continue;
 
-                bonusPoints = bonusPoints.append(new BonusPoints(FAIRY_POINTS_FINISHED_OBJECT, "fairy", m.getPlayer(), m, null));
+                PointsExpression expr = new PointsExpression(FAIRY_POINTS_FINISHED_OBJECT, "fairy.completed");
+                return bonusPoints.append(new ReceivedPoints(expr, m.getPlayer(), t._2));
             }
         }
 

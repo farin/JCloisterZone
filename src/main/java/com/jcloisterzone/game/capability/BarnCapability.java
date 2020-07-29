@@ -8,15 +8,11 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.figure.MeepleIdProvider;
-import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
-import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 

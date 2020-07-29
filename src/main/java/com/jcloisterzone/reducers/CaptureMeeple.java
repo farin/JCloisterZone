@@ -8,7 +8,6 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.LinkedHashMap;
 
 public class CaptureMeeple extends UndeployMeeple {

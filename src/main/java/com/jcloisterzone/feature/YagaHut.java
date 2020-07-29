@@ -1,12 +1,12 @@
 package com.jcloisterzone.feature;
 
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.play.PointsExpression;
 import com.jcloisterzone.game.state.GameState;
-
+import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
@@ -33,11 +33,6 @@ public class YagaHut extends TileFeature implements Completable, CloisterLike {
     }
 
     @Override
-    public String getPointCategory() {
-        return "cloister.yaga-hut";
-    }
-
-    @Override
     public YagaHut setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
         return new YagaHut(places, neighboring);
@@ -57,9 +52,11 @@ public class YagaHut extends TileFeature implements Completable, CloisterLike {
     }
 
     @Override
-    public int getPoints(GameState state) {
+    public PointsExpression getPoints(GameState state) {
         Position p = places.get().getPosition();
-        return 9 - state.getAdjacentAndDiagonalTiles2(p).size() + getLittleBuildingPoints(state);
+        int tilesCount = state.getAdjacentAndDiagonalTiles2(p).size();
+        int points = 9 - tilesCount;
+        return new PointsExpression(points, "yaga-hut", HashMap.of("tiles", tilesCount)).merge(getLittleBuildingPoints(state));
     }
 
     public static String name() {

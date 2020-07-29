@@ -1,7 +1,6 @@
 package com.jcloisterzone.game.state.mixins;
 
 import com.jcloisterzone.game.Rule;
-
 import io.vavr.collection.Map;
 
 public interface RulesMixin {

@@ -1,10 +1,5 @@
 package com.jcloisterzone.game;
 
-import com.jcloisterzone.Expansion;
-
-import io.vavr.collection.HashMap;
-import io.vavr.collection.Map;
-
 /*
  * TODO decouple this from single global just same as done for Tokens or TileModifier. Use just generic Rule interface and let
  * capabilities or expansion sets (some rules ale related to capabilities) to define their own rules
@@ -31,7 +26,7 @@ public enum Rule {
     TUNNELIZE_OTHER_EXPANSIONS("tunnelize-other-expansions", Boolean.class, null),
     MORE_TUNNEL_TOKENS("more-tunnel-tokens", String.class, new Object[] { "3/2", "2/1", "1/1" }),
     FESTIVAL_RETURN("festival-return", String.class, new Object[] { "meeple", "follower" }),
-    KEEP_MONASTERIES("keep-monasteries", String.class, new Object[] { "replace", "add" }),
+    KEEP_MONASTERIES("keep-monasteries", String.class, new Object[] { "replace", "merge" }),
     LABYRINTH_VARIANT("labyrinth-variant", String.class, new Object[] { "basic", "advanced" }),
     LITTLE_BUILDINGS_SCORING("little-buildings-scoring", String.class, new Object[] { "1/1/1", "3/2/1" }),
     KING_AND_ROBBER_BARON_SCORING("king-and-robber-baron-scoring", String.class, new Object[] { "default", "10/20", "15/40", "continuosly" }),

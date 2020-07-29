@@ -11,7 +11,6 @@ import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTunnelToken;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.Map;
 

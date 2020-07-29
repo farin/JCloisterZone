@@ -1,25 +1,24 @@
 package com.jcloisterzone.game;
 
-import java.io.Serializable;
-import java.util.function.Function;
-
-import io.vavr.collection.*;
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.Immutable;
-import com.jcloisterzone.Player;
 import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.RemoveTileException;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.MeepleIdProvider;
-import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.List;
+import io.vavr.collection.Set;
+import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
+
+import java.io.Serializable;
+import java.util.function.Function;
 
 @Immutable
 public abstract class Capability<T> implements Serializable {
@@ -74,7 +73,7 @@ public abstract class Capability<T> implements Serializable {
         return state;
     }
 
-    public List<BonusPoints> appendBonusPoints(GameState state, List<BonusPoints> bonusPoints, Scoreable feature, boolean isFinal) {
+    public List<ReceivedPoints> appendBonusPoints(GameState state, List<ReceivedPoints> bonusPoints, Scoreable feature, boolean isFinal) {
         return bonusPoints;
     }
 

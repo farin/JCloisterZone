@@ -1,8 +1,8 @@
 package com.jcloisterzone.game.state;
 
-import java.util.function.Function;
-
 import io.vavr.Function1;
+
+import java.util.function.Function;
 
 public class MemoizedValue<T> implements Function1<GameState, T> {
 

@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.RemoveTileException;
@@ -14,10 +12,10 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.Map;
 import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
 
 public class CountCapability extends Capability<CountCapabilityModel> {
 

@@ -252,7 +252,7 @@ public class TilePackBuilder {
 //                        priority = pp.priority;
 //                        positions = positions.pop();
 //                        //hard coded exceptions - should be declared in pack def
-//                        // TODO add <remap> ... directive
+//                        // TODO merge <remap> ... directive
 //                        if (expansions.containsKey(Expansion.COUNT)) {
 //                            if (tileId.equals("BA.RCr")) continue;
 //                            if (tileId.equals("R1.I.s") ||
@@ -284,7 +284,7 @@ public class TilePackBuilder {
 //                        if (!tiles.containsKey(group)) {
 //                            tiles.put(group, new java.util.ArrayList<>());
 //                        }
-//                        tiles.get(group).add(tile);
+//                        tiles.get(group).merge(tile);
 //                    }
 //                }
             });

@@ -1,11 +1,10 @@
 package com.jcloisterzone.feature;
 
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.play.PointsExpression;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
@@ -32,15 +31,15 @@ public interface CloisterLike extends Completable {
 
 
     @Override
-    default int getStructurePoints(GameState state, boolean completed) {
+    default PointsExpression getStructurePoints(GameState state, boolean completed) {
         return getPoints(state);
     }
 
     @Override
-    default int getLittleBuildingPoints(GameState state) {
+    default PointsExpression getLittleBuildingPoints(GameState state) {
         Map<Position, LittleBuilding> buildings = state.getCapabilityModel(LittleBuildingsCapability.class);
         if (buildings == null) {
-            return 0;
+            return null;
         }
         Position cloisterPos = getPosition();
         Seq<LittleBuilding> buldingsSeq = buildings.filterKeys(pos ->

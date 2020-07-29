@@ -1,20 +1,15 @@
 package com.jcloisterzone.game;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.function.Function;
-
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.capability.PigHerdCapability;
 import com.jcloisterzone.game.state.mixins.RulesMixin;
-
 import com.jcloisterzone.wsio.message.GameSetupMessage.PlacedTileItem;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
+
+import java.io.Serializable;
+import java.util.function.Function;
 
 @Immutable
 public class GameSetup implements Serializable, RulesMixin {

@@ -1,12 +1,10 @@
 package com.jcloisterzone.feature;
 
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
@@ -18,11 +16,6 @@ public class Castle extends TileFeature implements Scoreable {
     public Castle(List<FeaturePointer> places) {
         super(places);
         assert places.size() == 2;
-    }
-
-    @Override
-    public String getPointCategory() {
-        return "castle";
     }
 
     public Edge getEdge() {

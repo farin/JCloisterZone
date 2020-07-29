@@ -15,7 +15,6 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.PassMessage;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
 import io.vavr.collection.Set;

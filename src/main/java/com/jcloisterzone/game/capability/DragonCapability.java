@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
@@ -12,8 +10,8 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
-
 import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
 
 /**
  * @model Vector<Position> : visited tiles

@@ -4,7 +4,6 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.SetNextPlayer;
-
 import io.vavr.collection.HashSet;
 
 /**

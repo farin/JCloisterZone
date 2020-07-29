@@ -24,7 +24,6 @@ import com.jcloisterzone.reducers.PayRansom;
 import com.jcloisterzone.wsio.message.DeployFlierMessage;
 import com.jcloisterzone.wsio.message.DeployMeepleMessage;
 import com.jcloisterzone.wsio.message.PayRansomMessage;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
 

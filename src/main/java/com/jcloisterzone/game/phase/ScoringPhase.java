@@ -14,21 +14,14 @@ import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.ScoreFeatureReducer;
-import com.jcloisterzone.game.capability.AbbeyCapability;
-import com.jcloisterzone.game.capability.BarnCapability;
-import com.jcloisterzone.game.capability.BuilderCapability;
-import com.jcloisterzone.game.capability.CastleCapability;
-import com.jcloisterzone.game.capability.FerriesCapability;
-import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
-import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.ScoreCompletable;
 import com.jcloisterzone.reducers.ScoreFarm;
 import com.jcloisterzone.reducers.ScoreFarmWhenBarnIsConnected;
 import com.jcloisterzone.reducers.UndeployMeeples;
-
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
@@ -70,7 +63,7 @@ public class ScoringPhase extends Phase {
             // disconnected
             List<FeaturePointer> affected = from.subtract(to).splitToSides()
                 .map(loc -> new FeaturePointer(t._1, loc));
-            // connected (add only first side is enough, it's connected, sides must belong to same road
+            // connected (merge only first side is enough, it's connected, sides must belong to same road
             affected = affected.append(new FeaturePointer(t._1, to.subtract(from).splitToSides().get()));
 
             for (FeaturePointer fp : affected) {

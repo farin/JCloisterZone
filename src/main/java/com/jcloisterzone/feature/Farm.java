@@ -1,15 +1,16 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.play.PointsExpression;
 import com.jcloisterzone.figure.Pig;
 import com.jcloisterzone.game.state.GameState;
-
+import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
+import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
 public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Farm> {
@@ -97,37 +98,51 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
         return new Farm(places, adjoiningCities, adjoiningCityOfCarcassonne, pigHerds);
     }
 
-    @Override
-    public String getPointCategory() {
-        return "farm";
+
+    private int getPigCount(GameState state, Player player) {
+        return getSpecialMeeples(state).count(m -> (m instanceof Pig) && m.getPlayer().equals(player));
     }
 
-    private int getPointsPerCity(GameState state, Player player, int basePoints) {
-        return basePoints + pigHerds
-            + getSpecialMeeples(state).count(m -> (m instanceof Pig) && m.getPlayer().equals(player));
+    private PointsExpression getPoints(GameState state, Player player, String exprName, int basePoints) {
+        Map<String, Integer> args = HashMap.empty();
+        int pigCount = getPigCount(state, player);
+        if (pigCount > 0) args = args.put("pigs", pigCount);
+        if (pigHerds > 0) args = args.put("pigHerds", pigHerds);
+        int pointsPerCity = 3 + pigHerds + pigCount;
+        return getCityPoints(state, "farm", pointsPerCity, args).merge(getLittleBuildingPoints(state));
     }
 
-    public int getPoints(GameState state, Player player) {
-        return getCityPoints(state, getPointsPerCity(state, player, 3)) + getLittleBuildingPoints(state);
+    public PointsExpression getPoints(GameState state, Player player) {
+        return getPoints(state, player, "farm", 3);
     }
 
-    public int getPointsWhenBarnIsConnected(GameState state, Player player) {
-        return getCityPoints(state, getPointsPerCity(state, player, 1)) + getLittleBuildingPoints(state);
+    public PointsExpression getPointsWhenBarnIsConnected(GameState state, Player player) {
+        return getPoints(state, player, "farm.barn-connected", 1);
     }
 
-    public int getBarnPoints(GameState state) {
+
+    public PointsExpression getBarnPoints(GameState state) {
         //no pig herds according to Complete Annotated Rules
-        return getCityPoints(state, 4) + getLittleBuildingPoints(state);
+        Map<String, Integer> args = HashMap.empty();
+        return getCityPoints(state, "farm.barn", 4, args).merge(getLittleBuildingPoints(state));
     }
 
-    private int getCityPoints(GameState state, int pointsPerCity) {
-        int points = adjoiningCityOfCarcassonne ? pointsPerCity : 0;
-        Set<Feature> features = adjoiningCities.map(fp -> state.getFeature(fp));
+    private PointsExpression getCityPoints(GameState state, String exprName, int pointsPerCity, Map<String, Integer> args) {
+        int points = 0;
+        if (adjoiningCityOfCarcassonne) {
+            args = args.put("coc", 1);
+            points += pointsPerCity;
+        }
+        int castleCount = 0;
+        int cityCount = 0;
+        int besiegedCount = 0;
 
+        Set<Feature> features = adjoiningCities.map(fp -> state.getFeature(fp));
         for (Feature feature : features) {
             if (feature instanceof Castle) {
                 // adjoining Castle provides 1 more point then common city
                 points += pointsPerCity + 1;
+                castleCount++;
             } else {
                 City city = (City) feature;
                 if (city.isCompleted(state)) {
@@ -135,11 +150,17 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
                     if (city.isBesieged()) {
                         // besieged cities has double value
                         points += pointsPerCity;
+                        besiegedCount++;
+                    } else {
+                        cityCount++;
                     }
                 }
             }
         }
-        return points;
+        if (cityCount > 0) args = args.put("cities", cityCount);
+        if (besiegedCount > 0) args = args.put("besieged", besiegedCount);
+        if (castleCount > 0) args = args.put("castles", castleCount);
+        return new PointsExpression(points, exprName, args);
     }
 
     public static String name() {

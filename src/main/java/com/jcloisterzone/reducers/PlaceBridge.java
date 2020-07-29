@@ -12,7 +12,6 @@ import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-
 import io.vavr.collection.LinkedHashMap;
 
 public class PlaceBridge implements Reducer {

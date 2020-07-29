@@ -17,7 +17,6 @@ import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.reducers.UndeployMeeple;
 import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;

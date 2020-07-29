@@ -1,13 +1,12 @@
 package com.jcloisterzone.game.phase;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.PayRansom;
 import com.jcloisterzone.wsio.message.PassMessage;
 import com.jcloisterzone.wsio.message.PayRansomMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public abstract class Phase {

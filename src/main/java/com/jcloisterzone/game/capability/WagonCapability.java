@@ -1,11 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import static com.jcloisterzone.XMLUtils.contentAsLocations;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import com.jcloisterzone.Player;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -13,18 +7,18 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.MeepleIdProvider;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
-import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Queue;
 import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import static com.jcloisterzone.XMLUtils.contentAsLocations;
 
 /**
  * @model Queue<Tuple2<Wagon, FeaturePointer>>

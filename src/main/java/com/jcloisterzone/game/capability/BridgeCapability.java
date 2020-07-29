@@ -9,7 +9,6 @@ import com.jcloisterzone.event.play.TokenPlacedEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 

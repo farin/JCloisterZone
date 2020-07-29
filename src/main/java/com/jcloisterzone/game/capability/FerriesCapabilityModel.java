@@ -1,18 +1,17 @@
 package com.jcloisterzone.game.capability;
 
-import java.io.Serializable;
-import java.util.function.Function;
-
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
+
+import java.io.Serializable;
+import java.util.function.Function;
 
 @Immutable
 public class FerriesCapabilityModel implements Serializable {

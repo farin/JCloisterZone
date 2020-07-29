@@ -1,10 +1,10 @@
 package com.jcloisterzone.game.capability;
 
-import java.io.Serializable;
-
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Tile;
+
+import java.io.Serializable;
 
 @Immutable
 public class BazaarItem implements Serializable {

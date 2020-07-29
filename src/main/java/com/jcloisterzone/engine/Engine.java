@@ -198,6 +198,7 @@ public class Engine implements  Runnable {
         // initialSeed = 4125305802896227250L; // RR
         // initialSeed = -5589071459783070185L; // CFC.2
 
+        initialSeed = -6476999185744582589L; // BA.C as first tile
         // initialSeed = 5898276208915289755L; // Princess and Dragon: early volcano + move, + also early princess (in general this provides early non BA tile, works also at least for Tower
         err.println("initial seed is " + initialSeed);
 

@@ -1,25 +1,21 @@
 package com.jcloisterzone.feature;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.function.Function;
-
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.play.PointsExpression;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.FerriesCapabilityModel;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTunnelToken;
-
 import io.vavr.Tuple2;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.List;
-import io.vavr.collection.Map;
-import io.vavr.collection.Set;
+import io.vavr.collection.*;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.function.Function;
 
 public class Road extends CompletableFeature<Road> {
 
@@ -148,34 +144,36 @@ public class Road extends CompletableFeature<Road> {
         return new Road(places, openEdges, neighboring, inn, labyrinth, openTunnelEnds);
     }
 
-    private int getBasePoints(GameState state, boolean completed) {
+    private PointsExpression getBasePoints(GameState state, boolean completed) {
         int tileCount = getTilePositions().size();
         if (inn && !completed) {
-            return 0;
+            return new PointsExpression(0, "road.incomplete-inn");
+        }
+        Map<String, Integer> args = HashMap.of("tiles", tileCount);
+        if (inn) {
+            args = args.put("inn", 1);
         }
         int points = inn ? tileCount * 2 : tileCount;
         if (labyrinth && completed) {
-            points += 2 * getMeeples(state).size();
+            int meeplesCount = getMeeples(state).size();
+            args = args.put("meeples", meeplesCount);
+            points += 2 * meeplesCount;
         }
-        return points;
+        return new PointsExpression(points, "road", args);
 
     }
 
     @Override
-    public int getPoints(GameState state) {
-        int basePoints = getBasePoints(state, isCompleted(state));
-        return getMageAndWitchPoints(state, basePoints) + getLittleBuildingPoints(state);
+    public PointsExpression getPoints(GameState state) {
+        PointsExpression basePoints = getBasePoints(state, isCompleted(state));
+        return getMageAndWitchPoints(state, basePoints).merge(getLittleBuildingPoints(state));
     }
 
     @Override
-    public int getStructurePoints(GameState state, boolean completed) {
-        return getBasePoints(state, completed) + getLittleBuildingPoints(state);
+    public PointsExpression getStructurePoints(GameState state, boolean completed) {
+        return getBasePoints(state, completed).merge(getLittleBuildingPoints(state));
     }
 
-    @Override
-    public String getPointCategory() {
-        return "road";
-    }
 
     public static String name() {
         return "Road";
