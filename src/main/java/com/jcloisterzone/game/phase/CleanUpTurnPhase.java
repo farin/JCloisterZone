@@ -1,10 +1,15 @@
 package com.jcloisterzone.game.phase;
 
+import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.game.capability.BazaarCapability;
+import com.jcloisterzone.game.capability.BazaarCapabilityModel;
+import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.SetNextPlayer;
 import io.vavr.collection.HashSet;
+import io.vavr.collection.Queue;
 
 /**
  * real end of turn and switch to next player
@@ -24,8 +29,17 @@ public class CleanUpTurnPhase extends Phase {
         if (!state.getFlags().isEmpty()) {
             state = state.setFlags(HashSet.empty());
         }
-        state = (new SetNextPlayer()).apply(state);
 
-        return next(state);
+        BazaarCapabilityModel bazaarModel = state.getCapabilityModel(BazaarCapability.class);
+        Queue<BazaarItem> bazaarSupply = bazaarModel == null ? null : bazaarModel.getSupply();
+        TilePack tilePack = state.getTilePack();
+        if (tilePack.isEmpty() && bazaarSupply == null) {
+            // TODO allow placing Abbey if ebabled by custom rule (TODO add it, default is don't allow)
+            // but don't add fairy points during this special turns
+            return next(state, GameOverPhase.class);
+        } else {
+            state = (new SetNextPlayer()).apply(state);
+            return next(state);
+        }
     }
 }

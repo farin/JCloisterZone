@@ -242,6 +242,14 @@ public class StateGsonBuilder {
             }
             if (ev instanceof ScoreEvent) {
                 ScoreEvent sev = (ScoreEvent) ev;
+                if (sev.isFinal() && turn != -1) {
+                    turn = -1;
+                    item = new JsonObject();
+                    turnEvents = new JsonArray();
+                    item.addProperty("finalScoring", true);
+                    item.add("events", turnEvents);
+                    events.add(item);
+                }
                 JsonObject data = new JsonObject();
                 data.addProperty("type", "points");
                 JsonArray points = new JsonArray();
