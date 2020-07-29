@@ -39,10 +39,7 @@ public class TilePackBuilder {
     protected Config config;
 
     private java.util.Set<String> usedIds = new java.util.HashSet<>(); //for assertion only
-
-    // private java.util.Map<Expansion, Element> parsedDefinitions = new java.util.HashMap<>();
     private java.util.Map<String, java.util.List<Tile>> tiles = new java.util.HashMap<>();
-    // private Map<Position, Tuple2<PlacedTile, Integer>> preplacedTiles = HashMap.empty();
 
     public void setGameState(GameState state) {
         this.state = state;
@@ -62,38 +59,6 @@ public class TilePackBuilder {
         return TilePackBuilder.class.getClassLoader().getResource(fileName);
     }
 
-//    protected URL getTilesConfig(Expansion expansion) {
-//        DebugConfig debugConfig = config.getDebug();
-//        String fileName = null;
-//        if (debugConfig != null && debugConfig.getTile_definitions() != null) {
-//            fileName = debugConfig.getTile_definitions().get(expansion.name());
-//        }
-//        if (fileName == null) {
-//            fileName = "tile-definitions/"+expansion.name().toLowerCase()+".xml";
-//        }
-//        if (fileName.startsWith("/")) {
-//            try {
-//                return new File(fileName).toURI().toURL();
-//            } catch (MalformedURLException e) {
-//                throw new RuntimeException(e);
-//            }
-//        } else {
-//            return TilePackBuilder.class.getClassLoader().getResource(fileName);
-//        }
-//    }
-
-//    protected Element getExpansionDefinition(Expansion expansion) {
-//        Element root = parsedDefinitions.get(expansion);
-//        if (root == null) {
-//            try {
-//                root = XMLUtils.parseDocument(getTilesConfig(expansion)).getDocumentElement();
-//                parsedDefinitions.put(expansion, root);
-//            } catch (Exception e) {
-//                logger.error("Can't parse definition for " + expansion.name(), e);
-//            }
-//        }
-//        return root;
-//    }
 
     protected boolean isTunnelActive(String tileId) {
         if (!state.getCapabilities().contains(TunnelCapability.class)) {
@@ -138,30 +103,6 @@ public class TilePackBuilder {
         return initTile(tile, tileElements);
     }
 
-//    public Stream<Preplaced> getPreplacedPositions(String tileId, Vector<Element> tileElements) {
-//        return Stream.concat(
-//            tileElements.map(el -> XMLUtils.elementStream(el.getElementsByTagName("position")))
-//        ).map(
-//            e -> {
-//                Position pos = new Position(attributeIntValue(e, "x"), attributeIntValue(e, "y"));
-//                return new Preplaced(pos, attributeIntValue(e, "priority", 1));
-//            }
-//        );
-//    }
-
-//    public Element findTileElement(String id) {
-//        String[] tokens = id.split("\\.", 2);
-//        Expansion expansion = Expansion.valueOfCode(tokens[0]);
-//        Element element = getExpansionDefinition(expansion);
-//        NodeList nl = element.getElementsByTagName("tile");
-//        for (int i = 0; i < nl.getLength(); i++) {
-//            Element tileElement =  (Element) nl.item(i);
-//            if (tileElement.getAttribute("id").equals(tokens[1])) {
-//                return tileElement;
-//            }
-//        }
-//        throw new NoSuchElementException();
-//    }
 
     @SuppressWarnings("unchecked")
     public TilePack createTilePack() throws IOException {
@@ -194,18 +135,6 @@ public class TilePackBuilder {
 
             NodeList nl = element.getElementsByTagName("tile");
             XMLUtils.elementStream(nl).forEach(tileElement -> {
-//                String capabilityClass = tileElement.getAttribute("if-capability");
-//                if (!capabilityClass.isEmpty()) {
-//                    try {
-//                        Class<? extends Capability<?>> cls = (Class<? extends Capability<?>>) Class.forName(capabilityClass);
-//                        if (!state.getCapabilities().contains(cls)) {
-//                            return;
-//                        }
-//                    } catch (ClassNotFoundException e) {
-//                        logger.error("Can't find " + capabilityClass, e);
-//                    }
-//                }
-
                 String tileId = tileElement.getAttribute("id");
                 int count = tilesCount.getOrDefault(tileId, 0);
                 if (count == 0) {
@@ -240,53 +169,6 @@ public class TilePackBuilder {
                 for (int ci = 0; ci < count; ci++) {
                     group.add(tile);
                 }
-
-                // TODO preplaced tiles
-
-//                for (int ci = 0; ci < count; ci++) {
-//                    Position pos = null;
-//                    int priority = 0;
-//                    if (positions != null && !positions.isEmpty()) {
-//                        Preplaced pp = positions.peek();
-//                        pos = pp.position;
-//                        priority = pp.priority;
-//                        positions = positions.pop();
-//                        //hard coded exceptions - should be declared in pack def
-//                        // TODO merge <remap> ... directive
-//                        if (expansions.containsKey(Expansion.COUNT)) {
-//                            if (tileId.equals("BA.RCr")) continue;
-//                            if (tileId.equals("R1.I.s") ||
-//                                tileId.equals("R2.I.s") ||
-//                                tileId.equals("GQ.RFI")) {
-//                                pos = new Position(1, 2);
-//                            }
-//                            if (tileId.equals("WR.CFR")) {
-//                                pos = new Position(-2, -2);
-//                            }
-//                        } else if (expansions.containsKey(Expansion.WIND_ROSE)) {
-//                            if (state.getCapabilities().contains(RiverCapability.class)) {
-//                                if (tileId.equals("WR.CFR")) {
-//                                    pos = new Position(0, 1);
-//                                }
-//                            }
-//                        }
-//                        logger.info("Setting initial placement {} for {}", pos, tileId);
-//                    }
-//                    if (pos != null) {
-//                        Tuple2<PlacedTile, Integer> pt = preplacedTiles.get(pos).getOrNull();
-//                        if (pt == null || pt._2 < priority) {
-//                            preplacedTiles = preplacedTiles.put(pos,
-//                                new Tuple2<>(new PlacedTile(tile, pos, Rotation.R0), priority)
-//                            );
-//                        }
-//                    } else {
-//                        String group = getTileGroup(tile, tileElements);
-//                        if (!tiles.containsKey(group)) {
-//                            tiles.put(group, new java.util.ArrayList<>());
-//                        }
-//                        tiles.get(group).merge(tile);
-//                    }
-//                }
             });
         });
 

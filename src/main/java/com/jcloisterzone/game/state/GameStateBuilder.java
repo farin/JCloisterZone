@@ -32,19 +32,6 @@ import java.util.Map;
 
 public class GameStateBuilder {
 
-//    private final static class PlayerSlotComparator implements Comparator<PlayerSlot> {
-//        @Override
-//        public int compare(PlayerSlot o1, PlayerSlot o2) {
-//            if (o1.getSerial() == null) {
-//                return o2.getSerial() == null ? 0 : 1;
-//            }
-//            if (o2.getSerial() == null) return -1;
-//            if (o1.getSerial() < o2.getSerial()) return -1;
-//            if (o1.getSerial() > o2.getSerial()) return 1;
-//            return 0;
-//        }
-//    }
-
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final GameSetup setup;

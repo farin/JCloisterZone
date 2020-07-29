@@ -159,7 +159,7 @@ public class Road extends CompletableFeature<Road> {
             args = args.put("meeples", meeplesCount);
             points += 2 * meeplesCount;
         }
-        return new PointsExpression(points, "road", args);
+        return new PointsExpression(points, completed ? "road" : "road.incomplete", args);
 
     }
 

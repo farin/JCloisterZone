@@ -31,9 +31,6 @@ public class GameSetup implements Serializable, RulesMixin {
         this.start = start;
     }
 
-//    public boolean hasExpansion(Expansion expansion) {
-//        return expansions.containsKey(expansion);
-//    }
 
     public Map<String, Integer> getTileSets() {
         return tileSets;
@@ -44,9 +41,6 @@ public class GameSetup implements Serializable, RulesMixin {
         return new GameSetup(tileSets, meeples, capabilities, rules, start);
     }
 
-//    public GameSetup mapExpansions(Function<Map<Expansion, Integer>, Map<Expansion, Integer>> mapper) {
-//        return setExpansions(mapper.apply(expansions));
-//    }
 
     public Map<Class<? extends Meeple>, Integer> getMeeples() {
         return meeples;

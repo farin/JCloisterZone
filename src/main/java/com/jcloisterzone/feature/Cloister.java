@@ -147,7 +147,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
             points += adjacentVineyards * 3;
             args = args.put("vineyards", adjacentVineyards);
         }
-        return new PointsExpression(points, "cloister", args).merge(getLittleBuildingPoints(state));
+        return new PointsExpression(points, adjacent == 8 ? "cloister" : "cloister.incomplete", args).merge(getLittleBuildingPoints(state));
     }
 
     public static String name() {

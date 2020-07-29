@@ -26,7 +26,7 @@ public class StateGsonBuilder {
     public Gson create() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Game.class, new GameSerializer());
-        builder.registerTypeAdapter(TilePack.class, new TilePackSerializer());
+        builder.registerTypeHierarchyAdapter(TilePack.class, new TilePackSerializer());
         builder.registerTypeAdapter(ActionsState.class, new ActionsStateSerializer());
         builder.registerTypeAdapter(Position.class, new MessageParser.PositionSerializer());
         builder.registerTypeAdapter(Location.class, new MessageParser.LocationSerializer());

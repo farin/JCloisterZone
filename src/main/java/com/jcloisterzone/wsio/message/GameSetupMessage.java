@@ -17,7 +17,7 @@ public class GameSetupMessage extends AbstractWsMessage implements WsMessage {
     private Map<String, Object> timer;
     private ArrayList<PlayerSetup> players;
     private ArrayList<PlacedTileItem> start;
-
+    private Map<String, Object> gameAnnotations;
 
     public Map<String, Integer> getSets() {
         return sets;
@@ -41,6 +41,10 @@ public class GameSetupMessage extends AbstractWsMessage implements WsMessage {
 
     public ArrayList<PlacedTileItem> getStart() {
         return start;
+    }
+
+    public Map<String, Object> getGameAnnotations() {
+        return gameAnnotations;
     }
 
     public static class PlayerSetup {
