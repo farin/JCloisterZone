@@ -57,26 +57,20 @@
         </tile>
     </tiles>
 
-    <multi-tiles>
-      <multi-tile id="CO/_" size="4x3">
-        <ref tile="CO/1" />
-        <ref tile="CO/2" />
-        <ref tile="CO/3" />
-        <ref tile="CO/4" />
-        <ref tile="CO/5" />
-        <ref tile="CO/6" />
-        <ref tile="CO/7" />
-        <ref tile="CO/8" />
-        <ref tile="CO/9" />
-        <ref tile="CO/10" />
-        <ref tile="CO/11" />
-        <ref tile="CO/12" />
-      </multi-tile>
-    </multi-tiles>
-
     <sets>
         <tile-set id="count" max="1">
-            <ref tile="CO/_" count="1" />
+            <ref count="1" tile="CO/1" />
+            <ref count="1" tile="CO/2" />
+            <ref count="1" tile="CO/3" />
+            <ref count="1" tile="CO/4" />
+            <ref count="1" tile="CO/5" />
+            <ref count="1" tile="CO/6" />
+            <ref count="1" tile="CO/7" />
+            <ref count="1" tile="CO/8" />
+            <ref count="1" tile="CO/9" />
+            <ref count="1" tile="CO/10" />
+            <ref count="1" tile="CO/11" />
+            <ref count="1" tile="CO/12" />
         </tile-set>
     </sets>
 </pack>

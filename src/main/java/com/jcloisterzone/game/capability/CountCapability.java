@@ -26,7 +26,16 @@ public class CountCapability extends Capability<CountCapabilityModel> {
 
     @Override
     public GameState onStartGame(GameState state) {
-        return state.mapNeutralFigures(nf -> nf.setCount(new Count("count.1")));
+        Count count = new Count("count.1");
+        state =  state.mapNeutralFigures(nf -> nf.setCount(count));
+
+        Position quarterPosition = state.getPlacedTiles().filter(t -> t._2.getTile().getId().equals(QUARTER_ACTION_TILE_ID)).get()._1;
+        state = setModel(state, new CountCapabilityModel(quarterPosition, null));
+        state = (new MoveNeutralFigure<>(
+                count,
+                new FeaturePointer(quarterPosition, Location.QUARTER_CASTLE)
+        )).apply(state);
+        return state;
     }
 
     @Override
@@ -53,21 +62,5 @@ public class CountCapability extends Capability<CountCapabilityModel> {
     public boolean isMeepleDeploymentAllowed(GameState state, Position pos) {
         PlacedTile pt = state.getPlacedTiles().get(pos).getOrNull();
         return pt == null || !isTileForbidden(pt.getTile());
-    }
-
-    @Override
-    public GameState onTilePlaced(GameState state, PlacedTile pt) {
-        if (!pt.getTile().getId().equals(QUARTER_ACTION_TILE_ID)) {
-            return state;
-        }
-
-        Position quarterPosition = pt.getPosition();
-        state = setModel(state, new CountCapabilityModel(quarterPosition, null));
-        Count count = state.getNeutralFigures().getCount();
-        state = (new MoveNeutralFigure<>(
-            count,
-            new FeaturePointer(quarterPosition, Location.QUARTER_CASTLE)
-        )).apply(state);
-        return state;
     }
 }
