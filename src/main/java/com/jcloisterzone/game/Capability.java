@@ -60,11 +60,6 @@ public abstract class Capability<T> implements Serializable {
         return null;
     }
 
-    @Deprecated
-    public Set<FeaturePointer> extendFollowOptions(Set<FeaturePointer> locations) {
-        return locations;
-    }
-
     public GameState onStartGame(GameState state) {
         return state;
     }

@@ -94,7 +94,7 @@ public class Engine implements  Runnable {
     private GameSetup createSetupFromMessage(GameSetupMessage setupMsg) {
         Map<Class<? extends Meeple>, Integer> meeples = HashMap.empty();
         meeples = addMeeples(meeples, setupMsg, "small-follower", SmallFollower.class);
-        // meeples = addMeeples(meeples, setupMsg, "abbot", Abbot.class);
+        meeples = addMeeples(meeples, setupMsg, "abbot", Abbot.class);
         meeples = addMeeples(meeples, setupMsg, "phantom", Phantom.class);
         meeples = addMeeples(meeples, setupMsg, "big-follower", BigFollower.class);
         meeples = addMeeples(meeples, setupMsg, "builder", Builder.class);
@@ -105,6 +105,7 @@ public class Engine implements  Runnable {
         meeples = addMeeples(meeples, setupMsg, "shepherd", Shepherd.class);
 
         Set<Class<? extends Capability<?>>> capabilities = HashSet.empty();
+        capabilities = addCapabilities(capabilities, setupMsg,"abbot", AbbotCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"barn", BarnCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"builder", BuilderCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"phantom", PhantomCapability.class);

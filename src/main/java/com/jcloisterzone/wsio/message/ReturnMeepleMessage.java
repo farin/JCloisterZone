@@ -7,7 +7,7 @@ import com.jcloisterzone.wsio.WsMessageCommand;
 public class ReturnMeepleMessage extends AbstractWsMessage implements WsInGameMessage, WsReplayableMessage {
 
     public enum ReturnMeepleSource {
-        PRINCESS, SIEGE_ESCAPE, FESTIVAL, CORN_CIRCLE;
+        PRINCESS, SIEGE_ESCAPE, FESTIVAL, CORN_CIRCLE, ABBOT_RETURN;
     }
 
     private String gameId;

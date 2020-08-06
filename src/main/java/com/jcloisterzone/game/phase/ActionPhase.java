@@ -45,7 +45,7 @@ public class ActionPhase extends AbstractActionPhase {
         Player player = state.getTurnPlayer();
 
         Vector<Class<? extends Meeple>> meepleTypes = Vector.of(
-            SmallFollower.class, BigFollower.class, Phantom.class,
+            SmallFollower.class, BigFollower.class, Phantom.class, Abbot.class,
             Wagon.class, Mayor.class, Builder.class, Pig.class, Shepherd.class
         );
 
@@ -95,23 +95,28 @@ public class ActionPhase extends AbstractActionPhase {
             .getOrElseThrow(() -> new IllegalArgumentException("Pointer doesn't match any meeple"));
 
         switch (msg.getSource()) {
-        case PRINCESS:
-            ReturnMeepleAction princessAction = (ReturnMeepleAction) state.getPlayerActions()
-                .getActions().find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.PRINCESS)
-                .getOrElseThrow(() -> new IllegalArgumentException("Return meeple is not allowed"));
-            if (princessAction.getOptions().contains(ptr)) {
-                state = state.addFlag(Flag.PRINCESS_USED);
-            } else {
-                throw new IllegalArgumentException("Pointer doesn't match princess action");
-            }
-            break;
-        case FESTIVAL:
-            if (!state.getLastPlaced().getTile().hasModifier(FestivalCapability.FESTIVAL)) {
-                throw new IllegalArgumentException("Festival return is not allowed");
-            }
-            break;
-        default:
-            throw new IllegalArgumentException("Return meeple is not allowed");
+            case PRINCESS:
+                ReturnMeepleAction princessAction = (ReturnMeepleAction) state.getPlayerActions()
+                    .getActions().find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.PRINCESS)
+                    .getOrElseThrow(() -> new IllegalArgumentException("Return meeple is not allowed"));
+                if (princessAction.getOptions().contains(ptr)) {
+                    state = state.addFlag(Flag.PRINCESS_USED);
+                } else {
+                    throw new IllegalArgumentException("Pointer doesn't match princess action");
+                }
+                break;
+            case FESTIVAL:
+                if (!state.getLastPlaced().getTile().hasModifier(FestivalCapability.FESTIVAL)) {
+                    throw new IllegalArgumentException("Festival return is not allowed");
+                }
+                break;
+            case ABBOT_RETURN:
+                if (meeple.getPlayer() != state.getPlayerActions().getPlayer()) {
+                    throw new IllegalArgumentException("Not abbot owner");
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Return meeple is not allowed");
         }
 
         state = (new UndeployMeeple(meeple, true)).apply(state);
