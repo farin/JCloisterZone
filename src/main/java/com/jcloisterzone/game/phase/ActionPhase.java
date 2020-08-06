@@ -8,7 +8,12 @@ import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.play.PointsExpression;
+import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.play.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.play.TokenPlacedEvent;
+import com.jcloisterzone.feature.CloisterLike;
+import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.figure.neutral.Fairy;
@@ -94,6 +99,8 @@ public class ActionPhase extends AbstractActionPhase {
         Meeple meeple = state.getDeployedMeeples().find(m -> ptr.match(m._1)).map(t -> t._1)
             .getOrElseThrow(() -> new IllegalArgumentException("Pointer doesn't match any meeple"));
 
+        CloisterLike assignAbbotScore = null;
+
         switch (msg.getSource()) {
             case PRINCESS:
                 ReturnMeepleAction princessAction = (ReturnMeepleAction) state.getPlayerActions()
@@ -111,9 +118,10 @@ public class ActionPhase extends AbstractActionPhase {
                 }
                 break;
             case ABBOT_RETURN:
-                if (meeple.getPlayer() != state.getPlayerActions().getPlayer()) {
+                if (meeple.getPlayer() != state.getPlayerActions().getPlayer() || !(meeple instanceof Abbot)) {
                     throw new IllegalArgumentException("Not abbot owner");
                 }
+                assignAbbotScore = (CloisterLike) state.getFeature(ptr.asFeaturePointer());
                 break;
             default:
                 throw new IllegalArgumentException("Return meeple is not allowed");
@@ -121,6 +129,14 @@ public class ActionPhase extends AbstractActionPhase {
 
         state = (new UndeployMeeple(meeple, true)).apply(state);
         state = clearActions(state);
+
+        if (assignAbbotScore != null) {
+            PointsExpression points = assignAbbotScore.getStructurePoints(state, false);
+            ReceivedPoints rp = new ReceivedPoints(points, meeple.getPlayer(), ptr.asFeaturePointer());
+            state = (new AddPoints(meeple.getPlayer(), points.getPoints())).apply(state);
+            state = state.appendEvent(new ScoreEvent(rp, false, false));
+        }
+
         return next(state);
     }
 
