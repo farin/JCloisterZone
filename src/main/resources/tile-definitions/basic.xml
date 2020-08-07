@@ -198,7 +198,7 @@
     </tile>
   </tiles>
   <sets>
-    <tile-set id="basic">
+    <tile-set id="basic:1">
       <ref count="4" tile="BA/L" />
       <ref count="2" tile="BA/LR" />
       <ref count="4" tile="BA/RCr" />

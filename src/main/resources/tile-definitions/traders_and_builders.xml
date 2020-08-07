@@ -55,6 +55,19 @@
 				<neighbouring>N E</neighbouring>
 				<neighbouring>N S</neighbouring>
 			</wagon-move>
+    </tile>
+    <tile id="TB/CcRR.wG">
+      <garden />
+			<city resource="wine">N W</city>
+			<road>S</road>
+			<road>E</road>
+			<farm city="N">SR</farm>
+			<farm city="N">SL ER</farm>
+			<farm city="N">EL</farm>
+			<wagon-move>
+				<neighbouring>N E</neighbouring>
+				<neighbouring>N S</neighbouring>
+			</wagon-move>
 		</tile>
 		<tile id="TB/CcRC.c">
 			<city resource="cloth">N W</city>
@@ -77,6 +90,16 @@
 			</wagon-move>
 		</tile>
 		<tile id="TB/CcR.c">
+			<city resource="cloth">N W</city>
+			<road>E</road>
+			<farm city="N">EL</farm>
+			<farm city="N">ER SL SR</farm>
+			<wagon-move>
+				<neighbouring>N E</neighbouring>
+			</wagon-move>
+    </tile>
+    <tile id="TB/CcR.cG">
+      <garden />
 			<city resource="cloth">N W</city>
 			<road>E</road>
 			<farm city="N">EL</farm>
@@ -209,32 +232,58 @@
 			<farm>SR WL</farm>
 		</tile>
 	</tiles>
-    <sets>
-        <tile-set id="traders-and-builders">
-			<ref count="1" tile="TB/Cc.g" />
-			<ref count="1" tile="TB/Cc.w" />
-			<ref count="1" tile="TB/CCc.c" />
-			<ref count="1" tile="TB/CCc.w" />
-			<ref count="1" tile="TB/Ccc.g" />
-			<ref count="1" tile="TB/CcCC.c" />
-			<ref count="1" tile="TB/CcRR!.c" />
-			<ref count="1" tile="TB/CcRR.w" />
-			<ref count="1" tile="TB/CcRC.c" />
-			<ref count="1" tile="TB/CcRC.g" />
-			<ref count="1" tile="TB/CcR.c" />
-			<ref count="1" tile="TB/CcR!.w" />
-			<ref count="1" tile="TB/CccR.w" />
-			<ref count="1" tile="TB/CcCc.w" />
-			<ref count="1" tile="TB/CFc.w" />
-			<ref count="1" tile="TB/CR" />
-			<ref count="1" tile="TB/CRc.g" />
-			<ref count="1" tile="TB/CRc.w" />
-			<ref count="1" tile="TB/CRcR.w" />
-			<ref count="1" tile="TB/LRRR" />
-			<ref count="1" tile="TB/RCc.g" />
-			<ref count="1" tile="TB/RCc!.g" />
-			<ref count="1" tile="TB/RRC" />
-			<ref count="1" tile="TB/RRrr" />
-		</tile-set>
-    </sets>
+  <sets>
+    <tile-set id="traders-and-builders:1">
+      <ref count="1" tile="TB/Cc.g" />
+      <ref count="1" tile="TB/Cc.w" />
+      <ref count="1" tile="TB/CCc.c" />
+      <ref count="1" tile="TB/CCc.w" />
+      <ref count="1" tile="TB/Ccc.g" />
+      <ref count="1" tile="TB/CcCC.c" />
+      <ref count="1" tile="TB/CcRR!.c" />
+      <ref count="1" tile="TB/CcRR.w" />
+      <ref count="1" tile="TB/CcRC.c" />
+      <ref count="1" tile="TB/CcRC.g" />
+      <ref count="1" tile="TB/CcR.c" />
+      <ref count="1" tile="TB/CcR!.w" />
+      <ref count="1" tile="TB/CccR.w" />
+      <ref count="1" tile="TB/CcCc.w" />
+      <ref count="1" tile="TB/CFc.w" />
+      <ref count="1" tile="TB/CR" />
+      <ref count="1" tile="TB/CRc.g" />
+      <ref count="1" tile="TB/CRc.w" />
+      <ref count="1" tile="TB/CRcR.w" />
+      <ref count="1" tile="TB/LRRR" />
+      <ref count="1" tile="TB/RCc.g" />
+      <ref count="1" tile="TB/RCc!.g" />
+      <ref count="1" tile="TB/RRC" />
+      <ref count="1" tile="TB/RRrr" />
+    </tile-set>
+    <tile-set id="traders-and-builders:2">
+      <ref count="1" tile="TB/Cc.g" />
+      <ref count="1" tile="TB/Cc.w" />
+      <ref count="1" tile="TB/CCc.c" />
+      <ref count="1" tile="TB/CCc.w" />
+      <ref count="1" tile="TB/Ccc.g" />
+      <ref count="1" tile="TB/CcCC.c" />
+      <ref count="1" tile="TB/CcRR!.c" />
+      <ref count="1" tile="TB/CcRR.wG" />
+      <ref count="1" tile="TB/CcRC.c" />
+      <ref count="1" tile="TB/CcRC.g" />
+      <ref count="1" tile="TB/CcR.cG" />
+      <ref count="1" tile="TB/CcR!.w" />
+      <ref count="1" tile="TB/CccR.w" />
+      <ref count="1" tile="TB/CcCc.w" />
+      <ref count="1" tile="TB/CFc.w" />
+      <ref count="1" tile="TB/CR" />
+      <ref count="1" tile="TB/CRc.g" />
+      <ref count="1" tile="TB/CRc.w" />
+      <ref count="1" tile="TB/CRcR.w" />
+      <ref count="1" tile="TB/LRRR" />
+      <ref count="1" tile="TB/RCc.g" />
+      <ref count="1" tile="TB/RCc!.g" />
+      <ref count="1" tile="TB/RRC" />
+      <ref count="1" tile="TB/RRrr" />
+    </tile-set>
+  </sets>
 </pack>

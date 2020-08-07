@@ -1,115 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pack>
-    <!-- expansion also contains Abbey tile, with id AM.A when placed
-         this is not part of tile pack and tile is created from code separately
-     -->
-    <tiles>
-        <tile id="AM/C++">
-            <city pennant="2">N E S W</city>
-        </tile>
-        <tile id="AM/CCcc+">
-            <city pennant="yes">N S</city>
-            <city>W E</city>
-            <farm city="N W">INNER_FARM</farm>
-            <farm city="N W">INNER_FARM_B</farm>
-        </tile>
-        <tile id="AM/CCc+">
-            <city pennant="yes">N</city>
-            <city>W E</city>
-            <farm city="N W">INNER_FARM</farm>
-            <farm city="N W">SL SR</farm>
-        </tile>
-        <tile id="AM/CCRR">
-            <city castle-base="true">N</city>
-            <city castle-base="true">W</city>
-            <road>E</road>
-            <road>S</road>
-            <farm city="N">EL</farm>
-            <farm city="W">SR</farm>
-            <farm city="N W">ER SL</farm>
-            <wagon-move>
-                <neighbouring>N E</neighbouring>
-                <neighbouring>S W</neighbouring>
-            </wagon-move>
-        </tile>
-        <tile id="AM/LRRRR">
-            <cloister/>
-            <road>N</road>
-            <road>W</road>
-            <road>S</road>
-            <road>E</road>
-            <farm>WR NL</farm>
-            <farm>NR EL</farm>
-            <farm>ER SL</farm>
-            <farm>SR WL</farm>
-            <wagon-move>
-                <neighbouring>CLOISTER N</neighbouring>
-                <neighbouring>CLOISTER W</neighbouring>
-                <neighbouring>CLOISTER E</neighbouring>
-                <neighbouring>CLOISTER S</neighbouring>
-            </wagon-move>
-        </tile>
-        <tile id="AM/RC">
-            <city castle-base="true">N</city>
-            <road>W</road>
-            <farm city="N">WR</farm>
-            <farm city="N">EL ER SL SR WL</farm>
-            <wagon-move>
-                <neighbouring>N W</neighbouring>
-            </wagon-move>
-        </tile>
-        <tile id="AM/CRr">
-            <city castle-base="true">N</city>
-            <road>S E</road>
-            <farm city="N">WL WR SR</farm>
-            <farm city="N">EL</farm>
-            <farm>ER SL</farm>
-        </tile>
-        <tile id="AM/RrC">
-            <city castle-base="true">N</city>
-            <road>W S</road>
-            <farm city="N">EL ER SL</farm>
-            <farm city="N">WR</farm>
-            <farm>SR WL</farm>
-        </tile>
-        <tile id="AM/C!+">
-            <city pennant="yes">W</city>
-            <farm city="W">NL NR</farm>
-            <farm city="W">EL ER</farm>
-            <farm city="W">SL SR</farm>
-        </tile>
-        <tile id="AM/R">
-            <road>S</road>
-            <farm>NL NR EL ER SL SR WL WR</farm>
-        </tile>
-        <tile id="AM/Rrr">
-            <road>N W E</road>
-            <farm>WR NL</farm>
-            <farm>NR EL</farm>
-            <farm>ER SL SR WL</farm>
-        </tile>
-        <tile id="AM/CRcr+">
-            <city pennant="yes">W E</city>
-            <road tunnel="yes">N S</road>
-            <farm city="W">SL SR</farm>
-            <farm city="W">NL</farm>
-            <farm city="W">NR</farm>
-        </tile>
-    </tiles>
-    <sets>
-        <tile-set id="abbey-and-mayor">
-            <ref count="1" tile="AM/C++" />
-            <ref count="1" tile="AM/CCcc+" />
-            <ref count="1" tile="AM/CCc+" />
-            <ref count="1" tile="AM/CCRR" />
-            <ref count="1" tile="AM/LRRRR" />
-            <ref count="1" tile="AM/RC" />
-            <ref count="1" tile="AM/CRr" />
-            <ref count="1" tile="AM/RrC" />
-            <ref count="1" tile="AM/C!+" />
-            <ref count="1" tile="AM/R" />
-            <ref count="1" tile="AM/Rrr" />
-            <ref count="1" tile="AM/CRcr+" />
-        </tile-set>
-    </sets>
+  <!-- expansion also contains Abbey tile, with id AM.A when placed
+       this is not part of tile pack and tile is created from code separately
+  -->
+  <tiles>
+    <tile id="AM/C++">
+      <city pennant="2">N E S W</city>
+    </tile>
+    <tile id="AM/CCcc+">
+      <city pennant="yes">N S</city>
+      <city>W E</city>
+      <farm city="N W">INNER_FARM</farm>
+      <farm city="N W">INNER_FARM_B</farm>
+    </tile>
+    <tile id="AM/CCc+">
+      <city pennant="yes">N</city>
+      <city>W E</city>
+      <farm city="N W">INNER_FARM</farm>
+      <farm city="N W">SL SR</farm>
+    </tile>
+    <tile id="AM/CCRR">
+      <city castle-base="true">N</city>
+      <city castle-base="true">W</city>
+      <road>E</road>
+      <road>S</road>
+      <farm city="N">EL</farm>
+      <farm city="W">SR</farm>
+      <farm city="N W">ER SL</farm>
+      <wagon-move>
+        <neighbouring>N E</neighbouring>
+        <neighbouring>S W</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="AM/LRRRR">
+      <cloister />
+      <road>N</road>
+      <road>W</road>
+      <road>S</road>
+      <road>E</road>
+      <farm>WR NL</farm>
+      <farm>NR EL</farm>
+      <farm>ER SL</farm>
+      <farm>SR WL</farm>
+      <wagon-move>
+        <neighbouring>CLOISTER N</neighbouring>
+        <neighbouring>CLOISTER W</neighbouring>
+        <neighbouring>CLOISTER E</neighbouring>
+        <neighbouring>CLOISTER S</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="AM/RC">
+      <city castle-base="true">N</city>
+      <road>W</road>
+      <farm city="N">WR</farm>
+      <farm city="N">EL ER SL SR WL</farm>
+      <wagon-move>
+        <neighbouring>N W</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="AM/CRr">
+      <city castle-base="true">N</city>
+      <road>S E</road>
+      <farm city="N">WL WR SR</farm>
+      <farm city="N">EL</farm>
+      <farm>ER SL</farm>
+    </tile>
+    <tile id="AM/RrC">
+      <city castle-base="true">N</city>
+      <road>W S</road>
+      <farm city="N">EL ER SL</farm>
+      <farm city="N">WR</farm>
+      <farm>SR WL</farm>
+    </tile>
+    <tile id="AM/C!+">
+      <city pennant="yes">W</city>
+      <farm city="W">NL NR</farm>
+      <farm city="W">EL ER</farm>
+      <farm city="W">SL SR</farm>
+    </tile>
+    <tile id="AM/R">
+      <road>S</road>
+      <farm>NL NR EL ER SL SR WL WR</farm>
+    </tile>
+    <tile id="AM/RG">
+      <garden/>
+      <road>S</road>
+      <farm>NL NR EL ER SL SR WL WR</farm>
+    </tile>
+    <tile id="AM/Rrr">
+      <road>N W E</road>
+      <farm>WR NL</farm>
+      <farm>NR EL</farm>
+      <farm>ER SL SR WL</farm>
+    </tile>
+    <tile id="AM/CRcr+">
+      <city pennant="yes">W E</city>
+      <road tunnel="yes">N S</road>
+      <farm city="W">SL SR</farm>
+      <farm city="W">NL</farm>
+      <farm city="W">NR</farm>
+    </tile>
+  </tiles>
+  <sets>
+    <tile-set id="abbey-and-mayor:1">
+      <ref count="1" tile="AM/C++" />
+      <ref count="1" tile="AM/CCcc+" />
+      <ref count="1" tile="AM/CCc+" />
+      <ref count="1" tile="AM/CCRR" />
+      <ref count="1" tile="AM/LRRRR" />
+      <ref count="1" tile="AM/RC" />
+      <ref count="1" tile="AM/CRr" />
+      <ref count="1" tile="AM/RrC" />
+      <ref count="1" tile="AM/C!+" />
+      <ref count="1" tile="AM/R" />
+      <ref count="1" tile="AM/Rrr" />
+      <ref count="1" tile="AM/CRcr+" />
+    </tile-set>
+    <tile-set id="abbey-and-mayor:2">
+      <ref count="1" tile="AM/C++" />
+      <ref count="1" tile="AM/CCcc+" />
+      <ref count="1" tile="AM/CCc+" />
+      <ref count="1" tile="AM/CCRR" />
+      <ref count="1" tile="AM/LRRRR" />
+      <ref count="1" tile="AM/RC" />
+      <ref count="1" tile="AM/CRr" />
+      <ref count="1" tile="AM/RrC" />
+      <ref count="1" tile="AM/C!+" />
+      <ref count="1" tile="AM/RG" />
+      <ref count="1" tile="AM/Rrr" />
+      <ref count="1" tile="AM/CRcr+" />
+    </tile-set>
+  </sets>
 </pack>
