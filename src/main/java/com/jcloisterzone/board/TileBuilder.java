@@ -120,7 +120,7 @@ public class TileBuilder {
     }
 
     public Feature initFeature(String tileId, Feature feature, Element xml) {
-        if (feature instanceof Farm && tileId.startsWith("CO.")) {
+        if (feature instanceof Farm && tileId.startsWith("CO/")) {
             //this is not part of Count capability because it is integral behaviour valid also when capability is off
             feature = ((Farm) feature).setAdjoiningCityOfCarcassonne(true);
         }

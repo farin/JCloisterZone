@@ -1,8 +1,12 @@
 package com.jcloisterzone.game.capability;
 
+import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.ReturnMeepleAction;
+import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.feature.Garden;
 import com.jcloisterzone.figure.Abbot;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
@@ -11,10 +15,21 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
+import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
 
 public class AbbotCapability extends Capability<Void> {
 
     private static final long serialVersionUID = 1L;
+
+    @Override
+    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
+        if (!XMLUtils.getElementStreamByTagName(tileElements, "garden").isEmpty()) {
+            Garden garden = new Garden();
+            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.CLOISTER, garden));
+        }
+        return tile;
+    }
 
     @Override
     public GameState onActionPhaseEntered(GameState state) {

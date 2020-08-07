@@ -3,10 +3,7 @@ package com.jcloisterzone.figure;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Cloister;
-import com.jcloisterzone.feature.FlyingMachine;
-import com.jcloisterzone.feature.Structure;
+import com.jcloisterzone.feature.*;
 import com.jcloisterzone.game.state.GameState;
 
 public class Abbot extends Follower {
@@ -20,8 +17,8 @@ public class Abbot extends Follower {
     @Override
     public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Structure feature) {
         if (!(fp.getLocation() == Location.QUARTER_CATHEDRAL ||
-                feature instanceof Cloister || feature instanceof FlyingMachine)) {
-            return new DeploymentCheckResult("Abbot must be placed only in cloister or garden.");
+                feature instanceof Cloister || feature instanceof Garden || feature instanceof FlyingMachine)) {
+            return new DeploymentCheckResult("Abbot must be placed only at cloister or garden.");
         }
         return super.isDeploymentAllowed(state, fp, feature);
     }
