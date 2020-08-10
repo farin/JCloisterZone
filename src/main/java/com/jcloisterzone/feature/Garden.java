@@ -56,7 +56,7 @@ public class Garden extends TileFeature implements Scoreable, CloisterLike {
         int adjacent = state.getAdjacentAndDiagonalTiles2(p).size();
         Map<String, Integer> args = HashMap.of("tiles", adjacent + 1);
         int points = adjacent + 1;
-        return new PointsExpression(points, adjacent == 8 ? "garden" : "gardeb.incomplete", args).merge(getLittleBuildingPoints(state));
+        return new PointsExpression(points, adjacent == 8 ? "garden" : "garden.incomplete", args).merge(getLittleBuildingPoints(state));
     }
 
     public static String name() {
