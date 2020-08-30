@@ -1,10 +1,10 @@
 version: 4.0
 title: New artwork
 title_i18n:
-  ca: Nou disseny
+  ca: Disseny nou
   cs: Nová grafika
 description: New board game artwork, also known as Carcassonne 2.0 (illustrated by Anne Pätzke)
 description_i18n:
-  ca: Nou disseny de les llosetes, conegut com a Carcassonne 2.0 (il·lustrat per l'Anne Pätzke).
+  ca: Disseny nou de les llosetes, conegut com a Carcassonne 2.0 (il·lustrat per l'Anne Pätzke).
   cs: Nová grafika z deskové hry, někdy označována jako Carcassonne 2.0 (ilustrátorka Anne Pätzke)
 authors: 
