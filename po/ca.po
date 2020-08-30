@@ -1,21 +1,21 @@
-# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# juanjo <juanjo.ng.83@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-28 22:35+0200\n"
-"PO-Revision-Date: 2015-10-22 13:05+0100\n"
-"Last-Translator: Joan Josep\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2020-08-30 14:09+0200\n"
+"Last-Translator: juanjo <juanjo.ng.83@gmail.com>\n"
+"Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Lokalize 19.12.3\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: src/main/java/com/jcloisterzone/bugreport/BugReportDialog.java:26
 #: src/main/java/com/jcloisterzone/bugreport/BugReportPanel.java:63
@@ -51,7 +51,7 @@ msgstr "Joc base"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:23
 msgid "Basic game (2.0)"
-msgstr ""
+msgstr "Joc base (2.0)"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:24
 msgid "Wheel of Fortune"
@@ -172,7 +172,7 @@ msgstr "Castells alemanys"
 #: src/main/java/com/jcloisterzone/Expansion.java:66
 #: src/main/java/com/jcloisterzone/Expansion.java:67
 msgid "Halfings"
-msgstr "Mitges llosetes"
+msgstr "Meitat i meitat"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:68
 msgid "The Watchtower"
@@ -228,7 +228,7 @@ msgstr "Laberint"
 
 #: src/main/java/com/jcloisterzone/Expansion.java:86
 msgid "(Unknown expansion)"
-msgstr ""
+msgstr "(Expansió desconeguda)"
 
 #: src/main/java/com/jcloisterzone/feature/Bridge.java:34
 msgid "Bridge"
@@ -260,7 +260,7 @@ msgstr "Torre"
 
 #: src/main/java/com/jcloisterzone/feature/YagaHut.java:63
 msgid "Yaga's Hut"
-msgstr "La cabana de Yaga"
+msgstr "La cabana de Iagà"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:16
 msgid "Randomize seating order"
@@ -268,7 +268,7 @@ msgstr "Situa els jugadors aleatòriament"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:18
 msgid "Play farmers"
-msgstr ""
+msgstr "Juga grangers"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:19
 msgid "Use pig herds independently (without T&B expansion)"
@@ -284,7 +284,7 @@ msgstr "El drac es mou després de puntuar."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:23
 msgid "Place fairy on the tile. (instead of next to a follower)"
-msgstr "Posa la fada a la nova lloseta, no al costat d''un seguidor."
+msgstr "Posa la fada a la lloseta nova, no al costat d''un seguidor."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
@@ -300,7 +300,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:29
 msgid "Count number of followers on hill as tiebreaker."
-msgstr ""
+msgstr "Compta el nombre de seguidors dels turons per desempatar."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:31
 msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
@@ -334,7 +334,7 @@ msgstr "Afegeix 3/2/1 punts per torre/casa/sopluig."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:44
 msgid "Advanced labyrinth variant"
-msgstr ""
+msgstr "Variant avançada del laberint"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:47
 msgid "Tiny city is scored only for 2 points."
@@ -364,7 +364,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:289
 msgid "The game is not finished. Do you really want to leave it?"
-msgstr "La partida no ha acabat. Voleu realment sortir?"
+msgstr "La partida no ha acabat. Voleu sortir?"
 
 #: src/main/java/com/jcloisterzone/ui/Client.java:418
 #: src/main/java/com/jcloisterzone/ui/Client.java:470
@@ -497,15 +497,15 @@ msgstr "Empra l''idioma del sistema"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:167
 msgid "TAB / right click"
-msgstr ""
+msgstr "Tab / clic dret"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:168
 msgid "+ mouse over spot"
-msgstr ""
+msgstr "+ ratolí damunt del lloc"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:168
 msgid "(experimental)"
-msgstr ""
+msgstr "(experimental)"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:224
 msgid "Language"
@@ -525,7 +525,7 @@ msgstr "Cal reiniciar l''aplicació per aplicar el nou tema."
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:268
 msgid "Tile rotation"
-msgstr ""
+msgstr "Rotació de llosetes"
 
 #: src/main/java/com/jcloisterzone/ui/dialog/PreferencesDialog.java:274
 msgid "AI placement delay (ms)"
@@ -632,33 +632,33 @@ msgstr "de/en un {0}."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:50
 msgid "Shepherd"
-msgstr ""
+msgstr "Pastor"
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:55
 msgid "Farm with shepherd was expanded."
-msgstr ""
+msgstr "S'ha expandit una granja amb un pastor."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:86
 msgid "You can draw another sheep/wolf token from a bag."
-msgstr ""
+msgstr "Podeu agafar una altra fitxa d''ovella/llop de la bossa."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:90
 #, java-format
 msgid "({0} tokens left in bag)"
-msgstr ""
+msgstr "(queda/en [0] fitxa/es a la bossa)"
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:96
 msgid "Expand the flock of sheep."
-msgstr ""
+msgstr "Expandiu el ramat d'ovelles."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:108
 #, java-format
 msgid "Or score the flock for {0} points."
-msgstr ""
+msgstr "O puntueu el ramat per {0} punt(s)."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/FlockPanel.java:112
 msgid "Herd the flock into the stable."
-msgstr ""
+msgstr "Porta el ramat a l'estable."
 
 #: src/main/java/com/jcloisterzone/ui/grid/actionpanel/PrisonersExchangePanel.java:43
 msgid "Prisoners exchange"
@@ -712,7 +712,7 @@ msgstr "Monestir alemany"
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:27
 #: src/main/java/com/jcloisterzone/ui/panel/StartPanel.java:72
 msgid "New game"
-msgstr "Nova partida"
+msgstr "Partida nova"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:28
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:92
@@ -763,7 +763,7 @@ msgstr "Gira el tauler"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:40
 msgid "Show Game Events"
-msgstr ""
+msgstr "Mostra els esdeveniments de la partida"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:41
 msgid "Show Last Placements"
@@ -807,7 +807,7 @@ msgstr "Confirma la col·locació del seguidor en una torre"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:52
 msgid "Confirm Ransom Payment"
-msgstr "Confirmeu el pagament del rescat"
+msgstr "Confirma el pagament del rescat"
 
 #: src/main/java/com/jcloisterzone/ui/MenuBar.java:56
 msgid "About"
@@ -898,12 +898,12 @@ msgstr "Ha fallat la connexió. Amfitrió desconegut."
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:140
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:119
 msgid "Connection refused."
-msgstr "S''ha refusat la connexió."
+msgstr "La connexió s''ha refusat."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:142
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:121
 msgid "Connection failed."
-msgstr "Ha fallat la connexió."
+msgstr "La connexió ha fallat."
 
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectGamePanel.java:156
 #: src/main/java/com/jcloisterzone/ui/panel/ConnectPlayOnlinePanel.java:132
@@ -924,7 +924,7 @@ msgstr "Cliqueu dos cops en la ranura per afegir un jugador IA."
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:260
 msgid "Legacy Rules"
-msgstr ""
+msgstr "Regles antigues"
 
 #: src/main/java/com/jcloisterzone/ui/panel/CreateGamePanel.java:285
 msgid "Clock"
@@ -996,15 +996,15 @@ msgstr "Punts totals"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:146
 msgid "Tiles placed"
-msgstr ""
+msgstr "Llosetes jugades"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:147
 msgid "Time consumed:(Player/Game)"
-msgstr ""
+msgstr "Temps emprat (jugador/partida):"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:148
 msgid "Time consumed:(Percentage)"
-msgstr ""
+msgstr "Temps consumit (percentatge):"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:149
 msgid "Roads"
@@ -1044,7 +1044,7 @@ msgstr "Or"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:169
 msgid "Sheep"
-msgstr ""
+msgstr "Ovella"
 
 #: src/main/java/com/jcloisterzone/ui/panel/GameOverPanel.java:172
 msgid "Fairy"
