@@ -1,22 +1,17 @@
-# [JCloisterZone](http://jcloisterzone.com/)
+# JCloisterZone
 
+JCloisterZone is a Java implementation of a popular board game [Carcassonne](http://www.boardgamegeek.com/boardgame/822/carcassonne).
+Project website can be found under [JCloisterZone](https://jcloisterzone.com/)
 
-JCloisterZone is a Java implementation of a popular board game [Carcassonne](https://en.wikipedia.org/wiki/Carcassonne_(board_game)).
-It supports multiplayer game on a local computer or over a network.
-Games can be also played against computer AI.
-The game contains [many of the available expansions](http://www.boardgamegeek.com/boardgame/822/carcassonne), including the small ones, distributed during game expos or in a game magazines.
+## JCloisterZone Platform
 
-Project website http://jcloisterzone.com/
+In 2020 (after 16 yeast of project existence) is time to essential change. New UI is going to be introduced, based
+on completely different technology (Electron + Vue.JS).
 
-## Roadmap
+This repository no longer contains full application, but only game engine still in Java.
+Original Java client is available under [4.x branch](https://github.com/farin/JCloisterZone/tree/4.x)
 
-- ~(04/2020) Play server improvements. Eg. fiximg zombie games in list~ DONE
-- ~Bug fixing release (05/2020) - Fixing few hills & sheeps issues etc.~ DONE
-- UI rework, support fine game configuration (like adding tiles from expansion multiple tiles, excluding some feature eg playing without Dragon etc. - these is already supported by game engine
-but UI doesn't exist) - estimate delivery 07/2020
+## Supported Expansions
 
-
-## Development notes
-
-Refer to [BUILDING.md](./BUILDING.md).
+List of supported expansions can found [here](https://github.com/farin/JCloisterZone/tree/master/src/main/resources/tile-definitions)
 

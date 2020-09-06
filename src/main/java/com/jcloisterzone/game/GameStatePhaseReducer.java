@@ -1,59 +1,26 @@
 package com.jcloisterzone.game;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
+import com.jcloisterzone.game.phase.*;
+import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.io.MessageParser;
+import com.jcloisterzone.io.message.Message;
+import io.vavr.Function2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ClassToInstanceMap;
-import com.google.common.collect.MutableClassToInstanceMap;
-import com.jcloisterzone.game.phase.AbbeyPhase;
-import com.jcloisterzone.game.phase.ActionPhase;
-import com.jcloisterzone.game.phase.BazaarPhase;
-import com.jcloisterzone.game.phase.CastlePhase;
-import com.jcloisterzone.game.phase.ChangeFerriesPhase;
-import com.jcloisterzone.game.phase.CleanUpTurnPartPhase;
-import com.jcloisterzone.game.phase.CleanUpTurnPhase;
-import com.jcloisterzone.game.phase.CocCountPhase;
-import com.jcloisterzone.game.phase.CocFinalScoringPhase;
-import com.jcloisterzone.game.phase.CocFollowerPhase;
-import com.jcloisterzone.game.phase.CocScoringPhase;
-import com.jcloisterzone.game.phase.CommitAbbeyPassPhase;
-import com.jcloisterzone.game.phase.CommitActionPhase;
-import com.jcloisterzone.game.phase.CornCirclePhase;
-import com.jcloisterzone.game.phase.DragonMovePhase;
-import com.jcloisterzone.game.phase.DragonPhase;
-import com.jcloisterzone.game.phase.EscapePhase;
-import com.jcloisterzone.game.phase.FairyPhase;
-import com.jcloisterzone.game.phase.GameOverPhase;
-import com.jcloisterzone.game.phase.GoldPiecePhase;
-import com.jcloisterzone.game.phase.MageAndWitchPhase;
-import com.jcloisterzone.game.phase.PhantomPhase;
-import com.jcloisterzone.game.phase.Phase;
-import com.jcloisterzone.game.phase.PhaseMessageHandler;
-import com.jcloisterzone.game.phase.PlaceFerryPhase;
-import com.jcloisterzone.game.phase.RequiredCapability;
-import com.jcloisterzone.game.phase.ScoringPhase;
-import com.jcloisterzone.game.phase.ShepherdPhase;
-import com.jcloisterzone.game.phase.StepResult;
-import com.jcloisterzone.game.phase.TilePhase;
-import com.jcloisterzone.game.phase.TowerCapturePhase;
-import com.jcloisterzone.game.phase.WagonPhase;
-import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.wsio.MessageParser;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
-import io.vavr.Function2;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Derives new game state by applying WsMessage.
+ * Derives new game state by applying Message.
  */
-public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessage, GameState> {
+public class GameStatePhaseReducer implements Function2<GameState, Message, GameState> {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ClassToInstanceMap<Phase> phases = MutableClassToInstanceMap.create();
+    private final Map<Class<? extends Phase>, Phase> phases = new HashMap<>();
     private final Phase firstPhase;
     private final RandomGenerator random;
 
@@ -67,11 +34,14 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
         next = last = addPhase(setup, next, CleanUpTurnPhase.class);
         next = addPhase(setup, next, BazaarPhase.class);
-        next = addPhase(setup, next, EscapePhase.class);
+
+        if (setup.getBooleanRule(Rule.ESCAPE)) {
+            next = addPhase(setup, next, EscapePhase.class);
+        }
         next = addPhase(setup, next, CleanUpTurnPartPhase.class);
         next = addPhase(setup, next, CornCirclePhase.class);
 
-        if (setup.getBooleanValue(Rule.DRAGON_MOVE_AFTER_SCORING)) {
+        if ("after-scoring".equals(setup.getStringRule(Rule.DRAGON_MOVEMENT))) {
             addPhase(setup, next, DragonMovePhase.class);
             next = addPhase(setup, next, DragonPhase.class);
         }
@@ -84,7 +54,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
         next = addPhase(setup, next, CommitActionPhase.class);
         next = addPhase(setup, next, CastlePhase.class);
 
-        if (!setup.getBooleanValue(Rule.DRAGON_MOVE_AFTER_SCORING)) {
+        if (!"after-scoring".equals(setup.getStringRule(Rule.DRAGON_MOVEMENT))) {
                addPhase(setup, next, DragonMovePhase.class);
                next = addPhase(setup, next, DragonPhase.class);
         }
@@ -128,7 +98,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
         return phase;
     }
 
-    private StepResult applyMessageOnPhase(Phase phase, GameState state, WsInGameMessage message) {
+    private StepResult applyMessageOnPhase(Phase phase, GameState state, Message message) {
         for (Method m : phase.getClass().getMethods()) {
             if (m.getAnnotation(PhaseMessageHandler.class) == null) {
                 continue;
@@ -152,7 +122,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
 
         MessageParser parser = new MessageParser();
         logger.warn("Unhandled message:\n\t" +  parser.toJson(message));
-        throw new MessageNotHandledException(String.format("Message %s hasn't been handled by %s phase.", message.getClass().getSimpleName(), phase));
+        throw new MessageNotHandledException(String.format("MessageCommand %s hasn't been handled by %s phase.", message.getClass().getSimpleName(), phase));
     }
 
     public GameState applyStepResult(StepResult stepResult) {
@@ -165,7 +135,7 @@ public class GameStatePhaseReducer implements Function2<GameState, WsInGameMessa
     }
 
     @Override
-    public GameState apply(GameState state, WsInGameMessage message) {
+    public GameState apply(GameState state, Message message) {
         Phase phase = getPhase(state.getPhase());
         StepResult stepResult = applyMessageOnPhase(phase, state, message);
         return applyStepResult(stepResult);

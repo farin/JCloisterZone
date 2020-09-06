@@ -1,22 +1,17 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.HillCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.Map;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Set;
+import io.vavr.collection.*;
 
 /**
  * Feature which can be scored.
@@ -27,15 +22,13 @@ import io.vavr.collection.Set;
  */
 public interface Scoreable extends Structure {
 
-    PointCategory getPointCategory();
-
     /**
      * Map value is int tuple with power and tie breaking power
      * (hill presence/hill count according to rules)
      */
     default HashMap<Player, Tuple2<Integer, Integer>> getPowers(GameState state) {
     	boolean useHillTiebreaker = state.hasCapability(HillCapability.class);
-    	boolean useOnHillCount = state.getBooleanValue(Rule.ON_HILL_NUMBER_TIEBREAKER);
+    	boolean useOnHillCount = "number-of-followers".equals(state.getStringRule(Rule.HILL_TIEBREAKER));
         return getFollowers2(state)
             .foldLeft(HashMap.<Player, Tuple2<Integer, Integer>>empty(), (acc, follower2) -> {
             	Follower follower = follower2._1;
@@ -76,10 +69,14 @@ public interface Scoreable extends Structure {
         return getFollowers(state).find(f -> f.getPlayer().equals(player)).getOrNull();
     }
 
-    default int getLittleBuildingPoints(GameState state) {
+    default Tuple2<Follower, FeaturePointer> getSampleFollower2(GameState state, Player player) {
+        return getFollowers2(state).find(t -> t._1.getPlayer().equals(player)).getOrNull();
+    }
+
+    default PointsExpression getLittleBuildingPoints(GameState state) {
         Map<Position, LittleBuilding> buildings = state.getCapabilityModel(LittleBuildingsCapability.class);
         if (buildings == null) {
-            return 0;
+            return null;
         }
         Set<Position> position = getTilePositions();
         Seq<LittleBuilding> buldingsSeq = buildings.filterKeys(pos -> position.contains(pos)).values();

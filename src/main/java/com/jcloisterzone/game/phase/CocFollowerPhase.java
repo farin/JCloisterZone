@@ -6,23 +6,17 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Quarter;
-import com.jcloisterzone.figure.BigFollower;
-import com.jcloisterzone.figure.DeploymentCheckResult;
-import com.jcloisterzone.figure.Mayor;
-import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.DeployMeeple;
-import com.jcloisterzone.wsio.message.DeployMeepleMessage;
-
+import com.jcloisterzone.io.message.DeployMeepleMessage;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
@@ -41,18 +35,21 @@ public class CocFollowerPhase extends Phase {
         Stream<ScoreEvent> events = Stream.ofAll(state.getCurrentTurnPartEvents())
             .filter(Predicates.instanceOf(ScoreEvent.class))
             .map(ev -> (ScoreEvent) ev)
-            .filter(ev -> ev.getCategory().hasLandscapeSource())
-            .filter(ev -> ev.getPoints() > 0);
+            .filter(ev -> ev.isLandscapeSource());
 
         Player player = state.getTurnPlayer();
         boolean didReceived = false;
         boolean didCauseOpponentScoring = false;
         for (ScoreEvent ev : events) {
-            if (ev.getReceiver().equals(player)) {
-                didReceived = true;
-                break;
-            } else {
-                didCauseOpponentScoring = true;
+            for (ReceivedPoints rp : ev.getPoints()) {
+                if (rp.getPoints() == 0) {
+                    continue;
+                }
+                if (rp.getPlayer().equals(player)) {
+                    didReceived = true;
+                } else {
+                    didCauseOpponentScoring = true;
+                }
             }
         }
 
@@ -67,7 +64,7 @@ public class CocFollowerPhase extends Phase {
             Wagon.class, Mayor.class
         );
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
-        boolean marketAllowed = state.getBooleanValue(Rule.FARMERS);
+        boolean marketAllowed = state.getBooleanRule(Rule.FARMERS);
         Stream<Tuple2<FeaturePointer, Quarter>> quarters = state.getTileFeatures2(quarterPos)
             .filter(t -> t._1.isCityOfCarcassonneQuarter() && (marketAllowed || t._1 != Location.QUARTER_MARKET))
             .map(t -> new Tuple2<>(new FeaturePointer(quarterPos, t._1), (Quarter) t._2));

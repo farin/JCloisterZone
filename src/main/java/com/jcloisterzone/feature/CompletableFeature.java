@@ -4,10 +4,10 @@ import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
@@ -45,17 +45,20 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
 
     // helpers
 
-    protected int getMageAndWitchPoints(GameState state, int points) {
+    protected PointsExpression getMageAndWitchPoints(GameState state, PointsExpression expr) {
         Mage mage = state.getNeutralFigures().getMage();
         Witch witch = state.getNeutralFigures().getWitch();
         if (mage != null && mage.getFeature(state) == this) {
-            points += getTilePositions().size();
+            int tileCount = getTilePositions().size();
+            expr = expr.merge(new PointsExpression(tileCount, "mage"));
         }
         if (witch != null && witch.getFeature(state) == this) {
+            int points = expr.getPoints();
             if (points % 2 == 1) points++;
             points /= 2;
+            expr = new PointsExpression(points, expr.getName() + "+witch", expr.getArgs());
         }
-        return points;
+        return expr;
     }
 
     protected Set<Edge> mergeEdges(T obj) {

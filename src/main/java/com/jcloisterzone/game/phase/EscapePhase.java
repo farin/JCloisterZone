@@ -1,10 +1,7 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.EscapeAction;
+import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -18,10 +15,13 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.UndeployMeeple;
-import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
-
+import com.jcloisterzone.io.message.ReturnMeepleMessage;
+import com.jcloisterzone.io.message.ReturnMeepleMessage.ReturnMeepleSource;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 @RequiredCapability(SiegeCapability.class)
@@ -54,7 +54,7 @@ public class EscapePhase extends Phase {
             .filter(c -> {
                 Stream<PlacedTile> cityTiles = Stream.ofAll(c.getTilePositions()).map(state::getPlacedTile);
 
-                if (!state.getBooleanValue(Rule.ESCAPE_RGG)) {
+                if ("siege-tile".equals(state.getStringRule(Rule.ESCAPE_VARIANT))) {
                     cityTiles = cityTiles.filter(pt ->
                         pt.getTile().hasModifier(SiegeCapability.SIEGE_ESCAPE_TILE)
                     );
@@ -78,7 +78,7 @@ public class EscapePhase extends Phase {
         }
 
         return promote(state.setPlayerActions(
-            new ActionsState(player, new EscapeAction(options), true)
+            new ActionsState(player, new ReturnMeepleAction(options, ReturnMeepleSource.SIEGE_ESCAPE), true)
         ));
     }
 
@@ -91,8 +91,9 @@ public class EscapePhase extends Phase {
 
         switch (msg.getSource()) {
         case SIEGE_ESCAPE:
-            EscapeAction princessAction = (EscapeAction) state.getAction();
-            if (!princessAction.getOptions().contains(ptr)) {
+            ReturnMeepleAction escapeAction = (ReturnMeepleAction) state.getAction();
+            assert escapeAction.getSource() == ReturnMeepleSource.SIEGE_ESCAPE;
+            if (!escapeAction.getOptions().contains(ptr)) {
                 throw new IllegalArgumentException("Pointer doesn't match action");
             }
             break;

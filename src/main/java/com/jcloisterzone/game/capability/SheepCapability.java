@@ -1,25 +1,13 @@
 package com.jcloisterzone.game.capability;
 
-import java.util.function.Function;
-
-import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Farm;
-import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.SheepCapability.SheepToken;
 import com.jcloisterzone.game.state.GameState;
+import io.vavr.collection.*;
 
-import io.vavr.Predicates;
-import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.List;
-import io.vavr.collection.Map;
-import io.vavr.collection.TreeMap;
-import io.vavr.collection.Vector;
+import java.util.function.Function;
 
 /**
  * @model Map<Position, List<SheepToken>> - list of placed sheep tokens
@@ -57,11 +45,6 @@ public class SheepCapability extends Capability<Map<FeaturePointer, List<SheepTo
 	@Override
     public GameState onStartGame(GameState state) {
         return setModel(state, HashMap.empty());
-    }
-
-	@Override
-    public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
-        return List.of(new Shepherd(idProvider.generateId(Barn.class), player));
     }
 
 	public Vector<SheepToken> getBagConent(GameState state) {

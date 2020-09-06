@@ -1,13 +1,12 @@
 package com.jcloisterzone.feature;
 
-import java.io.Serializable;
-
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-
 import io.vavr.collection.List;
+
+import java.io.Serializable;
 
 @Immutable
 public abstract class TileFeature implements Feature, Serializable {

@@ -2,17 +2,10 @@ package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
-import com.jcloisterzone.ui.annotations.LinkedGridLayer;
-import com.jcloisterzone.ui.annotations.LinkedImage;
-import com.jcloisterzone.ui.grid.layer.TileActionLayer;
-import com.jcloisterzone.wsio.message.PlaceTokenMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.io.message.PlaceTokenMessage;
+import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.Set;
 
-
-@LinkedImage("actions/gold")
-@LinkedGridLayer(TileActionLayer.class)
 public class GoldPieceAction extends SelectTileAction {
 
     public GoldPieceAction(Set<Position> options) {
@@ -20,7 +13,7 @@ public class GoldPieceAction extends SelectTileAction {
     }
 
     @Override
-    public WsInGameMessage select(Position pos) {
+    public Message select(Position pos) {
         return new PlaceTokenMessage(GoldToken.GOLD, pos);
     }
 

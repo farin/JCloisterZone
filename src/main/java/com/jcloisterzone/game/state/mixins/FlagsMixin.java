@@ -2,7 +2,6 @@ package com.jcloisterzone.game.state.mixins;
 
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.Set;
 
 public interface FlagsMixin {

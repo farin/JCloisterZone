@@ -1,14 +1,12 @@
 package com.jcloisterzone.action;
 
-import java.io.Serializable;
-
-import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.io.message.CornCircleRemoveOrDeployMessage;
+import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.Iterator;
 import io.vavr.collection.Set;
 
-// TODO rename to PlayerChoice?
+import java.io.Serializable;
+
 /**
  * Represents a set of options a player can choose from.
  *
@@ -24,7 +22,7 @@ public interface PlayerAction<T> extends Iterable<T>, Serializable {
      * @param option the option chosen
      * @return the WebSocket message
      */
-    public WsInGameMessage select(T option);
+    public Message select(T option);
 
     /**
      * Returns an iterator over the options the player can choose from.

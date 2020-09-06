@@ -6,27 +6,24 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.play.FlierRollEvent;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.FlierRollEvent;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BarnCapability;
-import com.jcloisterzone.game.capability.LabyrinthCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
-import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.reducers.PayRansom;
-import com.jcloisterzone.wsio.message.DeployFlierMessage;
-import com.jcloisterzone.wsio.message.DeployMeepleMessage;
-import com.jcloisterzone.wsio.message.PayRansomMessage;
-
+import com.jcloisterzone.io.message.DeployFlierMessage;
+import com.jcloisterzone.io.message.DeployMeepleMessage;
+import com.jcloisterzone.io.message.PayRansomMessage;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
 
@@ -58,7 +55,7 @@ public abstract class AbstractActionPhase extends Phase {
 
             places = places.filter(t -> !(t._2 instanceof Castle));
 
-            if (!state.getBooleanValue(Rule.FARMERS)) {
+            if (!state.getBooleanRule(Rule.FARMERS)) {
                 places = places.filter(t -> !(t._2 instanceof Farm));
             }
 
@@ -176,6 +173,10 @@ public abstract class AbstractActionPhase extends Phase {
         PlacedTile placedTile = state.getLastPlaced();
 
         //TODO validate placement against players actions
+
+        if (fp.getLocation() == Location.FLYING_MACHINE) {
+            throw new IllegalArgumentException("Use DEPLOY_FLIER message instead");
+        }
 
         if (fp.getLocation() != Location.TOWER
             && placedTile.getTile().hasModifier(PortalCapability.MAGIC_PORTAL)

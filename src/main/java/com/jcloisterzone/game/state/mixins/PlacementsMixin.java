@@ -1,19 +1,12 @@
 package com.jcloisterzone.game.state.mixins;
 
-import com.jcloisterzone.board.EdgePattern;
-import com.jcloisterzone.board.EdgeType;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.PlacementOption;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.Map;

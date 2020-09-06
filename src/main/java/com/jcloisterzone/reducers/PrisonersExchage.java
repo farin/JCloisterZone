@@ -1,7 +1,7 @@
 package com.jcloisterzone.reducers;
 
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.event.play.PrisonersExchangeEvent;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.PrisonersExchangeEvent;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.GameState;

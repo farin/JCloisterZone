@@ -1,8 +1,7 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.wsio.message.CommitMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.io.message.CommitMessage;
+import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.HashSet;
 
 public class ConfirmAction extends AbstractPlayerAction<Boolean> {
@@ -14,7 +13,7 @@ public class ConfirmAction extends AbstractPlayerAction<Boolean> {
     }
 
     @Override
-    public WsInGameMessage select(Boolean target) {
+    public Message select(Boolean target) {
         return new CommitMessage();
     }
 

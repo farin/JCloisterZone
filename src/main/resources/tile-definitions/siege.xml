@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pack>
+  <tiles>
+    <tile id="SI.BE/Ccc">
+      <city besieged="yes">N E W</city>
+      <farm city="N">SL SR</farm>
+    </tile>
+    <tile id="SI.BE/CcR">
+      <city besieged="yes">N W</city>
+      <road>E</road>
+      <farm city="W">EL</farm>
+      <farm city="W">ER SL SR</farm>
+      <wagon-move>
+        <neighbouring>N E</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="SI.BE/CFR">
+      <city besieged="yes" castle-base="true">N</city>
+      <road>S</road>
+      <farm city="N">WL WR SR</farm>
+      <farm city="N">EL ER SL</farm>
+      <wagon-move>
+        <neighbouring>N S</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="SI.BE/CRr">
+      <road>E S</road>
+      <city besieged="yes" castle-base="true">N</city>
+      <farm city="N">EL WL WR SR</farm>
+      <farm>ER SL</farm>
+    </tile>
+    <tile id="SI.BE/RCc">
+      <city besieged="yes">N W</city>
+      <road>S</road>
+      <farm city="W">SR</farm>
+      <farm city="W">SL EL ER</farm>
+      <wagon-move>
+        <neighbouring>N S</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="SI.BE/RrC">
+      <road>S W</road>
+      <city besieged="yes" castle-base="true">N</city>
+      <farm city="N">WR EL ER SL</farm>
+      <farm>WL SR</farm>
+    </tile>
+
+    <tile id="SI.CA/C">
+      <city besieged="yes">N</city>
+      <farm city="N">WL WR SL SR EL ER</farm>
+    </tile>
+    <tile id="SI.CA/RCr">
+      <city besieged="yes">N</city>
+      <road>W E</road>
+      <farm city="N">WR EL</farm>
+      <farm>WL SL SR ER</farm>
+    </tile>
+    <tile id="SI.CA/Cc">
+      <city besieged="yes">N W</city>
+      <farm city="N">EL ER SL SR</farm>
+    </tile>
+    <tile id="SI.CA/CcRr">
+      <city besieged="yes">N W</city>
+      <road>S E</road>
+      <farm city="N">EL SR</farm>
+      <farm>ER SL</farm>
+    </tile>
+  </tiles>
+  <sets>
+    <tile-set id="siege/besiegers">
+      <ref count="1" tile="SI.BE/Ccc" />
+      <ref count="1" tile="SI.BE/CcR" />
+      <ref count="1" tile="SI.BE/CFR" />
+      <ref count="1" tile="SI.BE/CRr" />
+      <ref count="1" tile="SI.BE/RCc" />
+      <ref count="1" tile="SI.BE/RrC" />
+    </tile-set>
+    <tile-set id="siege/cathars">
+      <ref count="1" tile="SI.CA/C" />
+      <ref count="1" tile="SI.CA/RCr" />
+      <ref count="1" tile="SI.CA/Cc" />
+      <ref count="1" tile="SI.CA/CcRr" />
+    </tile-set>
+  </sets>
+</pack>

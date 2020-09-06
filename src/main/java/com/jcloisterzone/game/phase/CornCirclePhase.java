@@ -10,13 +10,7 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.figure.BigFollower;
-import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.Mayor;
-import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.CornCircleCapability;
 import com.jcloisterzone.game.capability.CornCircleCapability.CornCircleModifier;
@@ -25,13 +19,12 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.reducers.UndeployMeeple;
-import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
-import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCircleOption;
-import com.jcloisterzone.wsio.message.DeployMeepleMessage;
-import com.jcloisterzone.wsio.message.PassMessage;
-import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
-import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
-
+import com.jcloisterzone.io.message.CornCircleRemoveOrDeployMessage;
+import com.jcloisterzone.io.message.CornCircleRemoveOrDeployMessage.CornCircleOption;
+import com.jcloisterzone.io.message.DeployMeepleMessage;
+import com.jcloisterzone.io.message.PassMessage;
+import com.jcloisterzone.io.message.ReturnMeepleMessage;
+import com.jcloisterzone.io.message.ReturnMeepleMessage.ReturnMeepleSource;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
@@ -63,7 +56,7 @@ public class CornCirclePhase extends Phase {
             return next(state);
         }
 
-        CornCircleSelectDeployOrRemoveAction action = new CornCircleSelectDeployOrRemoveAction();
+        CornCircleSelectDeployOrRemoveAction action = new CornCircleSelectDeployOrRemoveAction(cornType);
         ActionsState as = new ActionsState(state.getTurnPlayer(), action, false);
         return promote(state.setPlayerActions(as));
     }

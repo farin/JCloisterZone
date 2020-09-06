@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mvn package -Djcz.version=$1 -Djcz.date=`date +%Y-%m-%d`
+mvn package -Dengine.version=$1 -Dengine.builddate=`date +%Y-%m-%d`

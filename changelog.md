@@ -1,8 +1,14 @@
 # Version history
 
-## upcoming
+## upcoming 5.0.0
 
+* new app architecture - split between game engine (Java) and client (standalone executable app, based on Electron)
+
+Game engine changes:
 * fix flier and magic portal regression - do not allow meeple placement on castle by flier and magic portal
+* mage and witch are not allowed on just placed tile
+* Darmstatd church - majority for counting church bonus is evaluated before anything is score
+    (in other words before any follower is returned to a supply)
 
 ## 4.6.1
 *2020-06-02*

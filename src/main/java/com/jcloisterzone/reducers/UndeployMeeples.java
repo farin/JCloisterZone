@@ -1,19 +1,18 @@
 package com.jcloisterzone.reducers;
 
-import java.util.ArrayList;
-
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.play.MeepleReturned;
-import com.jcloisterzone.event.play.PlayEvent;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.MeepleReturned;
+import com.jcloisterzone.event.PlayEvent;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
+
+import java.util.ArrayList;
 
 
 /**

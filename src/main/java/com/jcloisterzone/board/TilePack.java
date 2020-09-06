@@ -192,6 +192,9 @@ public class TilePack implements Serializable {
         }
     }
 
+    public TilePack removeGroup(String name) {
+        return setGroups(groups.remove(name));
+    }
 
     /**
      * Draws random tile  {@code index}.

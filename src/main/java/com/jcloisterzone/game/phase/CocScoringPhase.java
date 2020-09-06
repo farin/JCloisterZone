@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.function.Function;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -19,10 +17,11 @@ import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.DeployMeeple;
-import com.jcloisterzone.wsio.message.DeployMeepleMessage;
-
+import com.jcloisterzone.io.message.DeployMeepleMessage;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
+
+import java.util.function.Function;
 
 @RequiredCapability(CountCapability.class)
 public class CocScoringPhase extends AbstractCocScoringPhase {

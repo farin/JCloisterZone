@@ -20,6 +20,6 @@ public class RandomGenerator {
     }
 
     public int nextInt(int bound) {
-        return (random.nextInt(bound) + ((int)(salt % bound))) % bound;
+        return (random.nextInt(bound) + ((int)(Math.abs(salt) % bound))) % bound;
     }
 }

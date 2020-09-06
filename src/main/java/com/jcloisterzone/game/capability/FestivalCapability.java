@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.ReturnMeepleAction;
@@ -15,13 +13,13 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.wsio.message.ReturnMeepleMessage.ReturnMeepleSource;
-
+import com.jcloisterzone.io.message.ReturnMeepleMessage.ReturnMeepleSource;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
 
 public class FestivalCapability extends Capability<Void> {
 
@@ -51,7 +49,7 @@ public class FestivalCapability extends Capability<Void> {
         Stream<Tuple2<Meeple, FeaturePointer>> meeples = Stream.ofAll(state.getDeployedMeeples())
             .filter(t -> t._1.getPlayer().equals(player));
 
-        if (state.getBooleanValue(Rule.FESTIVAL_FOLLOWER_ONLY)) {
+        if ("follower".equals(state.getStringRule(Rule.FESTIVAL_RETURN))) {
             meeples = meeples.filter(Predicates.instanceOf(Follower.class));
         }
 

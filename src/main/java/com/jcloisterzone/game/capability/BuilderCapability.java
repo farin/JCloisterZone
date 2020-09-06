@@ -1,13 +1,7 @@
 package com.jcloisterzone.game.capability;
 
-import com.jcloisterzone.Player;
-import com.jcloisterzone.figure.Builder;
-import com.jcloisterzone.figure.MeepleIdProvider;
-import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
-
-import io.vavr.collection.List;
 
 public class BuilderCapability extends Capability<BuilderState> {
 
@@ -20,11 +14,6 @@ public class BuilderCapability extends Capability<BuilderState> {
 
     public GameState useBuilder(GameState state) {
         return updateModel(state, builderState -> builderState == BuilderState.UNUSED ? BuilderState.USED : builderState);
-    }
-
-    @Override
-    public List<Special> createPlayerSpecialMeeples(Player p, MeepleIdProvider idProvider) {
-        return List.of(new Builder(idProvider.generateId(Builder.class), p));
     }
 
     @Override

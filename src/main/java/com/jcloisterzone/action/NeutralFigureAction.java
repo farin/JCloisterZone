@@ -2,14 +2,10 @@ package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
-import com.jcloisterzone.ui.annotations.LinkedGridLayer;
-import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
-import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.io.message.Message;
+import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import io.vavr.collection.Set;
 
-@LinkedGridLayer(FeatureAreaLayer.class)
 public class NeutralFigureAction extends AbstractPlayerAction<FeaturePointer> implements SelectFeatureAction {
 
     private final NeutralFigure<FeaturePointer> figure;
@@ -20,7 +16,7 @@ public class NeutralFigureAction extends AbstractPlayerAction<FeaturePointer> im
     }
 
     @Override
-    public WsInGameMessage select(FeaturePointer target) {
+    public Message select(FeaturePointer target) {
         return new MoveNeutralFigureMessage(figure.getId(), target);
     }
 

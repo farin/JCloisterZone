@@ -1,14 +1,13 @@
 package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.event.play.TokenPlacedEvent;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
 

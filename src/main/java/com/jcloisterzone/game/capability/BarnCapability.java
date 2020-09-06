@@ -8,15 +8,11 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.figure.MeepleIdProvider;
-import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
-import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
@@ -27,10 +23,6 @@ public final class BarnCapability extends Capability<FeaturePointer> {
 
 	private static final long serialVersionUID = 1L;
 
-    @Override
-    public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
-        return List.of(new Barn(idProvider.generateId(Barn.class), player));
-    }
 
     @Override
     public GameState onActionPhaseEntered(GameState state) {
@@ -59,7 +51,7 @@ public final class BarnCapability extends Capability<FeaturePointer> {
             .map(p -> getCornerFeature(state, p))
             .filter(Predicates.isNotNull())
             .filter(t -> {
-                if (state.getBooleanValue(Rule.MULTI_BARN_ALLOWED)) {
+                if ("occupied".equals(state.getStringRule(Rule.BARN_PLACEMENT))) {
                     return true;
                 }
                 return t._2.getSpecialMeeples(state)

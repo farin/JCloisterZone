@@ -1,13 +1,10 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._tr;
-
 import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileBuilder;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
@@ -31,6 +28,6 @@ public class Bridge extends Road {
     }
 
     public static String name() {
-        return _tr("Bridge");
+        return "Bridge";
     }
 }

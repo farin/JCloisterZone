@@ -1,8 +1,8 @@
 package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.event.play.TokenPlacedEvent;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.state.GameState;

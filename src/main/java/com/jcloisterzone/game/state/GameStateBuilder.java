@@ -1,65 +1,49 @@
 package com.jcloisterzone.game.state;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.board.TilePackBuilder;
-import com.jcloisterzone.board.TilePackBuilder.Tiles;
-import com.jcloisterzone.config.Config;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.event.play.PlayerTurnEvent;
+import com.jcloisterzone.board.*;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.PlayerTurnEvent;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.MeepleIdProvider;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.GameSetup;
-import com.jcloisterzone.game.PlayerSlot;
 import com.jcloisterzone.reducers.PlaceTile;
-
-import io.vavr.Predicates;
+import com.jcloisterzone.io.message.GameSetupMessage.PlacedTileItem;
+import com.jcloisterzone.io.message.GameSetupMessage.PlayerSetup;
+import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Map;
 
 
 public class GameStateBuilder {
 
-//    private final static class PlayerSlotComparator implements Comparator<PlayerSlot> {
-//        @Override
-//        public int compare(PlayerSlot o1, PlayerSlot o2) {
-//            if (o1.getSerial() == null) {
-//                return o2.getSerial() == null ? 0 : 1;
-//            }
-//            if (o2.getSerial() == null) return -1;
-//            if (o1.getSerial() < o2.getSerial()) return -1;
-//            if (o1.getSerial() > o2.getSerial()) return 1;
-//            return 0;
-//        }
-//    }
-
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final GameSetup setup;
-    private final PlayerSlot[] slots;
-    private final Config config;
+    private final ArrayList<PlayerSetup> playersSetup;
 
     private Array<Player> players;
-    private Seq<PlacedTile> preplacedTiles;
     private Map<String, Object> gameAnnotations;
 
     private GameState state;
 
 
-    public GameStateBuilder(GameSetup setup, PlayerSlot[] slots, Config config) {
+    public GameStateBuilder(GameSetup setup, ArrayList<PlayerSetup> playersSetup) {
         this.setup = setup;
-        this.slots = slots;
-        this.config = config;
+        this.playersSetup = playersSetup;
     }
 
     public GameState createInitialState() {
@@ -73,13 +57,19 @@ public class GameStateBuilder {
 
         state = state.mapPlayers(ps ->
             ps.setFollowers(
-                players.map(p -> createPlayerFollowers(p, capabilities))
+                players.map(p -> createPlayerFollowers(p))
             ).setSpecialMeeples(
-                players.map(p -> createPlayerSpecialMeeples(p, capabilities))
+                players.map(p -> createPlayerSpecialMeeples(p))
             )
         );
 
         createTilePack();
+        for (PlacedTileItem pt : setup.getStart()) {
+            Tuple2<Tile, TilePack> draw = state.getTilePack().drawTile(pt.getTile());
+            Rotation rot = Rotation.valueOf("R" + pt.getRotation());
+            state = state.setTilePack(draw._2);
+            state = (new PlaceTile(draw._1, new Position(pt.getX(), pt.getY()), rot)).apply(state);
+        }
 
         for (Capability<?> cap : state.getCapabilities().toSeq()) {
             state = cap.onStartGame(state);
@@ -88,13 +78,6 @@ public class GameStateBuilder {
         //prepareAiPlayers(muteAi);
 
         state = processGameAnnotations(state);
-        return state;
-    }
-
-    public GameState createReadyState(GameState state) {
-        for (PlacedTile pt : preplacedTiles) {
-            state = (new PlaceTile(pt.getTile(), pt.getPosition(), pt.getRotation())).apply(state);
-        }
         state = state.appendEvent(new PlayerTurnEvent(PlayEventMeta.createWithoutPlayer(), state.getTurnPlayer()));
         return state;
     }
@@ -122,12 +105,9 @@ public class GameStateBuilder {
     }
 
     private void createPlayers() {
-        this.players = Stream.ofAll(Arrays.asList(slots))
-            .filter(Predicates.isNotNull())
-            .filter(PlayerSlot::isOccupied)
-            .sortBy(PlayerSlot::getSerial)
-            .foldLeft(Array.empty(), (arr, slot) ->
-               arr.append(new Player(slot.getNickname(), arr.size(), slot))
+        this.players = Stream.ofAll(playersSetup)
+            .foldLeft(Array.empty(), (arr, item) ->
+               arr.append(new Player(item.getName(), arr.size()))
             );
 
         if (this.players.isEmpty()) {
@@ -138,13 +118,14 @@ public class GameStateBuilder {
     private void createTilePack() {
         TilePackBuilder tilePackBuilder = new TilePackBuilder();
         tilePackBuilder.setGameState(state);
-        tilePackBuilder.setConfig(config);
-        tilePackBuilder.setExpansions(setup.getExpansions());
+        tilePackBuilder.setTileSets(setup.getTileSets());
 
-        Tiles tiles = tilePackBuilder.createTilePack();
-        TilePack tilePack = tiles.getTilePack();
-        state = state.setTilePack(tilePack);
-        preplacedTiles = tiles.getPreplacedTiles();
+        try {
+            TilePack tilePack = tilePackBuilder.createTilePack();
+            state = state.setTilePack(tilePack);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't parse tile definitions", e);
+        }
     }
 
     private Capability<?> createCapabilityInstance(Class<? extends Capability<?>> clazz) {
@@ -161,16 +142,41 @@ public class GameStateBuilder {
         );
     }
 
-    private io.vavr.collection.List<Follower> createPlayerFollowers(Player p, Seq<Capability<?>> capabilities) {
+    private io.vavr.collection.List<Follower> createPlayerFollowers(Player p) {
         MeepleIdProvider idProvider = new MeepleIdProvider(p);
         io.vavr.collection.List<Follower> followers = io.vavr.collection.List.empty();
-        followers = followers.appendAll(capabilities.flatMap(c -> c.createPlayerFollowers(p, idProvider)));
+
+        for (Tuple2<Class<? extends Meeple>, Integer> t: setup.getMeeples()) {
+            if (Follower.class.isAssignableFrom(t._1)) {
+                try {
+                    for (int i = 0; i < t._2; i++) {
+                        Constructor<? extends Meeple> ctor = t._1.getConstructor(String.class, Player.class);
+                        followers = followers.append((Follower) ctor.newInstance(idProvider.generateId(t._1), p));
+                    }
+                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    new RuntimeException(e);
+                }
+            }
+        }
         return followers;
     }
 
-    public Seq<Special> createPlayerSpecialMeeples(Player p, Seq<Capability<?>> capabilities) {
+    public Seq<Special> createPlayerSpecialMeeples(Player p) {
         MeepleIdProvider idProvider = new MeepleIdProvider(p);
-        return capabilities.flatMap(c -> c.createPlayerSpecialMeeples(p, idProvider));
+        io.vavr.collection.List<Special> specials = io.vavr.collection.List.empty();
+        for (Tuple2<Class<? extends Meeple>, Integer> t: setup.getMeeples()) {
+            if (Special.class.isAssignableFrom(t._1)) {
+                try {
+                    for (int i = 0; i < t._2; i++) {
+                        Constructor<? extends Meeple> ctor = t._1.getConstructor(String.class, Player.class);
+                        specials = specials.append((Special) ctor.newInstance(idProvider.generateId(t._1), p));
+                    }
+                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    new RuntimeException(e);
+                }
+            }
+        }
+        return specials;
     }
 
     public Map<String, Object> getGameAnnotations() {

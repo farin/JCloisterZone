@@ -1,38 +1,21 @@
 package com.jcloisterzone.board;
 
-import static com.jcloisterzone.XMLUtils.attrAsLocation;
-import static com.jcloisterzone.XMLUtils.attrAsLocations;
-import static com.jcloisterzone.XMLUtils.attributeBoolValue;
-import static com.jcloisterzone.XMLUtils.attributeIntValue;
-import static com.jcloisterzone.XMLUtils.contentAsLocations;
-
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicReference;
-
+import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.*;
+import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.state.GameState;
+import io.vavr.Tuple2;
+import io.vavr.Tuple3;
+import io.vavr.collection.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.jcloisterzone.Expansion;
-import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Cloister;
-import com.jcloisterzone.feature.Farm;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.River;
-import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.state.GameState;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 
-import io.vavr.Tuple2;
-import io.vavr.Tuple3;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.List;
-import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
-import io.vavr.collection.Vector;
+import static com.jcloisterzone.XMLUtils.*;
 
 
 public class TileBuilder {
@@ -54,7 +37,7 @@ public class TileBuilder {
         this.state = state;
     }
 
-    public Tile createTile(Expansion expansion, String tileId, Vector<Element> tileElements, boolean isTunnelActive) {
+    public Tile createTile(String tileId, Vector<Element> tileElements, boolean isTunnelActive) {
 
         features = new java.util.HashMap<>();
         multiEdges = new java.util.ArrayList<>();
@@ -111,7 +94,7 @@ public class TileBuilder {
         }
 
         io.vavr.collection.HashMap<Location, Feature> _features = io.vavr.collection.HashMap.ofAll(features);
-        Tile tileDef = new Tile(expansion, tileId, _features);
+        Tile tileDef = new Tile(tileId, _features);
 
         features = null;
         tileId = null;
@@ -120,7 +103,7 @@ public class TileBuilder {
     }
 
     public Feature initFeature(String tileId, Feature feature, Element xml) {
-        if (feature instanceof Farm && tileId.startsWith("CO.")) {
+        if (feature instanceof Farm && tileId.startsWith("CO/")) {
             //this is not part of Count capability because it is integral behaviour valid also when capability is off
             feature = ((Farm) feature).setAdjoiningCityOfCarcassonne(true);
         }

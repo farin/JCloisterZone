@@ -1,11 +1,11 @@
 package com.jcloisterzone.game.capability;
 
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.event.play.TokenReceivedEvent;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
+import com.jcloisterzone.event.TokenReceivedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
@@ -15,11 +15,11 @@ import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlayersState;
 import com.jcloisterzone.reducers.AddPoints;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
+import org.w3c.dom.Element;
 
 public class TradeGoodsCapability extends Capability<Void> {
 
@@ -29,7 +29,10 @@ public class TradeGoodsCapability extends Capability<Void> {
 	    GRAIN;
 	}
 
+    private static final int RESOURCE_POINTS = 10;
+
     private static final long serialVersionUID = 1L;
+
 
     @Override
     public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
@@ -91,8 +94,14 @@ public class TradeGoodsCapability extends Capability<Void> {
                     hiPlayers = hiPlayers.prepend(player);
                 }
             }
+            List<ReceivedPoints> pts = List.empty();
             for (Player player: hiPlayers) {
-                state = (new AddPoints(player, 10, PointCategory.TRADE_GOODS)).apply(state);
+                state = (new AddPoints(player, RESOURCE_POINTS)).apply(state);
+                PointsExpression expr = new PointsExpression(RESOURCE_POINTS, "trade-goods." + tr.name());
+                pts = pts.append(new ReceivedPoints(expr, player, null));
+            }
+            if (!pts.isEmpty()) {
+                state = state.appendEvent(new ScoreEvent(pts, false, true));
             }
         }
         return state;

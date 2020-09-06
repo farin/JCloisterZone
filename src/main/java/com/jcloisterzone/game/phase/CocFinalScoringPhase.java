@@ -1,7 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import java.util.function.Function;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Completable;
@@ -12,7 +10,9 @@ import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.DeployMeeple;
-import com.jcloisterzone.wsio.message.DeployMeepleMessage;
+import com.jcloisterzone.io.message.DeployMeepleMessage;
+
+import java.util.function.Function;
 
 public class CocFinalScoringPhase extends AbstractCocScoringPhase {
 

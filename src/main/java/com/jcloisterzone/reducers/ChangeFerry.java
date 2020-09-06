@@ -11,7 +11,6 @@ import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.FerriesCapabilityModel;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;

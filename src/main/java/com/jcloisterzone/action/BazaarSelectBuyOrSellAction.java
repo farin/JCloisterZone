@@ -1,17 +1,13 @@
 package com.jcloisterzone.action;
 
-import java.util.Arrays;
-
-import com.jcloisterzone.ui.annotations.LinkedPanel;
-import com.jcloisterzone.ui.grid.actionpanel.BazaarPanel;
-import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage;
-import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage.BuyOrSellOption;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.io.message.BazaarBuyOrSellMessage;
+import com.jcloisterzone.io.message.BazaarBuyOrSellMessage.BuyOrSellOption;
+import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 
-@LinkedPanel(BazaarPanel.class)
+import java.util.Arrays;
+
 public class BazaarSelectBuyOrSellAction extends AbstractPlayerAction<BuyOrSellOption>{
 
     public BazaarSelectBuyOrSellAction() {
@@ -23,7 +19,7 @@ public class BazaarSelectBuyOrSellAction extends AbstractPlayerAction<BuyOrSellO
     }
 
     @Override
-    public WsInGameMessage select(BuyOrSellOption option) {
+    public Message select(BuyOrSellOption option) {
         return new BazaarBuyOrSellMessage(option);
     }
 

@@ -1,21 +1,16 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._tr;
-
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.game.capability.HillCapability;
 import com.jcloisterzone.game.capability.VineyardCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
 
@@ -134,7 +129,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
     }
 
     @Override
-    public int getPoints(GameState state) {
+    public PointsExpression getPoints(GameState state) {
     	boolean scoreVineyards = state.hasCapability(VineyardCapability.class);
         Position p = places.get().getPosition();
         int adjacent = 0;
@@ -145,12 +140,19 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
         		adjacentVineyards++;
         	}
         }
-        int vineyardPoints = adjacent == 8 ? adjacentVineyards * 3 : 0;
-        return adjacent + 1 + vineyardPoints + getLittleBuildingPoints(state);
+
+        Map<String, Integer> args = HashMap.of("tiles", adjacent + 1);
+        int points = adjacent + 1;
+        if (adjacent == 8 && adjacentVineyards > 0) {
+            points += adjacentVineyards * 3;
+            args = args.put("vineyards", adjacentVineyards);
+        }
+        String baseName = shrine ? "shrine" : "cloister";
+        return new PointsExpression(points, adjacent == 8 ? baseName : baseName + ".incomplete", args).merge(getLittleBuildingPoints(state));
     }
 
     public static String name() {
-        return _tr("Cloister");
+        return "Cloister";
     }
 
     protected Set<FeaturePointer> placeOnBoardNeighboring(Position pos, Rotation rot) {

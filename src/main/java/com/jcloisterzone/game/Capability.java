@@ -1,27 +1,22 @@
 package com.jcloisterzone.game;
 
-import java.io.Serializable;
-import java.util.function.Function;
-
-import io.vavr.collection.*;
-import org.w3c.dom.Element;
-
 import com.jcloisterzone.Immutable;
-import com.jcloisterzone.Player;
 import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.RemoveTileException;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.MeepleIdProvider;
-import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.plugin.Plugin;
-import com.jcloisterzone.ui.Client;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.List;
+import io.vavr.collection.Vector;
+import org.w3c.dom.Element;
+
+import java.io.Serializable;
+import java.util.function.Function;
 
 @Immutable
 public abstract class Capability<T> implements Serializable {
@@ -63,19 +58,6 @@ public abstract class Capability<T> implements Serializable {
         return null;
     }
 
-    public List<Follower> createPlayerFollowers(Player player, MeepleIdProvider idProvider) {
-        return List.empty();
-    }
-
-    public List<Special> createPlayerSpecialMeeples(Player player, MeepleIdProvider idProvider) {
-        return List.empty();
-    }
-
-    @Deprecated
-    public Set<FeaturePointer> extendFollowOptions(Set<FeaturePointer> locations) {
-        return locations;
-    }
-
     public GameState onStartGame(GameState state) {
         return state;
     }
@@ -84,7 +66,7 @@ public abstract class Capability<T> implements Serializable {
         return state;
     }
 
-    public List<BonusPoints> appendBonusPoints(GameState state, List<BonusPoints> bonusPoints, Scoreable feature, boolean isFinal) {
+    public List<ReceivedPoints> appendBonusPoints(GameState state, List<ReceivedPoints> bonusPoints, Scoreable feature, boolean isFinal) {
         return bonusPoints;
     }
 
@@ -131,16 +113,16 @@ public abstract class Capability<T> implements Serializable {
         try {
             return classForName(name, defaultLoader);
         } catch (ClassNotFoundException ex) {
-            for (Plugin p : Client.getInstance().getPlugins()) {
-                if (!p.isEnabled() || p.getLoader().equals(defaultLoader)) {
-                    continue;
-                }
-                try {
-                    return classForName(name, p.getLoader());
-                } catch (ClassNotFoundException nested) {
-                    // do nothing
-                }
-            }
+//            for (Plugin p : Client.getInstance().getPlugins()) {
+//                if (!p.isEnabled() || p.getLoader().equals(defaultLoader)) {
+//                    continue;
+//                }
+//                try {
+//                    return classForName(name, p.getLoader());
+//                } catch (ClassNotFoundException nested) {
+//                    // do nothing
+//                }
+//            }
             throw ex;
         }
     }

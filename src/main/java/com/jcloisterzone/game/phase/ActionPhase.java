@@ -2,23 +2,19 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.PrincessAction;
+import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.event.play.TokenPlacedEvent;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
+import com.jcloisterzone.event.TokenPlacedEvent;
+import com.jcloisterzone.feature.CloisterLike;
 import com.jcloisterzone.feature.Tower;
-import com.jcloisterzone.figure.BigFollower;
-import com.jcloisterzone.figure.Builder;
-import com.jcloisterzone.figure.Mayor;
-import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.figure.Pig;
-import com.jcloisterzone.figure.Shepherd;
-import com.jcloisterzone.figure.SmallFollower;
-import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.figure.*;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Capability;
@@ -34,16 +30,11 @@ import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.MoveNeutralFigure;
-import com.jcloisterzone.reducers.PlaceBridge;
-import com.jcloisterzone.reducers.PlaceLittleBuilding;
-import com.jcloisterzone.reducers.PlaceTunnel;
-import com.jcloisterzone.reducers.UndeployMeeple;
-import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
-import com.jcloisterzone.wsio.message.PlaceTokenMessage;
-import com.jcloisterzone.wsio.message.ReturnMeepleMessage;
-
-import io.vavr.Predicates;
+import com.jcloisterzone.reducers.*;
+import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
+import com.jcloisterzone.io.message.PlaceTokenMessage;
+import com.jcloisterzone.io.message.ReturnMeepleMessage;
+import com.jcloisterzone.io.message.ReturnMeepleMessage.ReturnMeepleSource;
 import io.vavr.collection.Vector;
 
 
@@ -58,7 +49,7 @@ public class ActionPhase extends AbstractActionPhase {
         Player player = state.getTurnPlayer();
 
         Vector<Class<? extends Meeple>> meepleTypes = Vector.of(
-            SmallFollower.class, BigFollower.class, Phantom.class,
+            SmallFollower.class, BigFollower.class, Phantom.class, Abbot.class,
             Wagon.class, Mayor.class, Builder.class, Pig.class, Shepherd.class
         );
 
@@ -73,8 +64,8 @@ public class ActionPhase extends AbstractActionPhase {
         }
 
         if (state.getCapabilities().contains(PrincessCapability.class) &&
-            state.getBooleanValue(Rule.PRINCESS_MUST_REMOVE_KNIGHT)) {
-            PrincessAction princessAction = (PrincessAction) actions.find(a -> a instanceof PrincessAction).getOrNull();
+                "must".equals(state.getStringRule(Rule.PRINCESS_ACTION))) {
+            ReturnMeepleAction princessAction = (ReturnMeepleAction) actions.find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.PRINCESS).getOrNull();
             if (princessAction != null) {
                 actions = Vector.of(princessAction);
             }
@@ -90,7 +81,7 @@ public class ActionPhase extends AbstractActionPhase {
         if (fig instanceof Fairy) {
             // TODO validation against ActionState
 
-            assert (state.getBooleanValue(Rule.FAIRY_ON_TILE) ? Position.class : BoardPointer.class).isInstance(ptr);
+            assert ("on-tile".equals(state.getStringRule(Rule.FAIRY_PLACEMENT)) ? Position.class : BoardPointer.class).isInstance(ptr);
 
             Fairy fairy = (Fairy) fig;
             state = (new MoveNeutralFigure<BoardPointer>(fairy, ptr, state.getActivePlayer())).apply(state);
@@ -107,28 +98,44 @@ public class ActionPhase extends AbstractActionPhase {
         Meeple meeple = state.getDeployedMeeples().find(m -> ptr.match(m._1)).map(t -> t._1)
             .getOrElseThrow(() -> new IllegalArgumentException("Pointer doesn't match any meeple"));
 
+        CloisterLike assignAbbotScore = null;
+
         switch (msg.getSource()) {
-        case PRINCESS:
-            PrincessAction princessAction = (PrincessAction) state.getPlayerActions()
-                .getActions().find(Predicates.instanceOf(PrincessAction.class))
-                .getOrElseThrow(() -> new IllegalArgumentException("Return meeple is not allowed"));
-            if (princessAction.getOptions().contains(ptr)) {
-                state = state.addFlag(Flag.PRINCESS_USED);
-            } else {
-                throw new IllegalArgumentException("Pointer doesn't match princess action");
-            }
-            break;
-        case FESTIVAL:
-            if (!state.getLastPlaced().getTile().hasModifier(FestivalCapability.FESTIVAL)) {
-                throw new IllegalArgumentException("Festival return is not allowed");
-            }
-            break;
-        default:
-            throw new IllegalArgumentException("Return meeple is not allowed");
+            case PRINCESS:
+                ReturnMeepleAction princessAction = (ReturnMeepleAction) state.getPlayerActions()
+                    .getActions().find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.PRINCESS)
+                    .getOrElseThrow(() -> new IllegalArgumentException("Return meeple is not allowed"));
+                if (princessAction.getOptions().contains(ptr)) {
+                    state = state.addFlag(Flag.PRINCESS_USED);
+                } else {
+                    throw new IllegalArgumentException("Pointer doesn't match princess action");
+                }
+                break;
+            case FESTIVAL:
+                if (!state.getLastPlaced().getTile().hasModifier(FestivalCapability.FESTIVAL)) {
+                    throw new IllegalArgumentException("Festival return is not allowed");
+                }
+                break;
+            case ABBOT_RETURN:
+                if (meeple.getPlayer() != state.getPlayerActions().getPlayer() || !(meeple instanceof Abbot)) {
+                    throw new IllegalArgumentException("Not abbot owner");
+                }
+                assignAbbotScore = (CloisterLike) state.getFeature(ptr.asFeaturePointer());
+                break;
+            default:
+                throw new IllegalArgumentException("Return meeple is not allowed");
         }
 
         state = (new UndeployMeeple(meeple, true)).apply(state);
         state = clearActions(state);
+
+        if (assignAbbotScore != null) {
+            PointsExpression points = assignAbbotScore.getStructurePoints(state, false);
+            ReceivedPoints rp = new ReceivedPoints(points, meeple.getPlayer(), ptr.asFeaturePointer());
+            state = (new AddPoints(meeple.getPlayer(), points.getPoints())).apply(state);
+            state = state.appendEvent(new ScoreEvent(rp, false, false));
+        }
+
         return next(state);
     }
 

@@ -1,24 +1,28 @@
 package com.jcloisterzone.action;
 
-import java.util.Arrays;
-
-import com.jcloisterzone.ui.annotations.LinkedPanel;
-import com.jcloisterzone.ui.grid.actionpanel.CornCirclesPanel;
-import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage;
-import com.jcloisterzone.wsio.message.CornCircleRemoveOrDeployMessage.CornCircleOption;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.io.message.CornCircleRemoveOrDeployMessage;
+import com.jcloisterzone.io.message.CornCircleRemoveOrDeployMessage.CornCircleOption;
+import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.HashSet;
 
-@LinkedPanel(CornCirclesPanel.class)
+import java.util.Arrays;
+
 public class CornCircleSelectDeployOrRemoveAction extends AbstractPlayerAction<CornCircleOption> {
 
-    public CornCircleSelectDeployOrRemoveAction() {
+    private Class<? extends Feature> cornType;
+
+    public CornCircleSelectDeployOrRemoveAction( Class<? extends Feature> cornType) {
         super(HashSet.ofAll(Arrays.asList(CornCircleOption.values())));
+        this.cornType = cornType;
+    }
+
+    public Class<? extends Feature> getCornType() {
+        return cornType;
     }
 
     @Override
-    public WsInGameMessage select(CornCircleOption option) {
+    public Message select(CornCircleOption option) {
         return new CornCircleRemoveOrDeployMessage(option);
     }
 

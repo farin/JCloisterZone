@@ -1,14 +1,13 @@
 package com.jcloisterzone.feature;
 
 
-import java.lang.reflect.Method;
-
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
+
+import java.lang.reflect.Method;
 
 public interface Feature {
 

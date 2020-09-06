@@ -5,11 +5,10 @@ import com.jcloisterzone.action.BridgeAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.play.TokenPlacedEvent;
+import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 

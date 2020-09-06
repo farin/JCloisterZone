@@ -5,7 +5,7 @@ import com.jcloisterzone.action.ConfirmAction;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.wsio.message.CommitMessage;
+import com.jcloisterzone.io.message.CommitMessage;
 
 public class CommitActionPhase extends Phase {
 

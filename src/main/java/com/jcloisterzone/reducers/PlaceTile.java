@@ -2,32 +2,20 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.event.play.TilePlacedEvent;
-import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Cloister;
-import com.jcloisterzone.feature.CompletableFeature;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.MultiTileFeature;
-import com.jcloisterzone.feature.Road;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.TilePlacedEvent;
+import com.jcloisterzone.feature.*;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.game.state.PlacedTunnelToken;
-
 import io.vavr.Function3;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.LinkedHashMap;
-import io.vavr.collection.Map;
-import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
+import io.vavr.collection.*;
 
-import javax.lang.model.type.ArrayType;
 import java.util.ArrayList;
 
 public class PlaceTile implements Reducer {

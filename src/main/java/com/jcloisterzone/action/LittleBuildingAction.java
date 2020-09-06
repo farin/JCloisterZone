@@ -2,16 +2,10 @@ package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
-import com.jcloisterzone.ui.annotations.LinkedGridLayer;
-import com.jcloisterzone.ui.annotations.LinkedImage;
-import com.jcloisterzone.ui.grid.layer.LittleBuildingActionLayer;
-import com.jcloisterzone.wsio.message.PlaceTokenMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.io.message.Message;
+import com.jcloisterzone.io.message.PlaceTokenMessage;
 import io.vavr.collection.Set;
 
-@LinkedImage("actions/building")
-@LinkedGridLayer(LittleBuildingActionLayer.class)
 public class LittleBuildingAction extends AbstractPlayerAction<LittleBuilding> {
 
     private final Position pos;
@@ -22,7 +16,7 @@ public class LittleBuildingAction extends AbstractPlayerAction<LittleBuilding> {
     }
 
     @Override
-    public WsInGameMessage select(LittleBuilding option) {
+    public Message select(LittleBuilding option) {
         return new PlaceTokenMessage(option, pos);
     }
 

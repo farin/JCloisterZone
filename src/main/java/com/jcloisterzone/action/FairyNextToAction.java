@@ -1,14 +1,11 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.ui.annotations.LinkedImage;
-import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.io.message.Message;
+import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import io.vavr.collection.Set;
 
-@LinkedImage("actions/fairy")
-public class FairyNextToAction extends SelectFollowerAction {
+public class FairyNextToAction extends AbstractPlayerAction<MeeplePointer> {
 
     private final String figureId;
 
@@ -18,7 +15,7 @@ public class FairyNextToAction extends SelectFollowerAction {
     }
 
     @Override
-     public WsInGameMessage select(MeeplePointer target) {
+     public Message select(MeeplePointer target) {
         return new MoveNeutralFigureMessage(figureId, target);
     }
 
@@ -27,4 +24,7 @@ public class FairyNextToAction extends SelectFollowerAction {
         return "move fairy";
     }
 
+    public String getFigureId() {
+        return figureId;
+    }
 }

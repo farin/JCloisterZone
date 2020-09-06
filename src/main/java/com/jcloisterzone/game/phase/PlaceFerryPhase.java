@@ -15,8 +15,7 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.PlaceFerry;
-import com.jcloisterzone.wsio.message.PlaceTokenMessage;
-
+import com.jcloisterzone.io.message.PlaceTokenMessage;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
 

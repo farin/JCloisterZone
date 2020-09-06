@@ -1,10 +1,10 @@
 package com.jcloisterzone.game.state;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 @Immutable
 public class PlacedTunnelToken implements Serializable {

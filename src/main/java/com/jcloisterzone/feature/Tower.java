@@ -1,12 +1,9 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._tr;
-
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-
 import io.vavr.collection.List;
 
 
@@ -38,6 +35,6 @@ public class Tower extends TileFeature implements Structure {
     }
 
     public static String name() {
-        return _tr("Tower");
+        return "Tower";
     }
 }

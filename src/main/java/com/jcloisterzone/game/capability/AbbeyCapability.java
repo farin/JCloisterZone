@@ -1,6 +1,5 @@
 package com.jcloisterzone.game.capability;
 
-import com.jcloisterzone.Expansion;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Cloister;
@@ -8,7 +7,6 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.HashMap;
 
 
@@ -24,7 +22,7 @@ public class AbbeyCapability extends Capability<Integer> {
 	private static final long serialVersionUID = 1L;
 
     /** The constant ABBEY_TILE_ID. */
-    public static final String ABBEY_TILE_ID = "AM.A";
+    public static final String ABBEY_TILE_ID = "AM/A";
     /** Abbey tile, not placed yet. */
     public static Tile ABBEY_TILE;
 
@@ -32,7 +30,7 @@ public class AbbeyCapability extends Capability<Integer> {
         HashMap<Location, Feature> features = io.vavr.collection.HashMap.of(
             Location.CLOISTER, new Cloister()
         );
-        ABBEY_TILE = new Tile(Expansion.ABBEY_AND_MAYOR, ABBEY_TILE_ID, features);
+        ABBEY_TILE = new Tile(ABBEY_TILE_ID, features);
     }
 
 

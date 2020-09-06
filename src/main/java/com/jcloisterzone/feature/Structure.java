@@ -6,7 +6,6 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Special;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;

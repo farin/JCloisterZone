@@ -1,7 +1,7 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.event.play.DoubleTurnEvent;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.DoubleTurnEvent;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
@@ -34,7 +34,7 @@ public class CleanUpTurnPartPhase extends Phase {
                 .remove(Flag.PRINCESS_USED)
                 .remove(Flag.FLYING_MACHINE_USED)
             );
-        }        
+        }
 
         if (builderTakeAnotherTurn) {
         	state = state.appendEvent(

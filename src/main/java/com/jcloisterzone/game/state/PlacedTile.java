@@ -1,15 +1,11 @@
 package com.jcloisterzone.game.state;
 
+import com.jcloisterzone.Immutable;
+import com.jcloisterzone.board.*;
+import com.jcloisterzone.feature.Feature;
+
 import java.io.Serializable;
 import java.util.function.Function;
-
-import com.jcloisterzone.Immutable;
-import com.jcloisterzone.board.EdgePattern;
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.feature.Feature;
 
 /**
  * Represents a tile that is placed on the map. This is made of a {@link Tile}, a {@link Position} and an

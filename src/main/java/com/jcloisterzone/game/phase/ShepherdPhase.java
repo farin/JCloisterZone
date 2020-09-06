@@ -1,11 +1,13 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.FlockAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.event.play.ScoreEvent;
-import com.jcloisterzone.event.play.TokenPlacedEvent;
+import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
+import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Shepherd;
@@ -17,9 +19,8 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.AddPoints;
 import com.jcloisterzone.reducers.UndeployMeeple;
-import com.jcloisterzone.wsio.message.FlockMessage;
-import com.jcloisterzone.wsio.message.FlockMessage.FlockOption;
-
+import com.jcloisterzone.io.message.FlockMessage;
+import com.jcloisterzone.io.message.FlockMessage.FlockOption;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
@@ -74,7 +75,7 @@ public class ShepherdPhase extends Phase {
 			return next(state);
 		}
 
-		FlockAction action = new FlockAction();
+		FlockAction action = new FlockAction(new MeeplePointer(shepherdFp, shepherd.getId()));
         ActionsState as = new ActionsState(state.getTurnPlayer(), action, false);
         return promote(state.setPlayerActions(as));
 	}
@@ -106,17 +107,20 @@ public class ShepherdPhase extends Phase {
 		SheepCapability cap = state.getCapabilities().get(SheepCapability.class);
 		Map<FeaturePointer, List<SheepToken>> placedTokens = cap.getModel(state);
 		Map<Meeple, FeaturePointer> shepherdsOnFarm = getShepherdsOnFarm(state, farm);
-		int points = shepherdsOnFarm.values().map(fp -> {
-			return placedTokens.get(fp).get().map(SheepToken::sheepCount).sum();
-		}).sum().intValue();
+		Seq<SheepToken> tokens = shepherdsOnFarm.values().flatMap(fp -> placedTokens.get(fp).get());
+		int points = tokens.map(SheepToken::sheepCount).sum().intValue();
+		List<ReceivedPoints> receivedPoints = List.empty();
 
+		Map<String, Integer> exprArgs = tokens.groupBy(SheepToken::name).mapValues(list -> list.size());
+		PointsExpression expr = new PointsExpression(points, "flock", exprArgs);
 		for (Tuple2<Meeple, FeaturePointer> t : shepherdsOnFarm) {
 		    Shepherd m = (Shepherd) t._1;
-		    state = (new AddPoints(m.getPlayer(), points, PointCategory.SHEEP)).apply(state);
-			ScoreEvent scoreEvent = new ScoreEvent(points, PointCategory.SHEEP, false, t._2, m);
-            state = state.appendEvent(scoreEvent);
+		    state = (new AddPoints(m.getPlayer(), points)).apply(state);
+		    receivedPoints = receivedPoints.append(new ReceivedPoints(expr, m.getPlayer(), m.getDeployment(state)));
             state = (new UndeployMeeple(m, false)).apply(state);
 		}
+
+		state = state.appendEvent(new ScoreEvent(receivedPoints,false, false));
 
 		return cap.setModel(
 			state,

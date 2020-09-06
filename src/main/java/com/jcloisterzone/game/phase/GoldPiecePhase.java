@@ -2,8 +2,8 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.action.GoldPieceAction;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
-import com.jcloisterzone.event.play.TokenPlacedEvent;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.GoldminesCapability;
@@ -11,8 +11,7 @@ import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.wsio.message.PlaceTokenMessage;
-
+import com.jcloisterzone.io.message.PlaceTokenMessage;
 import io.vavr.collection.Set;
 
 @RequiredCapability(GoldminesCapability.class)

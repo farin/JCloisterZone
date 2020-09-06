@@ -1,14 +1,10 @@
 package com.jcloisterzone.game.capability;
 
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.PlacementOption;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.*;
 import com.jcloisterzone.feature.River;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
-
+import com.jcloisterzone.game.state.PlacedTile;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
@@ -26,12 +22,21 @@ public class RiverCapability extends Capability<Void> {
             pack = pack.mapGroup("river", g -> g.setSuccessiveGroup("river-lake"));
             pack = pack.mapGroup("river-lake", g -> g.setSuccessiveGroup("default"));
             if (pack.hasGroup("river-fork")) {
-                pack = pack.removeTilesById("R1.I.e"); //remove original lake if River II is enabled
                 pack = pack.mapGroup("river-fork", g -> g.setSuccessiveGroup("river"));
                 pack = pack.deactivateGroup("river");
             }
+            pack = pack.removeGroup("river-spring"); // remove unused springs
             return pack;
         });
+        return state;
+    }
+
+    @Override
+    public GameState onTilePlaced(GameState state, PlacedTile placedTile) {
+        if (placedTile.getTile().getId().equals("RI.2/III")) {
+            // mix other forks between other river tiles (this is applied when multiple rivers are enabled
+            state = state.mapTilePack(pack -> pack.activateGroup("river"));
+        }
         return state;
     }
 

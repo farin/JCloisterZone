@@ -83,7 +83,7 @@ public enum Rotation {
     /**
      * Adds rotation {@code r} to {@code this}.
      *
-     * @param r the rotation to add
+     * @param r the rotation to merge
      * @return the sum of the rotations
      */
     public Rotation add(Rotation r) {

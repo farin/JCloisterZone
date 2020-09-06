@@ -1,17 +1,11 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.ui.annotations.LinkedGridLayer;
-import com.jcloisterzone.ui.annotations.LinkedImage;
-import com.jcloisterzone.ui.grid.layer.TileActionLayer;
-import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.io.message.Message;
+import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import io.vavr.collection.Set;
 
 //TODO generic NeutralMeepleAction ?
-@LinkedImage("actions/dragonmove")
-@LinkedGridLayer(TileActionLayer.class)
 public class MoveDragonAction extends SelectTileAction {
 
     private final String figureId;
@@ -22,7 +16,7 @@ public class MoveDragonAction extends SelectTileAction {
     }
 
     @Override
-    public WsInGameMessage select(Position target) {
+    public Message select(Position target) {
         return new MoveNeutralFigureMessage(figureId, target);
     }
 
@@ -31,4 +25,7 @@ public class MoveDragonAction extends SelectTileAction {
         return "move " + figureId;
     }
 
+    public String getFigureId() {
+        return figureId;
+    }
 }

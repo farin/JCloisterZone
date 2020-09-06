@@ -2,7 +2,8 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.RemovMageOrWithAction;
+import com.jcloisterzone.action.RemovMageOrWitchAction;
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.City;
@@ -17,12 +18,8 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.NeutralFiguresState;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
-import com.jcloisterzone.wsio.message.MoveNeutralFigureMessage;
-
-import io.vavr.collection.HashSet;
-import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
-import io.vavr.collection.Vector;
+import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
+import io.vavr.collection.*;
 
 @RequiredCapability(MageAndWitchCapability.class)
 public class MageAndWitchPhase extends Phase {
@@ -46,17 +43,22 @@ public class MageAndWitchPhase extends Phase {
         // tile has trigger or mage and witch feature has been joined together
 
         GameState _state = state;
+        Position lastPlacedPos = state.getLastPlaced().getPosition();
         Stream<Completable> targetFeatures = state.getFeatures(Completable.class)
             .filter(f -> f != mageFeature && f != witchFeature)
             .filter(f -> f instanceof Road || f instanceof City)
-            .filter(f -> f.isOpen(_state));
+            .filter(f -> f.isOpen(_state))
+            .filter(f -> {
+                List<FeaturePointer> places = f.getPlaces();
+                return places.size() > 1 || !places.get().getPosition().equals(lastPlacedPos);
+            });
 
         if (targetFeatures.isEmpty()) {
             if (mageFeature != null && witchFeature != null) {
-            /*  If it is not possible to place or move the mage or witch figure
+                /*  If it is not possible to place or move the mage or witch figure
                 (because there are no unfinished cities or roads), the player must
                 remove either the mage or witch from the board, if at least one is on a tile. */
-                RemovMageOrWithAction action = new RemovMageOrWithAction(HashSet.of(ns.getMage(), ns.getWitch()));
+                RemovMageOrWitchAction action = new RemovMageOrWitchAction(HashSet.of(ns.getMage(), ns.getWitch()));
                 return promote(state.setPlayerActions(
                     new ActionsState(state.getTurnPlayer(), action, false)
                 ));
@@ -71,7 +73,11 @@ public class MageAndWitchPhase extends Phase {
             return next(state);
         }
 
-        Set<FeaturePointer> options = targetFeatures.flatMap(Completable::getPlaces).toSet();
+        Set<FeaturePointer> options = targetFeatures
+                .flatMap(Completable::getPlaces)
+                .filter(fp -> !fp.getPosition().equals(lastPlacedPos))
+                .toSet();
+
         Vector<PlayerAction<?>> actions = Vector.of(
             new NeutralFigureAction(ns.getMage(), options),
             new NeutralFigureAction(ns.getWitch(), options)

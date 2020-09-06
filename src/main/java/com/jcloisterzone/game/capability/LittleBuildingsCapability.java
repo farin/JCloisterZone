@@ -1,10 +1,9 @@
 package com.jcloisterzone.game.capability;
 
-import java.util.Arrays;
-
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.LittleBuildingAction;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
@@ -12,12 +11,9 @@ import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuildin
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlayersState;
 import com.jcloisterzone.game.state.mixins.RulesMixin;
+import io.vavr.collection.*;
 
-import io.vavr.collection.HashMap;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.Map;
-import io.vavr.collection.Seq;
-import io.vavr.collection.Set;
+import java.util.Arrays;
 
 /**
  * Model is map of all placed little buildings.
@@ -59,13 +55,17 @@ public class LittleBuildingsCapability extends Capability<Map<Position, LittleBu
         return state.appendAction(new LittleBuildingAction(options, pos));
     }
 
-    public static int getBuildingsPoints(RulesMixin rules, Seq<LittleBuilding> buildings) {
-        if (rules.getBooleanValue(Rule.BULDINGS_DIFFERENT_VALUE)) {
-            return buildings
-                .map(token -> token.ordinal() + 1)
-                .sum().intValue();
+    public static PointsExpression getBuildingsPoints(RulesMixin rules, Seq<LittleBuilding> buildings) {
+        if ("3/2/1".equals(rules.getStringRule(Rule.LITTLE_BUILDINGS_SCORING))) {
+            Map<LittleBuilding, Integer> counts = buildings.groupBy(t -> t).mapValues(l -> l.size());
+            int towerCount = counts.getOrElse(LittleBuilding.LB_TOWER, 0);
+            int houseCount = counts.getOrElse(LittleBuilding.LB_HOUSE, 0);
+            int shedCount = counts.getOrElse(LittleBuilding.LB_SHED, 0);
+            int points = towerCount * 3 + houseCount * 2 + shedCount;
+            return new PointsExpression(points, "little-buildings.321", HashMap.of("towers", towerCount, "houses", houseCount, "sheds", shedCount));
         } else {
-            return buildings.size();
+            int count = buildings.size();
+            return new PointsExpression(count, "little-buildings.default", HashMap.of("buildings", count));
         }
     }
 }

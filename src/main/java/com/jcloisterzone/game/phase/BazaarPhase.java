@@ -1,13 +1,14 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.action.BazaarBidAction;
 import com.jcloisterzone.action.BazaarSelectBuyOrSellAction;
 import com.jcloisterzone.action.BazaarSelectTileAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.TileAuctionedEvent;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BazaarCapability;
@@ -17,11 +18,10 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.AddPoints;
-import com.jcloisterzone.wsio.message.BazaarBidMessage;
-import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage;
-import com.jcloisterzone.wsio.message.BazaarBuyOrSellMessage.BuyOrSellOption;
-import com.jcloisterzone.wsio.message.PassMessage;
-
+import com.jcloisterzone.io.message.BazaarBidMessage;
+import com.jcloisterzone.io.message.BazaarBuyOrSellMessage;
+import com.jcloisterzone.io.message.BazaarBuyOrSellMessage.BuyOrSellOption;
+import com.jcloisterzone.io.message.PassMessage;
 import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
 
@@ -38,16 +38,16 @@ public class BazaarPhase extends Phase {
             return next(state);
         }
 
-        int size = state.getPlayers().length();
+        int playersCount = state.getPlayers().length();
         TilePack tilePack = state.getTilePack();
 
-        if (tilePack.size() < size) {
+        if (tilePack.size() < playersCount || playersCount < 2) {
             return next(state);
         }
 
         Queue<BazaarItem> supply = Queue.empty();
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < playersCount; i++) {
             Tuple2<Tile, TilePack> t = tilePack.drawTile(getRandom());
             state = state.setTilePack(t._2);
             supply = supply.append(new BazaarItem(t._1, 0, null, null));
@@ -72,12 +72,20 @@ public class BazaarPhase extends Phase {
         return false;
     }
 
+    private int getUnassignedTilesCount(BazaarCapabilityModel model) {
+        int count = 0;
+        for (BazaarItem bi : model.getSupply()) {
+            if (bi.getOwner() == null) count++;
+        }
+        return count;
+    }
+
     @PhaseMessageHandler
     public StepResult bazaarBid(GameState state, BazaarBidMessage msg) {
         int supplyIndex = msg.getSupplyIndex();
         int price = msg.getPrice();
 
-        boolean noAuction = state.getBooleanValue(Rule.BAZAAR_NO_AUCTION);
+        boolean noAuction = state.getBooleanRule(Rule.BAZAAR_NO_AUCTION);
 
         Player player = state.getActivePlayer();
         PlayerAction<?> action = state.getPlayerActions().getActions().get();
@@ -107,6 +115,8 @@ public class BazaarPhase extends Phase {
         });
 
         if (noAuction) {
+            Tile tile = state.getCapabilityModel(BazaarCapability.class).getSupply().get(msg.getSupplyIndex()).getTile();
+            state = state.appendEvent(new TileAuctionedEvent(PlayEventMeta.createWithPlayer(player), tile, BuyOrSellOption.BUY, 0, player, null));
             return nextSelectingPlayer(state);
         } else {
             return nextBidder(state);
@@ -144,6 +154,7 @@ public class BazaarPhase extends Phase {
         Player player = currentSelectingPlayer;
 
         model = model.setAuctionedItemIndex(null);
+        int tilesCount = getUnassignedTilesCount(model);
 
         do {
             player = player.getNextPlayer(state);
@@ -151,16 +162,25 @@ public class BazaarPhase extends Phase {
                 model = model.setTileSelectingPlayer(player);
 
                 state = state.setCapabilityModel(BazaarCapability.class, model);
-
-                BazaarSelectTileAction action = new BazaarSelectTileAction(model.getSupply().toLinkedSet());
-                state = state.setPlayerActions(
-                    new ActionsState(player, action, false)
-                );
-                return promote(state);
+                if (tilesCount > 1) {
+                    BazaarSelectTileAction action = new BazaarSelectTileAction(model.getSupply().toLinkedSet());
+                    state = state.setPlayerActions(
+                            new ActionsState(player, action, false)
+                    );
+                    return promote(state);
+                } else {
+                    BazaarItem bi = model.getSupply().find(item -> item.getOwner() == null).get();
+                    int index = model.getSupply().indexOf(bi);
+                    bi = bi.setOwner(player);
+                    model = model.updateSupplyItem(index, bi);
+                    state = state.setCapabilityModel(BazaarCapability.class, model);
+                    state = state.appendEvent(new TileAuctionedEvent(PlayEventMeta.createWithPlayer(player), bi.getTile(), BuyOrSellOption.BUY, 0, player, null));
+                    break;
+                }
             }
         } while (player != currentSelectingPlayer);
 
-        //all tiles has been auctioned
+        // all tiles has been auctioned
         Queue<BazaarItem> supply =  model.getSupply();
 
         model = model.setSupply(
@@ -204,12 +224,12 @@ public class BazaarPhase extends Phase {
         Player pSelecting = model.getTileSelectingPlayer();
         Player pBidding = bi.getCurrentBidder();
 
-        assert !pSelecting.equals(pBidding) || option == BuyOrSellOption.BUY; //if same, buy is flag expected
+        assert !pSelecting.equals(pBidding) || option == BuyOrSellOption.BUY; //if same, buy flag is expected
         if (option == BuyOrSellOption.SELL) points *= -1;
 
-        state = (new AddPoints(pSelecting, -points, PointCategory.BAZAAR_AUCTION)).apply(state);
+        state = (new AddPoints(pSelecting, -points)).apply(state);
         if (!pSelecting.equals(pBidding)) {
-            state = (new AddPoints(pBidding, points, PointCategory.BAZAAR_AUCTION)).apply(state);
+            state = (new AddPoints(pBidding, points)).apply(state);
         }
 
         bi = bi.setOwner(option == BuyOrSellOption.BUY ? pSelecting : pBidding);
@@ -217,6 +237,7 @@ public class BazaarPhase extends Phase {
 
         model = model.updateSupplyItem(model.getAuctionedItemIndex(), bi);
         state = state.setCapabilityModel(BazaarCapability.class, model);
+        state = state.appendEvent(new TileAuctionedEvent(PlayEventMeta.createWithPlayer(pSelecting), bi.getTile(), option, points, pSelecting, pSelecting.equals(pBidding) ? null : pBidding));
 
         return nextSelectingPlayer(state);
     }

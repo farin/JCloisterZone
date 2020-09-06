@@ -2,17 +2,10 @@ package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
-import com.jcloisterzone.ui.annotations.LinkedGridLayer;
-import com.jcloisterzone.ui.annotations.LinkedImage;
-import com.jcloisterzone.ui.grid.layer.FeatureAreaLayer;
-import com.jcloisterzone.wsio.message.PlaceTokenMessage;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.io.message.PlaceTokenMessage;
+import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.Set;
 
-
-@LinkedImage("actions/tunnel")
-@LinkedGridLayer(FeatureAreaLayer.class)
 public class TunnelAction extends AbstractPlayerAction<FeaturePointer> implements SelectFeatureAction {
 
     private final Tunnel token;
@@ -27,7 +20,7 @@ public class TunnelAction extends AbstractPlayerAction<FeaturePointer> implement
     }
 
     @Override
-    public WsInGameMessage select(FeaturePointer ptr) {
+    public Message select(FeaturePointer ptr) {
         return new PlaceTokenMessage(token, ptr);
     }
 

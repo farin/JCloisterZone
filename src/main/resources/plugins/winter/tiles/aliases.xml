@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<aliases xmlns="http://www.jcloisterzone.com/aliases">
-    <alias for="WI.LR" useGeometry="BA.LR" />
-    <alias for="WI.RRR" useGeometry="BA.RRR" />
-</aliases>

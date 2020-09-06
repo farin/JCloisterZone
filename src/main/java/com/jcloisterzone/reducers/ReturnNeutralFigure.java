@@ -2,8 +2,8 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.BoardPointer;
-import com.jcloisterzone.event.play.NeutralFigureReturned;
-import com.jcloisterzone.event.play.PlayEvent.PlayEventMeta;
+import com.jcloisterzone.event.NeutralFigureReturned;
+import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.NeutralFiguresState;

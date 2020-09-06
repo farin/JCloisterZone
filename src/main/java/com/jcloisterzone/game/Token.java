@@ -1,6 +1,6 @@
 package com.jcloisterzone.game;
 
-import com.jcloisterzone.wsio.message.adapters.TokenAdapter;
+import com.jcloisterzone.io.adapters.TokenAdapter;
 
 /**
  * All tokens must be inner classes inside capability.

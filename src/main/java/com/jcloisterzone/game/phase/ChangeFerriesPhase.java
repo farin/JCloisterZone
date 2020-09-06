@@ -14,8 +14,7 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.ChangeFerry;
-import com.jcloisterzone.wsio.message.PlaceTokenMessage;
-
+import com.jcloisterzone.io.message.PlaceTokenMessage;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
 
@@ -38,11 +37,11 @@ public class ChangeFerriesPhase extends Phase {
         Set<FeaturePointer> options = state.getTileFeatures2(pos, Road.class)
             .flatMap(t -> t._2.findNearest(state, new FeaturePointer(pos, t._1), fp -> ferries.find(f -> fp.isPartOf(f)).isDefined()))
             .distinct()
-            .filter(ferry -> !model.getMovedFerries().containsKey(ferry.getPosition()))
-            .flatMap(ferry -> {
+            .filter(ferryPart -> !model.getMovedFerries().containsKey(ferryPart.getPosition()))
+            .flatMap(ferryPart -> {
                 // map nearest ferry to action options
                 // (options for each are other possible ferry locations then current)
-                Position ferryPos = ferry.getPosition();
+                Position ferryPos = ferryPart.getPosition();
                 PlacedTile ferryTile = state.getPlacedTile(ferryPos);
                 return ferryTile
                     .getTile()
@@ -52,8 +51,8 @@ public class ChangeFerriesPhase extends Phase {
                     .combinations(2)
                     .map(pair -> pair.reduce(Location::union))
                     .map(loc -> loc.rotateCW(ferryTile.getRotation()))
-                    .filter(loc -> loc != ferry.getLocation())
                     .map(loc -> new FeaturePointer(ferryPos, loc))
+                    .filter(fp -> !ferries.contains(fp))
                     .toList();
             })
             .toSet();

@@ -1,21 +1,20 @@
 package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.play.ScoreEvent;
+import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Predicates;
-import io.vavr.Tuple2;
-import io.vavr.collection.LinkedHashMap;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.List;
+import io.vavr.collection.Map;
 import io.vavr.collection.Stream;
 
 public class FinalScoring implements Reducer {
@@ -34,12 +33,15 @@ public class FinalScoring implements Reducer {
         return size;
     }
 
-    private int getMonasteryPoints(GameState state, Position pos) {
+    private PointsExpression getMonasteryPoints(GameState state, Position pos) {
         int points = 1;
+        Map<String, Integer> args = HashMap.empty();
         for (Location loc : Location.SIDES) {
-            points += getContinuousRowSize(state, pos, loc);
+            int size = getContinuousRowSize(state, pos, loc);
+            points += size;
+            args = args.put(loc.toString(), size);
         }
-        return points;
+        return new PointsExpression(points, "monastery", args);
     }
 
     @Override
@@ -50,17 +52,22 @@ public class FinalScoring implements Reducer {
 
         for (Castle castle : getOccupiedScoreables(state, Castle.class)) {
             // no points for castles at the end
-            state = (new ScoreCastle(castle, 0, true)).apply(state);
+            state = (new ScoreCastle(castle, new PointsExpression(0, "castle.incomplete"), true)).apply(state);
         }
 
         Stream<Cloister> monasteries = state.getFeatures().filter(f -> f instanceof Cloister && ((Cloister) f).isMonastery()).map(f -> (Cloister) f);
 
         for (Cloister monastery: monasteries) {
-            int points = getMonasteryPoints(state, monastery.getPosition());
+            PointsExpression expr = getMonasteryPoints(state, monastery.getPosition());
+            List<ReceivedPoints> receivedPoints = List.empty();
+
             for (Player player : monastery.getMonasteryOwners(state)) {
                 Follower follower = monastery.getMonasterySampleFollower(state, player);
-                state = (new AddPoints(player, points, PointCategory.CLOISTER)).apply(state);
-                ScoreEvent scoreEvent = new ScoreEvent(points, PointCategory.CLOISTER, true, monastery.getPlace(), follower);
+                state = (new AddPoints(player, expr.getPoints())).apply(state);
+                receivedPoints = receivedPoints.append(new ReceivedPoints(expr, player, follower.getDeployment(state)));
+            }
+            if (!receivedPoints.isEmpty()) {
+                ScoreEvent scoreEvent = new ScoreEvent(receivedPoints, true, true);
                 state = state.appendEvent(scoreEvent);
             }
         }

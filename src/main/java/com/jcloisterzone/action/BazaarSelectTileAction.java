@@ -1,13 +1,9 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.game.capability.BazaarItem;
-import com.jcloisterzone.ui.annotations.LinkedPanel;
-import com.jcloisterzone.ui.grid.actionpanel.BazaarPanel;
-import com.jcloisterzone.wsio.message.WsInGameMessage;
-
+import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.Set;
 
-@LinkedPanel(BazaarPanel.class)
 public class BazaarSelectTileAction extends AbstractPlayerAction<BazaarItem> {
 
     public BazaarSelectTileAction(Set<BazaarItem> options) {
@@ -15,7 +11,7 @@ public class BazaarSelectTileAction extends AbstractPlayerAction<BazaarItem> {
     }
 
     @Override
-    public WsInGameMessage select(BazaarItem target) {
+    public Message select(BazaarItem target) {
         // server is invoked directly from BazaarPanel
         throw new UnsupportedOperationException();
     }

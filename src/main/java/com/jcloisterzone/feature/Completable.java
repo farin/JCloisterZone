@@ -1,8 +1,8 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.Set;
 
 public interface Completable extends Scoreable {
@@ -15,10 +15,10 @@ public interface Completable extends Scoreable {
     Completable setNeighboring(Set<FeaturePointer> neighboring);
     Set<FeaturePointer> getNeighboring();
 
-    int getPoints(GameState state);
+    PointsExpression getPoints(GameState state);
 
     /** get feature points as completed/incompleted (as is)
      *  and unaffected by Mage or Witch
      */
-    int getStructurePoints(GameState state, boolean completed);
+    PointsExpression getStructurePoints(GameState state, boolean completed);
 }

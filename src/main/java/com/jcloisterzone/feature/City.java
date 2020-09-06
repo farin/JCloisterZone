@@ -1,23 +1,16 @@
 package com.jcloisterzone.feature;
 
-import static com.jcloisterzone.ui.I18nUtils._tr;
-
-import com.jcloisterzone.PointCategory;
 import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.ShortEdge;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.TradeGoodsCapability.TradeGoods;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.List;
-import io.vavr.collection.Map;
-import io.vavr.collection.Set;
+import io.vavr.collection.*;
 
 public class City extends CompletableFeature<City> {
 
@@ -184,48 +177,65 @@ public class City extends CompletableFeature<City> {
         return new City(places, openEdges, neighboring, multiEdges, pennants, extraPoints, tradeGoods, besieged, cathedral, princess, castleBase);
     }
 
-    private int getBasePoints(GameState state, boolean completed) {
+    private PointsExpression getBasePoints(GameState state, boolean completed) {
+        boolean tinyCity = false;
         int tileCount = getTilePositions().size();
 
+
+        if (cathedral && !completed) {
+            return new PointsExpression(0, "city.incomplete-cathedral");
+        }
+
+        Map<String, Integer> args = HashMap.of(
+                "tiles", tileCount,
+                "pennants", pennants,
+                "extraPoints", extraPoints
+        );
+
         int pointsPerUnit = 2;
-        if (completed && tileCount == 2 && state.getBooleanValue(Rule.TINY_CITY_2_POINTS)) {
+        if (completed && tileCount == 2 && "2".equals(state.getStringRule(Rule.TINY_CITY_SCORING))) {
+            tinyCity = true;
             pointsPerUnit = 1;
         } else{
             if (besieged) {
+                args = args.put("besieged", 1);
                 pointsPerUnit--;
             }
         }
 
-        if (completed) {
-            if (cathedral) pointsPerUnit++;
+        if (cathedral) {
+            pointsPerUnit++;
+            args = args.put("cathedral", 1);
+        }
+
+        if (!completed) {
+            pointsPerUnit--;
+        }
+
+        int points = pointsPerUnit * (tileCount + pennants) + extraPoints;
+        String name = "city";
+        if (tinyCity) {
+            name = "city.tiny";
         } else {
-            if (cathedral) {
-                pointsPerUnit = 0;
-            } else {
-                pointsPerUnit--;
-            }
+            if (!completed) name = "city.incomplete";
         }
-        return pointsPerUnit * (tileCount + pennants) + extraPoints;
+        return new PointsExpression(points, name, args);
     }
 
     @Override
-    public int getStructurePoints(GameState state, boolean completed) {
-        return getBasePoints(state, completed) + getLittleBuildingPoints(state);
+    public PointsExpression getStructurePoints(GameState state, boolean completed) {
+        return getBasePoints(state, completed).merge(getLittleBuildingPoints(state));
     }
 
     @Override
-    public int getPoints(GameState state) {
-        int basePoints = getBasePoints(state, isCompleted(state));
-        return getMageAndWitchPoints(state, basePoints) + getLittleBuildingPoints(state);
+    public PointsExpression getPoints(GameState state) {
+        PointsExpression basePoints = getBasePoints(state, isCompleted(state));
+        return getMageAndWitchPoints(state, basePoints).merge(getLittleBuildingPoints(state));
     }
 
-    @Override
-    public PointCategory getPointCategory() {
-        return PointCategory.CITY;
-    }
 
     public static String name() {
-        return _tr("City");
+        return "City";
     }
 
     protected Set<Tuple2<ShortEdge, FeaturePointer>> mergeMultiEdges(City city) {
