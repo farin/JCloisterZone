@@ -12,7 +12,6 @@ public class CommandRegistry {
     static {
         TYPES = HashMap.<String, Class<? extends Message>>empty()
             .put(t(GameSetupMessage.class))
-            .put(t(DeployFlierMessage.class))
             .put(t(UndoMessage.class))
             .put(t(CommitMessage.class))
             .put(t(PassMessage.class))

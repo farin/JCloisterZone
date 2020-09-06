@@ -21,7 +21,6 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.reducers.PayRansom;
-import com.jcloisterzone.io.message.DeployFlierMessage;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
 import com.jcloisterzone.io.message.PayRansomMessage;
 import io.vavr.Tuple2;
@@ -169,7 +168,12 @@ public abstract class AbstractActionPhase extends Phase {
     @PhaseMessageHandler
     public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
         FeaturePointer fp = msg.getPointer();
-        Meeple m = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
+
+        if (fp.getLocation() == Location.FLYING_MACHINE) {
+            return handleDeployFlier(state, msg);
+        }
+
+        Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
         PlacedTile placedTile = state.getLastPlaced();
 
         //TODO validate placement against players actions
@@ -185,8 +189,8 @@ public abstract class AbstractActionPhase extends Phase {
             state = state.addFlag(Flag.PORTAL_USED);
         }
 
-        state = (new DeployMeeple(m, fp)).apply(state);
-        if (m instanceof Barn) {
+        state = (new DeployMeeple(meeple, fp)).apply(state);
+        if (meeple instanceof Barn) {
             state = state.setCapabilityModel(BarnCapability.class, fp);
         }
 
@@ -201,8 +205,7 @@ public abstract class AbstractActionPhase extends Phase {
         return pos;
     }
 
-    @PhaseMessageHandler
-    public StepResult handleDeployFlier(GameState state, DeployFlierMessage msg) {
+    public StepResult handleDeployFlier(GameState state, DeployMeepleMessage msg) {
         PlacedTile placedTile = state.getLastPlaced();
         FlyingMachine flyingMachine = (FlyingMachine) state.getFeature(msg.getPointer());
         Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());

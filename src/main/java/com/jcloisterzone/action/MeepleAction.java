@@ -1,9 +1,7 @@
 package com.jcloisterzone.action;
 
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.io.message.DeployFlierMessage;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
 import com.jcloisterzone.io.message.Message;
 import io.vavr.Tuple2;
@@ -49,10 +47,7 @@ public class MeepleAction implements SelectFeatureAction {
 
     @Override
     public Message select(FeaturePointer fp) {
-        if (fp.getLocation() == Location.FLYING_MACHINE) {
-           return new DeployFlierMessage(fp, getMeepleIdFor(fp));
-        }
-        return new DeployMeepleMessage(fp, getMeepleIdFor(fp));
+        return new DeployMeepleMessage(fp, getMeepleIdFor(fp), null);
     }
 
     @Override

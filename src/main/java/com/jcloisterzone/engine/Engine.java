@@ -242,7 +242,10 @@ public class Engine implements  Runnable {
 
             if (msg instanceof ReplayableMessage) {
                 if (msg instanceof SaltMessage) {
-                    phaseReducer.getRandom().setSalt(Long.valueOf(((SaltMessage) msg).getSalt()));
+                    SaltMessage saltedMsg = (SaltMessage) msg;
+                    if (saltedMsg.getSalt() != null) {
+                        phaseReducer.getRandom().setSalt(Long.valueOf(saltedMsg.getSalt()));
+                    }
                 }
                 state = phaseReducer.apply(state, msg);
 
