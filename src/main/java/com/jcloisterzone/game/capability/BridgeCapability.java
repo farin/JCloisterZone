@@ -18,16 +18,16 @@ import io.vavr.collection.Set;
  */
 public class BridgeCapability extends Capability<Set<FeaturePointer>> {
 
-	public static enum BrigeToken implements Token {
-		BRIDGE;
-	}
+	public enum BridgeToken implements Token {
+		BRIDGE
+    }
 
 	private static final long serialVersionUID = 1L;
 
     @Override
     public GameState onStartGame(GameState state) {
         int tokens = state.getPlayers().length() < 5 ? 3 : 2;
-        state = state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(BrigeToken.BRIDGE, tokens));
+        state = state.mapPlayers(ps -> ps.setTokenCountForAllPlayers(BridgeToken.BRIDGE, tokens));
         state = setModel(state, HashSet.empty());
         return state;
     }
@@ -37,11 +37,11 @@ public class BridgeCapability extends Capability<Set<FeaturePointer>> {
         Player player = state.getPlayerActions().getPlayer();
 
         boolean playerHasBridge = state.getPlayers().getPlayerTokenCount(
-            player.getIndex(), BrigeToken.BRIDGE) > 0;
+            player.getIndex(), BridgeToken.BRIDGE) > 0;
 
         if (!playerHasBridge ||
             state.getCurrentTurnPartEvents().find(
-               ev -> ev instanceof TokenPlacedEvent && ((TokenPlacedEvent)ev).getToken() == BrigeToken.BRIDGE
+               ev -> ev instanceof TokenPlacedEvent && ((TokenPlacedEvent)ev).getToken() == BridgeToken.BRIDGE
             ).isDefined()) {
             return state;
         }

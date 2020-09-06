@@ -9,7 +9,7 @@ import com.jcloisterzone.event.TileDiscardedEvent;
 import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.*;
-import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
+import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
@@ -154,7 +154,7 @@ public class TilePhase extends Phase {
 
         if (mandatoryBridge != null) {
             state = state.mapPlayers(ps ->
-                ps.addTokenCount(player.getIndex(), BrigeToken.BRIDGE, -1)
+                ps.addTokenCount(player.getIndex(), BridgeToken.BRIDGE, -1)
             );
             state = state.mapCapabilityModel(BridgeCapability.class, model -> model.add(mandatoryBridge));
 
@@ -173,7 +173,7 @@ public class TilePhase extends Phase {
 
         if (mandatoryBridge != null) {
             state = state.appendEvent(
-                new TokenPlacedEvent(PlayEventMeta.createWithPlayer(player), BrigeToken.BRIDGE, mandatoryBridge)
+                new TokenPlacedEvent(PlayEventMeta.createWithPlayer(player), BridgeToken.BRIDGE, mandatoryBridge)
             );
         }
 

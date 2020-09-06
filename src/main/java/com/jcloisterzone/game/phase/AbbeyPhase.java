@@ -28,10 +28,10 @@ public class AbbeyPhase extends Phase {
     public StepResult enter(GameState state) {
         BazaarCapabilityModel bazaarModel = state.getCapabilityModel(BazaarCapability.class);
         BuilderState builderState = state.getCapabilityModel(BuilderCapability.class);
-        boolean baazaarInProgress = bazaarModel != null &&  bazaarModel.getSupply() != null;
+        boolean bazaarInProgress = bazaarModel != null &&  bazaarModel.getSupply() != null;
         boolean builderSecondTurnPart = builderState == BuilderState.SECOND_TURN;
         boolean hasAbbey = state.getPlayers().getPlayerTokenCount(state.getPlayers().getTurnPlayerIndex(), AbbeyToken.ABBEY_TILE) > 0;
-        if (hasAbbey && (builderSecondTurnPart || !baazaarInProgress)) {
+        if (hasAbbey && (builderSecondTurnPart || !bazaarInProgress)) {
             GameState _state = state;
             Stream<PlacementOption> options = state.getHoles()
                 .flatMap(t ->

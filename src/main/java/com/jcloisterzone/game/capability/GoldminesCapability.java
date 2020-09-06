@@ -36,9 +36,9 @@ import java.util.Map.Entry;
  */
 public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
 
-	public static enum GoldToken implements Token {
-		GOLD;
-	}
+	public enum GoldToken implements Token {
+		GOLD
+    }
 
 	private static final long serialVersionUID = 1L;
 
@@ -96,7 +96,6 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
         }
 
         // award gold pieces
-        java.util.Map<Position, Integer> initialGoldCount = new java.util.HashMap<>();
         java.util.List<Entry<Position, java.util.Set<Player>>> entries = new java.util.ArrayList<>(claimedGold.entrySet());
         java.util.Map<Player, Integer> awardedGold = new java.util.HashMap<>();
         java.util.Map<Player, java.util.Set<Position>> awardedGoldPositions = new java.util.HashMap<>();
@@ -117,7 +116,6 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
         for (Position pos : claimedGold.keySet()) {
             int count = placedGold.get(pos).getOrElse(0);
             goldPieces += count;
-            initialGoldCount.put(pos, count);
         }
         Player player = state.getTurnPlayer();
         while (goldPieces > 0) {
@@ -168,9 +166,9 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
             if (pieces == 0) {
                 continue;
             }
-            int points = 0;
+            int points;
             if (pieces < 4) {
-                points = 1 * pieces;
+                points = pieces;
             } else if (pieces < 7) {
                 points = 2 * pieces;
             } else if (pieces < 10) {

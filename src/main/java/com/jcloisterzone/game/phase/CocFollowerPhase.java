@@ -96,7 +96,7 @@ public class CocFollowerPhase extends Phase {
         Meeple m = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
 
         if (!fp.getLocation().isCityOfCarcassonneQuarter()) {
-            throw new IllegalArgumentException("Only deplpy to the City of Carcassone is allowed");
+            throw new IllegalArgumentException("Only deploy to the City of Carcassone is allowed");
         }
 
         state = (new DeployMeeple(m, fp)).apply(state);

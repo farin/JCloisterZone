@@ -1,8 +1,6 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.io.message.ExchangeFollowerChoiceMessage;
-import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.Set;
 
 /**

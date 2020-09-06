@@ -34,7 +34,7 @@ public class CleanUpTurnPhase extends Phase {
         Queue<BazaarItem> bazaarSupply = bazaarModel == null ? null : bazaarModel.getSupply();
         TilePack tilePack = state.getTilePack();
         if (tilePack.isEmpty() && bazaarSupply == null) {
-            // TODO allow placing Abbey if ebabled by custom rule (TODO add it, default is don't allow)
+            // TODO allow placing Abbey if enabled by custom rule (TODO add it, default is don't allow)
             // but don't add fairy points during this special turns
             return next(state, GameOverPhase.class);
         } else {

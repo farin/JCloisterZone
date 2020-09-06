@@ -65,9 +65,8 @@ public class ImmutablePoint {
     }
 
     /**
-     * Rotates ImmutablePoint on initial sized tile.
-     * @param p ImmutablePoint to rotate
-     * @param d how roatate
+     * Rotates ImmutablePoint on initial sized tile.*
+     * @param r how roatate
      * @return rotated ImmutablePoint
      */
     public ImmutablePoint rotate100(Rotation r) {

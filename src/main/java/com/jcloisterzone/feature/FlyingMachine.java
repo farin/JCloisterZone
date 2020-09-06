@@ -46,6 +46,6 @@ public class FlyingMachine implements Structure {
 
     public Location getDirection() {
         return direction;
-    };
+    }
 
 }

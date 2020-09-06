@@ -19,7 +19,7 @@ public class CapabilitiesState implements Serializable {
     private final Map<Class<? extends Capability<?>>, Object> models;
 
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked"})
     public static CapabilitiesState createInitial(Seq<Capability<?>> capabilities) {
         return new CapabilitiesState(
             capabilities.toMap(cap -> new Tuple2(cap.getClass(), cap)),

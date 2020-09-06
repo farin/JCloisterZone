@@ -89,16 +89,14 @@ public class EscapePhase extends Phase {
         Meeple meeple = state.getDeployedMeeples().find(m -> ptr.match(m._1)).map(t -> t._1)
             .getOrElseThrow(() -> new IllegalArgumentException("Pointer doesn't match any meeple"));
 
-        switch (msg.getSource()) {
-        case SIEGE_ESCAPE:
-            ReturnMeepleAction escapeAction = (ReturnMeepleAction) state.getAction();
-            assert escapeAction.getSource() == ReturnMeepleSource.SIEGE_ESCAPE;
-            if (!escapeAction.getOptions().contains(ptr)) {
-                throw new IllegalArgumentException("Pointer doesn't match action");
-            }
-            break;
-        default:
+        if (msg.getSource() != ReturnMeepleSource.SIEGE_ESCAPE) {
             throw new IllegalArgumentException("Return meeple is not allowed");
+        }
+
+        ReturnMeepleAction escapeAction = (ReturnMeepleAction) state.getAction();
+        assert escapeAction.getSource() == ReturnMeepleSource.SIEGE_ESCAPE;
+        if (!escapeAction.getOptions().contains(ptr)) {
+            throw new IllegalArgumentException("Pointer doesn't match action");
         }
 
         state = (new UndeployMeeple(meeple, true)).apply(state);

@@ -124,7 +124,7 @@ public class PlaceTile implements Reducer {
                                         feature.getPlaces().find(fp -> fp.getPosition().equals(pos)).get(),
                                         multiEdge._1
                                 ));
-                                // if is not updated yet put it there anyway to make bellow statetement fpUpdate.get(t._1) works in any case
+                                // if is not updated yet put it there anyway to make bellow statement fpUpdate.get(t._1) works in any case
                                 if (!fpUpdate.containsKey(fullFp)) {
                                     fpUpdate.put(fullFp, adj);
                                 }

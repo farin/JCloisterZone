@@ -8,13 +8,11 @@ import io.vavr.Tuple2;
 import io.vavr.collection.List;
 
 public class Game {
-    private GameSetup gameSetup;
     private GameState state;
     private List<ReplayableMessage> replay;
     private List<UndoHistoryItem> undoHistory = List.empty();
 
     public Game(GameSetup gameSetup) {
-        this.gameSetup = gameSetup;
         replay = List.empty();
     }
 

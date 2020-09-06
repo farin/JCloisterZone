@@ -21,9 +21,9 @@ import io.vavr.collection.*;
  */
 public final class TowerCapability extends Capability<Array<List<Follower>>> {
 
-	public static enum TowerToken implements Token {
-		TOWER_PIECE;
-	}
+	public enum TowerToken implements Token {
+		TOWER_PIECE
+    }
 
 	private static final long serialVersionUID = 1L;
 

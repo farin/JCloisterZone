@@ -2,8 +2,6 @@ package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
-import com.jcloisterzone.io.message.Message;
-import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import io.vavr.collection.Set;
 
 public class NeutralFigureAction extends AbstractPlayerAction<FeaturePointer> implements SelectFeatureAction {

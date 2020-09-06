@@ -110,7 +110,7 @@ public abstract class AbstractActionPhase extends Phase {
                 if (meeples.find(m -> !(m instanceof Shepherd)).isEmpty()) {
                     // no meeples except Shepherd is on feature
                     return true;
-                };
+                }
                 if (struct instanceof Road && ((Road) struct).isLabyrinth()) {
                     // find if there is empty labyrinth segment
                     Set<FeaturePointer> segment = ((Road) struct).findSegmentBorderedBy(state, t._1,

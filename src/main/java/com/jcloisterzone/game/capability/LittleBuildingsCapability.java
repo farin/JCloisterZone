@@ -20,11 +20,11 @@ import java.util.Arrays;
  */
 public class LittleBuildingsCapability extends Capability<Map<Position, LittleBuilding>> {
 
-	public static enum LittleBuilding implements Token {
+	public enum LittleBuilding implements Token {
 		LB_SHED,
 		LB_HOUSE,
-		LB_TOWER;
-	}
+		LB_TOWER
+    }
 
     @Override
     public GameState onStartGame(GameState state) {

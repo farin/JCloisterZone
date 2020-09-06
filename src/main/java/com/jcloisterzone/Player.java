@@ -11,7 +11,6 @@ import io.vavr.collection.Vector;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.Objects;
 
 /**
  * Represents a player.

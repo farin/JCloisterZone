@@ -22,11 +22,11 @@ import io.vavr.collection.Set;
  */
 public final class TunnelCapability extends Capability<Map<FeaturePointer, PlacedTunnelToken>> {
 
-	public static enum Tunnel implements Token {
+	public enum Tunnel implements Token {
 		TUNNEL_A,
 		TUNNEL_B,
-		TUNNEL_C;
-	}
+		TUNNEL_C
+    }
 
 	private static final long serialVersionUID = 1L;
 

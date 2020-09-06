@@ -18,12 +18,14 @@ public class FlierCapability extends Capability<Void> {
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         Vector<Element> flyingMachineEl = XMLUtils.getElementStreamByTagName(tileElements, "flying-machine").toVector();
-        assert flyingMachineEl.size() <= 1;
-        for (Element el : flyingMachineEl) {
-            Location direction = Location.valueOf(el.getAttribute("direction"));
+        if (flyingMachineEl.size() == 0) {
+            return tile;
+        }
+        if (flyingMachineEl.size() == 1) {
+            Location direction = Location.valueOf(flyingMachineEl.get().getAttribute("direction"));
             FlyingMachine feature = new FlyingMachine(new FeaturePointer(Position.ZERO, Location.FLYING_MACHINE), direction);
             return tile.setInitialFeatures(tile.getInitialFeatures().put(Location.FLYING_MACHINE, feature));
         }
-        return tile;
+        throw new IllegalStateException("multiple <flying-machine> elements");
     }
 }

@@ -4,7 +4,7 @@ import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.BridgeCapability;
-import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
+import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import io.vavr.Predicates;
@@ -66,7 +66,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
 
     default Stream<PlacementOption> getTilePlacements(Tile tile) {
         boolean playerHasBridge = getPlayers().getPlayerTokenCount(
-            getTurnPlayer().getIndex(), BrigeToken.BRIDGE) > 0;
+            getTurnPlayer().getIndex(), BridgeToken.BRIDGE) > 0;
 
         EdgePattern basePattern = tile.getEdgePattern();
         Vector<Tuple2<EdgePattern, Location>> baseBridgePatterns = playerHasBridge ? _This.getBridgePatterns(basePattern) : null;

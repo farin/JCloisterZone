@@ -84,7 +84,7 @@ public class StateGsonBuilder {
         builder.registerTypeAdapter(TunnelAction.class, new TunnelActionSerializer());
         builder.registerTypeAdapter(FerriesAction.class, new FerriesActionSerializer());
         builder.registerTypeAdapter(GoldPieceAction.class, new GoldPieceActionSerializer());
-        builder.registerTypeAdapter(RemovMageOrWitchAction.class, new ActionSerializer("RemoveMageOrWitch"));
+        builder.registerTypeAdapter(RemoveMageOrWitchAction.class, new ActionSerializer("RemoveMageOrWitch"));
         builder.registerTypeAdapter(LittleBuildingAction.class, new LittleBuildingActionSerializer());
         return builder.create();
     }

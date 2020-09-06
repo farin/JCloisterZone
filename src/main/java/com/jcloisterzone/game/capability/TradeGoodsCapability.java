@@ -23,11 +23,11 @@ import org.w3c.dom.Element;
 
 public class TradeGoodsCapability extends Capability<Void> {
 
-	public static enum TradeGoods implements Token {
+	public enum TradeGoods implements Token {
 	    WINE,
 	    CLOTH,
-	    GRAIN;
-	}
+	    GRAIN
+    }
 
     private static final int RESOURCE_POINTS = 10;
 

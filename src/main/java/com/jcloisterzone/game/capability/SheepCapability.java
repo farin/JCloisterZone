@@ -14,7 +14,7 @@ import java.util.function.Function;
  */
 public class SheepCapability extends Capability<Map<FeaturePointer, List<SheepToken>>> {
 
-	public static enum SheepToken implements Token {
+	public enum SheepToken implements Token {
 	    SHEEP_1X,
 	    SHEEP_2X,
 	    SHEEP_3X,

@@ -16,14 +16,12 @@ import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Seq;
-import io.vavr.collection.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -130,7 +128,7 @@ public class GameStateBuilder {
 
     private Capability<?> createCapabilityInstance(Class<? extends Capability<?>> clazz) {
         try {
-            return clazz.newInstance();
+            return clazz.getConstructor().newInstance();
         } catch (Exception e) {
             throw new RuntimeException("Unable to create " + clazz.getSimpleName(), e);
         }
@@ -154,7 +152,7 @@ public class GameStateBuilder {
                         followers = followers.append((Follower) ctor.newInstance(idProvider.generateId(t._1), p));
                     }
                 } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    new RuntimeException(e);
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -172,7 +170,7 @@ public class GameStateBuilder {
                         specials = specials.append((Special) ctor.newInstance(idProvider.generateId(t._1), p));
                     }
                 } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    new RuntimeException(e);
+                    throw new RuntimeException(e);
                 }
             }
         }

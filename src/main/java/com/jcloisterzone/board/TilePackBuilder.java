@@ -16,7 +16,6 @@ import org.w3c.dom.NodeList;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -95,7 +94,6 @@ public class TilePackBuilder {
     }
 
 
-    @SuppressWarnings("unchecked")
     public TilePack createTilePack() throws IOException {
         java.util.Map<String, Integer> tilesCount = new java.util.HashMap<>();
         java.util.Set<String> removedTiles = new java.util.HashSet<>();
@@ -127,7 +125,7 @@ public class TilePackBuilder {
         }
 
         definitions.forEach(path -> {
-            InputStream defFile = null;
+            InputStream defFile;
             try {
                 defFile = TilePackBuilder.class.getClassLoader().getResource(path).openStream();
             } catch (IOException e) {
@@ -164,7 +162,7 @@ public class TilePackBuilder {
         });
 
         definitions.forEach(path -> {
-            InputStream defFile = null;
+            InputStream defFile;
             try {
                 defFile = TilePackBuilder.class.getClassLoader().getResource(path).openStream();
             } catch (IOException e) {

@@ -2,7 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.RemovMageOrWitchAction;
+import com.jcloisterzone.action.RemoveMageOrWitchAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -58,7 +58,7 @@ public class MageAndWitchPhase extends Phase {
                 /*  If it is not possible to place or move the mage or witch figure
                 (because there are no unfinished cities or roads), the player must
                 remove either the mage or witch from the board, if at least one is on a tile. */
-                RemovMageOrWitchAction action = new RemovMageOrWitchAction(HashSet.of(ns.getMage(), ns.getWitch()));
+                RemoveMageOrWitchAction action = new RemoveMageOrWitchAction(HashSet.of(ns.getMage(), ns.getWitch()));
                 return promote(state.setPlayerActions(
                     new ActionsState(state.getTurnPlayer(), action, false)
                 ));

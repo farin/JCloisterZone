@@ -199,7 +199,7 @@ public class TilePack implements Serializable {
     /**
      * Draws random tile  {@code index}.
      *
-     * @param radom random number generator
+     * @param random random number generator
      * @return a tuple containing both the tile drawn and the tile pack it belongs to
      * @throws IllegalArgumentException if {@code index} is not strictly less than the size of the pack
      */

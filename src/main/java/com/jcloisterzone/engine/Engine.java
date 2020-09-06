@@ -25,7 +25,6 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.jar.Manifest;
 
@@ -37,11 +36,8 @@ public class Engine implements  Runnable {
     private final Gson gson;
     private MessageParser parser = new MessageParser();
 
-    private Random random = new Random();
-
     private Game game;
     private long initialSeed;
-    protected int slotSerial;
 
     private boolean bulk;
 
@@ -51,7 +47,6 @@ public class Engine implements  Runnable {
         this.err = err;
 
         gson = new StateGsonBuilder().create();
-        initialSeed = random.nextLong();
     }
 
     private Map<Class<? extends Meeple>, Integer> addMeeples(
@@ -192,7 +187,7 @@ public class Engine implements  Runnable {
 
     @Override
     public void run() {
-        String line = null;
+        String line;
 
         while (true) {
             line = in.nextLine();
@@ -250,7 +245,7 @@ public class Engine implements  Runnable {
                 state = phaseReducer.apply(state, msg);
 
                 Player newActivePlayer = state.getActivePlayer();
-                boolean undoAllowed = !(msg instanceof SaltMessage)
+                boolean undoAllowed = (!(msg instanceof SaltMessage) || ((SaltMessage) msg).getSalt() == null)
                         && newActivePlayer != null
                         && newActivePlayer.equals(oldActivePlayer)
                         && !(msg instanceof DeployMeepleMessage && ((DeployMeepleMessage)msg).getMeepleId().contains("shepherd"));

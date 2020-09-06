@@ -71,7 +71,7 @@ public interface BoardMixin {
             if (maxX < pos.x) maxX = pos.x;
             if (minY > pos.y) minY = pos.y;
             if (maxY < pos.y) maxY = pos.y;
-        };
+        }
         return new Rectangle(minX, minY, maxX - minX, maxY - minY);
     }
 

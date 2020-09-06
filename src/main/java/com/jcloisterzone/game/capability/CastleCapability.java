@@ -19,9 +19,9 @@ import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 public class CastleCapability extends Capability<Void> {
 
-	public static enum CastleToken implements Token {
-		CASTLE;
-	}
+	public enum CastleToken implements Token {
+		CASTLE
+    }
 
 	private static final long serialVersionUID = 1L;
 

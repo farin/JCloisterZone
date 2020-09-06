@@ -72,7 +72,7 @@ public class WagonPhase extends Phase {
     private Stream<Tuple2<FeaturePointer, Feature>> getAdjacentFeatures(GameState state, Completable feature, FeaturePointer source) {
         if ("C1".equals(state.getStringRule(Rule.WAGON_MOVE))) {
             return Stream.ofAll(feature.getNeighboring())
-                    .map(fp -> new Tuple2(fp, state.getFeature(fp)));
+                    .map(fp -> new Tuple2<>(fp, state.getFeature(fp)));
         } else {
             Position sourcePos = source.getPosition();
             return Stream.ofAll(Position.ADJACENT_AND_DIAGONAL.values())
@@ -81,7 +81,7 @@ public class WagonPhase extends Phase {
                     .flatMap(pos -> {
                         return state.getTileFeatures2(pos, Structure.class).map(t -> {
                             FeaturePointer fp = new FeaturePointer(pos, t._1);
-                            return new Tuple2<>(fp, (Feature) t._2);
+                            return new Tuple2<>(fp, t._2);
                         });
                     });
         }

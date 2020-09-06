@@ -21,7 +21,7 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
-import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
+import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
 import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.PrincessCapability;
@@ -55,23 +55,25 @@ public class ActionPhase extends AbstractActionPhase {
 
         Vector<PlayerAction<?>> actions = prepareMeepleActions(state, meepleTypes);
 
-        GameState nextState = state.setPlayerActions(
+        state = state.setPlayerActions(
             new ActionsState(player, actions, true)
         );
 
-        for (Capability<?> cap : nextState.getCapabilities().toSeq()) {
-            nextState = cap.onActionPhaseEntered(nextState);
+        for (Capability<?> cap : state.getCapabilities().toSeq()) {
+            state = cap.onActionPhaseEntered(state);
         }
 
         if (state.getCapabilities().contains(PrincessCapability.class) &&
                 "must".equals(state.getStringRule(Rule.PRINCESS_ACTION))) {
-            ReturnMeepleAction princessAction = (ReturnMeepleAction) actions.find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.PRINCESS).getOrNull();
+            ReturnMeepleAction princessAction = (ReturnMeepleAction) state.getPlayerActions().getActions().
+                    find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.PRINCESS).getOrNull();
             if (princessAction != null) {
                 actions = Vector.of(princessAction);
+                state = state.setPlayerActions(new ActionsState(player, actions, false));
             }
         }
 
-        return promote(nextState);
+        return promote(state);
     }
 
     @PhaseMessageHandler
@@ -194,7 +196,7 @@ public class ActionPhase extends AbstractActionPhase {
         if (token instanceof TowerToken) {
         	return handlePlaceTower(state, msg);
         }
-        if (token instanceof BrigeToken) {
+        if (token instanceof BridgeToken) {
         	return handlePlaceBridge(state, msg);
         }
         throw new IllegalArgumentException(String.format("%s placement is not allowed", token));

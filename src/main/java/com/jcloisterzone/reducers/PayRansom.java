@@ -44,7 +44,7 @@ public class PayRansom implements Reducer {
             throw new IllegalArgumentException(String.format("No such prisoner %s.", meepleId));
         }
         if (!follower.getPlayer().equals(player)) {
-            new IllegalArgumentException("Cannot pay ransom for opponent's follower.");
+            throw new IllegalArgumentException("Cannot pay ransom for opponent's follower.");
         }
 
         Player _jailer = jailer;

@@ -1,8 +1,6 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.io.message.Message;
-import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import io.vavr.collection.Set;
 
 //TODO generic NeutralMeepleAction ?

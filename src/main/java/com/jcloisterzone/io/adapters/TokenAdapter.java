@@ -8,7 +8,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.jcloisterzone.game.Token;
-import com.jcloisterzone.game.capability.BridgeCapability.BrigeToken;
+import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
 import com.jcloisterzone.game.capability.CastleCapability.CastleToken;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
@@ -34,7 +34,7 @@ public class TokenAdapter extends TypeAdapter<Token> {
             String token = in.nextString();
             switch (token) {
             case "TOWER_PIECE": return TowerToken.TOWER_PIECE;
-            case "BRIDGE": return BrigeToken.BRIDGE;
+            case "BRIDGE": return BridgeToken.BRIDGE;
             case "LB_SHED": return LittleBuilding.LB_SHED;
             case "LB_HOUSE": return LittleBuilding.LB_HOUSE;
             case "LB_TOWER": return LittleBuilding.LB_TOWER;

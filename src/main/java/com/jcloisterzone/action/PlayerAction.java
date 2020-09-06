@@ -1,7 +1,6 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.io.message.CornCircleRemoveOrDeployMessage;
-import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.Iterator;
 import io.vavr.collection.Set;
 
@@ -22,7 +21,7 @@ public interface PlayerAction<T> extends Iterable<T>, Serializable {
      * @return an iterator over the options the player can choose from
      */
     @Override
-    default public Iterator<T> iterator() {
+    default Iterator<T> iterator() {
         return getOptions().iterator();
     }
 
@@ -31,14 +30,14 @@ public interface PlayerAction<T> extends Iterable<T>, Serializable {
      *
      * @return the options the player can choose from
      */
-    public Set<T> getOptions();
+    Set<T> getOptions();
 
     /**
      * Checks whether there are any options.
      *
      * @return {@code true} if there are no options, {@code false} otherwise
      */
-    default public boolean isEmpty() {
+    default boolean isEmpty() {
         return getOptions().isEmpty();
     }
 }

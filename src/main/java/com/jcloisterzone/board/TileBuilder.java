@@ -87,9 +87,9 @@ public class TileBuilder {
         	}
         	City target = (City) matched.getValue();
         	assert target.getOpenEdges().contains(multiEdge._1.toEdge());
-        	Set<Tuple2<ShortEdge, FeaturePointer>> targeMultiEdges = target.getMultiEdges();
-        	targeMultiEdges = targeMultiEdges.add(new Tuple2<>(multiEdge._1, multiEdge._3));
-        	target = target.setMultiEdges(targeMultiEdges);
+        	Set<Tuple2<ShortEdge, FeaturePointer>> targetMultiEdges = target.getMultiEdges();
+        	targetMultiEdges = targetMultiEdges.add(new Tuple2<>(multiEdge._1, multiEdge._3));
+        	target = target.setMultiEdges(targetMultiEdges);
         	features.put(matched.getKey(), target);
         }
 
@@ -97,7 +97,7 @@ public class TileBuilder {
         Tile tileDef = new Tile(tileId, _features);
 
         features = null;
-        tileId = null;
+        this.tileId = null;
 
         return tileDef;
     }

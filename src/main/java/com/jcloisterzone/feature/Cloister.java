@@ -105,7 +105,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
     }
 
     public HashMap<Player, Integer> getMonasteryPowers(GameState state) {
-        return getMonasteryFollowers2(state).foldLeft(HashMap.<Player, Integer>empty(), (acc, follower2) -> {
+        return getMonasteryFollowers2(state).foldLeft(HashMap.empty(), (acc, follower2) -> {
                 Follower follower = follower2._1;
                 FeaturePointer fp = follower2._2;
                 Player player = follower.getPlayer();

@@ -4,8 +4,6 @@ import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.io.message.PlaceTileMessage;
-import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 

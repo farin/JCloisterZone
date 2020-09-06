@@ -7,7 +7,6 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.game.RandomGenerator;
-import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -60,17 +59,6 @@ public abstract class AbstractCocScoringPhase extends Phase {
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
         PlacedTile lastPlaced = state.getLastPlaced();
         Position lastPlacedPos = lastPlaced.getPosition();
-
-        java.util.Set<Completable> justPlacedAbbeyAdjacent = new java.util.HashSet<>();
-        if (AbbeyCapability.isAbbey(lastPlaced.getTile())) {
-            for (Tuple2<Location, PlacedTile> t : state.getAdjacentTiles2(lastPlacedPos)) {
-                PlacedTile pt = t._2;
-                Feature feature = state.getFeaturePartOf(new FeaturePointer(pt.getPosition(), t._1.rev()));
-                if (feature instanceof Completable) {
-                    justPlacedAbbeyAdjacent.add((Completable) feature);
-                }
-            }
-        }
 
         Function<Feature, Boolean> filter = getAllowedFeaturesFilter(state);
 

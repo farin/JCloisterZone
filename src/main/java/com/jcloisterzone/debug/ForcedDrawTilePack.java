@@ -9,6 +9,8 @@ import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Queue;
 
+import java.util.Objects;
+
 /**
  * Tile pack with predefined draw order.
  * Intended for debugging and integration test.
@@ -73,7 +75,7 @@ public class ForcedDrawTilePack extends TilePack {
     }
 
     private ForcedDrawTilePack setDrawLimit(Integer drawLimit) {
-        if (this.drawLimit == drawLimit) return this;
+        if (Objects.equals(this.drawLimit, drawLimit)) return this;
         return new ForcedDrawTilePack(getGroups(), getHiddenUnderHills(), drawQueue, drawLimit);
     }
 

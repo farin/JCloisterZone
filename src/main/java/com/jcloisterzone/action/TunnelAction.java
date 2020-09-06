@@ -2,8 +2,6 @@ package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
-import com.jcloisterzone.io.message.PlaceTokenMessage;
-import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.Set;
 
 public class TunnelAction extends AbstractPlayerAction<FeaturePointer> implements SelectFeatureAction {

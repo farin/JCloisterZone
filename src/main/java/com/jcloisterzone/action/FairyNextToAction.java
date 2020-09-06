@@ -1,8 +1,6 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.io.message.Message;
-import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import io.vavr.collection.Set;
 
 public class FairyNextToAction extends AbstractPlayerAction<MeeplePointer> {

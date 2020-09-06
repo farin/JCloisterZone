@@ -15,7 +15,7 @@ import io.vavr.collection.HashMap;
  */
 public class AbbeyCapability extends Capability<Integer> {
 
-	public static enum AbbeyToken implements Token {
+	public enum AbbeyToken implements Token {
 		ABBEY_TILE // represent Abbey tile in player's supply
 	}
 

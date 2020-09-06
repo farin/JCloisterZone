@@ -12,6 +12,7 @@ import io.vavr.collection.Seq;
 import io.vavr.control.Option;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -161,7 +162,7 @@ public class PlayersState implements Serializable {
      * @return a new instance with the turn player index updated
      */
     public PlayersState setTurnPlayerIndex(Integer turnPlayerIndex) {
-        if (this.turnPlayerIndex == turnPlayerIndex) return this;
+        if (Objects.equals(this.turnPlayerIndex, turnPlayerIndex)) return this;
         return new PlayersState(
             players, score, tokens, turnPlayerIndex,
             followers, specialMeeples

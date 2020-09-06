@@ -32,7 +32,7 @@ public enum Rule {
     Class<?> type;
     Object[] allowedValues;
 
-    private Rule(String key, Class<?> type, Object[] allowedValues) {
+    Rule(String key, Class<?> type, Object[] allowedValues) {
         this.key = key;
         this.type = type;
         this.allowedValues = allowedValues;

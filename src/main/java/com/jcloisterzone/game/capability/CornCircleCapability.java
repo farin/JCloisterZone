@@ -38,9 +38,11 @@ public class CornCircleCapability extends Capability<CornCircleOption> {
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         Vector<Element> circleEl = XMLUtils.getElementStreamByTagName(tileElements, "corn-circle").toVector();
-        assert circleEl.size() <= 1;
-        for (Element el : circleEl) {
-            String type = el.getAttribute("type");
+		if (circleEl.size() == 0) {
+			return tile;
+		}
+		if (circleEl.size() == 1) {
+            String type = circleEl.get().getAttribute("type");
             CornCircleModifier modifier;
             switch (type) {
             case "Road":
@@ -56,10 +58,10 @@ public class CornCircleCapability extends Capability<CornCircleOption> {
             	modifier = CORN_CIRCLE_FARM;
             	break;
             default:
-            	throw new IllegalArgumentException("Invalid corn cicle type.");
+            	throw new IllegalArgumentException("Invalid corn circle type.");
             }
             return tile.addTileModifier(modifier);
         }
-        return tile;
+        throw new IllegalStateException("multiple <corn-circle> elements");
     }
 }

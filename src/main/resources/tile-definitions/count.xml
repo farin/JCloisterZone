@@ -23,7 +23,7 @@
     <tile id="CO/6">
     </tile>
     <tile id="CO/7">
-      <!-- all quarters are bount to this tile -->
+      <!-- all quarters are bound to this tile -->
     </tile>
     <tile id="CO/8">
       <farm>NR EL ER SL</farm>

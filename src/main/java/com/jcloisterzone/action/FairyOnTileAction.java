@@ -1,8 +1,6 @@
 package com.jcloisterzone.action;
 
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
-import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.Set;
 
 public class FairyOnTileAction extends SelectTileAction {

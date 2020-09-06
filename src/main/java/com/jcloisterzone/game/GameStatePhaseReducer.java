@@ -103,7 +103,7 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
             if (m.getAnnotation(PhaseMessageHandler.class) == null) {
                 continue;
             }
-            Class<?> params[] = m.getParameterTypes();
+            Class<?>[] params = m.getParameterTypes();
             assert params.length == 2;
 
             Class<?> acceptedMessageClass = params[1];

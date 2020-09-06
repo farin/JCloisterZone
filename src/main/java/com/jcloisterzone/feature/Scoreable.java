@@ -30,7 +30,7 @@ public interface Scoreable extends Structure {
     	boolean useHillTiebreaker = state.hasCapability(HillCapability.class);
     	boolean useOnHillCount = "number-of-followers".equals(state.getStringRule(Rule.HILL_TIEBREAKER));
         return getFollowers2(state)
-            .foldLeft(HashMap.<Player, Tuple2<Integer, Integer>>empty(), (acc, follower2) -> {
+            .foldLeft(HashMap.empty(), (acc, follower2) -> {
             	Follower follower = follower2._1;
             	FeaturePointer fp = follower2._2;
                 Player player = follower.getPlayer();

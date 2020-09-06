@@ -42,11 +42,11 @@ public interface CloisterLike extends Completable {
             return null;
         }
         Position cloisterPos = getPosition();
-        Seq<LittleBuilding> buldingsSeq = buildings.filterKeys(pos ->
+        Seq<LittleBuilding> buildingsSeq = buildings.filterKeys(pos ->
             Math.abs(pos.x - cloisterPos.x) <= 1 && Math.abs(pos.y - cloisterPos.y) <= 1
         ).values();
 
-        return LittleBuildingsCapability.getBuildingsPoints(state, buldingsSeq);
+        return LittleBuildingsCapability.getBuildingsPoints(state, buildingsSeq);
     }
 
 }

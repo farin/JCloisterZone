@@ -13,9 +13,9 @@ import org.w3c.dom.Element;
 /* model is map of placed ferries */
 public class FerriesCapability extends Capability<FerriesCapabilityModel> {
 
-	public static enum FerryToken implements Token {
-		FERRY;
-	}
+	public enum FerryToken implements Token {
+		FERRY
+    }
 
 	public static final TileModifier LAKE_FERRY = new TileModifier("LakeFerry");
 
