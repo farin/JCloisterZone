@@ -11,15 +11,4 @@ public class CaptureFollowerAction extends AbstractPlayerAction<MeeplePointer> {
         super(options);
     }
 
-    @Override
-    public Message select(MeeplePointer mp) {
-        return new CaptureFollowerMessage(mp);
-    }
-
-    @Override
-    public String toString() {
-        return "take prisoner";
-    }
-
-
 }

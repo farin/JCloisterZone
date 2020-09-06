@@ -8,27 +8,16 @@ import io.vavr.collection.HashSet;
 
 import java.util.Arrays;
 
-public class CornCircleSelectDeployOrRemoveAction extends AbstractPlayerAction<CornCircleOption> {
+public class CornCircleSelectDeployOrRemoveAction extends AbstractPlayerAction<Void> {
 
     private Class<? extends Feature> cornType;
 
     public CornCircleSelectDeployOrRemoveAction( Class<? extends Feature> cornType) {
-        super(HashSet.ofAll(Arrays.asList(CornCircleOption.values())));
+        super(null);
         this.cornType = cornType;
     }
 
     public Class<? extends Feature> getCornType() {
         return cornType;
     }
-
-    @Override
-    public Message select(CornCircleOption option) {
-        return new CornCircleRemoveOrDeployMessage(option);
-    }
-
-    @Override
-    public String toString() {
-        return "DEPLOY or REMOVE";
-    }
-
 }

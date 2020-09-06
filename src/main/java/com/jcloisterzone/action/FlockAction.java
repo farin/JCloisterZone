@@ -8,26 +8,16 @@ import io.vavr.collection.HashSet;
 
 import java.util.Arrays;
 
-public class FlockAction extends AbstractPlayerAction<FlockOption> {
+public class FlockAction extends AbstractPlayerAction<Void> {
 
 	private MeeplePointer shepherdPointer;
 
 	public FlockAction(MeeplePointer shepherdPointer) {
-		super(HashSet.ofAll(Arrays.asList(FlockOption.values())));
+		super(null);
 		this.shepherdPointer = shepherdPointer;
 	}
 
 	public MeeplePointer getShepherdPointer() {
 		return shepherdPointer;
 	}
-
-	@Override
-	public Message select(FlockOption option) {
-		return new FlockMessage(option);
-	}
-
-	@Override
-    public String toString() {
-        return "EXPAND or SCORE";
-    }
 }

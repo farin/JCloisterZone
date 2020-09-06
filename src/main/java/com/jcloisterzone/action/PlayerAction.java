@@ -17,14 +17,6 @@ import java.io.Serializable;
 public interface PlayerAction<T> extends Iterable<T>, Serializable {
 
     /**
-     * Generates a WebSocket message that informs the receiver that the player chose the given {@code option}.
-     *
-     * @param option the option chosen
-     * @return the WebSocket message
-     */
-    public Message select(T option);
-
-    /**
      * Returns an iterator over the options the player can choose from.
      *
      * @return an iterator over the options the player can choose from

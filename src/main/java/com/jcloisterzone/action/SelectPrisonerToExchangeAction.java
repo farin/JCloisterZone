@@ -22,11 +22,6 @@ public class SelectPrisonerToExchangeAction extends AbstractPlayerAction<Followe
         this.justCapturedFollower = justCapturedFollower;
     }
 
-    @Override
-    public Message select(Follower follower) {
-        return new ExchangeFollowerChoiceMessage(follower.getId());
-    }
-
     public Follower getJustCapturedFollower() {
         return justCapturedFollower;
     }

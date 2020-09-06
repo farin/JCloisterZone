@@ -78,17 +78,6 @@ public class Player implements Serializable {
     }
 
     /**
-     * Gets the current score of the player.
-     *
-     * @param state the state of the game
-     * @return the score of the player
-     */
-    public int getPoints(GameState state) {
-        return state.getPlayers().getScore().get(index);
-    }
-
-
-    /**
      * Gets the followers of the player.
      *
      * @param state the state of the game
@@ -116,49 +105,6 @@ public class Player implements Serializable {
      */
     public Stream<Meeple> getMeeples(GameState state) {
         return Stream.concat(getFollowers(state), getSpecialMeeples(state));
-    }
-
-    /**
-     * Checks whether the player has any special meeple of a specific class.
-     *
-     * @param state the state of the game
-     * @param clazz the class of interest
-     * @return {@code true} if the player has special meeples of the given class, {@code otherwise}
-     */
-    public boolean hasSpecialMeeple(GameState state, Class<? extends Special> clazz) {
-        assert !Modifier.isAbstract(clazz.getModifiers());
-        return !Stream.ofAll(getSpecialMeeples(state))
-            .filter(m -> m.getClass().equals(clazz))
-            .filter(m -> m.isInSupply(state))
-            .isEmpty();
-    }
-
-    /**
-     * Checks if the player has any followers.
-     *
-     * @param state the state of the game
-     * @return {@code true} if the player has followers, {@code otherwise}
-     */
-    public boolean hasFollower(GameState state) {
-        return !Stream.ofAll(getFollowers(state))
-            .filter(m -> m.isInSupply(state))
-            .isEmpty();
-    }
-
-    /**
-     * Checks whether the player has any follower of a specific class.
-     *
-     * @param state the state of the game
-     * @param clazz the class of interest
-     * @return {@code true} if the player has followers of the given class, {@code otherwise}
-     */
-    public boolean hasFollower(GameState state, Class<? extends Follower> clazz) {
-        assert !Modifier.isAbstract(clazz.getModifiers());
-        //check equality not instanceOf - phantom is subclass of small follower
-        return !Stream.ofAll(getFollowers(state))
-                .filter(m -> m.getClass().equals(clazz))
-                .filter(m -> m.isInSupply(state))
-                .isEmpty();
     }
 
     /**

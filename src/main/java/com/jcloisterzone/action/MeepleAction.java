@@ -46,11 +46,6 @@ public class MeepleAction implements SelectFeatureAction {
     }
 
     @Override
-    public Message select(FeaturePointer fp) {
-        return new DeployMeepleMessage(fp, getMeepleIdFor(fp), null);
-    }
-
-    @Override
     public Set<FeaturePointer> getOptions() {
         return options.values().foldLeft(HashSet.empty(), (res, o) -> res.union(o));
     }
@@ -58,11 +53,6 @@ public class MeepleAction implements SelectFeatureAction {
     @Override
     public boolean isEmpty() {
         return options.values().foldLeft(true, (res, o) -> res && o.isEmpty());
-    }
-
-    @Override
-    public String toString() {
-        return "place " + meepleType.getSimpleName();
     }
 
     public MeepleAction merge(MeepleAction ma) {

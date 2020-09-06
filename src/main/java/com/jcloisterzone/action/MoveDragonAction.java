@@ -15,16 +15,6 @@ public class MoveDragonAction extends SelectTileAction {
         this.figureId = figureId;
     }
 
-    @Override
-    public Message select(Position target) {
-        return new MoveNeutralFigureMessage(figureId, target);
-    }
-
-    @Override
-    public String toString() {
-        return "move " + figureId;
-    }
-
     public String getFigureId() {
         return figureId;
     }

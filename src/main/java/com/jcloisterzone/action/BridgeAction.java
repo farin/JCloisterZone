@@ -14,16 +14,4 @@ public class BridgeAction extends AbstractPlayerAction<FeaturePointer> implement
         super(options);
     }
 
-    @Override
-    public Message select(FeaturePointer ptr) {
-        return new PlaceTokenMessage(BrigeToken.BRIDGE, ptr);
-    }
-
-    @Override
-    public String toString() {
-        return "place bridge";
-    }
-
-
-
 }

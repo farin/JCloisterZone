@@ -18,15 +18,4 @@ public class TunnelAction extends AbstractPlayerAction<FeaturePointer> implement
     public Tunnel getToken() {
         return token;
     }
-
-    @Override
-    public Message select(FeaturePointer ptr) {
-        return new PlaceTokenMessage(token, ptr);
-    }
-
-    @Override
-    public String toString() {
-        return "place tunnel";
-    }
-
 }

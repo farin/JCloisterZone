@@ -14,16 +14,6 @@ public class FairyOnTileAction extends SelectTileAction {
         this.figureId = figureId;
     }
 
-    @Override
-     public Message select(Position target) {
-        return new MoveNeutralFigureMessage(figureId, target);
-    }
-
-    @Override
-    public String toString() {
-        return "move fairy";
-    }
-
     public String getFigureId() {
         return figureId;
     }

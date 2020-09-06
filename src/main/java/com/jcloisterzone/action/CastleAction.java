@@ -12,14 +12,4 @@ public class CastleAction extends AbstractPlayerAction<FeaturePointer> implement
         super(options);
     }
 
-    @Override
-    public Message select(FeaturePointer ptr) {
-        return new PlaceTokenMessage(CastleToken.CASTLE, ptr);
-    }
-
-    @Override
-    public String toString() {
-        return "place castle";
-    }
-
 }

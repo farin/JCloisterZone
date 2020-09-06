@@ -25,8 +25,6 @@ public class GameState implements ActionsMixin, BoardMixin,
 
     private static final long serialVersionUID = 1L;
 
-    //TODO group some fields into sub states
-
     private final Map<Rule, Object> rules;
 
     private final CapabilitiesState capabilities;

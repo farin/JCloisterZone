@@ -6,13 +6,8 @@ package com.jcloisterzone.game;
  *
  */
 public enum Rule {
-    // RANDOM_SEATING_ORDER(null, Boolean.class,  "Randomize seating order"),
-
     FARMERS(null, Boolean.class, null),
     ESCAPE(null, Boolean.class, null),
-
-    // USE_PIG_HERDS_INDEPENDENTLY(Expansion.BASIC, Boolean.class, "Use pig herds independently (without T&B expansion)"),
-    // TODO set with capability
 
     PRINCESS_ACTION("princess-action", String.class, new Object[] { "may", "must" }),
     FAIRY_PLACEMENT("fairy-placement", String.class, new Object[] { "next-follower", "on-tile" }),
@@ -22,7 +17,6 @@ public enum Rule {
     BAZAAR_NO_AUCTION("bazaar-no-auction", Boolean.class, null),
     HILL_TIEBREAKER("hill-tiebreaker", String.class, new Object[] { "at-least-one-follower", "number-of-followers" }),
     ESCAPE_VARIANT("espace-variant", String.class, new Object[] { "any-tile", "siege-tile" }),
-    // TODO what about use second tile set?
     GQ11_PIG_HERD("gq11-pig-herd", String.class, new Object[] { "pig", "nothing" }),
     TUNNELIZE_OTHER_EXPANSIONS("tunnelize-other-expansions", Boolean.class, null),
     MORE_TUNNEL_TOKENS("more-tunnel-tokens", String.class, new Object[] { "3/2", "2/1", "1/1" }),
@@ -69,15 +63,4 @@ public enum Rule {
         }
         throw new IllegalArgumentException("Unknow key");
     }
-
-//    public static Map<Rule, Object> getDefaultRules() {
-//        return HashMap.of(
-//            FARMERS, true,
-//            PIG_HERD_ON_GQ_FARM, true,
-//            TUNNELIZE_ALL_EXPANSIONS, true,
-//            MORE_TUNNEL_TOKENS, true,
-//            ADVANCED_LABYRINTH, true
-//        );
-//    }
-
 }

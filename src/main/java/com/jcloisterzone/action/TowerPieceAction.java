@@ -14,14 +14,4 @@ public class TowerPieceAction extends SelectTileAction {
         super(options);
     }
 
-    @Override
-    public Message select(Position pos) {
-        return new PlaceTokenMessage(TowerToken.TOWER_PIECE, new FeaturePointer(pos, Location.TOWER));
-    }
-
-    @Override
-    public String toString() {
-        return "place tower piece";
-    }
-
 }

@@ -15,16 +15,6 @@ public class ReturnMeepleAction extends AbstractPlayerAction<MeeplePointer> {
         this.source = source;
     }
 
-    @Override
-    public Message select(MeeplePointer ptr) {
-        return new ReturnMeepleMessage(ptr, source);
-    }
-
-    @Override
-    public String toString() {
-        return "return meeple";
-    }
-
     public ReturnMeepleSource getSource() {
         return source;
     }

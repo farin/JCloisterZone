@@ -15,17 +15,7 @@ public class NeutralFigureAction extends AbstractPlayerAction<FeaturePointer> im
         this.figure = figure;
     }
 
-    @Override
-    public Message select(FeaturePointer target) {
-        return new MoveNeutralFigureMessage(figure.getId(), target);
-    }
-
     public NeutralFigure<FeaturePointer> getFigure() {
         return figure;
-    }
-
-    @Override
-    public String toString() {
-        return "move " + figure;
     }
 }

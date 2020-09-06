@@ -14,16 +14,6 @@ public class FairyNextToAction extends AbstractPlayerAction<MeeplePointer> {
         this.figureId = figureId;
     }
 
-    @Override
-     public Message select(MeeplePointer target) {
-        return new MoveNeutralFigureMessage(figureId, target);
-    }
-
-    @Override
-    public String toString() {
-        return "move fairy";
-    }
-
     public String getFigureId() {
         return figureId;
     }

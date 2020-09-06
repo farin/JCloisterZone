@@ -11,14 +11,5 @@ public class GoldPieceAction extends SelectTileAction {
     public GoldPieceAction(Set<Position> options) {
         super(options);
     }
-
-    @Override
-    public Message select(Position pos) {
-        return new PlaceTokenMessage(GoldToken.GOLD, pos);
-    }
-
-    @Override
-    public String toString() {
-        return "place gold piece";
-    }
 }
+

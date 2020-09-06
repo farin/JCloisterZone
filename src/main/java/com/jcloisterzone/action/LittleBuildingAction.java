@@ -15,11 +15,6 @@ public class LittleBuildingAction extends AbstractPlayerAction<LittleBuilding> {
         this.pos = pos;
     }
 
-    @Override
-    public Message select(LittleBuilding option) {
-        return new PlaceTokenMessage(option, pos);
-    }
-
     public Position getPosition() {
         return pos;
     }

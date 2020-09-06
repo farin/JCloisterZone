@@ -12,9 +12,4 @@ public class RemovMageOrWitchAction extends AbstractPlayerAction<NeutralFigure<F
         super(options);
     }
 
-    @Override
-    public Message select(NeutralFigure<FeaturePointer> option) {
-        return new MoveNeutralFigureMessage(option.getId(), null);
-    }
-
 }

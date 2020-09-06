@@ -57,7 +57,6 @@ public class Location implements Serializable {
         if (mask == 0) return null;
         Location loc = instances.get(mask);
         if (loc != null) return loc;
-        //TODO prepare name here
         return new Location(null, mask);
     }
 

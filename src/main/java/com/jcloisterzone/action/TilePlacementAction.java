@@ -31,14 +31,4 @@ public class TilePlacementAction extends AbstractPlayerAction<PlacementOption> {
             .map(tp -> tp.getRotation())
             .toSet();
     }
-
-    @Override
-    public Message select(PlacementOption tp) {
-        return new PlaceTileMessage(tile.getId(), tp.getRotation(), tp.getPosition());
-    }
-
-    @Override
-    public String toString() {
-        return "place tile " + tile.getId();
-    }
 }

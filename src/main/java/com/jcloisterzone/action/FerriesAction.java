@@ -12,8 +12,4 @@ public class FerriesAction extends AbstractPlayerAction<FeaturePointer> implemen
         super(options);
     }
 
-    @Override
-    public Message select(FeaturePointer option) {
-        return new PlaceTokenMessage(FerryToken.FERRY, option);
-    }
 }

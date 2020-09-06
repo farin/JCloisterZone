@@ -4,21 +4,12 @@ import com.jcloisterzone.io.message.CommitMessage;
 import com.jcloisterzone.io.message.Message;
 import io.vavr.collection.HashSet;
 
-public class ConfirmAction extends AbstractPlayerAction<Boolean> {
+public class ConfirmAction extends AbstractPlayerAction<Void> {
 
     private static final long serialVersionUID = 1L;
 
     public ConfirmAction() {
-        super(HashSet.of(Boolean.TRUE));
+        super(null);
     }
 
-    @Override
-    public Message select(Boolean target) {
-        return new CommitMessage();
-    }
-
-    @Override
-    public String toString() {
-        return "confirm actions";
-    }
 }
