@@ -14,7 +14,7 @@ public class GameSetupMessage extends AbstractMessage implements Message {
     private Map<String, Object> elements;
     private Map<String, Object> rules;
     private Map<String, Object> timer;
-    private ArrayList<PlayerSetup> players;
+    private int players;
     private ArrayList<PlacedTileItem> start;
     private Map<String, Object> gameAnnotations;
     private String initialSeed;
@@ -35,7 +35,7 @@ public class GameSetupMessage extends AbstractMessage implements Message {
         return timer;
     }
 
-    public ArrayList<PlayerSetup> getPlayers() {
+    public int getPlayers() {
         return players;
     }
 
@@ -51,23 +51,6 @@ public class GameSetupMessage extends AbstractMessage implements Message {
         return initialSeed;
     }
 
-    public static class PlayerSetup {
-        private int slot;
-        private String state;
-        private String name;
-
-        public int getSlot() {
-            return slot;
-        }
-
-        public String getState() {
-            return state;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
 
     public static class PlacedTileItem {
         private String tile;
@@ -78,11 +61,9 @@ public class GameSetupMessage extends AbstractMessage implements Message {
         public String getTile() {
             return tile;
         }
-
         public int getX() {
             return x;
         }
-
         public int getY() {
             return y;
         }

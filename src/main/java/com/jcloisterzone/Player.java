@@ -20,27 +20,14 @@ import java.util.Objects;
 public class Player implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    final private String nick;
     final private int index;
 
     /**
      * Instantiates a new Player.
-     *
-     * @param nick  the nickname of the player
      * @param index the index of the player
      */
-    public Player(String nick, int index) {
-        this.nick = nick;
+    public Player(int index) {
         this.index = index;
-    }
-
-    /**
-     * Gets the nickname of the player.
-     *
-     * @return the nickname of the player
-     */
-    public String getNick() {
-        return nick;
     }
 
     /**
@@ -55,7 +42,7 @@ public class Player implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(index, nick);
+        return index;
     }
 
     @Override
@@ -218,12 +205,8 @@ public class Player implements Serializable {
             .filter(Predicates.isNotNull());
     }
 
-//    public int getTokens(GameState state, Token token) {
-//        return state.getPlayers().getPlayerTokenCount(index, token);
-//    }
-
     @Override
     public String toString() {
-        return nick;
+        return "Player " + index;
     }
 }

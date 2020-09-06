@@ -12,7 +12,6 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.reducers.PlaceTile;
 import com.jcloisterzone.io.message.GameSetupMessage.PlacedTileItem;
-import com.jcloisterzone.io.message.GameSetupMessage.PlayerSetup;
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.LinkedHashMap;
@@ -33,7 +32,7 @@ public class GameStateBuilder {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final GameSetup setup;
-    private final ArrayList<PlayerSetup> playersSetup;
+    private final int playersCount;
 
     private Array<Player> players;
     private Map<String, Object> gameAnnotations;
@@ -41,9 +40,12 @@ public class GameStateBuilder {
     private GameState state;
 
 
-    public GameStateBuilder(GameSetup setup, ArrayList<PlayerSetup> playersSetup) {
+    public GameStateBuilder(GameSetup setup, int playersCount) {
+        if (playersCount < 1) {
+            throw new IllegalArgumentException("No player in game");
+        }
         this.setup = setup;
-        this.playersSetup = playersSetup;
+        this.playersCount = playersCount;
     }
 
     public GameState createInitialState() {
@@ -105,14 +107,12 @@ public class GameStateBuilder {
     }
 
     private void createPlayers() {
-        this.players = Stream.ofAll(playersSetup)
-            .foldLeft(Array.empty(), (arr, item) ->
-               arr.append(new Player(item.getName(), arr.size()))
-            );
-
-        if (this.players.isEmpty()) {
-            throw new IllegalStateException("No players in game");
+        this.players = Array.empty();
+        for (int i = 0; i < playersCount; i++) {
+            this.players = this.players.append(new Player(i));
         }
+
+
     }
 
     private void createTilePack() {

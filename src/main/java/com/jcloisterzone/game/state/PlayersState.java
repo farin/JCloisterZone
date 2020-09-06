@@ -327,9 +327,4 @@ public class PlayersState implements Serializable {
     public Player getTurnPlayer() {
         return turnPlayerIndex == null ? null : getPlayer(turnPlayerIndex);
     }
-
-    @Override
-    public String toString() {
-        return String.join(",", players.map(Player::getNick));
-    }
 }
