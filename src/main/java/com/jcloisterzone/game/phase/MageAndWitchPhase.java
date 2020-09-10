@@ -47,11 +47,7 @@ public class MageAndWitchPhase extends Phase {
         Stream<Completable> targetFeatures = state.getFeatures(Completable.class)
             .filter(f -> f != mageFeature && f != witchFeature)
             .filter(f -> f instanceof Road || f instanceof City)
-            .filter(f -> f.isOpen(_state))
-            .filter(f -> {
-                List<FeaturePointer> places = f.getPlaces();
-                return places.size() > 1 || !places.get().getPosition().equals(lastPlacedPos);
-            });
+            .filter(f -> f.isOpen(_state));
 
         if (targetFeatures.isEmpty()) {
             if (mageFeature != null && witchFeature != null) {
