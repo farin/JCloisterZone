@@ -40,7 +40,11 @@ public class CastleCapability extends Capability<Void> {
     }
 
     private Stream<Castle> getOccupiedCastles(GameState state) {
-        return state.getFeatures(Castle.class).filter(c -> c.isOccupied(state));
+        Position placedThisTurn = state.getLastPlaced().getPosition();
+        return state.getFeatures(Castle.class)
+                .filter(c -> c.isOccupied(state))
+                .filter(c -> !c.getTilePositions().contains(placedThisTurn));
+
     }
 
     public Tuple2<GameState, Map<Castle, ScoreFeatureReducer>> scoreCastles(GameState state, HashMap<Completable, ScoreFeatureReducer> completed) {
@@ -48,13 +52,9 @@ public class CastleCapability extends Capability<Void> {
         Array<Tuple2<Completable, ScoreFeatureReducer>> scored = Array.ofAll(completed).sortBy(t -> -t._2.getFeaturePoints().getPoints());
         HashMap<Castle, ScoreFeatureReducer> allScoredCastled = HashMap.empty();
 
-        Position placedThisTurn = state.getLastPlaced().getPosition();
+
 
         for (Castle castle : getOccupiedCastles(state)) {
-            if (castle.getTilePositions().contains(placedThisTurn)) {
-                continue;
-            }
-
             Set<Position> vicinity = castle.getVicinity();
             for (Tuple2<Completable, ScoreFeatureReducer> t : scored) {
                 if (!vicinity.intersect(t._1.getTilePositions()).isEmpty()) {
