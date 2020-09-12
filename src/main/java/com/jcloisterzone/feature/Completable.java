@@ -18,7 +18,7 @@ public interface Completable extends Scoreable {
     PointsExpression getPoints(GameState state);
 
     /** get feature points as completed/incompleted (as is)
-     *  and unaffected by Mage or Witch
+     *  and unaffected by Mage or Witch and little buildings
      */
     PointsExpression getStructurePoints(GameState state, boolean completed);
 }

@@ -144,7 +144,8 @@ public class Road extends CompletableFeature<Road> {
         return new Road(places, openEdges, neighboring, inn, labyrinth, openTunnelEnds);
     }
 
-    private PointsExpression getBasePoints(GameState state, boolean completed) {
+    @Override
+    public PointsExpression getStructurePoints(GameState state, boolean completed) {
         int tileCount = getTilePositions().size();
         if (inn && !completed) {
             return new PointsExpression(0, "road.incomplete-inn");
@@ -165,15 +166,9 @@ public class Road extends CompletableFeature<Road> {
 
     @Override
     public PointsExpression getPoints(GameState state) {
-        PointsExpression basePoints = getBasePoints(state, isCompleted(state));
+        PointsExpression basePoints = getStructurePoints(state, isCompleted(state));
         return getMageAndWitchPoints(state, basePoints).merge(getLittleBuildingPoints(state));
     }
-
-    @Override
-    public PointsExpression getStructurePoints(GameState state, boolean completed) {
-        return getBasePoints(state, completed).merge(getLittleBuildingPoints(state));
-    }
-
 
     public static String name() {
         return "Road";

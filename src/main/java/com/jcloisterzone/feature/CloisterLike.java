@@ -29,10 +29,9 @@ public interface CloisterLike extends Completable {
         return HashSet.of(getPosition());
     }
 
-
     @Override
-    default PointsExpression getStructurePoints(GameState state, boolean completed) {
-        return getPoints(state);
+    default PointsExpression getPoints(GameState state) {
+        return getStructurePoints(state, isCompleted(state)).merge(getLittleBuildingPoints(state));
     }
 
     @Override

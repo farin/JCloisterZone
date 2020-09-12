@@ -129,7 +129,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
     }
 
     @Override
-    public PointsExpression getPoints(GameState state) {
+    public PointsExpression getStructurePoints(GameState state, boolean completed) {
     	boolean scoreVineyards = state.hasCapability(VineyardCapability.class);
         Position p = places.get().getPosition();
         int adjacent = 0;
@@ -148,7 +148,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
             args = args.put("vineyards", adjacentVineyards);
         }
         String baseName = shrine ? "shrine" : "cloister";
-        return new PointsExpression(points, adjacent == 8 ? baseName : baseName + ".incomplete", args).merge(getLittleBuildingPoints(state));
+        return new PointsExpression(points, adjacent == 8 ? baseName : baseName + ".incomplete", args);
     }
 
     public static String name() {

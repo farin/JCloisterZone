@@ -42,15 +42,14 @@ public class Garden extends TileFeature implements Scoreable, CloisterLike {
     public Feature placeOnBoard(Position pos, Rotation rot) {
         return new Garden(placeOnBoardPlaces(pos, rot), placeOnBoardNeighboring(pos, rot));
     }
-
-
+    
     @Override
-    public PointsExpression getPoints(GameState state) {
+    public PointsExpression getStructurePoints(GameState state, boolean completed) {
         Position p = places.get().getPosition();
         int adjacent = state.getAdjacentAndDiagonalTiles2(p).size();
         Map<String, Integer> args = HashMap.of("tiles", adjacent + 1);
         int points = adjacent + 1;
-        return new PointsExpression(points, adjacent == 8 ? "garden" : "garden.incomplete", args).merge(getLittleBuildingPoints(state));
+        return new PointsExpression(points, adjacent == 8 ? "garden" : "garden.incomplete", args);
     }
 
     public static String name() {

@@ -177,7 +177,8 @@ public class City extends CompletableFeature<City> {
         return new City(places, openEdges, neighboring, multiEdges, pennants, extraPoints, tradeGoods, besieged, cathedral, princess, castleBase);
     }
 
-    private PointsExpression getBasePoints(GameState state, boolean completed) {
+    @Override
+    public PointsExpression getStructurePoints(GameState state, boolean completed) {
         boolean tinyCity = false;
         int tileCount = getTilePositions().size();
 
@@ -223,13 +224,8 @@ public class City extends CompletableFeature<City> {
     }
 
     @Override
-    public PointsExpression getStructurePoints(GameState state, boolean completed) {
-        return getBasePoints(state, completed).merge(getLittleBuildingPoints(state));
-    }
-
-    @Override
     public PointsExpression getPoints(GameState state) {
-        PointsExpression basePoints = getBasePoints(state, isCompleted(state));
+        PointsExpression basePoints = getStructurePoints(state, isCompleted(state));
         return getMageAndWitchPoints(state, basePoints).merge(getLittleBuildingPoints(state));
     }
 
