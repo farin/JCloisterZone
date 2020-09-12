@@ -71,7 +71,6 @@ public class MageAndWitchPhase extends Phase {
 
         Set<FeaturePointer> options = targetFeatures
                 .flatMap(Completable::getPlaces)
-                .filter(fp -> !fp.getPosition().equals(lastPlacedPos))
                 .toSet();
 
         Vector<PlayerAction<?>> actions = Vector.of(
