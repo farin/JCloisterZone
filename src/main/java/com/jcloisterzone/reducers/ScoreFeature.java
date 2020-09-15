@@ -12,6 +12,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
+import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
@@ -46,63 +47,59 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
     }
 
 
+    private BoardPointer getSampleSource(GameState state, Player player, List<ReceivedPoints> bonusPoints) {
+        List<Tuple2<Follower, FeaturePointer>> followers = feature.getFollowers2(state).filter(t -> t._1.getPlayer().equals(player)).toList();
+        for (ReceivedPoints bonus : bonusPoints) {
+            if (!bonus.getPlayer().equals(player)) {
+                continue;
+            }
+            for (Tuple2<Follower, FeaturePointer> t : followers) {
+                if (t._2.equals(bonus.getSource())) {
+                    return t._2;
+                }
+            }
+        }
+        return followers.get()._2;
+    }
+
     @Override
     public GameState apply(GameState state) {
         owners = feature.getOwners(state);
 
         List<ReceivedPoints> bonusPoints = List.empty();
         for (Capability<?> cap : state.getCapabilities().toSeq()) {
-            bonusPoints = cap.appendBonusPoints(state, bonusPoints, feature, isFinal);
+            bonusPoints = cap.appendFiguresBonusPoints(state, bonusPoints, feature, isFinal);
         }
 
-        Map<Player, List<ReceivedPoints>> playerPoints = HashMap.empty();
+        List<ReceivedPoints> receivedPoints = List.empty();
 
         if (owners.isEmpty()) {
             // not owners but still followers can exist - eg. Mayor on city without pennants
             //Stream<Tuple2<Follower, FeaturePointer>> followers = feature.getFollowers2(state);
             for (Player player : feature.getFollowers(state).map(Follower::getPlayer).distinct()) {
                 PointsExpression expr = new PointsExpression(0, feature.getClass().getSimpleName().toLowerCase() + ".empty");
-                playerPoints = playerPoints.put(player, List.of(new ReceivedPoints( expr, player, null)));
+                receivedPoints = receivedPoints.append(new ReceivedPoints( expr, player, getSampleSource(state, player, bonusPoints)));
             }
         } else {
             for (Player player : owners) {
                 PointsExpression expr = getFeaturePoints(state, player);
                 state = (new AddPoints(player, expr.getPoints())).apply(state);
-                playerPoints = playerPoints.put(player, List.of(new ReceivedPoints(expr, player, null)));
+                receivedPoints = receivedPoints.append(new ReceivedPoints(expr, player, getSampleSource(state, player, bonusPoints)));
             }
+        }
+
+        if (!receivedPoints.isEmpty()) {
+            state = state.appendEvent(new ScoreEvent(receivedPoints, true, isFinal));
         }
 
         for (ReceivedPoints bonus : bonusPoints) {
             Player player = bonus.getPlayer();
             state = (new AddPoints(player, bonus.getPoints())).apply(state);
-            List<ReceivedPoints> sources = playerPoints.get(player).getOrElse(List.empty());
-            playerPoints = playerPoints.put(player, sources.append(bonus));
         }
 
-        List<ReceivedPoints> mergedReceivedPoints = List.empty();
-
-        for (Tuple2<Player, List<ReceivedPoints>> t: playerPoints) {
-            Player player = t._1;
-            List<ReceivedPoints> sources = t._2;
-            FeaturePointer sample = (FeaturePointer) sources.filter(s -> s.getSource() != null).map(ReceivedPoints::getSource).getOrNull();
-            if (sample == null) {
-                sample = feature.getSampleFollower2(state, player)._2;
-            }
-            sources = setSample(sources, sample);
-
-            for (Tuple2<BoardPointer, List<ReceivedPoints>> g : sources.groupBy(ReceivedPoints::getSource)) {
-                PointsExpression expr = null;
-                for (ReceivedPoints rp : g._2) {
-                    expr = expr == null ? rp.getExpression() : expr.merge(rp.getExpression());
-                }
-
-                mergedReceivedPoints = mergedReceivedPoints.append(new ReceivedPoints(expr, player, g._1));
-            }
-        }
-
-        if (!mergedReceivedPoints.isEmpty()) {
-            state = state.appendEvent(new ScoreEvent(mergedReceivedPoints, true, isFinal));
-        }
+        for (Tuple2<String, List<ReceivedPoints>> t : bonusPoints.groupBy(bonus -> bonus.getExpression().getName())) {
+            state = state.appendEvent(new ScoreEvent(t._2, false, isFinal));
+        };
 
         return state;
     }

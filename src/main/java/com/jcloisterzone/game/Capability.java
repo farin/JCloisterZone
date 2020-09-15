@@ -66,7 +66,7 @@ public abstract class Capability<T> implements Serializable {
         return state;
     }
 
-    public List<ReceivedPoints> appendBonusPoints(GameState state, List<ReceivedPoints> bonusPoints, Scoreable feature, boolean isFinal) {
+    public List<ReceivedPoints> appendFiguresBonusPoints(GameState state, List<ReceivedPoints> bonusPoints, Scoreable feature, boolean isFinal) {
         return bonusPoints;
     }
 

@@ -42,7 +42,7 @@ public class Garden extends TileFeature implements Scoreable, CloisterLike {
     public Feature placeOnBoard(Position pos, Rotation rot) {
         return new Garden(placeOnBoardPlaces(pos, rot), placeOnBoardNeighboring(pos, rot));
     }
-    
+
     @Override
     public PointsExpression getStructurePoints(GameState state, boolean completed) {
         Position p = places.get().getPosition();

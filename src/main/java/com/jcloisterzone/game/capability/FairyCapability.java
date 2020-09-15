@@ -63,7 +63,7 @@ public class FairyCapability extends Capability<Void> {
     }
 
     @Override
-    public List<ReceivedPoints> appendBonusPoints(GameState state, List<ReceivedPoints> bonusPoints, Scoreable feature, boolean isFinal) {
+    public List<ReceivedPoints> appendFiguresBonusPoints(GameState state, List<ReceivedPoints> bonusPoints, Scoreable feature, boolean isFinal) {
         BoardPointer ptr = state.getNeutralFigures().getFairyDeployment();
 
         if (ptr != null && !isFinal) {

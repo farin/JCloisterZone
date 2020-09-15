@@ -37,7 +37,7 @@ public class ChurchCapability extends Capability<Void> {
     }
 
     @Override
-    public List<ReceivedPoints> appendBonusPoints(GameState state, List<ReceivedPoints> bonusPoints, Scoreable feature, boolean isFinal) {
+    public List<ReceivedPoints> appendFiguresBonusPoints(GameState state, List<ReceivedPoints> bonusPoints, Scoreable feature, boolean isFinal) {
         if (isFinal || !(feature instanceof Cloister)) {
             return bonusPoints;
         }
