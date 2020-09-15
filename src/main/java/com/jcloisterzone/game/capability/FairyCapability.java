@@ -73,7 +73,7 @@ public class FairyCapability extends Capability<Void> {
                 Follower m = t._1;
 
                 if (onTileRule && !ptr.getPosition().equals(t._2.getPosition())) continue;
-                if (!onTileRule && !((MeeplePointer) ptr).getMeepleId().equals(m.getId())) continue;
+                if (!onTileRule && !((MeeplePointer) ptr).match(m)) continue;
 
                 PointsExpression expr = new PointsExpression(FAIRY_POINTS_FINISHED_OBJECT, "fairy.completed");
                 return bonusPoints.append(new ReceivedPoints(expr, m.getPlayer(), t._2));

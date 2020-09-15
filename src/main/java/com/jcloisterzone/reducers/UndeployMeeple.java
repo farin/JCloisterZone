@@ -1,13 +1,16 @@
 package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.MeepleReturned;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.capability.SheepCapability;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.NeutralFiguresState;
 import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Stream;
@@ -51,6 +54,16 @@ public class UndeployMeeple implements Reducer {
         	state = state.mapCapabilityModel(SheepCapability.class, tokens -> tokens.remove(source));
         }
 
+        NeutralFiguresState nfState = state.getNeutralFigures();
+        BoardPointer fairyPtr =  nfState.getFairyDeployment();
+        if (fairyPtr instanceof MeeplePointer) {
+            MeeplePointer mp = (MeeplePointer) fairyPtr;
+            if (meeple.getId().equals(mp.getMeepleId())) {
+                mp = new MeeplePointer(mp.asFeaturePointer(), null);
+                nfState = nfState.setDeployedNeutralFigures(nfState.getDeployedNeutralFigures().put(nfState.getFairy(), mp));
+                state = state.setNeutralFigures(nfState);
+            }
+        }
         return state;
     }
 

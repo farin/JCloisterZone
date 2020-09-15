@@ -49,6 +49,7 @@ public class MeeplePointer implements BoardPointer {
 
     public boolean match(Meeple meeple) {
         if (meeple == null) return false;
+        if (meepleId == null) return false;
         return meepleId.equals(meeple.getId());
     }
 

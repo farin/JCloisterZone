@@ -33,7 +33,7 @@ public abstract class Meeple extends Figure<FeaturePointer> {
 
     public boolean at(GameState state, MeeplePointer mp) {
         if (!at(state, mp.asFeaturePointer())) return false;
-        if (!mp.getMeepleId().equals(getId())) return false;
+        if (mp.getMeepleId() == null || !mp.getMeepleId().equals(getId())) return false;
         return true;
     }
 

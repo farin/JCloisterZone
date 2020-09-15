@@ -16,6 +16,15 @@ public class ScoreCastle extends ScoreFeature implements ScoreFeatureReducer {
     }
 
     @Override
+    protected GameState addFiguresBonusPoints(GameState state) {
+        if (isFinal) {
+            // no bonuses for unfinished castle, castle is not scored at the end
+            return state;
+        }
+        return super.addFiguresBonusPoints(state);
+    }
+
+    @Override
     protected PointsExpression getFeaturePoints(GameState state, Player player) {
         return points;
     }
