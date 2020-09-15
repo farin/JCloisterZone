@@ -2,7 +2,9 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
+import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.ScoreFeatureReducer;
@@ -30,6 +32,23 @@ public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReduce
     @Override
     public Completable getFeature() {
         return (Completable) super.getFeature();
+    }
+
+    @Override
+    protected GameState addFiguresBonusPoints(GameState state) {
+        if (isFinal) {
+            // for inn and catherdal rules saying:
+            // Even if that city would have normally scored, the presence of a cathedral will prevent it from scoring.
+            // technically there is no scoring and no bonues should be awarded
+            if (getFeature() instanceof Road) {
+                Road road = (Road) getFeature();
+                if (road.isInn()) return state;
+            } else if (getFeature() instanceof City) {
+                City city = (City) getFeature();
+                if (city.isCathedral()) return state;
+            }
+        }
+        return super.addFiguresBonusPoints(state);
     }
 
     @Override

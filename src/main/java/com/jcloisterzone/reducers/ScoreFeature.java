@@ -4,6 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.engine.Game;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
@@ -28,6 +29,7 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
     // "out" variable - computed owners are store to instance
     // to be available to reducer caller
     private Set<Player> owners;
+    private List<ReceivedPoints> bonusPoints = List.empty();
 
     public ScoreFeature(Scoreable feature, boolean isFinal) {
         this.feature = feature;
@@ -62,11 +64,23 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
         return followers.get()._2;
     }
 
+    protected GameState addFiguresBonusPoints(GameState state) {
+        for (ReceivedPoints bonus : bonusPoints) {
+            Player player = bonus.getPlayer();
+            state = (new AddPoints(player, bonus.getPoints())).apply(state);
+        }
+
+        for (Tuple2<String, List<ReceivedPoints>> t : bonusPoints.groupBy(bonus -> bonus.getExpression().getName())) {
+            state = state.appendEvent(new ScoreEvent(t._2, false, isFinal));
+        }
+
+        return state;
+    }
+
     @Override
     public GameState apply(GameState state) {
         owners = feature.getOwners(state);
 
-        List<ReceivedPoints> bonusPoints = List.empty();
         for (Capability<?> cap : state.getCapabilities().toSeq()) {
             bonusPoints = cap.appendFiguresBonusPoints(state, bonusPoints, feature, isFinal);
         }
@@ -92,15 +106,7 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
             state = state.appendEvent(new ScoreEvent(receivedPoints, true, isFinal));
         }
 
-        for (ReceivedPoints bonus : bonusPoints) {
-            Player player = bonus.getPlayer();
-            state = (new AddPoints(player, bonus.getPoints())).apply(state);
-        }
-
-        for (Tuple2<String, List<ReceivedPoints>> t : bonusPoints.groupBy(bonus -> bonus.getExpression().getName())) {
-            state = state.appendEvent(new ScoreEvent(t._2, false, isFinal));
-        };
-
+        state = addFiguresBonusPoints(state);
         return state;
     }
 
