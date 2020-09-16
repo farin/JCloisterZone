@@ -232,7 +232,7 @@ public abstract class AbstractActionPhase extends Phase {
         }
 
         PlayerAction<?> action = new MeepleAction(meeple, options);
-        state = state.setPlayerActions(new ActionsState(state.getTurnPlayer(), action, true));
+        state = state.setPlayerActions(new ActionsState(state.getTurnPlayer(), action, false));
         return promote(state);
     }
 }
