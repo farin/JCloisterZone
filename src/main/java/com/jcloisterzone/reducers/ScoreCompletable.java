@@ -35,23 +35,6 @@ public class ScoreCompletable extends ScoreFeature implements ScoreFeatureReduce
     }
 
     @Override
-    protected GameState addFiguresBonusPoints(GameState state) {
-        if (isFinal) {
-            // for inn and catherdal rules saying:
-            // Even if that city would have normally scored, the presence of a cathedral will prevent it from scoring.
-            // technically there is no scoring and no bonues should be awarded
-            if (getFeature() instanceof Road) {
-                Road road = (Road) getFeature();
-                if (road.isInn()) return state;
-            } else if (getFeature() instanceof City) {
-                City city = (City) getFeature();
-                if (city.isCathedral()) return state;
-            }
-        }
-        return super.addFiguresBonusPoints(state);
-    }
-
-    @Override
     public GameState apply(GameState state) {
         points = getFeature().getPoints(state);
         state = super.apply(state);
