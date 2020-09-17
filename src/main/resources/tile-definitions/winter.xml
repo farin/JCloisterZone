@@ -13,7 +13,7 @@
       </wagon-move>
     </tile>
     <tile id="WI/RC">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>W</road>
       <farm city="N">WR</farm>
       <farm city="N">EL ER SL SR WL</farm>
@@ -22,7 +22,7 @@
       </wagon-move>
     </tile>
     <tile id="WI/CR">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>E</road>
       <farm city="N">EL</farm>
       <farm city="N">WL WR SL SR ER</farm>
@@ -59,13 +59,13 @@
       </wagon-move>
     </tile>
     <tile id="WI/CRr">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>S E</road>
       <farm city="N">SR WL WR EL</farm>
       <farm>ER SL</farm>
     </tile>
     <tile id="WI/CFR">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>S</road>
       <farm city="N">WL WR SR</farm>
       <farm city="N">EL ER SL</farm>
@@ -94,7 +94,7 @@
       <farm>NL NR EL ER SL SR WL WR</farm>
     </tile>
     <tile id="WI/RrC">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>W S</road>
       <farm>SR WL</farm>
       <farm city="N">WR EL ER SL</farm>

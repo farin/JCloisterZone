@@ -7,7 +7,7 @@
 		</tile>
 		<tile id="CU/SC">
 			<cloister shrine="yes"/>
-			<city castle-base="true">N</city>
+			<city>N</city>
 			<farm city="N">SL SR WL WR EL ER</farm>
 		</tile>
 		<tile id="CU/SR">
@@ -20,7 +20,7 @@
 		</tile>
 		<tile id="CU/SCFR">
 			<cloister shrine="yes"/>
-			<city castle-base="true">N</city>
+			<city>N</city>
 			<road>S</road>
 			<farm city="N">SL SR WL WR EL ER</farm>
 			<wagon-move>
@@ -40,7 +40,7 @@
 		</tile>
 		<tile id="CU/SRCR">
 			<cloister shrine="yes"/>
-			<city castle-base="true">N</city>
+			<city>N</city>
 			<road>W</road>
 			<road>E</road>
 			<farm city="N">WR EL</farm>

@@ -2,8 +2,8 @@
 <pack>
   <tiles>
     <tile id="SD/CC">
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
+      <city>N</city>
+      <city>W</city>
       <farm city="N W">EL ER SL SR</farm>
     </tile>
     <tile id="SD/RRR">

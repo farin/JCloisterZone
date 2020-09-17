@@ -20,18 +20,18 @@
     </tile>
     <tile id="DG/C.d">
       <dragon />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">EL ER SL SR WL WR</farm>
     </tile>
     <tile id="DG/C.dG">
       <dragon />
       <garden />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">EL ER SL SR WL WR</farm>
     </tile>
     <tile id="DG/C.v">
       <volcano />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">EL ER SL SR WL WR</farm>
     </tile>
     <tile id="DG/LRRR.d">
@@ -77,7 +77,7 @@
       <road>E</road>
       <road>S</road>
       <road>W</road>
-      <city princess="yes" castle-base="true">N</city>
+      <city princess="yes">N</city>
       <farm city="N">WR EL</farm>
       <farm>WL SR</farm>
       <farm>ER SL</farm>
@@ -86,7 +86,7 @@
       </wagon-move>
     </tile>
     <tile id="DG/CCc+.p">
-      <city princess="yes">N</city>
+      <city princess="yes" castle-base="false">N</city>
       <city pennant="yes">E S</city>
       <farm city="N">WL WR</farm>
       <farm city="N S">INNER_FARM</farm>
@@ -154,8 +154,8 @@
     </tile>
     <tile id="DG/CC.v">
       <volcano />
-      <city castle-base="true">E</city>
-      <city castle-base="true">N</city>
+      <city>E</city>
+      <city>N</city>
       <farm city="N E">WL WR SL SR</farm>
     </tile>
     <tile id="DG/CFc+.d">
@@ -187,28 +187,28 @@
     <tile id="DG/RrC.d">
       <dragon />
       <road>S W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR EL ER SL</farm>
       <farm>WL SR</farm>
     </tile>
     <tile id="DG/RrC.g">
       <portal />
       <road>S W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR EL ER SL</farm>
       <farm>WL SR</farm>
     </tile>
     <tile id="DG/CRr.d">
       <dragon />
       <road>E S</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">EL WL WR SR</farm>
       <farm>ER SL</farm>
     </tile>
     <tile id="DG/CRr.g">
       <portal />
       <road>E S</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">EL WL WR SR</farm>
       <farm>ER SL</farm>
     </tile>

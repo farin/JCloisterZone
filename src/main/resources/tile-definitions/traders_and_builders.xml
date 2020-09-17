@@ -11,13 +11,13 @@
 		</tile>
 		<tile id="TB/CCc.c">
 			<city resource="cloth">W E</city>
-			<city castle-base="true">S</city>
+			<city>S</city>
 			<farm city="W">NL NR</farm>
 			<farm city="W S">INNER_FARM</farm>
 		</tile>
 		<tile id="TB/CCc.w">
 			<city resource="wine">W E</city>
-			<city castle-base="true">S</city>
+			<city>S</city>
 			<farm city="W">NL NR</farm>
 			<farm city="W S">INNER_FARM</farm>
 		</tile>
@@ -27,8 +27,8 @@
 		</tile>
 		<tile id="TB/CcCC.c">
 			<city resource="cloth">N W</city>
-			<city castle-base="true">S</city>
-			<city castle-base="true">E</city>
+			<city>S</city>
+			<city>E</city>
 			<farm city="N E S">INNER_FARM</farm>
 		</tile>
 		<tile id="TB/CcRR!.c">
@@ -71,7 +71,7 @@
 		</tile>
 		<tile id="TB/CcRC.c">
 			<city resource="cloth">N W</city>
-			<city castle-base="true">S</city>
+			<city>S</city>
 			<road>E</road>
 			<farm city="N">EL</farm>
 			<farm city="N S">ER</farm>
@@ -81,7 +81,7 @@
 		</tile>
 		<tile id="TB/CcRC.g">
 			<city resource="grain">N W</city>
-			<city castle-base="true">S</city>
+			<city>S</city>
 			<road>E</road>
 			<farm city="N">EL</farm>
 			<farm city="N S">ER</farm>
@@ -138,7 +138,7 @@
 			<farm city="W">SL SR</farm>
 		</tile>
 		<tile id="TB/CR">
-			<city castle-base="true">N</city>
+			<city>N</city>
 			<road>E</road>
 			<farm city="N">EL</farm>
 			<farm city="N">WL WR SL SR ER</farm>
@@ -213,7 +213,7 @@
 			</wagon-move>
 		</tile>
 		<tile id="TB/RRC">
-			<city castle-base="true">N</city>
+			<city>N</city>
 			<road>W</road>
 			<road>S</road>
 			<farm city="N">WR</farm>

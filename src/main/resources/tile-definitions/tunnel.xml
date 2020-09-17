@@ -2,7 +2,7 @@
 <pack>
 	<tiles>
 		<tile id="TU/CRRR">
-			<city castle-base="true">N</city>
+			<city>N</city>
 			<road tunnel="yes">W</road>
 			<road tunnel="yes">E</road>
 			<road tunnel="yes">S</road>
@@ -11,7 +11,7 @@
 			<farm>SR WL</farm>
 		</tile>
 		<tile id="TU/RCR">
-			<city castle-base="true">N</city>
+			<city>N</city>
 			<road tunnel="yes">W</road>
 			<road tunnel="yes">E</road>
 			<farm city="N">WR EL</farm>

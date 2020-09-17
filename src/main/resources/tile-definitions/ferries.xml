@@ -3,7 +3,7 @@
   <tiles>
     <tile id="FR/CRRR">
       <ferry />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>W</road>
       <road>S</road>
       <road>E</road>

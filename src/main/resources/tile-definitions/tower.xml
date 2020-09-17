@@ -3,7 +3,7 @@
   <tiles>
     <tile id="TO/C">
       <tower />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WL WR SL SR EL ER</farm>
     </tile>
     <tile id="TO/F">
@@ -74,7 +74,7 @@
     </tile>
     <tile id="TO/CFR">
       <tower />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>S</road>
       <farm city="N">WL WR SR</farm>
       <farm city="N">EL ER SL</farm>
@@ -82,13 +82,13 @@
     <tile id="TO/RrC">
       <tower />
       <road>S W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR EL ER SL</farm>
       <farm>WL SR</farm>
     </tile>
     <tile id="TO/RCr">
       <tower />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>W E</road>
       <farm city="N">WR</farm>
       <farm city="N">EL</farm>
@@ -112,15 +112,15 @@
     </tile>
     <tile id="TO/CC.2">
       <tower />
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
+      <city>N</city>
+      <city>W</city>
       <farm city="N W">EL ER SL SR</farm>
     </tile>
     <tile id="TO/CRCr.2">
       <tower />
       <road>W E</road>
       <city>N</city> <!-- tower in city - no castle base -->
-      <city castle-base="true">S</city>
+      <city>S</city>
       <farm city="N">WR EL</farm>
       <farm city="S">ER WL</farm>
     </tile>
@@ -137,7 +137,7 @@
     <tile id="TO/CccC+">
       <tower />
       <city pennant="yes">N W E</city>
-      <city castle-base="true">S</city>
+      <city>S</city>
       <farm city="W S">INNER_FARM</farm>
     </tile>
   </tiles>

@@ -14,14 +14,14 @@
       <farm city="N W">INNER_FARM_B</farm>
     </tile>
     <tile id="AM/CCc+">
-      <city pennant="yes">N</city>
+      <city pennant="yes" castle-base="false">N</city>
       <city>W E</city>
       <farm city="N W">INNER_FARM</farm>
       <farm city="N W">SL SR</farm>
     </tile>
     <tile id="AM/CCRR">
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
+      <city>N</city>
+      <city>W</city>
       <road>E</road>
       <road>S</road>
       <farm city="N">EL</farm>
@@ -50,7 +50,7 @@
       </wagon-move>
     </tile>
     <tile id="AM/RC">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>W</road>
       <farm city="N">WR</farm>
       <farm city="N">EL ER SL SR WL</farm>
@@ -59,21 +59,21 @@
       </wagon-move>
     </tile>
     <tile id="AM/CRr">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>S E</road>
       <farm city="N">WL WR SR</farm>
       <farm city="N">EL</farm>
       <farm>ER SL</farm>
     </tile>
     <tile id="AM/RrC">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>W S</road>
       <farm city="N">EL ER SL</farm>
       <farm city="N">WR</farm>
       <farm>SR WL</farm>
     </tile>
     <tile id="AM/C!+">
-      <city pennant="yes">W</city>
+      <city pennant="yes" castle-base="false">W</city>
       <farm city="W">NL NR</farm>
       <farm city="W">EL ER</farm>
       <farm city="W">SL SR</farm>

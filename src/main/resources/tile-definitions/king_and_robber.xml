@@ -3,12 +3,12 @@
   <tiles>
     <tile id="KR/LC">
       <cloister />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">EL ER SL SR WL WR</farm>
     </tile>
     <tile id="KR/RC">
       <road>W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR</farm>
       <farm city="N">EL ER SL SR WL</farm>
       <wagon-move>
@@ -18,7 +18,7 @@
     <tile id="KR/RCG">
       <garden/>
       <road>W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR</farm>
       <farm city="N">EL ER SL SR WL</farm>
       <wagon-move>
@@ -28,7 +28,7 @@
     <tile id="KR/CRrR">
       <road>W</road>
       <road>S E</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR</farm>
       <farm city="N">EL SR WL</farm>
       <farm>SL ER</farm>

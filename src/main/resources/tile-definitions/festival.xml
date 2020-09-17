@@ -3,7 +3,7 @@
   <tile id="FE/CCc">
     <festival />
     <city>W E</city>
-    <city castle-base="true">S</city>
+    <city>S</city>
     <farm city="W">NL NR</farm>
     <farm city="W S">INNER_FARM</farm>
   </tile>
@@ -15,7 +15,7 @@
   </tile>
   <tile id="FE/CFR">
     <festival />
-    <city castle-base="true">N</city>
+    <city>N</city>
     <road>S</road>
     <farm city="N">WL WR SR</farm>
     <farm city="N">EL ER SL</farm>
@@ -25,7 +25,7 @@
   </tile>
   <tile id="FE/CR">
     <festival />
-    <city castle-base="true">N</city>
+    <city>N</city>
     <road>E</road>
     <farm city="N">EL</farm>
     <farm city="N">WL WR SL SR ER</farm>
@@ -35,8 +35,8 @@
   </tile>
   <tile id="FE/CRCR">
     <festival />
-    <city castle-base="true">N</city>
-    <city castle-base="true">S</city>
+    <city>N</city>
+    <city>S</city>
     <road>W</road>
     <road>E</road>
     <farm city="S">ER</farm>
@@ -50,7 +50,7 @@
   <tile id="FE/CRr">
     <festival />
     <road>E S</road>
-    <city castle-base="true">N</city>
+    <city>N</city>
     <farm city="N">EL WL WR SR</farm>
     <farm>ER SL</farm>
   </tile>
@@ -68,7 +68,7 @@
   </tile>
   <tile id="FE/RC">
     <festival />
-    <city castle-base="true">N</city>
+    <city>N</city>
     <road>W</road>
     <farm city="N">WR</farm>
     <farm city="N">EL ER SL SR WL</farm>
@@ -79,7 +79,7 @@
   <tile id="FE/RrC">
     <festival />
     <road>S W</road>
-    <city castle-base="true">N</city>
+    <city>N</city>
     <farm city="N">WR EL ER SL</farm>
     <farm>WL SR</farm>
   </tile>

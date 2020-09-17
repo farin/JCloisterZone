@@ -15,7 +15,7 @@
     </tile>
     <tile id="BA/RCr">
       <road>W E</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">EL WR</farm>
       <farm>ER SL SR WL</farm>
     </tile>
@@ -96,7 +96,7 @@
     </tile>
     <tile id="BA/CRr">
       <road>E S</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">EL WL WR SR</farm>
       <farm>ER SL</farm>
     </tile>
@@ -104,7 +104,7 @@
       <road>E</road>
       <road>S</road>
       <road>W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR EL</farm>
       <farm>WL SR</farm>
       <farm>ER SL</farm>
@@ -114,39 +114,39 @@
     </tile>
     <tile id="BA/RrC">
       <road>S W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR EL ER SL</farm>
       <farm>WL SR</farm>
     </tile>
     <tile id="BA/C">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WL WR SL SR EL ER</farm>
     </tile>
     <tile id="BA/CG">
       <garden />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WL WR SL SR EL ER</farm>
     </tile>
     <tile id="BA/CFC.2">
-      <city castle-base="true">N</city>
-      <city castle-base="true">S</city>
+      <city>N</city>
+      <city>S</city>
       <farm city="N S">WL WR EL ER</farm>
     </tile>
     <tile id="BA/CFCG">
       <garden />
-      <city castle-base="true">N</city>
-      <city castle-base="true">S</city>
+      <city>N</city>
+      <city>S</city>
       <farm city="N S">WL WR EL ER</farm>
     </tile>
     <tile id="BA/CC.2">
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
+      <city>N</city>
+      <city>W</city>
       <farm city="N W">EL ER SL SR</farm>
     </tile>
     <tile id="BA/CCG">
       <garden />
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
+      <city>N</city>
+      <city>W</city>
       <farm city="N W">EL ER SL SR</farm>
     </tile>
     <tile id="BA/RRRR">

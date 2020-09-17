@@ -6,9 +6,9 @@
       <city>N E S W</city>
     </tile>
     <tile id="BB/CCCR">
-      <city castle-base="true">W</city>
-      <city castle-base="true">N</city>
-      <city castle-base="true">E</city>
+      <city>W</city>
+      <city>N</city>
+      <city>E</city>
       <road>S</road>
       <farm city="W N E">SR</farm>
       <farm city="E">SL</farm>
@@ -25,7 +25,7 @@
     <tile id="BB/CFR!">
       <city>W</city>
       <road>E</road>
-      <farm city="W">NL NR</farm>
+      <farm city="W" castle-base="false">NL NR</farm>
       <farm city="W">EL</farm>
       <farm city="W">ER SL SR</farm>
       <wagon-move>
@@ -45,7 +45,7 @@
     </tile>
     <tile id="BB/CFR.b">
       <bazaar />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>S</road>
       <farm city="N">EL ER SL SR WL WR</farm>
     </tile>

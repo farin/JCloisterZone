@@ -29,7 +29,7 @@
       <farm>NR EL ER SL</farm>
     </tile>
     <tile id="CO/9">
-      <city castle-base="true">S</city>
+      <city>S</city>
       <farm city="S">WL WR NL ER</farm>
     </tile>
     <tile id="CO/10">
@@ -41,7 +41,7 @@
       <farm>SR WL</farm>
     </tile>
     <tile id="CO/12">
-      <city castle-base="true">E</city>
+      <city>E</city>
       <farm city="E">NR SL SR WL</farm>
     </tile>
   </tiles>

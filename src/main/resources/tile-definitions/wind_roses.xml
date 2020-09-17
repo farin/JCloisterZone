@@ -6,8 +6,8 @@
       <farm city="N">SL SR EL ER</farm>
     </tile>
     <tile id="WR/CC.2" wind-rose="SE">
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
+      <city>N</city>
+      <city>W</city>
       <farm city="N W">EL ER SL SR</farm>
     </tile>
     <tile id="WR/CFc" wind-rose="NW">
@@ -16,7 +16,7 @@
       <farm city="N">EL ER</farm>
     </tile>
     <tile id="WR/CFR" wind-rose="NWSE">
-      <city castle-base="true">E</city>
+      <city>E</city>
       <road>W</road>
       <farm city="E">WR NL NR</farm>
       <farm city="E">WL SL SR</farm>
@@ -30,7 +30,7 @@
       <farm>SR WL</farm>
     </tile>
     <tile id="WR/RrC" wind-rose="SW">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>S W</road>
       <farm city="N">WR EL ER SL</farm>
       <farm>WL SR</farm>

@@ -8,13 +8,13 @@
     </tile>
     <tile id="CC.1/CC.2">
       <corn-circle type="City" />
-      <city castle-base="true">N</city>
-      <city castle-base="true">E</city>
+      <city>N</city>
+      <city>E</city>
       <farm city="N E">SL SR WL WR</farm>
     </tile>
     <tile id="CC.1/CR">
       <corn-circle type="Farm" />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>E</road>
       <farm city="N">WL WR SL SR EL ER</farm>
     </tile>
@@ -27,7 +27,7 @@
     <tile id="CC.1/RrC">
       <corn-circle type="Farm" />
       <road>S W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR EL ER SL</farm>
       <farm>WL SR</farm>
     </tile>
@@ -60,13 +60,13 @@
     </tile>
     <tile id="CC.2/CFR">
       <corn-circle type="Farm" />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>S</road>
       <farm city="N">WR WL SL SR EL ER</farm>
     </tile>
     <tile id="CC.2/RCR">
       <corn-circle type="Farm" />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>W</road>
       <road>E</road>
       <farm city="N">WR EL</farm>
@@ -74,8 +74,8 @@
     </tile>
     <tile id="CC.2/CFC">
       <corn-circle type="City" />
-      <city castle-base="true">N</city>
-      <city castle-base="true">S</city>
+      <city>N</city>
+      <city>S</city>
       <farm city="N S">WL WR</farm>
       <farm city="N S">EL ER</farm>
     </tile>

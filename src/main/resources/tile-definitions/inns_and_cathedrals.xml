@@ -16,29 +16,29 @@
       </wagon-move>
     </tile>
     <tile id="IC/CCCC">
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
-      <city castle-base="true">E</city>
-      <city castle-base="true">S</city>
+      <city>N</city>
+      <city>W</city>
+      <city>E</city>
+      <city>S</city>
       <farm city="N W E S">INNER_FARM</farm>
     </tile>
     <tile id="IC/CCCCG">
       <garden />
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
-      <city castle-base="true">E</city>
-      <city castle-base="true">S</city>
+      <city>N</city>
+      <city>W</city>
+      <city>E</city>
+      <city>S</city>
       <farm city="N W E S">INNER_FARM</farm>
     </tile>
     <tile id="IC/CCC">
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
-      <city castle-base="true">E</city>
+      <city>N</city>
+      <city>W</city>
+      <city>E</city>
       <farm city="N W E">SL SR</farm>
     </tile>
     <tile id="IC/CRCR">
-      <city castle-base="true">N</city>
-      <city castle-base="true">S</city>
+      <city>N</city>
+      <city>S</city>
       <road>W</road>
       <road>E</road>
       <farm city="S">ER</farm>
@@ -51,16 +51,16 @@
     </tile>
     <tile id="IC/CCc+">
       <city pennant="yes">N W</city>
-      <city castle-base="true">S</city>
+      <city>S</city>
       <farm city="N S">EL ER</farm>
     </tile>
     <tile id="IC/C!">
-      <city>N</city>
+      <city castle-base="false">N</city>
       <farm city="N">EL ER</farm>
       <farm city="N">WL WR SL SR</farm>
     </tile>
     <tile id="IC/CFR">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>S</road>
       <farm city="N">WL WR SR</farm>
       <farm city="N">EL ER SL</farm>
@@ -100,7 +100,7 @@
       </wagon-move>
     </tile>
     <tile id="IC/RrC.i">
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road inn="yes">W S</road>
       <farm>SR WL</farm>
       <farm city="N">WR EL ER SL</farm>

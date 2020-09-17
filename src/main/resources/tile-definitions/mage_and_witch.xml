@@ -6,7 +6,7 @@
       <road>E</road>
       <road>S</road>
       <road>W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR EL</farm>
       <farm>WL SR</farm>
       <farm>ER SL</farm>
@@ -23,9 +23,9 @@
     </tile>
     <tile id="MW/CCCR.3">
       <mage></mage>
-      <city castle-base="true">W</city>
-      <city castle-base="true">N</city>
-      <city castle-base="true">E</city>
+      <city>W</city>
+      <city>N</city>
+      <city>E</city>
       <road>S</road>
       <farm city="W N E">SR</farm>
       <farm city="E">SL</farm>
@@ -49,8 +49,8 @@
     </tile>
     <tile id="MW/CFC">
       <mage></mage>
-      <city castle-base="true">N</city>
-      <city castle-base="true">S</city>
+      <city>N</city>
+      <city>S</city>
       <farm city="N S">WL WR EL ER</farm>
     </tile>
     <tile id="MW/CccR.1">
@@ -67,7 +67,7 @@
       <mage></mage>
       <road>E</road>
       <road>S W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">EL</farm>
       <farm city="N">ER SL WR</farm>
       <farm>SR WL</farm>
@@ -77,8 +77,8 @@
     </tile>
     <tile id="MW/CCRr.2">
       <mage></mage>
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
+      <city>N</city>
+      <city>W</city>
       <road>S E</road>
       <farm city="N W">EL SR</farm>
       <farm>ER SL</farm>
@@ -86,8 +86,8 @@
     <tile id="MW/CCRrG">
       <mage></mage>
       <garden/>
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
+      <city>N</city>
+      <city>W</city>
       <road>S E</road>
       <farm city="N W">EL SR</farm>
       <farm>ER SL</farm>

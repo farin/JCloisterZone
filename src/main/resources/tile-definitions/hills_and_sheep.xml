@@ -3,7 +3,7 @@
   <tiles>
     <tile id="HS/C!.v">
       <vineyard />
-      <city>N</city>
+      <city castle-base="false">N</city>
       <farm city="N">WR WL SR</farm>
       <farm city="N">EL ER SL</farm>
     </tile>
@@ -20,8 +20,8 @@
     </tile>
     <tile id="HS/CC.h.2">
       <hill />
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
+      <city>N</city>
+      <city>W</city>
       <farm city="N W">EL ER SL SR</farm>
     </tile>
     <tile id="HS/Cc.v">
@@ -31,20 +31,20 @@
     </tile>
     <tile id="HS/CFC.h">
       <hill />
-      <city castle-base="true">N</city>
-      <city castle-base="true">S</city>
+      <city>N</city>
+      <city>S</city>
       <farm city="N S">WL WR EL ER</farm>
     </tile>
     <tile id="HS/CFC.v">
       <vineyard />
-      <city>W</city>
-      <city>E</city>
+      <city castle-base="false">W</city>
+      <city castle-base="false">E</city>
       <farm city="W E">NL NR</farm>
       <farm city="W E">SL SR</farm>
     </tile>
     <tile id="HS/CFR.h">
       <hill />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>S</road>
       <farm city="N">WL WR SR</farm>
       <farm city="N">EL ER SL</farm>
@@ -54,14 +54,14 @@
     </tile>
     <tile id="HS/CRr.h">
       <hill />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>E S</road>
       <farm city="N">EL WL WR SR</farm>
       <farm>ER SL</farm>
     </tile>
     <tile id="HS/LCRr">
       <cloister />
-      <city castle-base="true">N</city>
+      <city>N</city>
       <road>E S</road>
       <farm city="N">EL WL WR SR</farm>
       <farm>ER SL</farm>
@@ -78,8 +78,8 @@
     </tile>
     <tile id="HS/RCC.v">
       <vineyard />
-      <city castle-base="true">N</city>
-      <city castle-base="true">W</city>
+      <city>N</city>
+      <city>W</city>
       <road>S</road>
       <farm city="N W">SR</farm>
       <farm city="N">EL ER SL</farm>
@@ -121,7 +121,7 @@
     <tile id="HS/RrC.h">
       <hill />
       <road>S W</road>
-      <city castle-base="true">N</city>
+      <city>N</city>
       <farm city="N">WR EL ER SL</farm>
       <farm>WL SR</farm>
     </tile>

@@ -15,7 +15,7 @@
       </wagon-move>
     </tile>
     <tile id="SI.BE/CFR">
-      <city besieged="yes" castle-base="true">N</city>
+      <city besieged="yes">N</city>
       <road>S</road>
       <farm city="N">WL WR SR</farm>
       <farm city="N">EL ER SL</farm>
@@ -25,7 +25,7 @@
     </tile>
     <tile id="SI.BE/CRr">
       <road>E S</road>
-      <city besieged="yes" castle-base="true">N</city>
+      <city besieged="yes">N</city>
       <farm city="N">EL WL WR SR</farm>
       <farm>ER SL</farm>
     </tile>
@@ -40,7 +40,7 @@
     </tile>
     <tile id="SI.BE/RrC">
       <road>S W</road>
-      <city besieged="yes" castle-base="true">N</city>
+      <city besieged="yes">N</city>
       <farm city="N">WR EL ER SL</farm>
       <farm>WL SR</farm>
     </tile>
