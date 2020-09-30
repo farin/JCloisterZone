@@ -73,6 +73,11 @@ public class ActionPhase extends AbstractActionPhase {
             }
         }
 
+        if (state.getPlayerActions().getActions().isEmpty()) {
+            state = clearActions(state);
+            return next(state);
+        }
+
         return promote(state);
     }
 
