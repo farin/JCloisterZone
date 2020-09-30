@@ -37,8 +37,9 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
         case 4: return 7;
         case 5: return 6;
         case 6: return 5;
+        case 7: return 4;
+        default: return 3;
         }
-        throw new IllegalStateException();
     }
 
     @Override
