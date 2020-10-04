@@ -109,8 +109,11 @@ public class StateGsonBuilder {
             obj.addProperty("turnPlayer", state.getPlayers().getTurnPlayerIndex());
             obj.add("action", context.serialize(state.getPlayerActions()));
             obj.add("history", serializePlayEvents(state, context));
-            obj.addProperty("undo", game.isUndoAllowed());
 
+            JsonObject undo = new JsonObject();
+            undo.addProperty("allowed", game.isUndoAllowed());
+            undo.addProperty("depth", game.getUndoDepth());
+            obj.add("undo", undo);
 
             BazaarCapabilityModel bazModel = game.getState().getCapabilityModel(BazaarCapability.class);
             if (bazModel != null && bazModel.getSupply() != null) {

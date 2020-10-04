@@ -32,6 +32,10 @@ public class Game {
         return !undoHistory.isEmpty();
     }
 
+    public int getUndoDepth() {
+        return undoHistory.length();
+    }
+
     public void undo() {
         if (undoHistory.isEmpty()) {
             throw new IllegalStateException();
