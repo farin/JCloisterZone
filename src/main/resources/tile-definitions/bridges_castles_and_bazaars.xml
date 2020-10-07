@@ -23,9 +23,9 @@
       <farm city="W">SL SR</farm>
     </tile>
     <tile id="BB/CFR!">
-      <city>W</city>
+      <city castle-base="false">W</city>
       <road>E</road>
-      <farm city="W" castle-base="false">NL NR</farm>
+      <farm city="W">NL NR</farm>
       <farm city="W">EL</farm>
       <farm city="W">ER SL SR</farm>
       <wagon-move>
