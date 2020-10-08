@@ -14,6 +14,7 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.GameStateBuilder;
 import com.jcloisterzone.io.MessageParser;
 import com.jcloisterzone.io.message.*;
+import com.jcloisterzone.reducers.MoveNeutralFigure;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
@@ -248,7 +249,8 @@ public class Engine implements  Runnable {
                 boolean undoAllowed = (!(msg instanceof SaltMessage) || ((SaltMessage) msg).getSalt() == null)
                         && newActivePlayer != null
                         && newActivePlayer.equals(oldActivePlayer)
-                        && !(msg instanceof DeployMeepleMessage && ((DeployMeepleMessage)msg).getMeepleId().contains("shepherd"));
+                        && !(msg instanceof DeployMeepleMessage && ((DeployMeepleMessage)msg).getMeepleId().contains("shepherd"))
+                        && !(msg instanceof MoveNeutralFigureMessage && ((MoveNeutralFigureMessage)msg).getFigureId().contains("dragon"));
 
                 if (undoAllowed) {
                     game.markUndo();
