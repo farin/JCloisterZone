@@ -23,15 +23,6 @@ public class AbbotCapability extends Capability<Void> {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "garden").isEmpty()) {
-            Garden garden = new Garden();
-            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.CLOISTER, garden));
-        }
-        return tile;
-    }
-
-    @Override
     public GameState onActionPhaseEntered(GameState state) {
         ActionsState actions = state.getPlayerActions();
         for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
