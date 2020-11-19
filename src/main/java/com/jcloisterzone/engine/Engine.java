@@ -20,9 +20,9 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map.Entry;
@@ -33,6 +33,7 @@ public class Engine implements  Runnable {
     private Scanner in;
     private PrintStream out;
     private PrintStream err;
+    private PrintStream log;
 
     private final Gson gson;
     private MessageParser parser = new MessageParser();
@@ -42,10 +43,11 @@ public class Engine implements  Runnable {
 
     private boolean bulk;
 
-    public Engine(InputStream in, PrintStream out, PrintStream err) {
+    public Engine(InputStream in, PrintStream out, PrintStream err, PrintStream log) {
         this.in = new Scanner(in);
         this.out = out;
         this.err = err;
+        this.log = log;
 
         gson = new StateGsonBuilder().create();
     }
@@ -193,6 +195,10 @@ public class Engine implements  Runnable {
 
         while (true) {
             line = in.nextLine();
+            if (log != null) {
+                log.println(line);
+            }
+
             if (line.charAt(0) != '%') {
                 break;
             }
@@ -227,6 +233,10 @@ public class Engine implements  Runnable {
             line = in.nextLine();
             if (line.length() == 0) {
                 break;
+            }
+
+            if (log != null) {
+                log.println(line);
             }
 
             if (line.charAt(0) == '%') {
@@ -293,7 +303,7 @@ public class Engine implements  Runnable {
         return "dev-snapshot";
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (args.length > 0 && "--version".equals(args[0])) {
             try {
                 System.out.println(readVersion());
@@ -303,7 +313,17 @@ public class Engine implements  Runnable {
             return;
         }
 
-        Engine engine = new Engine(System.in, System.out, System.err);
+        Engine engine;
+
+        if (args.length > 0 && "--socket".equals(args[0])) {
+            int port = Integer.parseInt(args[1]);
+            System.out.println("Listening on socket " + port);
+            ServerSocket server = new ServerSocket(port);
+            Socket socket = server.accept();
+            engine = new Engine(socket.getInputStream(), new PrintStream(socket.getOutputStream()), System.err, System.out);
+        } else {
+            engine = new Engine(System.in, System.out, System.err, null);
+        }
         engine.run();
     }
 }
