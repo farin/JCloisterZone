@@ -7,6 +7,8 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.TileDiscardedEvent;
 import com.jcloisterzone.event.TokenPlacedEvent;
+import com.jcloisterzone.figure.Builder;
+import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
@@ -21,6 +23,7 @@ import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
 import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
+import io.vavr.control.Option;
 
 
 public class TilePhase extends Phase {
@@ -178,6 +181,15 @@ public class TilePhase extends Phase {
         	if (!tilePack.isEmpty()) {
         		state = state.setTilePack(tilePack.increaseHiddenUnderHills());
         	}
+        }
+
+        if (state.hasCapability(BuilderCapability.class)) {
+            FeaturePointer builderFp = state.getDeployedMeeples().filter((m, fp) -> m instanceof Builder && m.getPlayer().equals(player)).values().getOrNull();
+            if (builderFp != null && !builderFp.getPosition().equals(pos)) {
+                if (state.getFeature(builderFp).getTilePositions().contains(pos)) {
+                    state = state.getCapabilities().get(BuilderCapability.class).useBuilder(state);
+                }
+            }
         }
 
         state = clearActions(state);
