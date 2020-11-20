@@ -3,6 +3,7 @@ package com.jcloisterzone.game.capability;
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
+import io.vavr.collection.Set;
 
 import java.io.Serializable;
 
@@ -14,23 +15,23 @@ public class CountCapabilityModel implements Serializable {
     /** position of CO.7 tile */
     private final Position quarterPosition;
 
-    /** player how make last meeple deployment */
-    private final Player finalScoringLastMeepleDeployPlayer;
+    /** players who passed their turn */
+    private final Set<Player> finalScoringPass;
 
-    public CountCapabilityModel(Position quarterPosition, Player finalScoringLastMeepleDeployPlayer) {
+    public CountCapabilityModel(Position quarterPosition, Set<Player> finalScoringPass) {
         this.quarterPosition = quarterPosition;
-        this.finalScoringLastMeepleDeployPlayer = finalScoringLastMeepleDeployPlayer;
+        this.finalScoringPass = finalScoringPass;
     }
 
     public Position getQuarterPosition() {
         return quarterPosition;
     }
 
-    public Player getFinalScoringLastMeepleDeployPlayer() {
-        return finalScoringLastMeepleDeployPlayer;
+    public Set<Player> getFinalScoringPass() {
+        return finalScoringPass;
     }
 
-    public CountCapabilityModel setFinalScoringLastMeepleDeployPlayer(Player player) {
-        return new CountCapabilityModel(quarterPosition, player);
+    public CountCapabilityModel setFinalScoringPass(Set<Player> value) {
+        return new CountCapabilityModel(quarterPosition, value);
     }
 }

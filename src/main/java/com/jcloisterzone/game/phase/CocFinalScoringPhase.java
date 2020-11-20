@@ -8,12 +8,15 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.CountCapability;
+import com.jcloisterzone.game.capability.CountCapabilityModel;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
+import io.vavr.collection.HashSet;
 
 import java.util.function.Function;
 
+@RequiredCapability(CountCapability.class)
 public class CocFinalScoringPhase extends AbstractCocScoringPhase {
 
     public CocFinalScoringPhase(RandomGenerator random) {
@@ -21,13 +24,35 @@ public class CocFinalScoringPhase extends AbstractCocScoringPhase {
     }
 
     @Override
-    protected boolean isLast(GameState state, Player player, boolean actionUsed) {
-        Player lastNoPass = state.getCapabilityModel(CountCapability.class).getFinalScoringLastMeepleDeployPlayer();
-        if (lastNoPass == null) {
-            // no player has meeple (or everybody pass) without deploying any meeple
-            return state.getTurnPlayer().equals(player);
+    public StepResult enter(GameState state) {
+        CountCapabilityModel model = state.getCapabilityModel(CountCapability.class);
+        state = state.setCapabilityModel(CountCapability.class, model.setFinalScoringPass(HashSet.empty()));
+        return super.enter(state);
+    }
+
+    @Override
+    protected StepResult nextPlayer(GameState state, Player player, boolean actionUsed) {
+        CountCapabilityModel model = state.getCapabilityModel(CountCapability.class);
+        if (!actionUsed) {
+            model = model.setFinalScoringPass(model.getFinalScoringPass().add(player));
+            state = state.setCapabilityModel(CountCapability.class, model);
         }
-        return lastNoPass.equals(player) && !actionUsed;
+
+        Player next = player;
+        while (model.getFinalScoringPass().size() != state.getPlayers().length()) {
+            next = next.getNextPlayer(state);
+            if (!model.getFinalScoringPass().contains(next)) {
+                StepResult res = processPlayer(state, next);
+                if (res == null) {
+                    model = model.setFinalScoringPass(model.getFinalScoringPass().add(next));
+                    state = state.setCapabilityModel(CountCapability.class, model);
+                } else {
+                    return res;
+                }
+            }
+        }
+
+        return endPhase(state);
     }
 
     @Override
@@ -43,14 +68,5 @@ public class CocFinalScoringPhase extends AbstractCocScoringPhase {
         };
     }
 
-    @PhaseMessageHandler
-    public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
-        FeaturePointer fp = msg.getPointer();
-        Player player = state.getActivePlayer();
-        Follower follower = player.getFollowers(state).find(f -> f.getId().equals(msg.getMeepleId())).get();
 
-        state = state.mapCapabilityModel(CountCapability.class, m -> m.setFinalScoringLastMeepleDeployPlayer(player));
-        state = (new DeployMeeple(follower, fp)).apply(state);
-        return nextPlayer(state, player, true);
-    }
 }

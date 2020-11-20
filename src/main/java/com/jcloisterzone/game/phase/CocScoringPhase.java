@@ -31,8 +31,19 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
     }
 
     @Override
-    protected boolean isLast(GameState state, Player player, boolean actionUsed) {
-        return state.getTurnPlayer().equals(player);
+    protected StepResult nextPlayer(GameState state, Player player, boolean actionUsed) {
+        Player next = player;
+        while (true) {
+            next = next.getNextPlayer(state);
+            if (state.getTurnPlayer().equals(next)) {
+                return endPhase(state);
+            } else {
+                StepResult res = processPlayer(state, next);
+                if (res != null) {
+                    return res;
+                }
+            }
+        }
     }
 
     @Override
@@ -108,15 +119,5 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
             }
             throw new UnsupportedOperationException();
         };
-    }
-
-    @PhaseMessageHandler
-    public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
-        FeaturePointer fp = msg.getPointer();
-        Player player = state.getActivePlayer();
-        Follower follower = player.getFollowers(state).find(f -> f.getId().equals(msg.getMeepleId())).get();
-
-        state = (new DeployMeeple(follower, fp)).apply(state);
-        return processPlayer(state, player);
     }
 }

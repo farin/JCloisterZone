@@ -90,11 +90,7 @@ public class TilePhase extends Phase {
 
                 // Tile Pack is empty
                 if (packIsEmpty) {
-                    if (state.hasCapability(CountCapability.class)) {
-                        return next(state, CocFinalScoringPhase.class);
-                    } else {
-                        return next(state, GameOverPhase.class);
-                    }
+                    return next(state, state.getEndPhase());
                 }
 
                 state = drawTile(state);

@@ -11,6 +11,9 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.CountCapability;
+import com.jcloisterzone.game.phase.CocFinalScoringPhase;
+import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.state.mixins.*;
 import io.vavr.collection.*;
@@ -364,5 +367,13 @@ public class GameState implements ActionsMixin, BoardMixin,
 
     public int getTurnNumber() {
         return turnNumber;
+    }
+
+    public Class<? extends Phase> getEndPhase () {
+        if (hasCapability(CountCapability.class)) {
+            return CocFinalScoringPhase.class;
+        } else {
+            return GameOverPhase.class;
+        }
     }
 }

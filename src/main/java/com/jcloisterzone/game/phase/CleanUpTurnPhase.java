@@ -36,7 +36,7 @@ public class CleanUpTurnPhase extends Phase {
         if (tilePack.isEmpty() && bazaarSupply == null) {
             // TODO allow placing Abbey if enabled by custom rule (TODO add it, default is don't allow)
             // but don't add fairy points during this special turns
-            return next(state, GameOverPhase.class);
+            return next(state, state.getEndPhase());
         } else {
             state = (new SetNextPlayer()).apply(state);
             return next(state);
