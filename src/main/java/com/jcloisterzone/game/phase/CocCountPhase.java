@@ -5,6 +5,8 @@ import com.jcloisterzone.action.NeutralFigureAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.MeepleDeployed;
+import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.RandomGenerator;
@@ -30,6 +32,25 @@ public class CocCountPhase extends Phase {
         Count count = state.getNeutralFigures().getCount();
         Position quarterPos = state.getCapabilityModel(CountCapability.class).getQuarterPosition();
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
+        String rule = state.getStringRule(Rule.COUNT_MOVE);
+
+        if ("clockwise".equals(rule)) {
+            Location quarter = countFp.getLocation();
+            Location nextQuarter = null;
+            if (quarter.equals(Location.QUARTER_CASTLE)) nextQuarter = Location.QUARTER_MARKET;
+            else if (quarter.equals(Location.QUARTER_MARKET)) nextQuarter = Location.QUARTER_BLACKSMITH;
+            else if (quarter.equals(Location.QUARTER_BLACKSMITH)) nextQuarter = Location.QUARTER_CATHEDRAL;
+            else nextQuarter = Location.QUARTER_CASTLE;
+
+            state = (new MoveNeutralFigure<FeaturePointer>(count, new FeaturePointer(quarterPos, nextQuarter), player)).apply(state);
+            return next(state);
+        }
+
+        if ("follow-meeple".equals(rule)) {
+            MeepleDeployed cocDeployment = (MeepleDeployed) state.getEvents().findLast(ev -> ev instanceof MeepleDeployed && ((MeepleDeployed)ev).getLocation().isCityOfCarcassonneQuarter()).get();
+            state = (new MoveNeutralFigure<FeaturePointer>(count, new FeaturePointer(quarterPos, cocDeployment.getLocation()), player)).apply(state);
+            return next(state);
+        }
 
         List<Location> quarters = Location.QUARTERS.filter(loc -> loc != countFp.getLocation());
         if (!state.getBooleanRule(Rule.FARMERS)) {
