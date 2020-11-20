@@ -30,6 +30,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
 
     protected abstract Function<Feature, Boolean> getAllowedFeaturesFilter(GameState state);
     protected abstract StepResult nextPlayer(GameState state, Player player, boolean actionUsed);
+    protected abstract List<Location> getValidQuerters(GameState state);
 
     protected StepResult endPhase(GameState state) {
         state = clearActions(state);
@@ -53,7 +54,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
         Function<Feature, Boolean> filter = getAllowedFeaturesFilter(state);
 
-        Vector<MeepleAction> actions = Location.QUARTERS
+        Vector<MeepleAction> actions = getValidQuerters(state)
             .filter(quarter -> quarter != countFp.getLocation())
             .flatMap(quarter -> {
                 Set<FeaturePointer> options = state.getFeatures(getFeatureTypeForLocation(quarter))

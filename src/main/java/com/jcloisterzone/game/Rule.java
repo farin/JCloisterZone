@@ -25,7 +25,8 @@ public enum Rule {
     LABYRINTH_VARIANT("labyrinth-variant", String.class, new Object[] { "basic", "advanced" }),
     LITTLE_BUILDINGS_SCORING("little-buildings-scoring", String.class, new Object[] { "1/1/1", "3/2/1" }),
     KING_AND_ROBBER_SCORING("king-and-robber-scoring", String.class, new Object[] { "default", "10/20", "15/40", "continuously" }),
-    TINY_CITY_SCORING("tiny-city-scoring", String.class, new Object[] { "4", "2" });
+    TINY_CITY_SCORING("tiny-city-scoring", String.class, new Object[] { "4", "2" }),
+    COC_FINAL_SCORING("coc-final-scoring", String.class, new Object[] { "market-only", "any-district"});
 
 
     String key;

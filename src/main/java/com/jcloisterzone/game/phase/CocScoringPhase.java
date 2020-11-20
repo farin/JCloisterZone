@@ -20,6 +20,7 @@ import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
+import io.vavr.collection.List;
 
 import java.util.function.Function;
 
@@ -44,6 +45,11 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
                 }
             }
         }
+    }
+
+    @Override
+    protected List<Location> getValidQuerters(GameState state) {
+        return Location.QUARTERS;
     }
 
     @Override
