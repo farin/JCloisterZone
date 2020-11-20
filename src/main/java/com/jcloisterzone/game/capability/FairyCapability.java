@@ -19,6 +19,7 @@ import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.List;
+import io.vavr.collection.Seq;
 import io.vavr.collection.Set;
 
 @Immutable
@@ -46,15 +47,24 @@ public class FairyCapability extends Capability<Void> {
                 .mapKeys(m -> (Follower) m);
 
         Fairy fairy = state.getNeutralFigures().getFairy();
+        BoardPointer fairyPtr = state.getNeutralFigures().getFairyDeployment();
 
         if (fairyOnTile) {
-            Set<Position> options = followers.values().map(fp -> fp.getPosition()).toSet();
+            Seq<Position> positions = followers.values().map(fp -> fp.getPosition());
+            if (fairyPtr != null) {
+                positions = positions.filter(fp -> !fp.getPosition().equals(fairyPtr.getPosition()));
+            }
+            Set<Position> options = positions.toSet();
             if (options.isEmpty()) {
                 return state;
             }
             return state.appendAction(new FairyOnTileAction(fairy.getId(), options));
         } else {
-            Set<MeeplePointer> options = followers.map(t -> new MeeplePointer(t)).toSet();
+            Seq<MeeplePointer> ptrs = followers.map(t -> new MeeplePointer(t));
+            if (fairyPtr != null) {
+                ptrs = ptrs.filter(fp -> !fp.getMeepleId().equals(((MeeplePointer)fairyPtr).getMeepleId()));
+            }
+            Set<MeeplePointer> options = ptrs.toSet();
             if (options.isEmpty()) {
                 return state;
             }
