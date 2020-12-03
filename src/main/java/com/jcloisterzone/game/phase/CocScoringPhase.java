@@ -32,18 +32,22 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
     }
 
     @Override
+    public StepResult enter(GameState state) {
+        return nextPlayer(state, state.getTurnPlayer().getNextPlayer(state), true);
+    }
+
+    @Override
     protected StepResult nextPlayer(GameState state, Player player, boolean actionUsed) {
-        Player next = player;
+        Player p = player;
         while (true) {
-            next = next.getNextPlayer(state);
-            if (state.getTurnPlayer().equals(next)) {
-                return endPhase(state);
-            } else {
-                StepResult res = processPlayer(state, next);
-                if (res != null) {
-                    return res;
-                }
+            StepResult res = processPlayer(state, p);
+            if (res != null) {
+                return res;
             }
+            if (p.equals(state.getTurnPlayer())) {
+                return endPhase(state);
+            }
+            p = p.getNextPlayer(state);
         }
     }
 

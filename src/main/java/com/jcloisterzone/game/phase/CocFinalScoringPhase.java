@@ -30,7 +30,7 @@ public class CocFinalScoringPhase extends AbstractCocScoringPhase {
     public StepResult enter(GameState state) {
         CountCapabilityModel model = state.getCapabilityModel(CountCapability.class);
         state = state.setCapabilityModel(CountCapability.class, model.setFinalScoringPass(HashSet.empty()));
-        return super.enter(state);
+        return nextPlayer(state, state.getTurnPlayer(), true);
     }
 
     @Override

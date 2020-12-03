@@ -37,11 +37,6 @@ public abstract class AbstractCocScoringPhase extends Phase {
         return next(state);
     }
 
-    @Override
-    public StepResult enter(GameState state) {
-        return nextPlayer(state, state.getTurnPlayer(), true);
-    }
-
     private Class<? extends Scoreable> getFeatureTypeForLocation(Location loc) {
         if (loc == Location.QUARTER_CASTLE) return City.class;
         if (loc == Location.QUARTER_BLACKSMITH) return Road.class;
