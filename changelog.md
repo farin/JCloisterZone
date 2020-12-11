@@ -1,13 +1,23 @@
 # Version history
 
-## upcoming 5.0.0
+## New app architecture (5.x.x)
 
 * new app architecture - split between game engine (Java) and client (standalone executable app, based on Electron)
 
 Game engine changes:
-* fix flier and magic portal regression - do not allow meeple placement on castle by flier and magic portal
+* added Abbot expansion
+* added Spiel Doch promo
+* added custom rules for Count move
+* support for C2 Wagon move rules
 * Darmstatd church - majority for counting church bonus is evaluated before anything is score
     (in other words before any follower is returned to a supply)
+* fix flier and magic portal regression - do not allow meeple placement on castle by flier and magic portal
+* fix: do not score castle created this turn
+* fix: castle can be created on besiged cities
+* fix: disallow undo for dragon moves
+* fix: trigger double turn even if builder was eaten by dragon
+* fix: Shepherd can co-existent on farm with barn
+* fix: Add Little Buildings bonus also for German Monasterie
 
 ## 4.6.1
 *2020-06-02*
