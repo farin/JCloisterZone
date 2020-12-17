@@ -49,10 +49,11 @@ public class BazaarPhase extends Phase {
 
         for (int i = 0; i < playersCount; i++) {
             Tuple2<Tile, TilePack> t = tilePack.drawTile(getRandom());
-            state = state.setTilePack(t._2);
+            tilePack = t._2;
             supply = supply.append(new BazaarItem(t._1, 0, null, null));
         }
 
+        state = state.setTilePack(tilePack);
         Player player = state.getTurnPlayer().getNextPlayer(state);
         BazaarCapabilityModel model = new BazaarCapabilityModel(supply, null, player);
 
