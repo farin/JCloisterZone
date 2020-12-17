@@ -8,6 +8,7 @@ import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.PhantomCapability;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.ActionsState;
+import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.Predicates;
 import io.vavr.collection.Vector;
@@ -21,6 +22,14 @@ public class PhantomPhase extends AbstractActionPhase {
 
     @Override
     public StepResult enter(GameState state) {
+        if (state.getFlags().contains(Flag.PRINCESS_USED)) {
+            // The placement of a princess tile with removal of a knight from the city cannot be used as a first
+            // "follower move" and be followed by placement of the phantom (e.g. into the now-vacated city).
+            // As per the rules for the princess, "if a knight is removed from the city, the player may not deploy or
+            // move any other figure." [This combo would be too powerful in allowing city stealing – ed.]
+            return next(state);
+        }
+
         Player player = state.getTurnPlayer();
 
         Vector<PlayerAction<?>> actions = prepareMeepleActions(state, Vector.of(Phantom.class));

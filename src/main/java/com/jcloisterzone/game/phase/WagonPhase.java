@@ -14,6 +14,7 @@ import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.state.ActionsState;
+import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
@@ -38,8 +39,16 @@ public class WagonPhase extends Phase {
             model = dequeueTuple._2;
             state = state.setCapabilityModel(WagonCapability.class, model);
             Tuple2<Wagon, FeaturePointer> item = dequeueTuple._1;
-
             Wagon wagon = item._1;
+
+            if (state.getFlags().contains(Flag.PRINCESS_USED) && wagon.getPlayer().equals(state.getTurnPlayer())) {
+                // The placement of a princess tile with removal of a knight from the city cannot be used as a first
+                // "follower move" and be followed by placement of the phantom (e.g. into the now-vacated city).
+                // As per the rules for the princess, "if a knight is removed from the city, the player may not deploy or
+                // move any other figure." [This combo would be too powerful in allowing city stealing – ed.]
+                continue;
+            }
+
             Feature feature = state.getFeature(item._2);
             if (feature instanceof Completable) { // skip Castle
                 GameState _state = state;
