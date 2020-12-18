@@ -1,5 +1,16 @@
 # Version history
 
+## New app architecture (5.3.1)
+*2020-12-18*
+
+* rules: phantom can't be played immediatelly after princess
+* fix: don't clone auctioned tiles (auctioned tiles remained in tile pack)
+* fix: move from City of Carcassonne can be skipped now
+* fix: follower capture is not mandatory after increasing tower
+* auction tiles in history sidebar are wrapped to multiple rows
+* config.json is watched and read after manual change
+
+
 ## New app architecture (5.x.x)
 
 * new app architecture - split between game engine (Java) and client (standalone executable app, based on Electron)
