@@ -141,16 +141,23 @@ public abstract class AbstractActionPhase extends Phase {
         PlacedTile lastPlaced = state.getLastPlaced();
         Position currentTilePos = lastPlaced.getPosition();
         Stream<PlacedTile> tiles;
+        Stream<Tuple2<FeaturePointer, Structure>> specialMeepleStructures;
+        Stream<Tuple2<FeaturePointer, Structure>> regularMeepleStructures;
 
         if (lastPlaced.getTile().hasModifier(PortalCapability.MAGIC_PORTAL) && !state.getFlags().contains(Flag.PORTAL_USED)) {
-            tiles = Stream.ofAll(state.getPlacedTiles().values());
+            Stream<PlacedTile> allTiles = Stream.ofAll(state.getPlacedTiles().values());
+            regularMeepleStructures = getAvailableStructures(state, allTiles, HashSet.of(currentTilePos));
+            specialMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
         } else {
-            tiles = Stream.of(lastPlaced);
+            regularMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
+            specialMeepleStructures = regularMeepleStructures;
         }
 
-        Stream<Tuple2<FeaturePointer, Structure>> structures = getAvailableStructures(state, tiles, HashSet.of(currentTilePos));
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
-            Set<FeaturePointer> locations = getMeepleAvailableStructures(state, meeple, structures, false);
+            Set<FeaturePointer> locations = getMeepleAvailableStructures(
+                    state, meeple,
+                    meeple instanceof Special ? specialMeepleStructures : regularMeepleStructures,
+                    false);
             PlayerAction<?> action = new MeepleAction(meeple, locations);
             return action;
         });
