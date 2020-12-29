@@ -1,6 +1,15 @@
 # Version history
 
-## New app architecture (5.3.1)
+## 5.3.2
+*2020-12-29*
+
+* fix: only regular meeples can use magic portal
+* added option to randomize seating order
+* added tiles dialog - shows removed and remaining tiles
+* purist mode - option to disable remaining tiles
+* user can display dialog with current game's setup
+
+## 5.3.1
 *2020-12-18*
 
 * rules: phantom can't be played immediatelly after princess
