@@ -1,5 +1,11 @@
 # Version history
 
+## 5.3.3
+*2020-12-30*
+* hide unintentionally displayed experimental section "play online" (not working yet)
+* zoom follows mouse pointer. wheel sensitivity decreased
+* fix colors in game setup overview
+
 ## 5.3.2
 *2020-12-29*
 
