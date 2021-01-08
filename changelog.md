@@ -3,7 +3,7 @@
 ## next release
 
 * fix: unable to skip move from City of Carcassonne discrict (impossible in player's turn)
-* added confirmation after: wagon move, move from City of Carcassonne
+* added confirmation after: wagon move, corn circle actions, move from City of Carcassonne
 
 
 ## 5.3.3
