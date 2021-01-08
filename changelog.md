@@ -1,5 +1,11 @@
 # Version history
 
+## next release
+
+* fix: unable to skip move from City of Carcassonne discrict (impossible in player's turn)
+* added confirmation to moving from City of Carcassonne
+
+
 ## 5.3.3
 *2020-12-30*
 * hide unintentionally displayed experimental section "play online" (not working yet)

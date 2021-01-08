@@ -80,6 +80,7 @@ public class StateGsonBuilder {
         builder.registerTypeAdapter(BazaarBidAction.class, new ActionSerializer("BazaarBid"));
         builder.registerTypeAdapter(BazaarSelectBuyOrSellAction.class, new ActionSerializer("BazaarSelectBuyOrSell"));
         builder.registerTypeAdapter(CornCircleSelectDeployOrRemoveAction.class, new CornCircleSelectDeployOrRemoveActionSerializer());
+        builder.registerTypeAdapter(ConfirmAction.class, new ActionSerializer("Confirm"));
         builder.registerTypeAdapter(FlockAction.class, new FlockActionSerializer());
         builder.registerTypeAdapter(TunnelAction.class, new TunnelActionSerializer());
         builder.registerTypeAdapter(FerriesAction.class, new FerriesActionSerializer());
