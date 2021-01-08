@@ -16,6 +16,7 @@ import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.io.message.PassMessage;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
 import io.vavr.Predicates;
@@ -34,6 +35,16 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
     @Override
     public StepResult enter(GameState state) {
         return nextPlayer(state, state.getTurnPlayer(), false);
+    }
+
+    @Override
+    @PhaseMessageHandler
+    public StepResult handlePass(GameState state, PassMessage msg) {
+        Player player = state.getActivePlayer();
+        if (player.equals(state.getTurnPlayer())) {
+            return endPhase(state);
+        }
+        return super.handlePass(state, msg);
     }
 
     @Override
