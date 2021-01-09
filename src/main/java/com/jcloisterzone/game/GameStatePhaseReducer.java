@@ -27,10 +27,11 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
     public GameStatePhaseReducer(GameSetup setup, long initialSeed) {
         random = new RandomGenerator(initialSeed);
 
-        Phase over, last, next = null;
+        Phase endChain, last, next = null;
         //if there isn't assignment - phase is out of standard flow
-        over = addPhase(setup, next, GameOverPhase.class);
-               addPhase(setup, over, CocFinalScoringPhase.class);
+        endChain = addPhase(setup, null, GameOverPhase.class);
+        endChain = addPhase(setup, endChain, CocFinalScoringPhase.class);
+        endChain = addPhase(setup, endChain, AbbeyEndGamePhase.class);
 
         next = last = addPhase(setup, next, CleanUpTurnPhase.class);
         next = addPhase(setup, next, BazaarPhase.class);

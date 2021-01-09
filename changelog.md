@@ -2,9 +2,9 @@
 
 ## next release
 
-* fix: unable to skip move from City of Carcassonne discrict (impossible in player's turn)
+* rules: each player can place abbey after last tile is placed
 * added confirmation after: wagon move, corn circle actions, move from City of Carcassonne
-
+* fix: unable to skip move from City of Carcassonne discrict (impossible in player's turn)
 
 ## 5.3.3
 *2020-12-30*
