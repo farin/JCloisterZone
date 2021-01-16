@@ -10,8 +10,10 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Structure;
+import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.WagonCapability;
@@ -48,18 +50,31 @@ public class WagonPhase extends Phase {
             if (feature instanceof Completable) { // skip Castle
                 GameState _state = state;
                 Set<FeaturePointer> options = getAdjacentFeatures(state, (Completable)feature, item._2)
-                    .filter(t -> {
-                        Feature f = t._2;
-                        if (f instanceof Castle) {
-                            Castle castle = (Castle) f;
-                            return !castle.isOccupied(_state);
-                        }
-                        if (f instanceof Completable) {
-                            Completable nei = (Completable) f;
-                            return !nei.isCompleted(_state) && !nei.isOccupied(_state);
-                        }
-                        return false; // eg f == null
-                    }).map(Tuple2::_1).toSet();
+                        .filter(t -> {
+                            Feature f = t._2;
+                            if (f instanceof Castle) {
+                                Castle castle = (Castle) f;
+                                return !castle.isOccupied(_state);
+                            }
+                            if (f instanceof Completable) {
+                                Completable nei = (Completable) f;
+                                if ((f instanceof  Structure) && wagon.isDeploymentAllowed(_state, t._1, (Structure) f) != DeploymentCheckResult.OK) {
+                                    return false;
+                                }
+                                return !nei.isCompleted(_state) && !nei.isOccupied(_state);
+                            }
+                            return false; // eg f == null
+                        })
+                        .map(Tuple2::_1)
+                        .filter(fp -> {
+                            for (Capability<?> cap : _state.getCapabilities().toSeq()) {
+                                if (!cap.isMeepleDeploymentAllowed(_state, fp.getPosition())) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        })
+                        .toSet();
 
                 if (!options.isEmpty()) {
                     PlayerAction<?> action = new MeepleAction(wagon, options);
