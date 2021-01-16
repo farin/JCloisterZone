@@ -1,10 +1,19 @@
 # Version history
 
-## next release
+## 5.4.0
 
 * rules: each player can place abbey after last tile is placed
-* added confirmation after: wagon move, corn circle actions, move from City of Carcassonne
+* rules: when field with Shepherd is closed player can still choose expand/score
+* fix: skip action by opponent is no longer possible
+* fix: load game with randomized seating order
+* fix: do not allow wagon move on garden (causing game  crash)
 * fix: unable to skip move from City of Carcassonne discrict (impossible in player's turn)
+* fix: when "fairy on tile" rule was selected, 1 point fairy bonus wasn't awarded
+* added confirmation after: wagon move, corn circle actions, move from City of Carcassonne
+* rotating tile skips invalid rotations on selected position (now works same as in legacy application)
+* it's possible rotate tile / select action also from keyboard with Tab key
+* added progress bar to app update (will we active for next update)
+* saved games are not compatible with previous version
 
 ## 5.3.3
 *2020-12-30*
