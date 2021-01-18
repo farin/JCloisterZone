@@ -1,6 +1,12 @@
 # Version history
 
+## 5.4.1
+*2021-01-18*
+
+* hotfix: meeples on bridges are displayed on wrong position
+
 ## 5.4.0
+*2021-01-17*
 
 * rules: each player can place abbey after last tile is placed
 * rules: when field with Shepherd is closed player can still choose expand/score
