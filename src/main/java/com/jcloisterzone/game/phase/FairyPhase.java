@@ -35,16 +35,18 @@ public class FairyPhase extends Phase {
         for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
             Meeple m = t._1;
             if (!m.getPlayer().equals(state.getTurnPlayer())) continue;
-            if (!t._2.equals(fairyFp)) continue;
-
-            if (!onTileRule && !((MeeplePointer) ptr).match(m)) {
-                continue;
+            if (onTileRule) {
+                if (!t._2.getPosition().equals(fairyFp.getPosition())) continue;
+            } else {
+                if (!t._2.equals(fairyFp)) continue;
+                if (!((MeeplePointer) ptr).match(m)) continue;
             }
 
             state = new AddPoints(m.getPlayer(), FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN).apply(state);
 
             PointsExpression expr = new PointsExpression(FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN, "fairy.turn");
             state = state.appendEvent(new ScoreEvent(new ReceivedPoints(expr, m.getPlayer(), fairyFp), false, false));
+            break;
         }
 
         return next(state);

@@ -76,21 +76,6 @@ public class TilePhase extends Phase {
                     return next(state, CleanUpTurnPhase.class);
                 }
 
-                //Abbey special case, every player has opportunity to place own abbey at the end.
-                if (packIsEmpty && state.getCapabilities().contains(AbbeyCapability.class)) {
-                    Integer endPlayerIdx = state.getCapabilityModel(AbbeyCapability.class);
-                    Player turnPlayer = state.getTurnPlayer();
-                    if (endPlayerIdx == null) {
-                        //tile pack has been depleted jut now
-                        endPlayerIdx = turnPlayer.getPrevPlayer(state).getIndex();
-                        state = state.setCapabilityModel(AbbeyCapability.class, endPlayerIdx);
-                    }
-                    if (endPlayerIdx != turnPlayer.getIndex()) {
-                        return next(state, CleanUpTurnPartPhase.class);
-                    }
-                    // otherwise proceed to game over
-                }
-
                 // Tile Pack is empty
                 if (packIsEmpty) {
                     return next(state, state.getEndPhase());

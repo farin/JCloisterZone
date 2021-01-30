@@ -1,10 +1,7 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.action.CornCircleSelectDeployOrRemoveAction;
-import com.jcloisterzone.action.MeepleAction;
-import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.ReturnMeepleAction;
+import com.jcloisterzone.action.*;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
@@ -17,13 +14,10 @@ import com.jcloisterzone.game.capability.CornCircleCapability.CornCircleModifier
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.io.message.*;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.reducers.UndeployMeeple;
-import com.jcloisterzone.io.message.CornCircleRemoveOrDeployMessage;
 import com.jcloisterzone.io.message.CornCircleRemoveOrDeployMessage.CornCircleOption;
-import com.jcloisterzone.io.message.DeployMeepleMessage;
-import com.jcloisterzone.io.message.PassMessage;
-import com.jcloisterzone.io.message.ReturnMeepleMessage;
 import com.jcloisterzone.io.message.ReturnMeepleMessage.ReturnMeepleSource;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
@@ -146,7 +140,7 @@ public class CornCirclePhase extends Phase {
         Meeple m = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
         state = (new DeployMeeple(m, fp)).apply(state);
 
-        return nextCornPlayer(state, player);
+        return promote(state.setPlayerActions(new ActionsState(player, new ConfirmAction(), false)));
     }
 
     @PhaseMessageHandler
@@ -165,7 +159,13 @@ public class CornCirclePhase extends Phase {
         Meeple meeple = state.getDeployedMeeples().find(m -> ptr.match(m._1)).map(t -> t._1)
             .getOrElseThrow(() -> new IllegalArgumentException("Pointer doesn't match any meeple"));
         state = (new UndeployMeeple(meeple, true)).apply(state);
-        return nextCornPlayer(state, player);
+
+        return promote(state.setPlayerActions(new ActionsState(player, new ConfirmAction(), false)));
+    }
+
+    @PhaseMessageHandler
+    public StepResult handleCommit(GameState state, CommitMessage msg) {
+        return nextCornPlayer(state, state.getActivePlayer());
     }
 
     @PhaseMessageHandler

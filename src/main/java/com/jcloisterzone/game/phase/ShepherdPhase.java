@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.action.FlockAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.engine.Game;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
@@ -37,16 +38,19 @@ public class ShepherdPhase extends Phase {
 		super(random);
 	}
 
+	private Seq<Farm> getClosedFarmsWithShepherd(GameState state) {
+		return state.getDeployedMeeples()
+				.filterKeys(Predicates.instanceOf(Shepherd.class))
+				.values()
+				.map(fp -> (Farm) state.getFeature(fp))
+				.distinct()
+				.filter(farm -> !farm.isOpen(state));
+	}
+
 	@Override
 	public StepResult enter(GameState state) {
 		PlacedTile lastPlaced = state.getLastPlaced();
-		GameState _state = state;
-		Seq<Farm> closedFarmsWithShepherd = state.getDeployedMeeples()
-				.filterKeys(Predicates.instanceOf(Shepherd.class))
-				.values()
-				.map(fp -> (Farm) _state.getFeature(fp))
-				.distinct()
-				.filter(farm -> !farm.isOpen(_state));
+		Seq<Farm> closedFarmsWithShepherd = getClosedFarmsWithShepherd(state);
 
 		Shepherd shepherd = (Shepherd) state.getTurnPlayer().getSpecialMeeples(state).find(m -> m instanceof Shepherd).getOrNull();
 		FeaturePointer shepherdFp = shepherd.getDeployment(state);
@@ -60,18 +64,16 @@ public class ShepherdPhase extends Phase {
 			Farm farm = (Farm) state.getFeature(shepherdFp);
 			isFarmExtended = state.getTileFeatures2(lastPlaced.getPosition()).map(Tuple2::_2).contains(farm);
 
-			// close farms after placed flock is expanded http://wikicarpedia.com/index.php/Hills_%26_Sheep#cite_note-2
-			if (isJustPlaced || closedFarmsWithShepherd.contains(farm)) {
+			if (isJustPlaced) {
 				state = expandFlock(state, shepherdFp);
 				alreadyExpanded = true;
 			}
 		}
 
-		for (Farm farm : closedFarmsWithShepherd) {
-			state = scoreFlock(state, farm);
-		}
-
 		if (shepherdFp == null || !isFarmExtended || alreadyExpanded) {
+			for (Farm farm : closedFarmsWithShepherd) {
+				state = scoreFlock(state, farm);
+			}
 			return next(state);
 		}
 
@@ -86,7 +88,12 @@ public class ShepherdPhase extends Phase {
 		FeaturePointer shepherdFp = shepherd.getDeployment(state);
 
 		if (msg.getValue() == FlockOption.EXPAND) {
-			return next(expandFlock(state, shepherdFp));
+			state = expandFlock(state, shepherdFp);
+			Seq<Farm> closedFarmsWithShepherd = getClosedFarmsWithShepherd(state);
+			for (Farm farm : closedFarmsWithShepherd) {
+				state = scoreFlock(state, farm);
+			}
+			return next(state);
 		} else {
 			return scoreFlock(state, shepherdFp);
 		}

@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
 import com.jcloisterzone.game.capability.BazaarItem;
@@ -30,12 +31,16 @@ public class CleanUpTurnPhase extends Phase {
             state = state.setFlags(HashSet.empty());
         }
 
+        Integer endPlayerIdx = state.getCapabilityModel(AbbeyCapability.class);
+        if (endPlayerIdx != null) {
+            // end game abbey state is in progress
+            return next(state, AbbeyEndGamePhase.class);
+        }
+
         BazaarCapabilityModel bazaarModel = state.getCapabilityModel(BazaarCapability.class);
         Queue<BazaarItem> bazaarSupply = bazaarModel == null ? null : bazaarModel.getSupply();
         TilePack tilePack = state.getTilePack();
         if (tilePack.isEmpty() && bazaarSupply == null) {
-            // TODO allow placing Abbey if enabled by custom rule (TODO add it, default is don't allow)
-            // but don't add fairy points during this special turns
             return next(state, state.getEndPhase());
         } else {
             state = (new SetNextPlayer()).apply(state);

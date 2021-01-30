@@ -6,26 +6,25 @@
 * fixed broken reconnect / join existing game afterd disconnect
 
 ## 5.4.1
-*2021-01-16*
+*2021-01-18*
 
-* fix: wrongly displayed meeples on bridges (intriduced in 5.4.0 build)
+* hotfix: meeples on bridges are displayed on wrong position
 
 ## 5.4.0
-*2021-01-16*
+*2021-01-17*
 
 * rules: each player can place abbey after last tile is placed
 * rules: when field with Shepherd is closed player can still choose expand/score
 * fix: skip action by opponent is no longer possible
 * fix: load game with randomized seating order
-* fix: do not allow wagon move on garden (causing game crash)
+* fix: do not allow wagon move on garden (causing game  crash)
 * fix: unable to skip move from City of Carcassonne discrict (impossible in player's turn)
 * fix: when "fairy on tile" rule was selected, 1 point fairy bonus wasn't awarded
 * added confirmation after: wagon move, corn circle actions, move from City of Carcassonne
 * rotating tile skips invalid rotations on selected position (now works same as in legacy application)
 * it's possible rotate tile / select action also from keyboard with Tab key
 * added progress bar to app update (will we active for next update)
-* note: saved games are not compatible with previous version
-
+* saved games are not compatible with previous version
 
 ## 5.3.3
 *2020-12-30*

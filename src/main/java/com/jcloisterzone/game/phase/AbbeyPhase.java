@@ -18,7 +18,7 @@ import io.vavr.collection.Stream;
 import java.util.Arrays;
 
 @RequiredCapability(AbbeyCapability.class)
-public class AbbeyPhase extends Phase {
+public class AbbeyPhase extends AbstractAbbeyPhase {
 
     public AbbeyPhase(RandomGenerator random) {
         super(random);
@@ -32,51 +32,23 @@ public class AbbeyPhase extends Phase {
         boolean builderSecondTurnPart = builderState == BuilderState.SECOND_TURN;
         boolean hasAbbey = state.getPlayers().getPlayerTokenCount(state.getPlayers().getTurnPlayerIndex(), AbbeyToken.ABBEY_TILE) > 0;
         if (hasAbbey && (builderSecondTurnPart || !bazaarInProgress)) {
-            GameState _state = state;
-            Stream<PlacementOption> options = state.getHoles()
-                .flatMap(t ->
-                    Array.ofAll(Arrays.asList(Rotation.values()))
-                    .map(r -> new PlacementOption(t._1, r, null))
-                )
-                .filter(tp -> {
-                    for (Capability<?> cap : _state.getCapabilities().toSeq()) {
-                        if (!cap.isTilePlacementAllowed(_state, AbbeyCapability.ABBEY_TILE, tp)) return false;
-                    }
-                    return true;
-                });
-
-            if (!options.isEmpty()) {
-                TilePlacementAction action = new TilePlacementAction(
-                    AbbeyCapability.ABBEY_TILE,
-                    options.toSet()
-                );
-
+            TilePlacementAction action = createAbbeyAction(state);
+            if (action != null) {
                 state = state.setPlayerActions(new ActionsState(
-                    state.getTurnPlayer(),
-                    action,
-                    true
+                        state.getTurnPlayer(),
+                        action,
+                        true
                 ));
-
                 return promote(state);
             }
+
         }
         return next(state, TilePhase.class);
     }
 
     @PhaseMessageHandler
     public StepResult handlePlaceTile(GameState state, PlaceTileMessage msg) {
-        if (!msg.getTileId().equals(AbbeyCapability.ABBEY_TILE_ID)) {
-            throw new IllegalArgumentException("Only abbey can be placed.");
-        }
-
-        Player player = state.getActivePlayer();
-        state = state.mapPlayers(ps ->
-            ps.addTokenCount(player.getIndex(), AbbeyToken.ABBEY_TILE, -1)
-        );
-
-        state = (new PlaceTile(AbbeyCapability.ABBEY_TILE, msg.getPosition(), msg.getRotation())).apply(state);
-        state = clearActions(state);
-
+        state = applyPlaceTile(state, msg);
         return next(state, ActionPhase.class);
     }
 }
