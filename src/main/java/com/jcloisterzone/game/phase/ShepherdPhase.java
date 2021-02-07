@@ -106,9 +106,9 @@ public class ShepherdPhase extends Phase {
 	private StepResult scoreFlock(GameState state, FeaturePointer shepherdFp) {
 		Farm farm = (Farm) state.getFeature(shepherdFp);
 		state = scoreFlock(state, farm);
-                Seq<Farm> closedFarmsWithShepherd = getClosedFarmsWithShepherd(state);
-                for (Farm closedFarm : closedFarmsWithShepherd) {
-				state = scoreFlock(state, closedFarm);
+		Seq<Farm> closedFarmsWithShepherd = getClosedFarmsWithShepherd(state);
+		for (Farm closedFarm : closedFarmsWithShepherd) {
+			state = scoreFlock(state, closedFarm);
 		}
 		state = clearActions(state);
 		return next(state);

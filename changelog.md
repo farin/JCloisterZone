@@ -1,5 +1,9 @@
 # Version history
 
+## Upcoming
+
+* fix: opponent's shepard on closed field is score one turn later
+
 ## 5.4.2
 *2021-01-30*
 
