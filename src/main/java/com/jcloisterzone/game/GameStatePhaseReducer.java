@@ -65,6 +65,7 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
         next = addPhase(setup, next, PlaceFerryPhase.class);
         next = addPhase(setup, next, PhantomPhase.class);
                addPhase(setup, next, TowerCapturePhase.class);
+        next = addPhase(setup, next, RussianPromosTrapPhase.class);
         next = addPhase(setup, next, ActionPhase.class);
         next = addPhase(setup, next, MageAndWitchPhase.class);
         next = addPhase(setup, next, GoldPiecePhase.class);

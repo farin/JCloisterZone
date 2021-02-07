@@ -14,7 +14,6 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.GameStateBuilder;
 import com.jcloisterzone.io.MessageParser;
 import com.jcloisterzone.io.message.*;
-import com.jcloisterzone.reducers.MoveNeutralFigure;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
@@ -155,6 +154,9 @@ public class Engine implements  Runnable {
         }
         if (setupMsg.getSets().containsKey("russian-promos/2013")) {
             capabilities = capabilities.add(YagaCapability.class);
+        }
+        if (setupMsg.getSets().containsKey("russian-promos/2016")) {
+            capabilities = capabilities.add(RussianPromosTrapCapability.class);
         }
 
         Map<Rule, Object> rules = HashMap.empty();

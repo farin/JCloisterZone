@@ -129,6 +129,11 @@ public class ActionPhase extends AbstractActionPhase {
                 }
                 assignAbbotScore = (CloisterLike) state.getFeature(ptr.asFeaturePointer());
                 break;
+            case TRAP:
+                if (meeple.getPlayer() != state.getPlayerActions().getPlayer()) {
+                    throw new IllegalArgumentException("Not owner");
+                }
+                break;
             default:
                 throw new IllegalArgumentException("Return meeple is not allowed");
         }
