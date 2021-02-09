@@ -13,8 +13,14 @@ import com.jcloisterzone.reducers.SetNextPlayer;
 @RequiredCapability(AbbeyCapability.class)
 public class AbbeyEndGamePhase extends AbstractAbbeyPhase {
 
-    public AbbeyEndGamePhase(RandomGenerator random) {
-        super(random);
+    private ActionPhase actionPhase;
+
+    public AbbeyEndGamePhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
+    }
+
+    public void setActionPhase(ActionPhase actionPhase) {
+        this.actionPhase = actionPhase;
     }
 
     @Override
@@ -64,6 +70,6 @@ public class AbbeyEndGamePhase extends AbstractAbbeyPhase {
     @PhaseMessageHandler
     public StepResult handlePlaceTile(GameState state, PlaceTileMessage msg) {
         state = applyPlaceTile(state, msg);
-        return next(state, ActionPhase.class);
+        return next(state, actionPhase);
     }
 }

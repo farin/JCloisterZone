@@ -27,8 +27,8 @@ import java.util.function.Predicate;
 @RequiredCapability(SiegeCapability.class)
 public class EscapePhase extends Phase {
 
-    public EscapePhase(RandomGenerator random) {
-        super(random);
+    public EscapePhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

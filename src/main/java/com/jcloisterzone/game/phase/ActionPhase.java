@@ -40,8 +40,11 @@ import io.vavr.collection.Vector;
 
 public class ActionPhase extends AbstractActionPhase {
 
-    public ActionPhase(RandomGenerator random) {
-        super(random);
+    private TowerCapturePhase towerCapturePhase;
+
+    public ActionPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
+        this.towerCapturePhase = new TowerCapturePhase(random, defaultNext);
     }
 
     @Override
@@ -162,7 +165,7 @@ public class ActionPhase extends AbstractActionPhase {
         );
 
         state = clearActions(state);
-        return next(state, TowerCapturePhase.class);
+        return next(state, towerCapturePhase);
     }
 
     private StepResult handlePlaceBridge(GameState state, PlaceTokenMessage msg) {

@@ -8,7 +8,6 @@ import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.TileDiscardedEvent;
 import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.figure.Builder;
-import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
@@ -23,13 +22,23 @@ import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
 import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
-import io.vavr.control.Option;
 
 
 public class TilePhase extends Phase {
 
-    public TilePhase(RandomGenerator random) {
-        super(random);
+    private Phase endPhase;
+    private CleanUpTurnPhase cleanUpTurnPhase;
+
+    public TilePhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
+    }
+
+    public void setEndPhase(Phase endPhase) {
+        this.endPhase = endPhase;
+    }
+
+    public void setCleanUpTurnPhase(CleanUpTurnPhase cleanUpTurnPhase) {
+        this.cleanUpTurnPhase = cleanUpTurnPhase;
     }
 
     public GameState drawTile(GameState state) {
@@ -73,12 +82,12 @@ public class TilePhase extends Phase {
                 if (packIsEmpty && bazaarSupply != null) {
                     // Very edge case: no match for bazaar tile + no remaining tile in pack.
                     // Skip player's turns
-                    return next(state, CleanUpTurnPhase.class);
+                    return next(state, cleanUpTurnPhase);
                 }
 
                 // Tile Pack is empty
                 if (packIsEmpty) {
-                    return next(state, state.getEndPhase());
+                    return next(state, endPhase);
                 }
 
                 state = drawTile(state);

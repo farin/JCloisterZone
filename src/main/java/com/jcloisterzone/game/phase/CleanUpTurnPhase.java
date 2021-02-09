@@ -17,8 +17,19 @@ import io.vavr.collection.Queue;
  */
 public class CleanUpTurnPhase extends Phase {
 
-    public CleanUpTurnPhase(RandomGenerator random) {
-        super(random);
+    private AbbeyEndGamePhase abbeyEndGamePhase;
+    private Phase endPhase;
+
+    public CleanUpTurnPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
+    }
+
+    public void setAbbeyEndGamePhase(AbbeyEndGamePhase abbeyEndGamePhase) {
+        this.abbeyEndGamePhase = abbeyEndGamePhase;
+    }
+
+    public void setEndPhase(Phase endPhase) {
+        this.endPhase = endPhase;
     }
 
     @Override
@@ -34,14 +45,14 @@ public class CleanUpTurnPhase extends Phase {
         Integer endPlayerIdx = state.getCapabilityModel(AbbeyCapability.class);
         if (endPlayerIdx != null) {
             // end game abbey state is in progress
-            return next(state, AbbeyEndGamePhase.class);
+            return next(state, abbeyEndGamePhase);
         }
 
         BazaarCapabilityModel bazaarModel = state.getCapabilityModel(BazaarCapability.class);
         Queue<BazaarItem> bazaarSupply = bazaarModel == null ? null : bazaarModel.getSupply();
         TilePack tilePack = state.getTilePack();
         if (tilePack.isEmpty() && bazaarSupply == null) {
-            return next(state, state.getEndPhase());
+            return next(state, endPhase);
         } else {
             state = (new SetNextPlayer()).apply(state);
             return next(state);

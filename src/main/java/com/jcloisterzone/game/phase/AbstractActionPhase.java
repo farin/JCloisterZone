@@ -28,8 +28,8 @@ import io.vavr.collection.*;
 
 public abstract class AbstractActionPhase extends Phase {
 
-    public AbstractActionPhase(RandomGenerator random) {
-        super(random);
+    public AbstractActionPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     private boolean isMeepleDeploymentAllowedByCapabilities(GameState state, Position pos) {

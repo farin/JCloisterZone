@@ -236,7 +236,7 @@ public class Engine implements  Runnable {
 
         GameState state = builder.createInitialState();
         Phase firstPhase = phaseReducer.getFirstPhase();
-        state = state.setPhase(firstPhase.getClass());
+        state = state.setPhase(firstPhase);
         state = phaseReducer.applyStepResult(firstPhase.enter(state));
         game.replaceState(state);
 
@@ -338,7 +338,6 @@ public class Engine implements  Runnable {
         Args.parseOrExit(Engine.class, args);
 
         do {
-
             if (port != null) {
                 System.out.println("Listening on port " + port);
                 ServerSocket server = new ServerSocket(port);

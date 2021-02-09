@@ -17,8 +17,8 @@ import java.util.Arrays;
 
 public abstract class AbstractAbbeyPhase extends Phase {
 
-    public AbstractAbbeyPhase(RandomGenerator random) {
-        super(random);
+    public AbstractAbbeyPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     protected TilePlacementAction createAbbeyAction(GameState state) {

@@ -6,8 +6,8 @@ import com.jcloisterzone.game.capability.AbbeyCapability;
 @RequiredCapability(AbbeyCapability.class)
 public class CommitAbbeyPassPhase extends CommitActionPhase {
 
-    public CommitAbbeyPassPhase(RandomGenerator random) {
-        super(random);
+    public CommitAbbeyPassPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
 }

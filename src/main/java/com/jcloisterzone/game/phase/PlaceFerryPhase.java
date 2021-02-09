@@ -22,8 +22,8 @@ import io.vavr.collection.Set;
 @RequiredCapability(FerriesCapability.class)
 public class PlaceFerryPhase extends Phase {
 
-    public PlaceFerryPhase(RandomGenerator random) {
-        super(random);
+    public PlaceFerryPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

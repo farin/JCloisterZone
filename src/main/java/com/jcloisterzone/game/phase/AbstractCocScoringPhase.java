@@ -3,14 +3,12 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
 import com.jcloisterzone.io.message.PassMessage;
 import com.jcloisterzone.reducers.DeployMeeple;
@@ -24,8 +22,8 @@ import java.util.function.Function;
 
 public abstract class AbstractCocScoringPhase extends Phase {
 
-    public AbstractCocScoringPhase(RandomGenerator random) {
-        super(random);
+    public AbstractCocScoringPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     protected abstract Function<Feature, Boolean> getAllowedFeaturesFilter(GameState state);

@@ -9,8 +9,11 @@ import com.jcloisterzone.game.state.GameState;
 @RequiredCapability(DragonCapability.class)
 public class DragonPhase extends Phase {
 
-    public DragonPhase(RandomGenerator random) {
-        super(random);
+    private DragonMovePhase dragonMovePhase;
+
+    public DragonPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
+        dragonMovePhase = new DragonMovePhase(random, defaultNext);
     }
 
     @Override
@@ -19,7 +22,7 @@ public class DragonPhase extends Phase {
         if (tile.hasModifier(DragonCapability.DRAGON_TRIGGER)) {
             Position pos = state.getNeutralFigures().getDragonDeployment();
             if (pos != null) {
-                return next(state, DragonMovePhase.class);
+                return next(state, dragonMovePhase);
             }
         }
         return next(state);

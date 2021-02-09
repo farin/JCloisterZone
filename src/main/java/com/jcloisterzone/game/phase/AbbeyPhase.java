@@ -15,13 +15,25 @@ import com.jcloisterzone.io.message.PlaceTileMessage;
 import io.vavr.collection.Array;
 import io.vavr.collection.Stream;
 
+import javax.swing.*;
 import java.util.Arrays;
 
 @RequiredCapability(AbbeyCapability.class)
 public class AbbeyPhase extends AbstractAbbeyPhase {
 
-    public AbbeyPhase(RandomGenerator random) {
-        super(random);
+    private TilePhase tilePhase;
+    private ActionPhase actionPhase;
+
+    public AbbeyPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
+    }
+
+    public void setTilePhase(TilePhase tilePhase) {
+        this.tilePhase = tilePhase;
+    }
+
+    public void setActionPhase(ActionPhase actionPhase) {
+        this.actionPhase = actionPhase;
     }
 
     @Override
@@ -43,12 +55,12 @@ public class AbbeyPhase extends AbstractAbbeyPhase {
             }
 
         }
-        return next(state, TilePhase.class);
+        return next(state, tilePhase);
     }
 
     @PhaseMessageHandler
     public StepResult handlePlaceTile(GameState state, PlaceTileMessage msg) {
         state = applyPlaceTile(state, msg);
-        return next(state, ActionPhase.class);
+        return next(state, actionPhase);
     }
 }

@@ -17,8 +17,8 @@ import io.vavr.Tuple2;
 @RequiredCapability(RussianPromosTrapCapability.class)
 public class RussianPromosTrapPhase extends Phase {
 
-    public RussianPromosTrapPhase(RandomGenerator random) {
-        super(random);
+    public RussianPromosTrapPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

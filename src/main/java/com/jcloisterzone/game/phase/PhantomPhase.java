@@ -16,8 +16,8 @@ import io.vavr.collection.Vector;
 @RequiredCapability(PhantomCapability.class)
 public class PhantomPhase extends AbstractActionPhase {
 
-    public PhantomPhase(RandomGenerator random) {
-        super(random);
+    public PhantomPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

@@ -18,8 +18,8 @@ import io.vavr.Tuple2;
 @RequiredCapability(FairyCapability.class)
 public class FairyPhase extends Phase {
 
-    public FairyPhase(RandomGenerator random) {
-        super(random);
+    public FairyPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

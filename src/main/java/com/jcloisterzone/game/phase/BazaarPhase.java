@@ -28,8 +28,8 @@ import io.vavr.collection.Queue;
 @RequiredCapability(BazaarCapability.class)
 public class BazaarPhase extends Phase {
 
-    public BazaarPhase(RandomGenerator random) {
-        super(random);
+    public BazaarPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

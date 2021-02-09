@@ -106,7 +106,7 @@ public class StateGsonBuilder {
             obj.add("neutralFigures", serializeNeutralFigures(state, context));
             obj.add("tokens", serializeTokens(state, context));
             obj.add("features", serializeFeatures(state, context));
-            obj.addProperty("phase", state.getPhase().getSimpleName());
+            obj.addProperty("phase", state.getPhase().getClass().getSimpleName());
             obj.addProperty("turnPlayer", state.getPlayers().getTurnPlayerIndex());
             obj.add("action", context.serialize(state.getPlayerActions()));
             obj.add("history", serializePlayEvents(state, context));

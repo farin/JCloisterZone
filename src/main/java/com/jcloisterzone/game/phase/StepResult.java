@@ -7,9 +7,9 @@ import com.jcloisterzone.game.state.GameState;
 public class StepResult {
 
     private final GameState state;
-    private final Class<? extends Phase> next;
+    private final Phase next;
 
-    public StepResult(GameState state, Class<? extends Phase> next) {
+    public StepResult(GameState state, Phase next) {
         super();
         this.state = state;
         this.next = next;
@@ -19,7 +19,7 @@ public class StepResult {
         return state;
     }
 
-    public Class<? extends Phase> getNext() {
+    public Phase getNext() {
         return next;
     }
 }

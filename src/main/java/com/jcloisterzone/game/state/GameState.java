@@ -51,7 +51,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     private final ActionsState playerActions;
     private final Queue<PlayEvent> events;
 
-    private final Class<? extends Phase> phase;
+    private final Phase phase;
     private final int turnNumber;
 
     public static GameState createInitial(
@@ -92,7 +92,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             ActionsState playerActions,
             Set<Flag> flags,
             Queue<PlayEvent> events,
-            Class<? extends Phase> phase,
+            Phase phase,
             int turnNumber) {
         this.rules = rules;
         this.capabilities = capabilities;
@@ -279,7 +279,7 @@ public class GameState implements ActionsMixin, BoardMixin,
         );
     }
 
-    public GameState setPhase(Class<? extends Phase> phase) {
+    public GameState setPhase(Phase phase) {
         if (phase == this.phase) return this;
         return new GameState(
             rules, capabilities, players,
@@ -363,21 +363,11 @@ public class GameState implements ActionsMixin, BoardMixin,
         return events;
     }
 
-    public Class<? extends Phase> getPhase() {
+    public Phase getPhase() {
         return phase;
     }
 
     public int getTurnNumber() {
         return turnNumber;
-    }
-
-    public Class<? extends Phase> getEndPhase () {
-        if (hasCapability(AbbeyCapability.class)) {
-            return AbbeyEndGamePhase.class;
-        }
-        if (hasCapability(CountCapability.class)) {
-            return CocFinalScoringPhase.class;
-        }
-        return GameOverPhase.class;
     }
 }

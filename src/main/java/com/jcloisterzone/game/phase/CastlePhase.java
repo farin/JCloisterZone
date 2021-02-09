@@ -26,8 +26,8 @@ import io.vavr.collection.Set;
 @RequiredCapability(CastleCapability.class)
 public class CastlePhase extends Phase {
 
-    public CastlePhase(RandomGenerator random) {
-        super(random);
+    public CastlePhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     private Set<FeaturePointer> getPlayerOptions(GameState state, Player player) {

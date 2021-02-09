@@ -17,8 +17,8 @@ import io.vavr.collection.Set;
 @RequiredCapability(GoldminesCapability.class)
 public class GoldPiecePhase extends Phase {
 
-    public GoldPiecePhase(RandomGenerator random) {
-        super(random);
+    public GoldPiecePhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

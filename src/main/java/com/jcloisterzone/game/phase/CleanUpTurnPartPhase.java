@@ -15,8 +15,14 @@ import com.jcloisterzone.game.state.GameState;
  */
 public class CleanUpTurnPartPhase extends Phase {
 
-    public CleanUpTurnPartPhase(RandomGenerator random) {
-        super(random);
+    private Phase secondPartStartPhase;
+
+    public CleanUpTurnPartPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
+    }
+
+    public void setSecondPartStartPhase(Phase secondPartStartPhase) {
+        this.secondPartStartPhase = secondPartStartPhase;
     }
 
     @Override
@@ -40,7 +46,7 @@ public class CleanUpTurnPartPhase extends Phase {
         	state = state.appendEvent(
         		new DoubleTurnEvent(PlayEventMeta.createWithoutPlayer())
             );
-            return next(state, state.getCapabilities().contains(AbbeyCapability.class) ? AbbeyPhase.class : TilePhase.class);
+            return next(state, secondPartStartPhase);
         } else {
             return next(state);
         }

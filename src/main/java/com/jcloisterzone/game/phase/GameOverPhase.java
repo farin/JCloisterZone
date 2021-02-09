@@ -7,8 +7,8 @@ import com.jcloisterzone.reducers.FinalScoring;
 
 public class GameOverPhase extends Phase {
 
-    public GameOverPhase(RandomGenerator random) {
-        super(random);
+    public GameOverPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

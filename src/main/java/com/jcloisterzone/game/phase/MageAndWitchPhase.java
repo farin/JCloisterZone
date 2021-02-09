@@ -24,8 +24,8 @@ import io.vavr.collection.*;
 @RequiredCapability(MageAndWitchCapability.class)
 public class MageAndWitchPhase extends Phase {
 
-    public MageAndWitchPhase(RandomGenerator random) {
-        super(random);
+    public MageAndWitchPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

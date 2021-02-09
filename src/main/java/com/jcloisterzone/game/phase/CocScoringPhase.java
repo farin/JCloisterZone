@@ -33,8 +33,8 @@ import java.util.function.Function;
 @RequiredCapability(CountCapability.class)
 public class CocScoringPhase extends AbstractCocScoringPhase {
 
-    public CocScoringPhase(RandomGenerator random) {
-        super(random);
+    public CocScoringPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override
