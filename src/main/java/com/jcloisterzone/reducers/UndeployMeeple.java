@@ -15,7 +15,7 @@ import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Stream;
 
-public class UndeployMeeple implements Reducer {
+public class UndeployMeeple extends AbstractUndeploy {
 
     private final Meeple meeple;
     /** true if meeple is returned different way than scoring feature */
@@ -34,20 +34,9 @@ public class UndeployMeeple implements Reducer {
         PlayEventMeta metaWithPlayer = PlayEventMeta.createWithActivePlayer(state);
         state = primaryUndeploy(state, metaWithPlayer, meeple, source);
 
-        // Undeploy lonely Builders and Pigs
         if (meeple instanceof Follower) {
-            Player owner = meeple.getPlayer();
-            PlayEventMeta metaNoPlayer = PlayEventMeta.createWithoutPlayer();
-            Structure feature = state.getStructure(source);
-            Stream<Tuple2<Meeple, FeaturePointer>> threatened = feature.getMeeples2(state)
-                .filter(m -> (m._1 instanceof Pig) || (m._1 instanceof Builder))
-                .filter(m -> m._1.getPlayer().equals(owner));
-
-            for (Tuple2<Meeple, FeaturePointer> t : threatened) {
-                if (feature.getFollowers(state).find(f -> f.getPlayer().equals(owner)).isEmpty()) {
-                    state = undeploy(state, metaNoPlayer, t._1, t._2);
-                }
-            }
+            // Undeploy lonely Builders and Pigs
+            state = undeployLonelySpecials(state, (Follower) meeple, source, forced);
         }
 
         if (meeple instanceof Shepherd) {
@@ -68,20 +57,10 @@ public class UndeployMeeple implements Reducer {
     }
 
     protected GameState primaryUndeploy(GameState state, PlayEventMeta meta, Meeple meeple, FeaturePointer source) {
-        return undeploy(state, meta, meeple, source);
-    }
-
-    private GameState undeploy(GameState state, PlayEventMeta meta, Meeple meeple, FeaturePointer source) {
-        LinkedHashMap<Meeple, FeaturePointer> deployedMeeples = state.getDeployedMeeples();
-        state = state.setDeployedMeeples(deployedMeeples.remove(meeple));
-        state = state.appendEvent(
-            new MeepleReturned(meta, meeple, source, forced)
-        );
-        return state;
+        return undeploy(state, meta, meeple, source, forced);
     }
 
     public boolean isForced() {
         return forced;
     }
-
 }

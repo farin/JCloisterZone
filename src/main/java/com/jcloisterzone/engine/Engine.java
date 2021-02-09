@@ -14,6 +14,9 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.GameStateBuilder;
 import com.jcloisterzone.io.MessageParser;
 import com.jcloisterzone.io.message.*;
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
+import io.vavr.Predicates;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
@@ -23,12 +26,23 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.function.Predicate;
 import java.util.jar.Manifest;
 
 public class Engine implements  Runnable {
+
+    @Argument(alias = "p", description = "Use socket connection on given port instead of stdin stdout")
+    private static Integer port;
+
+    @Argument(alias = "r", description = "Rerun engine on game end.")
+    private static Boolean reload = false;
+
+
     private Scanner in;
     private PrintStream out;
     private PrintStream err;
@@ -232,7 +246,11 @@ public class Engine implements  Runnable {
 
         boolean gameIsOver = false;
         while (!gameIsOver) {
-            line = in.nextLine();
+            try {
+                line = in.nextLine();
+            } catch (NoSuchElementException ex) {
+                break;
+            }
             if (line.length() == 0) {
                 break;
             }
@@ -317,15 +335,24 @@ public class Engine implements  Runnable {
 
         Engine engine;
 
-        if (args.length > 0 && "--socket".equals(args[0])) {
-            int port = Integer.parseInt(args[1]);
-            System.out.println("Listening on socket " + port);
-            ServerSocket server = new ServerSocket(port);
-            Socket socket = server.accept();
-            engine = new Engine(socket.getInputStream(), new PrintStream(socket.getOutputStream()), System.err, System.out);
-        } else {
-            engine = new Engine(System.in, System.out, System.err, null);
-        }
-        engine.run();
+        Args.parseOrExit(Engine.class, args);
+
+        do {
+
+            if (port != null) {
+                System.out.println("Listening on port " + port);
+                ServerSocket server = new ServerSocket(port);
+                Socket socket = server.accept();
+                engine = new Engine(socket.getInputStream(), new PrintStream(socket.getOutputStream()), System.err, System.out);
+            } else {
+                engine = new Engine(System.in, System.out, System.err, null);
+            }
+
+            try {
+                engine.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } while (reload);
     }
 }

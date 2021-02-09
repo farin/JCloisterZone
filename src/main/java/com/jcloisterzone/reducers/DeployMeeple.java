@@ -5,11 +5,12 @@ import com.jcloisterzone.event.MeepleDeployed;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.figure.DeploymentCheckResult;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.LinkedHashMap;
 
-public class DeployMeeple implements Reducer {
+public class DeployMeeple extends AbstractUndeploy {
 
     private final Meeple meeple;
     private final FeaturePointer fp;
@@ -37,6 +38,11 @@ public class DeployMeeple implements Reducer {
         state = state.appendEvent(
             new MeepleDeployed(PlayEventMeta.createWithActivePlayer(state), meeple, fp, movedFrom)
         );
+
+        if (movedFrom != null && (meeple instanceof Follower)) {
+            state = undeployLonelySpecials(state, (Follower) meeple, movedFrom, true);
+        }
+
         return state;
     }
 
