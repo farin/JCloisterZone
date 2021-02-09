@@ -11,7 +11,6 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
-import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.CastleCapability.CastleToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
@@ -23,7 +22,6 @@ import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
-@RequiredCapability(CastleCapability.class)
 public class CastlePhase extends Phase {
 
     public CastlePhase(RandomGenerator random, Phase defaultNext) {

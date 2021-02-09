@@ -1,7 +1,6 @@
 package com.jcloisterzone.game;
 
-import com.jcloisterzone.game.capability.AbbeyCapability;
-import com.jcloisterzone.game.capability.CountCapability;
+import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.phase.*;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.MessageParser;
@@ -33,72 +32,62 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
         CleanUpTurnPartPhase cleanUpTurnPartPhase;
         TilePhase tilePhase;
         ActionPhase actionPhase;
-        AbbeyPhase abbeyPhase;
-        AbbeyEndGamePhase abbeyEndGamePhase;
+        AbbeyPhase abbeyPhase = null;
+        AbbeyEndGamePhase abbeyEndGamePhase = null;
 
         endChain =                  new GameOverPhase(random, null);
-        endChain = ifEnabled(setup, new CocFinalScoringPhase(random, endChain));
-        endChain = ifEnabled(setup, abbeyEndGamePhase = new AbbeyEndGamePhase(random, endChain));
+        if (setup.contains(CountCapability.class)) endChain = new CocFinalScoringPhase(random, endChain);
+        if (setup.contains(AbbeyCapability.class)) endChain = abbeyEndGamePhase = new AbbeyEndGamePhase(random, endChain);
 
         next = cleanUpTurnPhase = new CleanUpTurnPhase(random, null);
-        next = ifEnabled(setup, new BazaarPhase(random, next));
-
-        if (setup.getBooleanRule(Rule.ESCAPE)) {
-            next = ifEnabled(setup, new EscapePhase(random, next));
-        }
+        if (setup.contains(BazaarCapability.class)) next = new BazaarPhase(random, next);
+        if (setup.getBooleanRule(Rule.ESCAPE)) next = new EscapePhase(random, next);
         next = cleanUpTurnPartPhase = new CleanUpTurnPartPhase(random, next);
-        next = ifEnabled(setup, new CornCirclePhase(random, next));
+        if (setup.contains(CornCircleCapability.class)) new CornCirclePhase(random, next);
 
-        if ("after-scoring".equals(setup.getStringRule(Rule.DRAGON_MOVEMENT))) {
-            next = ifEnabled(setup, new DragonPhase(random, next));
+        if (setup.contains(DragonCapability.class) && "after-scoring".equals(setup.getStringRule(Rule.DRAGON_MOVEMENT))) {
+            next = new DragonPhase(random, next);
         }
-
-               ifEnabled(setup, new CocCountPhase(random, next));
-        next = ifEnabled(setup, new CocFollowerPhase(random, next));
-        next = ifEnabled(setup, new WagonPhase(random, next));
-        next =                  new ScoringPhase(random, next);
-        next = ifEnabled(setup, new CocScoringPhase(random, next));
-        next =                  new CommitActionPhase(random, next);
-        next = ifEnabled(setup, new CastlePhase(random, next));
-
-        if (!"after-scoring".equals(setup.getStringRule(Rule.DRAGON_MOVEMENT))) {
-               next = ifEnabled(setup, new DragonPhase(random, next));
+        if (setup.contains(CountCapability.class)) next = new CocFollowerPhase(random, next);
+        if (setup.contains(WagonCapability.class)) next = new WagonPhase(random, next);
+        next = new ScoringPhase(random, next);
+        if (setup.contains(CountCapability.class)) next = new CocScoringPhase(random, next);
+        next = new CommitActionPhase(random, next);
+        if (setup.contains(CastleCapability.class)) next = new CastlePhase(random, next);
+        if (setup.contains(DragonCapability.class) && !"after-scoring".equals(setup.getStringRule(Rule.DRAGON_MOVEMENT))) {
+            next = new DragonPhase(random, next);
         }
-
-        next = ifEnabled(setup, new ShepherdPhase(random, next));
-        next = ifEnabled(setup, new ChangeFerriesPhase(random, next));
-        next = ifEnabled(setup, new PlaceFerryPhase(random, next));
-        next = ifEnabled(setup, new PhantomPhase(random, next));
-        // next = addPhase(setup, new RussianPromosTrapPhase(random, next));
-        next = actionPhase =    new ActionPhase(random, next);
-        next = ifEnabled(setup, new MageAndWitchPhase(random, next));
-        next = ifEnabled(setup, new GoldPiecePhase(random, next));
-        next = ifEnabled(setup, new RussianPromosTrapPhase(random, next));
-        next = tilePhase =      new TilePhase(random, next);
-        // if abbey is passed, commit commit action phase follows to change salt by following Commit message
-        next = ifEnabled(setup, new CommitAbbeyPassPhase(random, next));
-        next = ifEnabled(setup, abbeyPhase = new AbbeyPhase(random, next));
-        next = ifEnabled(setup, new FairyPhase(random, next));
+        if (setup.contains(SheepCapability.class)) next = new ShepherdPhase(random, next);
+        if (setup.contains(FerriesCapability.class)) {
+            next = new ChangeFerriesPhase(random, next);
+            next = new PlaceFerryPhase(random, next);
+        }
+        if (setup.contains(PhantomCapability.class)) next = new PhantomPhase(random, next);
+        if (setup.contains(RussianPromosTrapCapability.class)) next = new RussianPromosTrapPhase(random, next);
+        next = actionPhase = new ActionPhase(random, next);
+        if (setup.contains(MageAndWitchCapability.class)) next =  new MageAndWitchPhase(random, next);
+        if (setup.contains(GoldminesCapability.class)) next =  new GoldPiecePhase(random, next);
+        if (setup.contains(RussianPromosTrapCapability.class)) next = new RussianPromosTrapPhase(random, next);
+        next = tilePhase = new TilePhase(random, next);
+        if (setup.contains(AbbeyCapability.class)) {
+            // if abbey is passed, commit commit action phase follows to change salt by following Commit message
+            next = new CommitAbbeyPassPhase(random, next);
+            next = abbeyPhase = new AbbeyPhase(random, next);
+        }
+        if (setup.contains(FairyCapability.class)) next = new FairyPhase(random, next);
 
         cleanUpTurnPhase.setDefaultNext(next); //after last phase, the first is default
         cleanUpTurnPhase.setAbbeyEndGamePhase(abbeyEndGamePhase);
         cleanUpTurnPhase.setEndPhase(endChain);
-        cleanUpTurnPartPhase.setSecondPartStartPhase(setup.getCapabilities().contains(AbbeyCapability.class) ? abbeyPhase : tilePhase);
-        abbeyEndGamePhase.setActionPhase(actionPhase);
-        abbeyPhase.setTilePhase(tilePhase);
-        abbeyPhase.setActionPhase(actionPhase);
+        cleanUpTurnPartPhase.setSecondPartStartPhase(abbeyPhase != null ? abbeyPhase : tilePhase);
+        if (abbeyEndGamePhase != null) abbeyEndGamePhase.setActionPhase(actionPhase);
+        if (abbeyPhase != null) {
+            abbeyPhase.setTilePhase(tilePhase);
+            abbeyPhase.setActionPhase(actionPhase);
+        }
         tilePhase.setEndPhase(endChain);
         tilePhase.setCleanUpTurnPhase(cleanUpTurnPhase);
         firstPhase = next;
-    }
-
-    private Phase ifEnabled(GameSetup setup, Phase phase) {
-        RequiredCapability req = phase.getClass().getAnnotation(RequiredCapability.class);
-
-        if (req != null && !setup.getCapabilities().contains(req.value())) {
-            return phase.getDefaultNext();
-        }
-        return phase;
     }
 
     private StepResult applyMessageOnPhase(Phase phase, GameState state, Message message) {
@@ -151,6 +140,4 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
     public RandomGenerator getRandom() {
         return random;
     }
-
-
 }

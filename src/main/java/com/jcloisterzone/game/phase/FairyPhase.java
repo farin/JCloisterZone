@@ -15,7 +15,6 @@ import com.jcloisterzone.reducers.AddPoints;
 import io.vavr.Tuple2;
 
 
-@RequiredCapability(FairyCapability.class)
 public class FairyPhase extends Phase {
 
     public FairyPhase(RandomGenerator random, Phase defaultNext) {

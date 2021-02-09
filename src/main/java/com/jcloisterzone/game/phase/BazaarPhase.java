@@ -25,7 +25,6 @@ import com.jcloisterzone.io.message.PassMessage;
 import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
 
-@RequiredCapability(BazaarCapability.class)
 public class BazaarPhase extends Phase {
 
     public BazaarPhase(RandomGenerator random, Phase defaultNext) {

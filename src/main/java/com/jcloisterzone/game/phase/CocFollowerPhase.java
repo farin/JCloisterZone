@@ -23,7 +23,6 @@ import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
-@RequiredCapability(CountCapability.class)
 public class CocFollowerPhase extends Phase {
 
     private CocCountPhase cocCountPhase;

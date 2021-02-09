@@ -8,13 +8,11 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.SoloveiRazboynik;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
-import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.DeployMeeple;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 
-@RequiredCapability(RussianPromosTrapCapability.class)
 public class RussianPromosTrapPhase extends Phase {
 
     public RussianPromosTrapPhase(RandomGenerator random, Phase defaultNext) {

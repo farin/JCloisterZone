@@ -2,24 +2,19 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.capability.CountCapabilityModel;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.DeployMeeple;
-import com.jcloisterzone.io.message.DeployMeepleMessage;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 
 import java.util.function.Function;
 
-@RequiredCapability(CountCapability.class)
 public class CocFinalScoringPhase extends AbstractCocScoringPhase {
 
     public CocFinalScoringPhase(RandomGenerator random, Phase defaultNext) {

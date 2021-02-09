@@ -18,7 +18,6 @@ import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
-@RequiredCapability(CountCapability.class)
 public class CocCountPhase extends Phase {
 
     public CocCountPhase(RandomGenerator random, Phase defaultNext) {

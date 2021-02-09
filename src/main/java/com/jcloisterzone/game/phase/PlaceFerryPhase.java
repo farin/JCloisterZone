@@ -19,7 +19,6 @@ import com.jcloisterzone.io.message.PlaceTokenMessage;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
 
-@RequiredCapability(FerriesCapability.class)
 public class PlaceFerryPhase extends Phase {
 
     public PlaceFerryPhase(RandomGenerator random, Phase defaultNext) {

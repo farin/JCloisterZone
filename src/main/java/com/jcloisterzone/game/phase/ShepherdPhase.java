@@ -29,7 +29,6 @@ import io.vavr.collection.Seq;
 import io.vavr.collection.Vector;
 
 
-@RequiredCapability(SheepCapability.class)
 public class ShepherdPhase extends Phase {
 
 

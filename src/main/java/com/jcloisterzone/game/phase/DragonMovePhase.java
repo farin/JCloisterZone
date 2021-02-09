@@ -22,7 +22,6 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
 
-@RequiredCapability(DragonCapability.class)
 public class DragonMovePhase extends Phase {
 
     public DragonMovePhase(RandomGenerator random, Phase defaultNext) {

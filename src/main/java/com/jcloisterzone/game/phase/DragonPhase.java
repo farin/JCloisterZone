@@ -6,7 +6,6 @@ import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.state.GameState;
 
-@RequiredCapability(DragonCapability.class)
 public class DragonPhase extends Phase {
 
     private DragonMovePhase dragonMovePhase;

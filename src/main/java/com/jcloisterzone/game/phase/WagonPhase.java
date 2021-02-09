@@ -28,7 +28,6 @@ import io.vavr.collection.Queue;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
-@RequiredCapability(WagonCapability.class)
 public class WagonPhase extends Phase {
 
     public WagonPhase(RandomGenerator random, Phase defaultNext) {

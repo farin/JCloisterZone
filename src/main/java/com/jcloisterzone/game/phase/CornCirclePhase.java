@@ -24,7 +24,6 @@ import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
-@RequiredCapability(CornCircleCapability.class)
 public class CornCirclePhase extends Phase {
 
     public CornCirclePhase(RandomGenerator random, Phase defaultNext) {

@@ -10,7 +10,6 @@ import com.jcloisterzone.io.message.PassMessage;
 import com.jcloisterzone.io.message.PlaceTileMessage;
 import com.jcloisterzone.reducers.SetNextPlayer;
 
-@RequiredCapability(AbbeyCapability.class)
 public class AbbeyEndGamePhase extends AbstractAbbeyPhase {
 
     private ActionPhase actionPhase;
