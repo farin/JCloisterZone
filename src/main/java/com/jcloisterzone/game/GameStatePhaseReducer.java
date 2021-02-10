@@ -67,7 +67,6 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
         next = actionPhase = new ActionPhase(random, next);
         if (setup.contains(MageAndWitchCapability.class)) next =  new MageAndWitchPhase(random, next);
         if (setup.contains(GoldminesCapability.class)) next =  new GoldPiecePhase(random, next);
-        if (setup.contains(RussianPromosTrapCapability.class)) next = new RussianPromosTrapPhase(random, next);
         next = tilePhase = new TilePhase(random, next);
         if (setup.contains(AbbeyCapability.class)) {
             // if abbey is passed, commit commit action phase follows to change salt by following Commit message

@@ -1,17 +1,13 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.board.Location;
-import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.SoloveiRazboynik;
-import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.Player;
+import com.jcloisterzone.action.ConfirmAction;
 import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
+import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.DeployMeeple;
-import io.vavr.Predicates;
-import io.vavr.Tuple2;
+import com.jcloisterzone.io.message.CommitMessage;
+import io.vavr.collection.List;
 
 public class RussianPromosTrapPhase extends Phase {
 
@@ -21,18 +17,29 @@ public class RussianPromosTrapPhase extends Phase {
 
     @Override
     public StepResult enter(GameState state) {
-        for (Feature razboynik : state.getFeatures().filter(Predicates.instanceOf(SoloveiRazboynik.class))) {
-            Position pos = razboynik.getPlaces().get().getPosition();
-            Road road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Location.WE)).getOrNull();
-            if (road == null) {
-                road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Location.NS)).getOrNull();
-            }
-            FeaturePointer target = new FeaturePointer(pos, Location.TOWER);
-            for (Tuple2<Follower, FeaturePointer> t : road.getFollowers2(state)) {
-                Follower meeple = t._1;
-                state = (new DeployMeeple(meeple, target)).apply(state);
-            }
-        };
+        RussianPromosTrapCapability russianPromos = state.getCapabilities().get(RussianPromosTrapCapability.class);
+        List<RussianPromosTrapCapability.ExposedFollower> exposed = russianPromos.findExposedFollowers(state);
+        Player player = state.getTurnPlayer();
+
+        if (!exposed.filter(exp -> exp.getFollower().getPlayer() == player).isEmpty()) {
+            // own follower is exposed, confirm prev action
+            state = state.setPlayerActions(
+                    new ActionsState(player, new ConfirmAction(), false)
+            );
+            return promote(state);
+        }
+
+        if (!exposed.isEmpty()) {
+            state = russianPromos.trapFollowers(state, exposed);
+        }
+
+        return next(state);
+    }
+
+    @PhaseMessageHandler
+    public StepResult handleCommit(GameState state, CommitMessage msg) {
+        RussianPromosTrapCapability russianPromos = state.getCapabilities().get(RussianPromosTrapCapability.class);
+        state = russianPromos.trapFollowers(state);
         return next(state);
     }
 }

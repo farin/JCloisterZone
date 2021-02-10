@@ -186,6 +186,11 @@ public class TilePhase extends Phase {
             }
         }
 
+        RussianPromosTrapCapability russianPromos = state.getCapabilities().get(RussianPromosTrapCapability.class);
+        if (russianPromos != null) {
+            state = russianPromos.trapFollowers(state);
+        }
+
         state = clearActions(state);
         state = state.setDrawnTile(null);
 
