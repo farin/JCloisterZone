@@ -34,6 +34,8 @@ import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.SheepCapability.SheepToken;
 import com.jcloisterzone.game.phase.DragonMovePhase;
+import com.jcloisterzone.game.phase.Phase;
+import com.jcloisterzone.game.phase.RussianPromosTrapPhase;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.NeutralFiguresState;
@@ -106,7 +108,7 @@ public class StateGsonBuilder {
             obj.add("neutralFigures", serializeNeutralFigures(state, context));
             obj.add("tokens", serializeTokens(state, context));
             obj.add("features", serializeFeatures(state, context));
-            obj.addProperty("phase", state.getPhase().getClass().getSimpleName());
+            obj.addProperty("phase", getPhaseName(state.getPhase()));
             obj.addProperty("turnPlayer", state.getPlayers().getTurnPlayerIndex());
             obj.add("action", context.serialize(state.getPlayerActions()));
             obj.add("history", serializePlayEvents(state, context));
@@ -155,6 +157,13 @@ public class StateGsonBuilder {
 
             return obj;
         }
+    }
+
+    private String getPhaseName(Phase phase) {
+        if (phase instanceof RussianPromosTrapPhase) {
+            return "CommitPhase";
+        }
+        return phase.getClass().getSimpleName();
     }
 
     private JsonElement serializePlacedTiles(LinkedHashMap<Position, PlacedTile> state, JsonSerializationContext context) {

@@ -15,6 +15,9 @@ public class CommitActionPhase extends Phase {
 
     @Override
     public StepResult enter(GameState state) {
+        if (state.isCommited()) {
+            return next(state);
+        }
         Player player = state.getTurnPlayer();
         state = state.setPlayerActions(
             new ActionsState(player, new ConfirmAction(), false)

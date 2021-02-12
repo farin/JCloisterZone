@@ -4,6 +4,7 @@ import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.phase.*;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.MessageParser;
+import com.jcloisterzone.io.message.CommitMessage;
 import com.jcloisterzone.io.message.Message;
 import io.vavr.Function2;
 import org.slf4j.Logger;
@@ -105,7 +106,12 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
             }
             try {
                 assert m.getReturnType().equals(StepResult.class) : String.format("Bad return type %s.%s()", phase.getClass().getSimpleName(), m.getName());
-                return (StepResult) m.invoke(phase, state, message);
+                StepResult res = (StepResult) m.invoke(phase, state, message);
+                boolean commited = message instanceof CommitMessage;
+                if (res.getState().isCommited() != commited) {
+                    res = new StepResult(res.getState().setCommited(commited), res.getNext());
+                }
+                return res;
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 throw new RuntimeException(e.getCause() == null ? e : e.getCause());
             }
