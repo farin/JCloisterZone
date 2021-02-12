@@ -8,10 +8,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.feature.CloisterLike;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.feature.SoloveiRazboynik;
+import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.Abbot;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -35,7 +32,16 @@ public class RussianPromosTrapCapability extends Capability<Void> {
             SoloveiRazboynik razboynik = new SoloveiRazboynik();
             tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.TOWER, razboynik));
         }
+        if (!XMLUtils.getElementStreamByTagName(tileElements, "vodyanoy").isEmpty()) {
+            Vodyanoy vodyanoy = new Vodyanoy();
+            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.TOWER, vodyanoy));
+        }
         return tile;
+    }
+
+    @Override
+    public boolean isMeepleDeploymentAllowed(GameState state, Position pos) {
+        return !(state.getPlacedTile(pos).getInitialFeaturePartOf(Location.TOWER) instanceof Vodyanoy);
     }
 
     @Override
@@ -46,7 +52,8 @@ public class RussianPromosTrapCapability extends Capability<Void> {
         for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
             Meeple meeple = t._1;
             FeaturePointer fp = t._2;
-            if (meeple.getPlayer().equals(active) && state.getFeature(fp) instanceof SoloveiRazboynik) {
+            Feature feature = state.getFeature(fp);
+            if (meeple.getPlayer().equals(active) && (feature instanceof SoloveiRazboynik || feature instanceof Vodyanoy)) {
                 places = places.add(new MeeplePointer(fp, meeple.getId()));
             }
         }
@@ -61,16 +68,31 @@ public class RussianPromosTrapCapability extends Capability<Void> {
     public List<ExposedFollower> findExposedFollowers(GameState state) {
         List<ExposedFollower> result = List.empty();
 
-        for (Feature razboynik : state.getFeatures().filter(Predicates.instanceOf(SoloveiRazboynik.class))) {
-            Position pos = razboynik.getPlaces().get().getPosition();
-            Road road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Location.WE)).getOrNull();
-            if (road == null) {
-                road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Location.NS)).getOrNull();
-            }
-            FeaturePointer trap = new FeaturePointer(pos, Location.TOWER);
-            for (Tuple2<Follower, FeaturePointer> t : road.getFollowers2(state)) {
-                Follower meeple = t._1;
-                result = result.append(new ExposedFollower(meeple, trap));
+        for (Feature feature : state.getFeatures()) {
+            if (feature instanceof SoloveiRazboynik) {
+                Position pos = feature.getPlaces().get().getPosition();
+                Road road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Location.WE)).getOrNull();
+                if (road == null) {
+                    road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Location.NS)).getOrNull();
+                }
+                FeaturePointer trap = new FeaturePointer(pos, Location.TOWER);
+                for (Tuple2<Follower, FeaturePointer> t : road.getFollowers2(state)) {
+                    Follower meeple = t._1;
+                    result = result.append(new ExposedFollower(meeple, trap));
+                }
+            } else if (feature instanceof Vodyanoy) {
+                Position pos = feature.getPlaces().get().getPosition();
+                FeaturePointer trap = new FeaturePointer(pos, Location.TOWER);
+
+                for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
+                    if (!(t._1 instanceof Follower)) continue;
+                    FeaturePointer fp = t._2;
+                    Position p = fp.getPosition();
+                    if (Math.abs(p.x - pos.x) <= 1 && Math.abs(p.y - pos.y) <= 1 && !pos.equals(p)) {
+                        if (fp.getLocation().isCityOfCarcassonneQuarter()) continue;
+                        result = result.append(new ExposedFollower((Follower) t._1, trap));
+                    }
+                }
             }
         };
 
