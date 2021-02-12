@@ -11,6 +11,7 @@ import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
+import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -58,6 +59,12 @@ public class PlaceFerryPhase extends Phase {
         FeaturePointer ferry = msg.getPointer().asFeaturePointer();
         state = (new PlaceFerry(ferry)).apply(state);
         state = clearActions(state);
+
+        RussianPromosTrapCapability russianPromos = state.getCapabilities().get(RussianPromosTrapCapability.class);
+        if (russianPromos != null) {
+            state = russianPromos.trapFollowers(state);
+        }
+
         return next(state);
     }
 }

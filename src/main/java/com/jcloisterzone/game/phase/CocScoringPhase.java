@@ -13,6 +13,7 @@ import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
+import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -47,6 +48,11 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
 
     @PhaseMessageHandler
     public StepResult handleCommit(GameState state, CommitMessage msg) {
+        RussianPromosTrapCapability russianPromos = state.getCapabilities().get(RussianPromosTrapCapability.class);
+        if (russianPromos != null) {
+            state = russianPromos.trapFollowers(state);
+        }
+
         return this.handlePass(state, null);
     }
 

@@ -6,6 +6,7 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.MessageParser;
 import com.jcloisterzone.io.message.CommitMessage;
 import com.jcloisterzone.io.message.Message;
+import com.jcloisterzone.io.message.PassMessage;
 import io.vavr.Function2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,7 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
             next = new ChangeFerriesPhase(random, next);
             next = new PlaceFerryPhase(random, next);
         }
+        if (setup.contains(RussianPromosTrapCapability.class)) next = new RussianPromosTrapPhase(random, next);
         if (setup.contains(PhantomCapability.class)) next = new PhantomPhase(random, next);
         if (setup.contains(RussianPromosTrapCapability.class)) next = new RussianPromosTrapPhase(random, next);
         next = actionPhase = new ActionPhase(random, next);
@@ -108,8 +110,12 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
                 assert m.getReturnType().equals(StepResult.class) : String.format("Bad return type %s.%s()", phase.getClass().getSimpleName(), m.getName());
                 StepResult res = (StepResult) m.invoke(phase, state, message);
                 boolean commited = message instanceof CommitMessage;
+                boolean passed = message instanceof PassMessage;
                 if (res.getState().isCommited() != commited) {
                     res = new StepResult(res.getState().setCommited(commited), res.getNext());
+                }
+                if (res.getState().isPassed() != passed) {
+                    res = new StepResult(res.getState().setPassed(passed), res.getNext());
                 }
                 return res;
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {

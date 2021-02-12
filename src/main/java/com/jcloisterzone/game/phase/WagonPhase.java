@@ -16,6 +16,7 @@ import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
@@ -118,6 +119,11 @@ public class WagonPhase extends Phase {
 
     @PhaseMessageHandler
     public StepResult handleCommit(GameState state, CommitMessage msg) {
+        RussianPromosTrapCapability russianPromos = state.getCapabilities().get(RussianPromosTrapCapability.class);
+        if (russianPromos != null) {
+            state = russianPromos.trapFollowers(state);
+        }
+
         state = clearActions(state);
         return enter(state);
     }

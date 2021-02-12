@@ -54,6 +54,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     private final Phase phase;
     private final int turnNumber;
     private final boolean commited;
+    private final boolean passed;
 
     public static GameState createInitial(
             Map<Rule, Object> rules,
@@ -76,6 +77,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             Queue.empty(),
             null,
             1,
+            false,
             false
         );
     }
@@ -96,7 +98,8 @@ public class GameState implements ActionsMixin, BoardMixin,
             Queue<PlayEvent> events,
             Phase phase,
             int turnNumber,
-            boolean commited) {
+            boolean commited,
+            boolean passed) {
         this.rules = rules;
         this.capabilities = capabilities;
         this.players = players;
@@ -113,6 +116,7 @@ public class GameState implements ActionsMixin, BoardMixin,
         this.phase = phase;
         this.turnNumber = turnNumber;
         this.commited = commited;
+        this.passed = passed;
     }
 
     @Override
@@ -124,7 +128,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -137,7 +141,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -149,7 +153,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -165,7 +169,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -178,7 +182,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -191,7 +195,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -208,7 +212,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -220,7 +224,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -236,7 +240,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -249,7 +253,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -266,7 +270,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -279,7 +283,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -291,7 +295,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -303,7 +307,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
             flags, events,
-            phase, turnNumber, commited
+            phase, turnNumber, commited, passed
         );
     }
 
@@ -315,7 +319,19 @@ public class GameState implements ActionsMixin, BoardMixin,
                 featureMap, neutralFigures,
                 deployedMeeples, playerActions,
                 flags, events,
-                phase, turnNumber, commited
+                phase, turnNumber, commited, passed
+        );
+    }
+
+    public GameState setPassed(boolean passed) {
+        if (passed == this.passed) return this;
+        return new GameState(
+                rules, capabilities, players,
+                tilePack, drawnTile, placedTiles, discardedTiles,
+                featureMap, neutralFigures,
+                deployedMeeples, playerActions,
+                flags, events,
+                phase, turnNumber, commited, passed
         );
     }
 
@@ -389,5 +405,9 @@ public class GameState implements ActionsMixin, BoardMixin,
 
     public boolean isCommited() {
         return commited;
+    }
+
+    public boolean isPassed() {
+        return passed;
     }
 }
