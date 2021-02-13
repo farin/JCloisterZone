@@ -13,8 +13,11 @@ import com.jcloisterzone.game.state.PlacedTunnelToken;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
+import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
+
+import java.util.ArrayList;
 
 /**
  * Capability model is {@code Map<FeaturePointer, String>} - tunnels,
@@ -61,13 +64,29 @@ public final class TunnelCapability extends Capability<Map<FeaturePointer, Place
             return state;
         }
 
+        java.util.List<TunnelAction> actions = createTunnelActions(state);
+        if (actions.isEmpty()) {
+            return state;
+        }
+
+        ActionsState as = state.getPlayerActions();
+        for (TunnelAction action: actions) {
+            as = as.appendAction(action);
+        }
+        return state.setPlayerActions(as);
+    }
+
+    public java.util.List<TunnelAction> createTunnelActions(GameState state) {
+        java.util.List actions = new ArrayList(3);
+        Player player = state.getTurnPlayer();
+
         Set<FeaturePointer> openTunnels = getModel(state)
-            .filterValues(Predicates.isNull())
-            .map(Tuple2::_1)
-            .toSet();
+                .filterValues(Predicates.isNull())
+                .map(Tuple2::_1)
+                .toSet();
 
         if (openTunnels.isEmpty()) {
-            return state;
+            return actions;
         }
 
         ActionsState as = state.getPlayerActions();
@@ -75,10 +94,8 @@ public final class TunnelCapability extends Capability<Map<FeaturePointer, Place
             if (state.getPlayers().getPlayerTokenCount(player.getIndex(), token) == 0) {
                 continue;
             }
-
-            as = as.appendAction(new TunnelAction(openTunnels, token));
+            actions.add(new TunnelAction(openTunnels, token));
         }
-
-        return state.setPlayerActions(as);
+        return actions;
     }
 }
