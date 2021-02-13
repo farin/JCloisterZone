@@ -96,6 +96,7 @@ public class RussianPromosTrapCapability extends Capability<Void> {
 
     public List<ExposedFollower> findExposedFollowers(GameState state) {
         List<ExposedFollower> result = List.empty();
+        java.util.Set<String> alreadyExposed = new java.util.HashSet();
 
         for (Feature feature : state.getFeatures()) {
             if (feature instanceof SoloveiRazboynik) {
@@ -107,21 +108,26 @@ public class RussianPromosTrapCapability extends Capability<Void> {
                 FeaturePointer trap = new FeaturePointer(pos, Location.TOWER);
                 for (Tuple2<Follower, FeaturePointer> t : road.getFollowers2(state)) {
                     Follower meeple = t._1;
-                    result = result.append(new ExposedFollower(meeple, trap));
+                    if (!alreadyExposed.contains(meeple.getId())) {
+                        result = result.append(new ExposedFollower(meeple, trap));
+                        alreadyExposed.add(meeple.getId());
+                    }
                 }
             } else if (feature instanceof Vodyanoy) {
                 Position pos = feature.getPlaces().get().getPosition();
                 FeaturePointer trap = new FeaturePointer(pos, Location.TOWER);
 
                 for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
-                    if (!(t._1 instanceof Follower)) continue;
+                    Meeple meeple = t._1;
+                    if (!(meeple instanceof Follower)) continue;
+                    if (alreadyExposed.contains(meeple.getId())) continue;
                     FeaturePointer fp = t._2;
                     Position p = fp.getPosition();
                     Feature f = state.getFeature(fp);
                     if (fp.getLocation().isCityOfCarcassonneQuarter() || f instanceof Vodyanoy || f instanceof SoloveiRazboynik || f instanceof Castle) continue;
                     if (Math.abs(p.x - pos.x) <= 1 && Math.abs(p.y - pos.y) <= 1 && !pos.equals(p)) {
-                        if (fp.getLocation().isCityOfCarcassonneQuarter()) continue;
                         result = result.append(new ExposedFollower((Follower) t._1, trap));
+                        alreadyExposed.add(meeple.getId());
                     }
                 }
             }
