@@ -1,6 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.ShortEdge;
@@ -22,15 +21,14 @@ import com.jcloisterzone.reducers.UndeployMeeples;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
-import io.vavr.control.Option;
 
 
 public class ScoringPhase extends Phase {
 
     private java.util.Map<Completable, ScoreFeatureReducer> completedMutable = new java.util.HashMap<>();
 
-    public ScoringPhase(RandomGenerator random) {
-        super(random);
+    public ScoringPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     private GameState scoreCompletedOnTile(GameState state, PlacedTile tile) {

@@ -10,6 +10,7 @@ import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.capability.FerriesCapabilityModel;
+import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -18,11 +19,10 @@ import com.jcloisterzone.io.message.PlaceTokenMessage;
 import io.vavr.Tuple2;
 import io.vavr.collection.Set;
 
-@RequiredCapability(FerriesCapability.class)
 public class ChangeFerriesPhase extends Phase {
 
-    public ChangeFerriesPhase(RandomGenerator random) {
-        super(random);
+    public ChangeFerriesPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override
@@ -85,6 +85,12 @@ public class ChangeFerriesPhase extends Phase {
         ));
         state = (new ChangeFerry(oldFerry, newFerry)).apply(state);
         state = clearActions(state);
+
+        RussianPromosTrapCapability russianPromos = state.getCapabilities().get(RussianPromosTrapCapability.class);
+        if (russianPromos != null) {
+            state = russianPromos.trapFollowers(state);
+        }
+
         return enter(state);
     }
 

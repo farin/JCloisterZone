@@ -41,7 +41,6 @@ public class GameSetup implements Serializable, RulesMixin {
         return new GameSetup(tileSets, meeples, capabilities, rules, start);
     }
 
-
     public Map<Class<? extends Meeple>, Integer> getMeeples() {
         return meeples;
     }
@@ -80,5 +79,9 @@ public class GameSetup implements Serializable, RulesMixin {
 
     public List<PlacedTileItem> getStart() {
         return start;
+    }
+
+    public boolean contains(Class<? extends Capability<?>> cap) {
+        return capabilities.contains(cap);
     }
 }

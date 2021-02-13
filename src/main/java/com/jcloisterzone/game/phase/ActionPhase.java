@@ -40,8 +40,11 @@ import io.vavr.collection.Vector;
 
 public class ActionPhase extends AbstractActionPhase {
 
-    public ActionPhase(RandomGenerator random) {
-        super(random);
+    private TowerCapturePhase towerCapturePhase;
+
+    public ActionPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
+        this.towerCapturePhase = new TowerCapturePhase(random, defaultNext);
     }
 
     @Override
@@ -129,6 +132,11 @@ public class ActionPhase extends AbstractActionPhase {
                 }
                 assignAbbotScore = (CloisterLike) state.getFeature(ptr.asFeaturePointer());
                 break;
+            case TRAP:
+                if (meeple.getPlayer() != state.getPlayerActions().getPlayer()) {
+                    throw new IllegalArgumentException("Not owner");
+                }
+                break;
             default:
                 throw new IllegalArgumentException("Return meeple is not allowed");
         }
@@ -157,7 +165,7 @@ public class ActionPhase extends AbstractActionPhase {
         );
 
         state = clearActions(state);
-        return next(state, TowerCapturePhase.class);
+        return next(state, towerCapturePhase);
     }
 
     private StepResult handlePlaceBridge(GameState state, PlaceTokenMessage msg) {

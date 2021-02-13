@@ -1,27 +1,28 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.board.PlacementOption;
-import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
 import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.AbbeyCapability.AbbeyToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.PlaceTile;
 import com.jcloisterzone.io.message.PlaceTileMessage;
-import io.vavr.collection.Array;
-import io.vavr.collection.Stream;
 
-import java.util.Arrays;
-
-@RequiredCapability(AbbeyCapability.class)
 public class AbbeyPhase extends AbstractAbbeyPhase {
 
-    public AbbeyPhase(RandomGenerator random) {
-        super(random);
+    private TilePhase tilePhase;
+    private ActionPhase actionPhase;
+
+    public AbbeyPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
+    }
+
+    public void setTilePhase(TilePhase tilePhase) {
+        this.tilePhase = tilePhase;
+    }
+
+    public void setActionPhase(ActionPhase actionPhase) {
+        this.actionPhase = actionPhase;
     }
 
     @Override
@@ -43,12 +44,12 @@ public class AbbeyPhase extends AbstractAbbeyPhase {
             }
 
         }
-        return next(state, TilePhase.class);
+        return next(state, tilePhase);
     }
 
     @PhaseMessageHandler
     public StepResult handlePlaceTile(GameState state, PlaceTileMessage msg) {
         state = applyPlaceTile(state, msg);
-        return next(state, ActionPhase.class);
+        return next(state, actionPhase);
     }
 }

@@ -24,11 +24,10 @@ import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
-@RequiredCapability(CornCircleCapability.class)
 public class CornCirclePhase extends Phase {
 
-    public CornCirclePhase(RandomGenerator random) {
-        super(random);
+    public CornCirclePhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     private Class<? extends Feature> getCornType(GameState state) {

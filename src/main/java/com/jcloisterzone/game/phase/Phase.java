@@ -14,12 +14,11 @@ public abstract class Phase {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final RandomGenerator random;
-
-    //TODO change to class ? but what about skipping phase in handlePass
     private Phase defaultNext;
 
-    public Phase(RandomGenerator random) {
+    public Phase(RandomGenerator random, Phase defaultNext) {
         this.random = random;
+        this.defaultNext = defaultNext;
     }
 
     public Phase getDefaultNext() {
@@ -31,21 +30,17 @@ public abstract class Phase {
     }
 
     public StepResult next(GameState state) {
-        return new StepResult(state, defaultNext.getClass());
+        return new StepResult(state, defaultNext);
     }
 
-    public StepResult next(GameState state, Class<? extends Phase> phaseClass) {
-        return new StepResult(state, phaseClass);
-    }
-
-    public void next(GameState state, Phase phase) {
-        phase.enter(state);
+    public StepResult next(GameState state, Phase phase) {
+        return new StepResult(state, phase);
     }
 
     public abstract StepResult enter(GameState state);
 
     protected StepResult promote(GameState state) {
-        return new StepResult(state.setPhase(getClass()), null);
+        return new StepResult(state.setPhase(this), null);
     }
 
     protected GameState clearActions(GameState state) {

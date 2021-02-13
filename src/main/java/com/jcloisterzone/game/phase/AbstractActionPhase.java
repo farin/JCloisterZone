@@ -28,8 +28,8 @@ import io.vavr.collection.*;
 
 public abstract class AbstractActionPhase extends Phase {
 
-    public AbstractActionPhase(RandomGenerator random) {
-        super(random);
+    public AbstractActionPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     private boolean isMeepleDeploymentAllowedByCapabilities(GameState state, Position pos) {
@@ -52,7 +52,7 @@ public abstract class AbstractActionPhase extends Phase {
 
             Stream<Tuple2<Location, Structure>> places = state.getTileFeatures2(pos, Structure.class);
 
-            places = places.filter(t -> !(t._2 instanceof Castle));
+            places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik));
 
             if (!state.getBooleanRule(Rule.FARMERS)) {
                 places = places.filter(t -> !(t._2 instanceof Farm));

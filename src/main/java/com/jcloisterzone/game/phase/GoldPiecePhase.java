@@ -14,11 +14,10 @@ import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.io.message.PlaceTokenMessage;
 import io.vavr.collection.Set;
 
-@RequiredCapability(GoldminesCapability.class)
 public class GoldPiecePhase extends Phase {
 
-    public GoldPiecePhase(RandomGenerator random) {
-        super(random);
+    public GoldPiecePhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

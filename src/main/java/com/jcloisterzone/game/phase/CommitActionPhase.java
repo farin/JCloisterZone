@@ -9,12 +9,15 @@ import com.jcloisterzone.io.message.CommitMessage;
 
 public class CommitActionPhase extends Phase {
 
-    public CommitActionPhase(RandomGenerator random) {
-        super(random);
+    public CommitActionPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override
     public StepResult enter(GameState state) {
+        if (state.isCommited()) {
+            return next(state);
+        }
         Player player = state.getTurnPlayer();
         state = state.setPlayerActions(
             new ActionsState(player, new ConfirmAction(), false)

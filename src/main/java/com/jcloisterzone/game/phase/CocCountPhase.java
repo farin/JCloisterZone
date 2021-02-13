@@ -6,7 +6,6 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleDeployed;
-import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.RandomGenerator;
@@ -19,11 +18,10 @@ import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
-@RequiredCapability(CountCapability.class)
 public class CocCountPhase extends Phase {
 
-    public CocCountPhase(RandomGenerator random) {
-        super(random);
+    public CocCountPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

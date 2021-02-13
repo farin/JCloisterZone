@@ -24,11 +24,10 @@ import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
-@RequiredCapability(TowerCapability.class)
 public class TowerCapturePhase extends Phase {
 
-    public TowerCapturePhase(RandomGenerator random) {
-        super(random);
+    public TowerCapturePhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
     }
 
     @Override

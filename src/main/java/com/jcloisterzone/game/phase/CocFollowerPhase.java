@@ -23,11 +23,13 @@ import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
-@RequiredCapability(CountCapability.class)
 public class CocFollowerPhase extends Phase {
 
-    public CocFollowerPhase(RandomGenerator random) {
-        super(random);
+    private CocCountPhase cocCountPhase;
+
+    public CocFollowerPhase(RandomGenerator random, Phase defaultNext) {
+        super(random, defaultNext);
+        cocCountPhase = new CocCountPhase(random, defaultNext);
     }
 
     @Override
@@ -101,6 +103,6 @@ public class CocFollowerPhase extends Phase {
 
         state = (new DeployMeeple(m, fp)).apply(state);
         state = clearActions(state);
-        return next(state, CocCountPhase.class);
+        return next(state, cocCountPhase);
     }
 }

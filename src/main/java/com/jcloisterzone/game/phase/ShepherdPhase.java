@@ -3,7 +3,6 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.action.FlockAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
-import com.jcloisterzone.engine.Game;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
@@ -30,12 +29,11 @@ import io.vavr.collection.Seq;
 import io.vavr.collection.Vector;
 
 
-@RequiredCapability(SheepCapability.class)
 public class ShepherdPhase extends Phase {
 
 
-	public ShepherdPhase(RandomGenerator random) {
-		super(random);
+	public ShepherdPhase(RandomGenerator random, Phase defaultNext) {
+		super(random, defaultNext);
 	}
 
 	private Seq<Farm> getClosedFarmsWithShepherd(GameState state) {
