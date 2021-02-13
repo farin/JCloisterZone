@@ -118,7 +118,7 @@ public class RussianPromosTrapCapability extends Capability<Void> {
                     FeaturePointer fp = t._2;
                     Position p = fp.getPosition();
                     Feature f = state.getFeature(fp);
-                    if (f instanceof Vodyanoy || f instanceof SoloveiRazboynik) continue;
+                    if (fp.getLocation().isCityOfCarcassonneQuarter() || f instanceof Vodyanoy || f instanceof SoloveiRazboynik || f instanceof Castle) continue;
                     if (Math.abs(p.x - pos.x) <= 1 && Math.abs(p.y - pos.y) <= 1 && !pos.equals(p)) {
                         if (fp.getLocation().isCityOfCarcassonneQuarter()) continue;
                         result = result.append(new ExposedFollower((Follower) t._1, trap));
