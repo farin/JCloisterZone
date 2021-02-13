@@ -12,6 +12,7 @@ import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.ActionsState;
+import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
@@ -52,6 +53,10 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
 
     @Override
     public GameState onActionPhaseEntered(GameState state) {
+        if (state.hasFlag(Flag.TOWER_INCREASED)) {
+            return state;
+        }
+
         Player player = state.getPlayerActions().getPlayer();
 
         Set<FeaturePointer> occupiedTowers = state.getDeployedMeeples()
