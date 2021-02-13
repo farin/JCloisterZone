@@ -8,6 +8,8 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.Abbot;
 import com.jcloisterzone.figure.Follower;
@@ -16,9 +18,12 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.ReturnMeepleMessage;
+import com.jcloisterzone.reducers.AddPoints;
 import com.jcloisterzone.reducers.DeployMeeple;
 import io.vavr.Predicates;
+import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Vector;
@@ -65,6 +70,30 @@ public class RussianPromosTrapCapability extends Capability<Void> {
         return state;
     }
 
+    @Override
+    public GameState onFinalScoring(GameState state) {
+        for (Vodyanoy vodyanoy : state.getFeatures(Vodyanoy.class)) {
+            List<ScoreEvent.ReceivedPoints> receivedPoints = List.empty();
+            HashMap<Player, Integer> counts = vodyanoy.getFollowers(state)
+                    .foldLeft(HashMap.empty(), (acc, follower) -> {
+                        Player player = follower.getPlayer();
+                        return acc.put(player, acc.get(player).getOrElse(0) + 1);
+                    });
+
+            for (Tuple2<Player, Integer> t : counts) {
+                Player player = t._1;
+                PointsExpression expr = new PointsExpression(-2 * t._2, "vodyanoy", HashMap.of("followers",t._2));
+                state = (new AddPoints(player, expr.getPoints())).apply(state);
+                receivedPoints = receivedPoints.append(new ScoreEvent.ReceivedPoints(expr, player, vodyanoy.getSampleFollower2(state, player)._2));
+            }
+
+            if (!receivedPoints.isEmpty()) {
+                state = state.appendEvent(new ScoreEvent(receivedPoints, true, true));
+            }
+        }
+        return state;
+    }
+
     public List<ExposedFollower> findExposedFollowers(GameState state) {
         List<ExposedFollower> result = List.empty();
 
@@ -88,6 +117,8 @@ public class RussianPromosTrapCapability extends Capability<Void> {
                     if (!(t._1 instanceof Follower)) continue;
                     FeaturePointer fp = t._2;
                     Position p = fp.getPosition();
+                    Feature f = state.getFeature(fp);
+                    if (f instanceof Vodyanoy || f instanceof SoloveiRazboynik) continue;
                     if (Math.abs(p.x - pos.x) <= 1 && Math.abs(p.y - pos.y) <= 1 && !pos.equals(p)) {
                         if (fp.getLocation().isCityOfCarcassonneQuarter()) continue;
                         result = result.append(new ExposedFollower((Follower) t._1, trap));

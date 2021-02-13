@@ -6,7 +6,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import io.vavr.collection.List;
 
-public class Vodyanoy extends TileFeature implements Structure {
+public class Vodyanoy extends TileFeature implements Scoreable {
 
     private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.TOWER));
 
