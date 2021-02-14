@@ -155,10 +155,6 @@ public class ActionPhase extends AbstractActionPhase {
     }
 
     private StepResult handlePlaceTower(GameState state, PlaceTokenMessage msg) {
-        if (state.hasFlag(Flag.TOWER_INCREASED)) {
-            throw new IllegalArgumentException("Tower already inceresed in current turn.");
-        }
-
         FeaturePointer ptr = (FeaturePointer) msg.getPointer();
         Tower tower = (Tower) state.getFeatureMap().get(ptr).getOrElseThrow(() -> new IllegalArgumentException("No tower"));
         tower = tower.increaseHeight();
@@ -167,7 +163,6 @@ public class ActionPhase extends AbstractActionPhase {
         state = state.appendEvent(new TokenPlacedEvent(
             PlayEventMeta.createWithActivePlayer(state), TowerToken.TOWER_PIECE, ptr)
         );
-        state = state.addFlag(Flag.TOWER_INCREASED);
 
         state = clearActions(state);
         return next(state, towerCapturePhase);
