@@ -5,6 +5,7 @@
 * Russian Promos extended with tiles from 2016 (Vodyanoy and SoloveiRazboynik)  
 * player is now allowed to place tunnel token and meeple in any order (instead tunnel first only)
 * fix: opponent's shepard on closed field is score one turn later
+* fix: "Show Game Setup" menu item should be enabled only when game is running
 
 ## 5.4.2
 *2021-01-30*
