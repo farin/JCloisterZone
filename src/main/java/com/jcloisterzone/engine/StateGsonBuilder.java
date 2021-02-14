@@ -36,12 +36,7 @@ import com.jcloisterzone.game.capability.SheepCapability.SheepToken;
 import com.jcloisterzone.game.phase.DragonMovePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.RussianPromosTrapPhase;
-import com.jcloisterzone.game.state.ActionsState;
-import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.game.state.NeutralFiguresState;
-import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.game.state.PlacedTunnelToken;
-import com.jcloisterzone.game.state.PlayersState;
+import com.jcloisterzone.game.state.*;
 import com.jcloisterzone.io.MessageParser;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
@@ -112,6 +107,12 @@ public class StateGsonBuilder {
             obj.addProperty("turnPlayer", state.getPlayers().getTurnPlayerIndex());
             obj.add("action", context.serialize(state.getPlayerActions()));
             obj.add("history", serializePlayEvents(state, context));
+
+            JsonObject flags = new JsonObject();
+            if (state.hasFlag(Flag.RANSOM_PAID)) {
+                flags.addProperty("ransomPaid", true);
+            }
+            obj.add("flags", flags);
 
             JsonObject undo = new JsonObject();
             undo.addProperty("allowed", game.isUndoAllowed());
