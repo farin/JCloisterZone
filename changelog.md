@@ -1,12 +1,13 @@
 # Version history
 
-## Upcoming
+## 5.5.0
+*2021-02-21*
 
-* Russian Promos extended with tiles from 2016 (Vodyanoy and SoloveiRazboynik)  
+* Russian Promos extended with tiles from 2016 (Vodyanoy and SoloveiRazboynik)
 * player is now allowed to place tunnel token and meeple in any order (instead tunnel first only)
-* fix: opponent's shepard on closed field is score one turn later
+* fix: opponent's shepherd on closed field is score one turn later
 * fix: "Show Game Setup" menu item should be enabled only when game is running
-* fix: ui shouldn't allow to pay ransom twice despite builder double turn
+* fix: UI shouldn't allow to pay ransom twice despite builder double turn
 
 ## 5.4.2
 *2021-01-30*
