@@ -17,7 +17,7 @@ public class Abbot extends Follower {
     @Override
     public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Structure feature) {
         if (!(fp.getLocation() == Location.QUARTER_CATHEDRAL ||
-                feature instanceof Cloister || feature instanceof Garden || feature instanceof FlyingMachine)) {
+                feature instanceof Cloister || feature instanceof Garden || feature instanceof FlyingMachine|| feature instanceof TrapFeature)) {
             return new DeploymentCheckResult("Abbot must be placed only at cloister or garden.");
         }
         return super.isDeploymentAllowed(state, fp, feature);

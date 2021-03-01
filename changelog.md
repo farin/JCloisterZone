@@ -1,5 +1,11 @@
 # Version history
 
+## 5.5.1
+* upcoming release *
+
+* fix: crash on Russian Promos trap catching Abbot, Wagon or Mayor
+
+
 ## 5.5.0
 *2021-02-21*
 

@@ -4,10 +4,7 @@ import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.FlyingMachine;
-import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.feature.Structure;
+import com.jcloisterzone.feature.*;
 import com.jcloisterzone.game.state.GameState;
 
 @Immutable
@@ -32,7 +29,7 @@ public class Mayor extends Follower {
     @Override
     public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Structure feature) {
         if (!(fp.getLocation() == Location.QUARTER_CASTLE ||
-              feature instanceof City || feature instanceof FlyingMachine)) {
+              feature instanceof City || feature instanceof FlyingMachine|| feature instanceof TrapFeature)) {
             return new DeploymentCheckResult("Mayor must be placed in city only.");
         }
         return super.isDeploymentAllowed(state, fp, feature);
