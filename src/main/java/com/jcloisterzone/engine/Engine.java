@@ -298,7 +298,7 @@ public class Engine implements  Runnable {
                 throw new IllegalStateException("Unknown message");
             }
 
-            gameIsOver = game.getState().getPhase().equals(GameOverPhase.class);
+            gameIsOver = game.getState().getPhase() instanceof GameOverPhase;
 
             if (!bulk || gameIsOver) {
                 out.println(gson.toJson(game));

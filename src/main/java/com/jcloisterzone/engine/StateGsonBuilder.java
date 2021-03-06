@@ -263,7 +263,7 @@ public class StateGsonBuilder {
             Vector<Position> visited =  root.getCapabilityModel(DragonCapability.class);
             JsonObject data = new JsonObject();
             data.add("position", context.serialize(pos));
-            if (root.getPhase().equals(DragonMovePhase.class)) {
+            if (root.getPhase() instanceof DragonMovePhase) {
                 JsonArray visitedData = new JsonArray();
                 visited.forEach(p -> visitedData.add(context.serialize(p)));
                 data.add("visited", visitedData);
