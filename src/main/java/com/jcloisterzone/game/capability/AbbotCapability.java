@@ -7,6 +7,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.CloisterLike;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Garden;
 import com.jcloisterzone.figure.Abbot;
 import com.jcloisterzone.figure.Meeple;
@@ -32,8 +33,14 @@ public class AbbotCapability extends Capability<Void> {
                 continue;
             }
 
-            CloisterLike feature = (CloisterLike) state.getFeature(t._2);
-            if (feature.isCompleted(state)) {
+            Feature feature = state.getFeature(t._2);
+            if (!(feature instanceof CloisterLike)) {
+                // eg catched by Vodyanoy
+                continue;
+            }
+
+            CloisterLike cloister = (CloisterLike) feature;
+            if (cloister.isCompleted(state)) {
                 /* https://wikicarpedia.com/index.php/The_Abbot#cite_note-14
                 You can only score the abbot placed on a monastery or a garden before the feature is completely
                 surrounded by tiles, that is, when the feature is incomplete. In this case, you always score the abbot
