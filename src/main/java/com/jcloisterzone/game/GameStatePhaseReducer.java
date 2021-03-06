@@ -37,7 +37,7 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
         AbbeyPhase abbeyPhase = null;
         AbbeyEndGamePhase abbeyEndGamePhase = null;
 
-        endChain =                  new GameOverPhase(random, null);
+        endChain = new GameOverPhase(random, null);
         if (setup.contains(CountCapability.class)) endChain = new CocFinalScoringPhase(random, endChain);
         if (setup.contains(AbbeyCapability.class)) endChain = abbeyEndGamePhase = new AbbeyEndGamePhase(random, endChain);
 
@@ -45,7 +45,7 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
         if (setup.contains(BazaarCapability.class)) next = new BazaarPhase(random, next);
         if (setup.getBooleanRule(Rule.ESCAPE)) next = new EscapePhase(random, next);
         next = cleanUpTurnPartPhase = new CleanUpTurnPartPhase(random, next);
-        if (setup.contains(CornCircleCapability.class)) new CornCirclePhase(random, next);
+        if (setup.contains(CornCircleCapability.class)) next = new CornCirclePhase(random, next);
 
         if (setup.contains(DragonCapability.class) && "after-scoring".equals(setup.getStringRule(Rule.DRAGON_MOVEMENT))) {
             next = new DragonPhase(random, next);
