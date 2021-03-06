@@ -182,16 +182,15 @@ public class City extends CompletableFeature<City> {
         boolean tinyCity = false;
         int tileCount = getTilePositions().size();
 
-
-        if (cathedral && !completed) {
-            return new PointsExpression(0, "city.incomplete-cathedral");
-        }
-
         Map<String, Integer> args = HashMap.of(
                 "tiles", tileCount,
                 "pennants", pennants,
                 "extraPoints", extraPoints
         );
+
+        if (cathedral && !completed) {
+            return new PointsExpression(0, "city.incomplete-cathedral", args);
+        }
 
         int pointsPerUnit = 2;
         if (completed && tileCount == 2 && "2".equals(state.getStringRule(Rule.TINY_CITY_SCORING))) {

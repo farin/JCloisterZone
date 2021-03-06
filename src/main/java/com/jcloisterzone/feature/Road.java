@@ -147,10 +147,12 @@ public class Road extends CompletableFeature<Road> {
     @Override
     public PointsExpression getStructurePoints(GameState state, boolean completed) {
         int tileCount = getTilePositions().size();
-        if (inn && !completed) {
-            return new PointsExpression(0, "road.incomplete-inn");
-        }
         Map<String, Integer> args = HashMap.of("tiles", tileCount);
+
+        if (inn && !completed) {
+            return new PointsExpression(0, "road.incomplete-inn", args);
+        }
+
         if (inn) {
             args = args.put("inn", 1);
         }
