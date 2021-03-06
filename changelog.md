@@ -1,5 +1,12 @@
 # Version history
 
+## 5.5.2
+*2021-03-05*
+* fix: dragon shows remaining moves again
+* fix: accidentaly disabled corn circles (5.5.0 regression)
+* ui fix: incomplete city with cathedral shows properly points from mage
+
+
 ## 5.5.1
 *2021-03-02*
 
