@@ -6,6 +6,7 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.MeepleReturned;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
@@ -76,7 +77,8 @@ public class WagonPhase extends Phase {
                         .toSet();
 
                 if (!options.isEmpty()) {
-                    PlayerAction<?> action = new MeepleAction(wagon, options);
+                    MeepleReturned returnedEvent = (MeepleReturned) state.getEvents().findLast(ev -> ev instanceof MeepleReturned && ((MeepleReturned) ev).getMeeple() == wagon).getOrNull();
+                    PlayerAction<?> action = new MeepleAction(wagon, options, returnedEvent.getFrom());
                     state = state.setPlayerActions(
                         new ActionsState(wagon.getPlayer(), action, true)
                     );

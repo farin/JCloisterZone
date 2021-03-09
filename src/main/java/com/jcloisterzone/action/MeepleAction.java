@@ -8,6 +8,8 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
+import java.util.Objects;
+
 public class MeepleAction implements SelectFeatureAction {
 
     private static final long serialVersionUID = 1L;
@@ -15,28 +17,32 @@ public class MeepleAction implements SelectFeatureAction {
     //meeple id to set of options
     private final Map<String, Set<FeaturePointer>> options;
     private final Class<? extends Meeple> meepleType;
-    private final boolean cityOfCarcassoneMove;
+    private final FeaturePointer origin; // eg wagon source;
 
     public MeepleAction(Meeple meeple, Set<FeaturePointer> options) {
-        this(meeple.getClass(), HashMap.of(meeple.getId(), options), false);
+        this(meeple.getClass(), HashMap.of(meeple.getId(), options), null);
     }
 
-    public MeepleAction(Meeple meeple, Set<FeaturePointer> options, boolean cityOfCarcassoneMove) {
-        this(meeple.getClass(), HashMap.of(meeple.getId(), options), cityOfCarcassoneMove);
+    public MeepleAction(Meeple meeple, Set<FeaturePointer> options, FeaturePointer origin) {
+        this(meeple.getClass(), HashMap.of(meeple.getId(), options), origin);
     }
 
-    public MeepleAction(Class<? extends Meeple> meepleType, Map<String, Set<FeaturePointer>> options, boolean cityOfCarcassoneMove) {
+    public MeepleAction(Class<? extends Meeple> meepleType, Map<String, Set<FeaturePointer>> options, FeaturePointer origin) {
         this.options = options;
         this.meepleType = meepleType;
-        this.cityOfCarcassoneMove = cityOfCarcassoneMove;
+        this.origin = origin;
     }
 
     public Class<? extends Meeple> getMeepleType() {
         return meepleType;
     }
 
+    public FeaturePointer getOrigin() {
+        return origin;
+    }
+
     public boolean isCityOfCarcassoneMove() {
-        return cityOfCarcassoneMove;
+        return origin != null && origin.getLocation().isCityOfCarcassonneQuarter();
     }
 
     public String getMeepleIdFor(FeaturePointer fp) {
@@ -55,13 +61,13 @@ public class MeepleAction implements SelectFeatureAction {
 
     public MeepleAction merge(MeepleAction ma) {
         assert ma.meepleType.equals(meepleType);
-        assert ma.cityOfCarcassoneMove == cityOfCarcassoneMove;
+        assert Objects.equals(ma.origin, origin);
         Map<String, Set<FeaturePointer>> options = this.options;
         for (Tuple2<String, Set<FeaturePointer>> t : ma.options) {
             Set<FeaturePointer> fps = options.get(t._1).getOrElse(HashSet.empty());
             options = options.put(t._1, fps.addAll(t._2));
         }
-        return new MeepleAction(meepleType, options, cityOfCarcassoneMove);
+        return new MeepleAction(meepleType, options, origin);
     }
 
 }

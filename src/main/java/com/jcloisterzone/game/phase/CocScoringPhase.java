@@ -79,7 +79,7 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
     }
 
     @Override
-    protected List<Location> getValidQuerters(GameState state) {
+    protected List<Location> getValidQuarters(GameState state) {
         return Location.QUARTERS;
     }
 

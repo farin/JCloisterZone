@@ -691,6 +691,9 @@ public class StateGsonBuilder {
                 options.add(context.serialize(fp));
             });
             json.add("options", options);
+            if (action.getOrigin() != null) {
+                json.add("origin", context.serialize(action.getOrigin()));
+            }
             return json;
         }
     }

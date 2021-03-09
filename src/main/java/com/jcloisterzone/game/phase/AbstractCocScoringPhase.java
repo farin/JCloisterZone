@@ -3,10 +3,12 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
@@ -28,7 +30,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
 
     protected abstract Function<Feature, Boolean> getAllowedFeaturesFilter(GameState state);
     protected abstract StepResult nextPlayer(GameState state, Player player, boolean actionUsed);
-    protected abstract List<Location> getValidQuerters(GameState state);
+    protected abstract List<Location> getValidQuarters(GameState state);
 
     protected StepResult endPhase(GameState state) {
         state = clearActions(state);
@@ -47,7 +49,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
         FeaturePointer countFp = state.getNeutralFigures().getCountDeployment();
         Function<Feature, Boolean> filter = getAllowedFeaturesFilter(state);
 
-        Vector<MeepleAction> actions = getValidQuerters(state)
+        Vector<MeepleAction> actions = getValidQuarters(state)
             .filter(quarter -> quarter != countFp.getLocation())
             .flatMap(quarter -> {
                 Set<FeaturePointer> options = state.getFeatures(getFeatureTypeForLocation(quarter))
@@ -59,6 +61,9 @@ public abstract class AbstractCocScoringPhase extends Phase {
                     return List.empty();
                 }
 
+                Position quarterPosition = state.getPlacedTiles().filter(t -> t._2.getTile().getId().equals(CountCapability.QUARTER_ACTION_TILE_ID)).get()._1;
+                FeaturePointer quarterFp = new FeaturePointer(quarterPosition, quarter);
+
                 return state.getDeployedMeeples()
                     .filter(t -> t._2.getLocation() == quarter)   // is deployed on quarter
                     .map(Tuple2::_1)
@@ -66,7 +71,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
                     .groupBy(Object::getClass)                    // for each meeple class create action ...
                     .values()
                     .map(Seq::get)
-                    .map(m -> new MeepleAction(m, options, true));
+                    .map(m -> new MeepleAction(m, options, quarterFp));
             })
             .toVector();
 

@@ -29,7 +29,7 @@ public class CocFinalScoringPhase extends AbstractCocScoringPhase {
     }
 
     @Override
-    protected List<Location> getValidQuerters(GameState state) {
+    protected List<Location> getValidQuarters(GameState state) {
         if (state.getStringRule(Rule.COC_FINAL_SCORING).equals("market-only")) {
             return List.of(Location.QUARTER_MARKET);
         } else {
