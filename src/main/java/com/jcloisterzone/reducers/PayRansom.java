@@ -26,8 +26,11 @@ public class PayRansom implements Reducer {
         }
 
         Player player = state.getActivePlayer();
-        Predicate<Follower> pred = f -> f.getId().equals(meepleId);
+        if (state.getPlayers().getScore().get(player.getIndex()) < TowerCapability.RANSOM_POINTS) {
+            throw new IllegalStateException("Not enough points to pay ransom.");
+        }
 
+        Predicate<Follower> pred = f -> f.getId().equals(meepleId);
         Array<List<Follower>> model = state.getCapabilityModel(TowerCapability.class);
         Follower follower = null;
         Player jailer = null;
