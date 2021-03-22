@@ -1,5 +1,12 @@
 # Version history
 
+## 5.5.3
+*2021-03-22*
+* rules: player can pay ransom only if has at least 3 points 
+* fix: remaning tiles count - subtract also removed tiles (removed because no placement was available when drawn)
+* ui enhancement: wagon hit was added, pointing to source feature when use can move wagon
+
+
 ## 5.5.2
 *2021-03-05*
 * fix: dragon shows remaining moves again
