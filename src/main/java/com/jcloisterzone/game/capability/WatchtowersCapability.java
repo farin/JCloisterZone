@@ -68,11 +68,12 @@ public class WatchtowersCapability extends Capability<Void> {
     	
     	for(Meeple meeple: featureMeeples) {
     	    pos = meeple.getPosition(state);
-	    	Stream<Tuple2<Location, Feature>> tfs  = state.getTileFeatures2(pos).filter(tf -> tf._2 instanceof Watchtower);
 
-	    	Watchtower watchtower = (Watchtower) state.getTileFeatures2(pos).filter(tf -> tf._2 instanceof Watchtower).map(Tuple2::_2).getOrNull();
+    	    Tuple2<Location, Feature> tfs  = state.getTileFeatures2(pos).filter(tf -> tf._2 instanceof Watchtower).getOrNull();
 
-	    	if (watchtower != null) {
+	    	if (tfs != null) {
+	    		Location loc = tfs._1;
+	    		Watchtower watchtower = (Watchtower) tfs._2;
 	    		int cities = 0;
 	    		int meeples = 0;
 	    		int monasteries = 0;
@@ -143,7 +144,9 @@ public class WatchtowersCapability extends Capability<Void> {
                 );
 
                 if (points>0) {
-                	bonusPoints = bonusPoints.append(new ReceivedPoints(new PointsExpression(points,"watchtower",args), meeple.getPlayer(), meeple.getDeployment(state)));
+                	
+                	bonusPoints = bonusPoints.append(new ReceivedPoints(new PointsExpression(points,"watchtower",args), meeple.getPlayer(), new FeaturePointer(pos, loc)));
+//                	bonusPoints = bonusPoints.append(new ReceivedPoints(new PointsExpression(points,"watchtower",args), meeple.getPlayer(), meeple.getDeployment(state)));
                 }
 	    	}
 	    }
