@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pack>
+  <tiles>
+	<tile id = "Watchtowers/CCRF_2T">
+  <road>S</road>
+  <city>N</city>
+  <farm>SR WL WR</farm>
+  <farm>SL</farm>
+  <city>E</city>
+  <watchtower type="pennant"></watchtower>
+</tile>
+<tile id = "Watchtowers/CFff_3C">
+  <city>N</city>
+  <watchtower type="monastery"></watchtower>
+  <farm>EL ER SL SR WL WR</farm>
+</tile>
+<tile id = "Watchtowers/CFRF_1C">
+  <city>N</city>
+  <road>S</road>
+  <watchtower type="city"></watchtower>
+  <farm>SR WL WR</farm>
+  <farm>EL ER SL</farm>
+</tile>
+<tile id = "Watchtowers/CFRF_2M">
+  <city>N</city>
+  <farm>SR WL WR</farm>
+  <farm>EL ER SL</farm>
+  <road>S</road>
+  <watchtower type="meeple"></watchtower>
+</tile>
+<tile id = "Watchtowers/CRFR_1R">
+  <city>N</city>
+  <farm>ER SL SR WL</farm>
+  <road>W</road>
+  <farm>WR</farm>
+  <farm>EL</farm>
+  <road>E</road>
+  <watchtower type="road"></watchtower>
+</tile>
+<tile id = "Watchtowers/CRRC_2M">
+  <road>S</road>
+  <road>E</road>
+  <farm>EL</farm>
+  <farm>ER SL</farm>
+  <farm>SR</farm>
+  <city>N W</city>
+  <watchtower type="meeple"></watchtower>
+</tile>
+<tile id = "Watchtowers/FCFC_1C">
+  <city>E</city>
+  <city>W</city>
+  <watchtower type="city"></watchtower>
+  <farm>NL NR</farm>
+  <farm>SL SR</farm>
+</tile>
+<tile id = "Watchtowers/FCRC_2T">
+  <city>W</city>
+  <city>E</city>
+  <watchtower type="pennant"></watchtower>
+  <road>S</road>
+  <farm>NL NR</farm>
+  <farm>SR</farm>
+  <farm>SL</farm>
+</tile>
+<tile id = "Watchtowers/FfRC_1R">
+  <city>W</city>
+  <road>S</road>
+  <watchtower type="road"></watchtower>
+  <farm>SR</farm>
+  <farm>NL NR EL ER SL</farm>
+</tile>
+<tile id = "Watchtowers/FRFC_1C">
+  <city>W</city>
+  <road>E</road>
+  <watchtower type="city"></watchtower>
+  <farm>NL NR EL</farm>
+  <farm>ER SL SR</farm>
+</tile>
+<tile id = "Watchtowers/FRFR_3C">
+  <road>W</road>
+  <road>E</road>
+  <watchtower type="monastery"></watchtower>
+  <farm>NL NR EL WR</farm>
+  <farm>ER SL SR WL</farm>
+</tile>
+<tile id = "Watchtowers/FRRF_1R">
+  <road>E</road>
+  <road>S</road>
+  <watchtower type="road"></watchtower>
+  <farm>ER SL</farm>
+  <farm>NL NR EL SR WL WR</farm>
+</tile>
+  </tiles>
+  <sets>
+    <tile-set id="watchtowers">
+      <ref count="1" tile="Watchtowers/CCRF_2T" />
+      <ref count="1" tile="Watchtowers/CFff_3C" />
+      <ref count="1" tile="Watchtowers/CFRF_1C" />
+      <ref count="1" tile="Watchtowers/CFRF_2M" />
+      <ref count="1" tile="Watchtowers/CRFR_1R" />
+      <ref count="1" tile="Watchtowers/CRRC_2M" />
+      <ref count="1" tile="Watchtowers/FCFC_1C" />
+      <ref count="1" tile="Watchtowers/FCRC_2T" />
+      <ref count="1" tile="Watchtowers/FfRC_1R" />
+      <ref count="1" tile="Watchtowers/FRFC_1C" />
+      <ref count="1" tile="Watchtowers/FRFR_3C" />
+      <ref count="1" tile="Watchtowers/FRRF_1R" />
+    </tile-set>
+  </sets>
+</pack>

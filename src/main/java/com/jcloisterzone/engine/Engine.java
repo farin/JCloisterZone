@@ -180,6 +180,9 @@ public class Engine implements  Runnable {
         if (setupMsg.getElements().containsKey("escape")) {
             rules = rules.put(Rule.ESCAPE, true);
         }
+        if (setupMsg.getElements().containsKey("watchtower")) {
+            capabilities = capabilities.add(WatchtowersCapability.class);
+        }
 
         for (Entry<String, Object> entry : setupMsg.getRules().entrySet()) {
             rules = rules.put(Rule.byKey(entry.getKey()), entry.getValue());

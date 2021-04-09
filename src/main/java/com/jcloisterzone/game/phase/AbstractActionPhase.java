@@ -58,6 +58,9 @@ public abstract class AbstractActionPhase extends Phase {
                 places = places.filter(t -> !(t._2 instanceof Farm));
             }
 
+            // Watchtower is not allowed as tile placement
+            places = places.filter(t -> !(t._2 instanceof Watchtower));
+
             // towers are handled by Tower capability separately (needs collect towers on all tiles)
             // (and flier or magic portal use is also not allowed to be placed on tower
             places = places.filter(t -> !(t._2 instanceof Tower));
