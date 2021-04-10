@@ -8,6 +8,7 @@ import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
@@ -110,6 +111,10 @@ public class WatchtowersCapability extends Capability<Void> {
 	                meeples += state.getDeployedMeeples()
 	                        .filter(mt -> mt._1 instanceof Follower)
 	                        .filter(mt -> mt._2.getPosition().equals(p))
+	                        .filter(mt -> {
+	    	                    Feature f = state.getFeature(mt._2);
+	                        	return (!(mt._2.getLocation().isCityOfCarcassonneQuarter() || f instanceof Castle));
+	                        })
 	                        .length();
 
 	            }
@@ -144,9 +149,7 @@ public class WatchtowersCapability extends Capability<Void> {
                 );
 
                 if (points>0) {
-                	
                 	bonusPoints = bonusPoints.append(new ReceivedPoints(new PointsExpression(points,"watchtower",args), meeple.getPlayer(), new FeaturePointer(pos, loc)));
-//                	bonusPoints = bonusPoints.append(new ReceivedPoints(new PointsExpression(points,"watchtower",args), meeple.getPlayer(), meeple.getDeployment(state)));
                 }
 	    	}
 	    }
