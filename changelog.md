@@ -1,5 +1,9 @@
 # Version history
 
+## next
+
+* fixed bug allowing everyone buy each other imprisoned meeple 
+
 ## 5.5.3
 *2021-03-22*
 * rules: player can pay ransom only if has at least 3 points 
@@ -10,7 +14,7 @@
 ## 5.5.2
 *2021-03-05*
 * fix: dragon shows remaining moves again
-* fix: accidentaly disabled corn circles (5.5.0 regression)
+* fix: accidentally disabled corn circles (5.5.0 regression)
 * ui fix: incomplete city with cathedral shows properly points from mage
 
 
