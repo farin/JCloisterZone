@@ -137,15 +137,6 @@ public class Tile implements Serializable {
     }
 
     /**
-     * Checks whether this tile has a tower place on it
-     *
-     * @return {@code true} it this tile has a tower place on it, {@code false} otherwise
-     */
-    public boolean hasTower() {
-        return initialFeatures.containsKey(Location.TOWER);
-    }
-
-    /**
      * Calculates and returns the type of the edge pointed by {@code loc}.
      *
      * @param loc the location indicating the edge of interest

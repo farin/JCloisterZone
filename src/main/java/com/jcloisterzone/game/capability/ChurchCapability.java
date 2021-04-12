@@ -2,7 +2,6 @@ package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
@@ -56,8 +55,6 @@ public class ChurchCapability extends Capability<Void> {
         int max = adjacentMeepleCount.values().map(map -> map.size()).max().getOrElse(-1);
         Set<Player> players = adjacentMeepleCount.filter((p, map) -> map.size() == max).keySet();
 
-
-        BoardPointer ptr = state.getNeutralFigures().getFairyDeployment();
         for (Player player: players) {
             LinkedHashMap<Meeple, FeaturePointer> followers = adjacentMeepleCount.get(player).get();
             Tuple2<Meeple, FeaturePointer> onTile = followers.filter(t -> t._2.getPosition().equals(cloisterPosition)).getOrNull();
