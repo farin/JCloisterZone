@@ -7,10 +7,7 @@ import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleReturned;
-import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.Structure;
+import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
@@ -61,7 +58,14 @@ public class WagonPhase extends Phase {
                                 if ((f instanceof  Structure) && wagon.isDeploymentAllowed(_state, t._1, (Structure) f) != DeploymentCheckResult.OK) {
                                     return false;
                                 }
-                                return !nei.isCompleted(_state) && !nei.isOccupied(_state);
+                                if (nei.isCompleted(_state)) {
+                                    return false;
+                                }
+                                if (nei instanceof Cloister) {
+                                    return ((Cloister) nei).getMeeplesIncludingMonastery(_state).isEmpty();
+                                } else {
+                                    return !nei.isOccupied(_state);
+                                }
                             }
                             return false; // eg f == null
                         })

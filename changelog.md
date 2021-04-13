@@ -2,7 +2,8 @@
 
 ## next
 
-* fixed bug allowing everyone buy each other imprisoned meeple 
+* fixed bug allowing everyone buy each other imprisoned meeple
+* fixed: wagon is not allowed to move on Monastery with meeple placed as abbot
 
 ## 5.5.3
 *2021-03-22*
