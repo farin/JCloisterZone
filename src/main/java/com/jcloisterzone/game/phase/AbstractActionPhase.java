@@ -66,7 +66,7 @@ public abstract class AbstractActionPhase extends Phase {
             places = places.flatMap(t -> {
                 Structure struct = t._2;
                 if (struct instanceof Cloister && ((Cloister)struct).isMonastery()) {
-                    return List.of(t, new Tuple2<>(Location.MONASTERY, t._2));
+                    return List.of(t, new Tuple2<>(Location.MONASTERY, struct));
                 }
                 return List.of(t);
             });

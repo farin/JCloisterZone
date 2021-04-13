@@ -4,6 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.ConfirmAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleReturned;
@@ -23,6 +24,7 @@ import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
 import com.jcloisterzone.io.message.PassMessage;
 import io.vavr.Tuple2;
+import io.vavr.collection.List;
 import io.vavr.collection.Queue;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
@@ -48,14 +50,14 @@ public class WagonPhase extends Phase {
                 GameState _state = state;
                 Set<FeaturePointer> options = getAdjacentFeatures(state, (Completable)feature, item._2)
                         .filter(t -> {
-                            Feature f = t._2;
+                            Structure f = t._2;
                             if (f instanceof Castle) {
                                 Castle castle = (Castle) f;
                                 return !castle.isOccupied(_state);
                             }
                             if (f instanceof Completable) {
                                 Completable nei = (Completable) f;
-                                if ((f instanceof  Structure) && wagon.isDeploymentAllowed(_state, t._1, (Structure) f) != DeploymentCheckResult.OK) {
+                                if ((f instanceof  Structure) && wagon.isDeploymentAllowed(_state, t._1, f) != DeploymentCheckResult.OK) {
                                     return false;
                                 }
                                 if (nei.isCompleted(_state)) {
@@ -68,6 +70,13 @@ public class WagonPhase extends Phase {
                                 }
                             }
                             return false; // eg f == null
+                        })
+                        .flatMap(t -> {
+                            Structure struct = t._2;
+                            if (struct instanceof Cloister && ((Cloister)struct).isMonastery()) {
+                                return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Location.MONASTERY), struct));
+                            }
+                            return List.of(t);
                         })
                         .map(Tuple2::_1)
                         .filter(fp -> {
@@ -93,10 +102,10 @@ public class WagonPhase extends Phase {
         return next(state);
     }
 
-    private Stream<Tuple2<FeaturePointer, Feature>> getAdjacentFeatures(GameState state, Completable feature, FeaturePointer source) {
+    private Stream<Tuple2<FeaturePointer, Structure>> getAdjacentFeatures(GameState state, Completable feature, FeaturePointer source) {
         if ("C1".equals(state.getStringRule(Rule.WAGON_MOVE))) {
             return Stream.ofAll(feature.getNeighboring())
-                    .map(fp -> new Tuple2<>(fp, state.getFeature(fp)));
+                    .map(fp -> new Tuple2<>(fp, (Structure) state.getFeature(fp)));
         } else {
             Position sourcePos = source.getPosition();
             return Stream.ofAll(Position.ADJACENT_AND_DIAGONAL.values())

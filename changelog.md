@@ -3,7 +3,8 @@
 ## next
 
 * fixed bug allowing everyone buy each other imprisoned meeple
-* fixed: wagon is not allowed to move on Monastery with meeple placed as abbot
+* fix: wagon is not allowed to move on Monastery with meeple placed as abbot
+* fix: wagon moved on Monastery should be allowed to select deployment as monk or as abbot
 
 ## 5.5.3
 *2021-03-22*
