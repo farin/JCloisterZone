@@ -120,7 +120,6 @@ public abstract class AbstractActionPhase extends Phase {
                             Set<FeaturePointer> segment = road.findSegmentBorderedBy(state, t._1,
                                     fp -> ((Road) state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth()).toSet();
                             boolean segmentIsEmpty = Stream.ofAll(state.getDeployedMeeples())
-                                    .filter(x -> !(x._1 instanceof Shepherd))
                                     .filter(x -> segment.contains(x._2))
                                     .isEmpty();
                             if (segmentIsEmpty) {

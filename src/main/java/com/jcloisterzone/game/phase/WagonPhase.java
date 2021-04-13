@@ -11,6 +11,7 @@ import com.jcloisterzone.event.MeepleReturned;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Shepherd;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.RandomGenerator;
@@ -65,9 +66,28 @@ public class WagonPhase extends Phase {
                                 }
                                 if (nei instanceof Cloister) {
                                     return ((Cloister) nei).getMeeplesIncludingMonastery(_state).isEmpty();
-                                } else {
-                                    return !nei.isOccupied(_state);
                                 }
+
+                                if (nei instanceof Road) {
+                                    Road road = (Road) nei;
+                                    if (road.isLabyrinth()) {
+                                        // current tile musn't be labyrinth center - apply regular ocuupation rule to it
+                                        if (!((Road) _state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())).isLabyrinth()) {
+                                            // find if there is empty labyrinth segment
+                                            Set<FeaturePointer> segment = road.findSegmentBorderedBy(_state, t._1,
+                                                    fp -> ((Road) _state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth()).toSet();
+                                            boolean segmentIsEmpty = Stream.ofAll(_state.getDeployedMeeples())
+                                                    .filter(x -> segment.contains(x._2))
+                                                    .isEmpty();
+                                            if (segmentIsEmpty) {
+                                                // whole road is occupied but segment divided by labyrinth is free
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                return !nei.isOccupied(_state);
                             }
                             return false; // eg f == null
                         })
