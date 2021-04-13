@@ -111,17 +111,23 @@ public abstract class AbstractActionPhase extends Phase {
                     // no meeples except Shepherd is on feature
                     return true;
                 }
-                if (struct instanceof Road && ((Road) struct).isLabyrinth()) {
-                    // find if there is empty labyrinth segment
-                    Set<FeaturePointer> segment = ((Road) struct).findSegmentBorderedBy(state, t._1,
-                            fp -> ((Road)state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth()).toSet();
-                    boolean segmentIsEmpty = Stream.ofAll(state.getDeployedMeeples())
-                            .filter(x -> !(x._1 instanceof Shepherd))
-                            .filter(x -> segment.contains(x._2))
-                            .isEmpty();
-                    if (segmentIsEmpty) {
-                        // whole road is occupied but segment divided by labyrinth is free
-                        return true;
+                if (struct instanceof Road) {
+                    Road road = (Road) struct;
+                    if (road.isLabyrinth()) {
+                        // current tile musn't be labyrinth center - apply regular ocuupation rule to it
+                        if (!((Road) state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())).isLabyrinth()) {
+                            // find if there is empty labyrinth segment
+                            Set<FeaturePointer> segment = road.findSegmentBorderedBy(state, t._1,
+                                    fp -> ((Road) state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth()).toSet();
+                            boolean segmentIsEmpty = Stream.ofAll(state.getDeployedMeeples())
+                                    .filter(x -> !(x._1 instanceof Shepherd))
+                                    .filter(x -> segment.contains(x._2))
+                                    .isEmpty();
+                            if (segmentIsEmpty) {
+                                // whole road is occupied but segment divided by labyrinth is free
+                                return true;
+                            }
+                        }
                     }
                 }
                 return false;
