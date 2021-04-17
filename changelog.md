@@ -2,6 +2,9 @@
 
 ## next
 * fixed bug allowing everyone buy each other imprisoned meeple
+* fix: wrong meeple type wss moved from the city of C. in some cases.  
+   eg player has both small and big follower deployed on city quarted
+   when want so to move meeple out, regardless of his choice only first deployed here was always used
 * fix: wagon is not allowed to move on Monastery with meeple placed as abbot
 * fix: wagon moved on Monastery should be allowed to select deployment as monk or as abbot
 * fix: don't allow phantom and magic portal placement on alredy occupied labyrinth
