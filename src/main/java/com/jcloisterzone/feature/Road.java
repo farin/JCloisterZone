@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 public class Road extends CompletableFeature<Road> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private final boolean inn;
     private final boolean labyrinth;
