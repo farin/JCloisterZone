@@ -1,24 +1,26 @@
 # Version history
 
-## next
-* fixed bug allowing everyone buy each other imprisoned meeple
-* fix: wrong meeple type wss moved from the city of C. in some cases.  
-   eg player has both small and big follower deployed on city quarted
-   when want so to move meeple out, regardless of his choice only first deployed here was always used
-* fix: wagon is not allowed to move on Monastery with meeple placed as abbot
+## 5.5.4
+*2021-04-17*
+
+* fix: everyone can buy each other imprisoned follower
+* fix: move from the City of C. ignores follower type selected by a player
+* fix: wagon shouldn't be allowed to move on Monastery with follower already placed as abbot
 * fix: wagon moved on Monastery should be allowed to select deployment as monk or as abbot
 * fix: don't allow phantom and magic portal placement on alredy occupied labyrinth
 * fix: wagon should be able to move to an unoccupied labyrinth road branch
 
 ## 5.5.3
 *2021-03-22*
-* rules: player can pay ransom only if has at least 3 points 
+
+* rules: player can pay ransom only if has at least 3 points
 * fix: remaning tiles count - subtract also removed tiles (removed because no placement was available when drawn)
 * ui enhancement: wagon hit was added, pointing to source feature when use can move wagon
 
 
 ## 5.5.2
 *2021-03-05*
+
 * fix: dragon shows remaining moves again
 * fix: accidentally disabled corn circles (5.5.0 regression)
 * ui fix: incomplete city with cathedral shows properly points from mage
