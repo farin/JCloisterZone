@@ -137,6 +137,7 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"vineyard", VineyardCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"shrine", ShrineCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"festival", FestivalCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"well", WellCapability.class);
 
         boolean containsRiver = setupMsg.getSets().keySet().stream().anyMatch(s -> s.startsWith("river/"));
         boolean containsCornCircle = setupMsg.getSets().keySet().stream().anyMatch(s -> s.startsWith("corn-circles/"));

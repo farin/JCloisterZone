@@ -12,7 +12,9 @@ import com.jcloisterzone.game.capability.FerriesCapabilityModel;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import io.vavr.Tuple2;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
+import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
@@ -80,7 +82,11 @@ public class ChangeFerry implements Reducer {
            Set<FeaturePointer> neighbouring = merged.getNeighboring().intersect(
                initialFeatures.flatMap(f -> f.getNeighboring()).toSet()
            );
-           return new Road(places, openEdges, neighbouring, isInn, isLabyrinth, openTunnelEnds);
+           Map<String, Integer> modifiers = HashMap.empty();
+           for(Road initialFeature : initialFeatures) {
+        	   	modifiers = modifiers.merge(initialFeature.getModifiers(),(a1,a2)->(a1+a2));
+           }
+           return new Road(places, openEdges, neighbouring, isInn, isLabyrinth, openTunnelEnds, modifiers);
         });
 
         // handle special case, ferry connected two ends of same road (after disconnect)
