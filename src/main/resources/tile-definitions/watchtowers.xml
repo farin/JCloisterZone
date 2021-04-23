@@ -4,27 +4,27 @@
 	<tile id = "Watchtowers/CCRF_2T">
   <road>S</road>
   <city>N</city>
-  <farm>SR WL WR</farm>
-  <farm>SL</farm>
+  <farm city="N">SR WL WR</farm>
+  <farm city="E">SL</farm>
   <city>E</city>
   <watchtower type="pennant"></watchtower>
 </tile>
 <tile id = "Watchtowers/CFff_3C">
   <city>N</city>
   <watchtower type="monastery"></watchtower>
-  <farm>EL ER SL SR WL WR</farm>
+  <farm city="N">EL ER SL SR WL WR</farm>
 </tile>
 <tile id = "Watchtowers/CFRF_1C">
   <city>N</city>
   <road>S</road>
   <watchtower type="city"></watchtower>
-  <farm>SR WL WR</farm>
-  <farm>EL ER SL</farm>
+  <farm city="N">SR WL WR</farm>
+  <farm city="N">EL ER SL</farm>
 </tile>
 <tile id = "Watchtowers/CFRF_2M">
   <city>N</city>
-  <farm>SR WL WR</farm>
-  <farm>EL ER SL</farm>
+  <farm city="N">SR WL WR</farm>
+  <farm city="N">EL ER SL</farm>
   <road>S</road>
   <watchtower type="meeple"></watchtower>
 </tile>
@@ -32,49 +32,49 @@
   <city>N</city>
   <farm>ER SL SR WL</farm>
   <road>W</road>
-  <farm>WR</farm>
-  <farm>EL</farm>
+  <farm city="N">WR</farm>
+  <farm city="N">EL</farm>
   <road>E</road>
   <watchtower type="road"></watchtower>
 </tile>
 <tile id = "Watchtowers/CRRC_2M">
   <road>S</road>
   <road>E</road>
-  <farm>EL</farm>
   <farm>ER SL</farm>
-  <farm>SR</farm>
   <city>N W</city>
   <watchtower type="meeple"></watchtower>
+  <farm city="N W">EL</farm>
+  <farm city="N W">SR</farm>
 </tile>
 <tile id = "Watchtowers/FCFC_1C">
   <city>E</city>
   <city>W</city>
   <watchtower type="city"></watchtower>
-  <farm>NL NR</farm>
-  <farm>SL SR</farm>
+  <farm city="E W">NL NR</farm>
+  <farm city="E W">SL SR</farm>
 </tile>
 <tile id = "Watchtowers/FCRC_2T">
   <city>W</city>
   <city>E</city>
   <watchtower type="pennant"></watchtower>
   <road>S</road>
-  <farm>NL NR</farm>
-  <farm>SR</farm>
-  <farm>SL</farm>
+  <farm city="E W">NL NR</farm>
+  <farm city="W">SR</farm>
+  <farm city="E">SL</farm>
 </tile>
 <tile id = "Watchtowers/FfRC_1R">
   <city>W</city>
   <road>S</road>
   <watchtower type="road"></watchtower>
-  <farm>SR</farm>
-  <farm>NL NR EL ER SL</farm>
+  <farm city="W">SR</farm>
+  <farm city="W">NL NR EL ER SL</farm>
 </tile>
 <tile id = "Watchtowers/FRFC_1C">
   <city>W</city>
   <road>E</road>
   <watchtower type="city"></watchtower>
-  <farm>NL NR EL</farm>
-  <farm>ER SL SR</farm>
+  <farm city="W">NL NR EL</farm>
+  <farm city="W">ER SL SR</farm>
 </tile>
 <tile id = "Watchtowers/FRFR_3C">
   <road>W</road>
