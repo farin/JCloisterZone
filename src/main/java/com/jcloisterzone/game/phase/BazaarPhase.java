@@ -105,6 +105,10 @@ public class BazaarPhase extends Phase {
                     model = model.updateSupplyItem(supplyIndex, item);
                     return model;
                 }
+            } else {
+                if (price <= item.getCurrentPrice()) {
+                    throw new IllegalArgumentException("Bidded price must be higher then current");
+                }
             }
 
             item = item.setCurrentPrice(price);
