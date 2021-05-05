@@ -117,6 +117,8 @@ public class GameStateBuilder {
         TilePackBuilder tilePackBuilder = new TilePackBuilder();
         tilePackBuilder.setGameState(state);
         tilePackBuilder.setTileSets(setup.getTileSets());
+        tilePackBuilder.setXmls(setup.getXmls().toJavaList());
+        tilePackBuilder.setDisabledTiles(setup.getDisabledTiles().toJavaList());
 
         try {
             TilePack tilePack = tilePackBuilder.createTilePack();

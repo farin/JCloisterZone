@@ -16,10 +16,12 @@ import org.w3c.dom.NodeList;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileInputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.CodeSource;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -41,6 +43,9 @@ public class TilePackBuilder {
     private java.util.Set<String> usedIds = new java.util.HashSet<>(); //for assertion only
     private java.util.Map<String, java.util.List<Tile>> tiles = new java.util.HashMap<>();
 
+    private List<String> xmls;
+    private List<String> disabledTiles;
+
     public void setGameState(GameState state) {
         this.state = state;
         tileBuilder.setGameState(state);
@@ -48,6 +53,14 @@ public class TilePackBuilder {
 
     public void setTileSets(Map<String, Integer> tileSets) {
         this.tileSets = tileSets;
+    }
+
+    public void setXmls(List<String> xmls) {
+        this.xmls = xmls;
+    }
+
+    public void setDisabledTiles(List<String> disabledTiles) {
+        this.disabledTiles = disabledTiles;
     }
 
     protected boolean isTunnelActive(String tileId) {
@@ -123,11 +136,20 @@ public class TilePackBuilder {
                 });
             }
         }
+        if (xmls != null) {
+        	xmls.forEach(xml -> {
+        		definitions.add(xml);
+        	});
+        }
 
         definitions.forEach(path -> {
             InputStream defFile;
             try {
-                defFile = TilePackBuilder.class.getClassLoader().getResource(path).openStream();
+            	if (new File(path).exists()) {
+            		defFile = new FileInputStream(path) ;
+            	} else {
+            		defFile = TilePackBuilder.class.getClassLoader().getResource(path).openStream();
+            	}
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
                 return;
@@ -143,7 +165,9 @@ public class TilePackBuilder {
                         try {
                             int tileCount = Integer.parseInt(refElement.getAttribute("count"));
                             int count = tilesCount.getOrDefault(tileId, 0) + setCount * tileCount;
-                            tilesCount.put(tileId, count);
+                            if (!disabledTiles.contains(tileId)) {
+                            	tilesCount.put(tileId, count);
+                            }
                         } catch (Exception e) {
                             System.err.println("Can't parse " + tileId + ": " + e);
                         }
@@ -164,7 +188,11 @@ public class TilePackBuilder {
         definitions.forEach(path -> {
             InputStream defFile;
             try {
-                defFile = TilePackBuilder.class.getClassLoader().getResource(path).openStream();
+            	if (new File(path).exists()) {
+            		defFile = new FileInputStream(path) ;
+            	} else {
+            		defFile = TilePackBuilder.class.getClassLoader().getResource(path).openStream();
+            	}
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
                 return;

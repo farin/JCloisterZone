@@ -190,7 +190,9 @@ public class Engine implements  Runnable {
                 meeples,
                 capabilities,
                 rules,
-                io.vavr.collection.List.ofAll(setupMsg.getStart())
+                io.vavr.collection.List.ofAll(setupMsg.getStart()),
+                io.vavr.collection.List.ofAll(setupMsg.getXmls()),
+        		io.vavr.collection.List.ofAll(setupMsg.getDisabledTiles())
         );
         return gameSetup;
     }

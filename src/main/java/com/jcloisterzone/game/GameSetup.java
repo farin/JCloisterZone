@@ -22,13 +22,17 @@ public class GameSetup implements Serializable, RulesMixin {
     private final Map<Rule, Object> rules;
     private final Set<Class<? extends Capability<?>>> capabilities;
     private final List<PlacedTileItem> start;
+    private final List<String> xmls;
+    private final List<String> disabledTiles;
 
-    public GameSetup(Map<String, Integer> tileSets, Map<Class<? extends Meeple>, Integer> meeples, Set<Class<? extends Capability<?>>> capabilities, Map<Rule, Object> rules, List<PlacedTileItem> start) {
+    public GameSetup(Map<String, Integer> tileSets, Map<Class<? extends Meeple>, Integer> meeples, Set<Class<? extends Capability<?>>> capabilities, Map<Rule, Object> rules, List<PlacedTileItem> start, List<String> xmls, List<String> disabledTiles) {
         this.tileSets = tileSets;
         this.meeples = meeples;
         this.capabilities = capabilities;
         this.rules = rules;
         this.start = start;
+        this.xmls = xmls;
+        this.disabledTiles = disabledTiles;
     }
 
 
@@ -38,7 +42,7 @@ public class GameSetup implements Serializable, RulesMixin {
 
     public GameSetup setTileSets(Map<String, Integer> tileSets) {
         if (this.tileSets == tileSets) return this;
-        return new GameSetup(tileSets, meeples, capabilities, rules, start);
+        return new GameSetup(tileSets, meeples, capabilities, rules, start, xmls, disabledTiles);
     }
 
     public Map<Class<? extends Meeple>, Integer> getMeeples() {
@@ -47,7 +51,7 @@ public class GameSetup implements Serializable, RulesMixin {
 
     public GameSetup setMeeples(Map<Class<? extends Meeple>, Integer> meeples) {
         if (this.meeples == meeples) return this;
-        return new GameSetup(tileSets, meeples, capabilities, rules, start);
+        return new GameSetup(tileSets, meeples, capabilities, rules, start, xmls, disabledTiles);
     }
 
     @Override
@@ -57,7 +61,7 @@ public class GameSetup implements Serializable, RulesMixin {
 
     public GameSetup setRules(Map<Rule, Object> rules) {
         if (this.rules == rules) return this;
-        return new GameSetup(tileSets, meeples, capabilities, rules, start);
+        return new GameSetup(tileSets, meeples, capabilities, rules, start, xmls, disabledTiles);
     }
 
     public GameSetup mapRules(Function<Map<Rule, Object>, Map<Rule, Object>> mapper) {
@@ -70,7 +74,7 @@ public class GameSetup implements Serializable, RulesMixin {
 
     public GameSetup setCapabilities(Set<Class<? extends Capability<?>>> capabilities) {
         if (this.capabilities == capabilities) return this;
-        return new GameSetup(tileSets, meeples, capabilities, rules, start);
+        return new GameSetup(tileSets, meeples, capabilities, rules, start, xmls, disabledTiles);
     }
 
     public GameSetup mapCapabilities(Function<Set<Class<? extends Capability<?>>>, Set<Class<? extends Capability<?>>>> mapper) {
@@ -79,6 +83,14 @@ public class GameSetup implements Serializable, RulesMixin {
 
     public List<PlacedTileItem> getStart() {
         return start;
+    }
+
+    public List<String> getXmls() {
+        return xmls;
+    }
+
+    public List<String> getDisabledTiles() {
+        return disabledTiles;
     }
 
     public boolean contains(Class<? extends Capability<?>> cap) {

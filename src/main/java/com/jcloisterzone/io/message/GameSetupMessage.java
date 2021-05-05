@@ -18,6 +18,8 @@ public class GameSetupMessage extends AbstractMessage implements Message {
     private ArrayList<PlacedTileItem> start;
     private Map<String, Object> gameAnnotations;
     private String initialSeed;
+    private ArrayList<String> xmls;
+    private ArrayList<String> disabledTiles;
 
     public Map<String, Integer> getSets() {
         return sets;
@@ -51,6 +53,13 @@ public class GameSetupMessage extends AbstractMessage implements Message {
         return initialSeed;
     }
 
+    public ArrayList<String> getXmls() {
+        return xmls;
+    }
+
+    public ArrayList<String> getDisabledTiles() {
+        return disabledTiles;
+    }
 
     public static class PlacedTileItem {
         private String tile;
