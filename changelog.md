@@ -1,6 +1,7 @@
 # Version history
 
-## upcoming
+## 5.5.5
+*2021-05-11*
 
 * small screens layout enhancements (mainly player list)
 * tiles dialog shows always total count. (only remaining count can be hidden by game option)
@@ -10,7 +11,7 @@
 * active player is indicated by colored background
 * both active player indicators (triangle, background) can be disabled in settings
 * fix: auction bid must be higher then prev one
-* ui fix: display missing gained points in history if first player actioned tile
+* ui fix: display missing gained points in history if first player auctioned tile
 * ui fix: rule checkbox color for dark theme
 * ui fix: awarded trade resources are displayed next each other in player list
 * ui fix: fairy barely not visible under mage/witch when placed on same place
