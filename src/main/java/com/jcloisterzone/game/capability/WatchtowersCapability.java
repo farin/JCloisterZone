@@ -29,9 +29,12 @@ import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 
 import static com.jcloisterzone.XMLUtils.attributeBoolValue;
+import static com.jcloisterzone.XMLUtils.attributeIntValue;
 
 public class WatchtowersCapability extends Capability<Void> {
 
@@ -44,10 +47,17 @@ public class WatchtowersCapability extends Capability<Void> {
 			return tile;
 		}
 		if (watchtowers.size() == 1) {
-			String type = watchtowers.get().getAttribute("type");
-            Watchtower.WatchtowerType watchtowerType = Watchtower.WatchtowerType.forType(type);
-            Watchtower watchtower = new Watchtower(watchtowerType);
-            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.TOWER, watchtower));
+            Map<String, Integer> modifiers = HashMap.empty();
+            modifiers = modifiers.put("bonus-city",attributeIntValue(watchtowers.get(),"bonus-city",0));
+            modifiers = modifiers.put("bonus-meeple",attributeIntValue(watchtowers.get(),"bonus-meeple",0));
+            modifiers = modifiers.put("bonus-monastery",attributeIntValue(watchtowers.get(),"bonus-monastery",0));
+            modifiers = modifiers.put("bonus-pennant",attributeIntValue(watchtowers.get(),"bonus-pennant",0));
+            modifiers = modifiers.put("bonus-road",attributeIntValue(watchtowers.get(),"bonus-road",0));
+            Watchtower watchtower = new Watchtower(modifiers);
+            Stream<Location> locations = XMLUtils.contentAsLocations(watchtowers.get());
+            if (locations.size() == 1) {
+            	tile = tile.setInitialFeatures(tile.getInitialFeatures().put(locations.get(), watchtower));
+            }
         }
         return tile;
     }
@@ -65,7 +75,6 @@ public class WatchtowersCapability extends Capability<Void> {
     	Stream<Meeple> featureMeeples = feature.getMeeples(state);
 
     	Position pos = null;
-		boolean isWatchtower = false;
     	
     	for(Meeple meeple: featureMeeples) {
     	    pos = meeple.getPosition(state);
@@ -119,34 +128,39 @@ public class WatchtowersCapability extends Capability<Void> {
 
 	            }
 
-                int count = 0;
-
-                if (watchtower.getType() == Watchtower.WatchtowerType.CITY) {
-              
-                	count = cities;
-              
-				} else if (watchtower.getType() == Watchtower.WatchtowerType.MONASTERY) {
-				  
-				  	count = monasteries;
-				
-				} else if (watchtower.getType() == Watchtower.WatchtowerType.ROAD) {
-				  
-				  	count = roads;
-				
-				} else if (watchtower.getType() == Watchtower.WatchtowerType.MEEPLE) {
-				  
-				  	count = meeples;
-				
-				} else if (watchtower.getType() == Watchtower.WatchtowerType.PENNANT) {
-				
-				  	count = pennants;
-				}
-
-                int points = count * watchtower.getType().getPoints();
+                int points = 0;
                 
-                Map<String, Integer> args = HashMap.of(
-                	watchtower.getType().getType(), count
-                );
+                Map<String, Integer> args = HashMap.empty();
+                
+                if (cities>0) {
+                	points += cities * watchtower.getModifiers().getOrElse("bonus-city",0);
+                	args = args.put("bonusCity",watchtower.getModifiers().getOrElse("bonus-city",0));
+                	args = args.put("city",cities);
+                }
+
+                if (pennants>0) {
+                	points += pennants * watchtower.getModifiers().getOrElse("bonus-pennant",0);
+                	args = args.put("bonusPennant",watchtower.getModifiers().getOrElse("bonus-pennant",0));
+                	args = args.put("pennant",pennants);
+                }
+
+                if (monasteries>0) {
+                	points += monasteries * watchtower.getModifiers().getOrElse("bonus-monastery",0);
+                	args = args.put("bonusMonastery",watchtower.getModifiers().getOrElse("bonus-monastery",0));
+                	args = args.put("monastery",monasteries);
+                }
+
+                if (roads>0) {
+                	points += roads * watchtower.getModifiers().getOrElse("bonus-road",0);
+                	args = args.put("bonusRoad",watchtower.getModifiers().getOrElse("bonus-road",0));
+                	args = args.put("road",roads);
+                }
+
+                if (meeples>0) {
+                	points += meeples * watchtower.getModifiers().getOrElse("bonus-meeple",0);
+                	args = args.put("bonusMeeple",watchtower.getModifiers().getOrElse("bonus-meeple",0));
+                	args = args.put("meeple",meeples);
+                }
 
                 if (points>0) {
                 	bonusPoints = bonusPoints.append(new ReceivedPoints(new PointsExpression(points,"watchtower",args), meeple.getPlayer(), new FeaturePointer(pos, loc)));

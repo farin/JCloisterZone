@@ -5,80 +5,34 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import io.vavr.collection.List;
+import io.vavr.collection.Map;
 
 public class Watchtower extends TileFeature implements Structure {
 
-	public enum WatchtowerType {
-
-		MONASTERY("monastery",3),
-		CITY("city",1),
-		ROAD("road",1),
-		MEEPLE("meeple",2),
-		PENNANT("pennant",2);
-
-	    private String type;
-	    private int points;
-	    
-	    /**
-	     * Instantiates a new {@code WatchtowerType}.
-	     *
-	     * @param type of watchtower
-	     * @param points of watchtower bonus
-	     */
-	    WatchtowerType(String type, int points) {
-	        this.type = type;
-	        this.points = points;
-	    }
-
-	    /**
-	     * Gets the {@code type} of the instance.
-	     * @return the {@code type} of the instance
-	     */
-	    public String getType() {
-	        return type;
-	    }
-
-	    /**
-	     * Gets the {@code points} of the instance.
-	     * @return the {@code points} of the instance
-	     */
-	    public int getPoints() {
-	        return points;
-	    }
-
-	    /**
-	     * Gets the instance with the given {@code type}.
-	     * @param type the type to search
-	     * @return the instance with the given {@code type}
-	     * @throws IllegalArgumentException if {@code type} does not match any instance
-	     */
-	    public static WatchtowerType forType(String type) {
-	        for (WatchtowerType e : values()) {
-	            if (e.type.equals(type)) return e;
-	        }
-	        throw new IllegalArgumentException("Invalid WatchtowerType type " + type);
-	    }
-	}
-
     private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.TOWER));
-    private final WatchtowerType type;
-
-    public Watchtower(WatchtowerType type) {
-        this(INITIAL_PLACE, type);
+    Map<String, Integer> modifiers;
+    
+    public Watchtower(Map<String, Integer> modifiers) {
+        this(INITIAL_PLACE, modifiers);
     }
 
-    public Watchtower(List<FeaturePointer> places, WatchtowerType type) {
+    public Watchtower(List<FeaturePointer> places, Map<String, Integer> modifiers) {
         super(places);
-        this.type = type;
+        this.modifiers = modifiers;
     }
 
+    public Map<String, Integer> getModifiers() {
+        return modifiers;
+    }
+
+    public Watchtower setModifier(String type, int count) {
+    	if (modifiers.containsKey(type) && modifiers.get(type).equals(count)) return this;
+    	return new Watchtower(places, modifiers.put(type,count));
+    }
+    
     @Override
     public Watchtower placeOnBoard(Position pos, Rotation rot) {
-        return new Watchtower(placeOnBoardPlaces(pos, rot), type);
-    }
-
-    public WatchtowerType getType() {
-    	return type;
+        return new Watchtower(placeOnBoardPlaces(pos, rot), modifiers);
     }
 
     public static String name() {

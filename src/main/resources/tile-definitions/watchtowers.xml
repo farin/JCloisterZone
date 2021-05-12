@@ -1,95 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pack>
   <tiles>
-	<tile id = "Watchtowers/CCRF_2T">
-  <road>S</road>
-  <city>N</city>
-  <farm city="N">SR WL WR</farm>
-  <farm city="E">SL</farm>
-  <city>E</city>
-  <watchtower type="pennant"></watchtower>
-</tile>
-<tile id = "Watchtowers/CFff_3C">
-  <city>N</city>
-  <watchtower type="monastery"></watchtower>
-  <farm city="N">EL ER SL SR WL WR</farm>
-</tile>
-<tile id = "Watchtowers/CFRF_1C">
-  <city>N</city>
-  <road>S</road>
-  <watchtower type="city"></watchtower>
-  <farm city="N">SR WL WR</farm>
-  <farm city="N">EL ER SL</farm>
-</tile>
-<tile id = "Watchtowers/CFRF_2M">
-  <city>N</city>
-  <farm city="N">SR WL WR</farm>
-  <farm city="N">EL ER SL</farm>
-  <road>S</road>
-  <watchtower type="meeple"></watchtower>
-</tile>
-<tile id = "Watchtowers/CRFR_1R">
-  <city>N</city>
-  <farm>ER SL SR WL</farm>
-  <road>W</road>
-  <farm city="N">WR</farm>
-  <farm city="N">EL</farm>
-  <road>E</road>
-  <watchtower type="road"></watchtower>
-</tile>
-<tile id = "Watchtowers/CRRC_2M">
-  <road>S</road>
-  <road>E</road>
-  <farm>ER SL</farm>
-  <city>N W</city>
-  <watchtower type="meeple"></watchtower>
-  <farm city="N W">EL</farm>
-  <farm city="N W">SR</farm>
-</tile>
-<tile id = "Watchtowers/FCFC_1C">
-  <city>E</city>
-  <city>W</city>
-  <watchtower type="city"></watchtower>
-  <farm city="E W">NL NR</farm>
-  <farm city="E W">SL SR</farm>
-</tile>
-<tile id = "Watchtowers/FCRC_2T">
-  <city>W</city>
-  <city>E</city>
-  <watchtower type="pennant"></watchtower>
-  <road>S</road>
-  <farm city="E W">NL NR</farm>
-  <farm city="W">SR</farm>
-  <farm city="E">SL</farm>
-</tile>
-<tile id = "Watchtowers/FfRC_1R">
-  <city>W</city>
-  <road>S</road>
-  <watchtower type="road"></watchtower>
-  <farm city="W">SR</farm>
-  <farm city="W">NL NR EL ER SL</farm>
-</tile>
-<tile id = "Watchtowers/FRFC_1C">
-  <city>W</city>
-  <road>E</road>
-  <watchtower type="city"></watchtower>
-  <farm city="W">NL NR EL</farm>
-  <farm city="W">ER SL SR</farm>
-</tile>
-<tile id = "Watchtowers/FRFR_3C">
-  <road>W</road>
-  <road>E</road>
-  <watchtower type="monastery"></watchtower>
-  <farm>NL NR EL WR</farm>
-  <farm>ER SL SR WL</farm>
-</tile>
-<tile id = "Watchtowers/FRRF_1R">
-  <road>E</road>
-  <road>S</road>
-  <watchtower type="road"></watchtower>
-  <farm>ER SL</farm>
-  <farm>NL NR EL SR WL WR</farm>
-</tile>
+    <tile id="Watchtowers/CCRF_2T">
+      <city>N</city>
+      <city>E</city>
+      <road>S</road>
+      <watchtower bonus-pennant="2">TOWER</watchtower>
+      <farm city="N E">INNER_FARM</farm>
+      <farm city="E">SL</farm>
+      <farm city="N">SR WL WR</farm>
+    </tile>
+    <tile id="Watchtowers/CFff_3C">
+      <watchtower bonus-monastery="3">TOWER</watchtower>
+      <city>N</city>
+      <farm city="N">EL ER SL SR WL WR</farm>
+    </tile>
+    <tile id="Watchtowers/CFRF_1C">
+      <city>N</city>
+      <watchtower bonus-city="1">TOWER</watchtower>
+      <road>S</road>
+      <farm city="N">EL ER SL</farm>
+      <farm city="N">SR WL WR</farm>
+    </tile>
+    <tile id="Watchtowers/CFRF_2M">
+      <city>N</city>
+      <watchtower bonus-meeple="2">TOWER</watchtower>
+      <road>S</road>
+      <farm city="N">EL ER SL</farm>
+      <farm city="N">SR WL WR</farm>
+    </tile>
+    <tile id="Watchtowers/CRFR_1R">
+      <city>N</city>
+      <watchtower bonus-road="1">TOWER</watchtower>
+      <road>W</road>
+      <road>E</road>
+      <farm city="N">EL</farm>
+      <farm city="N">WR</farm>
+      <farm>ER SL SR WL</farm>
+    </tile>
+    <tile id="Watchtowers/CRRC_2M">
+      <watchtower bonus-meeple="2">TOWER</watchtower>
+      <city>N W</city>
+      <road>S</road>
+      <farm city="N W">SR</farm>
+      <road>E</road>
+      <farm city="N W">EL</farm>
+      <farm>ER SL</farm>
+    </tile>
+    <tile id="Watchtowers/FCFC_1C">
+      <city>W</city>
+      <watchtower bonus-city="1">TOWER</watchtower>
+      <city>E</city>
+      <farm city="W E">NL NR</farm>
+      <farm city="W E">SL SR</farm>
+    </tile>
+    <tile id="Watchtowers/FCRC_2T">
+      <city>E</city>
+      <city>W</city>
+      <watchtower bonus-pennant="2">TOWER</watchtower>
+      <farm city="W E">NL NR</farm>
+      <road>S</road>
+      <farm city="E">SL</farm>
+      <farm city="W">SR</farm>
+    </tile>
+    <tile id="Watchtowers/FfRC_1R">
+      <city>W</city>
+      <watchtower bonus-road="1">TOWER</watchtower>
+      <road>S</road>
+      <farm city="W">SR</farm>
+      <farm city="W">NL NR EL ER SL</farm>
+    </tile>
+    <tile id="Watchtowers/FRFC_1C">
+      <city>W</city>
+      <watchtower bonus-city="1">TOWER</watchtower>
+      <road>E</road>
+      <farm city="W">NL NR EL</farm>
+      <farm city="W">ER SL SR</farm>
+    </tile>
+    <tile id="Watchtowers/FRFR_3C">
+      <watchtower bonus-monastery="3">TOWER</watchtower>
+      <road>W</road>
+      <road>E</road>
+      <farm>ER SL SR WL</farm>
+      <farm>NL NR EL WR</farm>
+    </tile>
+    <tile id="Watchtowers/FRRF_1R">
+      <watchtower bonus-road="1">TOWER</watchtower>
+      <road>S</road>
+      <road>E</road>
+      <farm>NL NR EL SR WL WR</farm>
+      <farm>ER SL</farm>
+    </tile>
   </tiles>
   <sets>
     <tile-set id="watchtowers">
