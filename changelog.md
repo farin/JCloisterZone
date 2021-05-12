@@ -4,6 +4,7 @@
 *2021-05-11*
 
 * small screens layout enhancements (mainly player list)
+* game setup overview (and dialog during game) shows changed rules
 * tiles dialog shows always total count. (only remaining count can be hidden by game option)
 * added undo button to action confirmation
 * added option for player list rotation (active player can be on top)
