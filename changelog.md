@@ -1,6 +1,6 @@
 # Version history
 
-## 5.5.5
+## 5.6.0
 *2021-05-11*
 
 * small screens layout enhancements (mainly player list)
