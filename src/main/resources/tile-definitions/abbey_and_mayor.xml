@@ -88,6 +88,12 @@
       <farm>NL NR EL ER SL SR WL WR</farm>
     </tile>
     <tile id="AM/Rrr">
+      <road wells="1">N W E</road>
+      <farm>WR NL</farm>
+      <farm>NR EL</farm>
+      <farm>ER SL SR WL</farm>
+    </tile>
+    <tile id="AM/Rrr.2">
       <road>N W E</road>
       <farm>WR NL</farm>
       <farm>NR EL</farm>
@@ -127,7 +133,7 @@
       <ref count="1" tile="AM/RrC" />
       <ref count="1" tile="AM/C!+" />
       <ref count="1" tile="AM/RG" />
-      <ref count="1" tile="AM/Rrr" />
+      <ref count="1" tile="AM/Rrr.2" />
       <ref count="1" tile="AM/CRcr+" />
     </tile-set>
   </sets>
