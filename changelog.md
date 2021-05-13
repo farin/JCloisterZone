@@ -1,5 +1,12 @@
 # Version history
 
+## 5.6.1
+*2021-05-13*
+* adjusted transparency for active player colored background
+* farm scoring breakdown enhancements (missing pig bonus for castle items and adjacent City of Carcassonne)
+* fix: undo button confirms actions instead doing undo
+* fix: scoring breakdown height on small screens
+
 ## 5.6.0
 *2021-05-11*
 
