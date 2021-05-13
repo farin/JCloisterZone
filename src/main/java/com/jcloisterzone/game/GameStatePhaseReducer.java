@@ -7,6 +7,10 @@ import com.jcloisterzone.io.MessageParser;
 import com.jcloisterzone.io.message.CommitMessage;
 import com.jcloisterzone.io.message.Message;
 import com.jcloisterzone.io.message.PassMessage;
+import com.jcloisterzone.random.JavaRandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.random.MersenneTwisterRandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import io.vavr.Function2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +29,14 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
     private final Phase firstPhase;
     private final RandomGenerator random;
 
-    public GameStatePhaseReducer(GameSetup setup, long initialSeed) {
-        random = new RandomGenerator(initialSeed);
+    public GameStatePhaseReducer(GameSetup setup, long initialSeed, boolean compatJavaRandom) {
+        //this.compatJavaRandom = compatJavaRandom;
+
+        if (compatJavaRandom) {
+            random = new JavaRandomGenerator(initialSeed);
+        } else {
+            random = new MersenneTwisterRandomGenerator(initialSeed);
+        }
 
         Phase endChain, next;
 

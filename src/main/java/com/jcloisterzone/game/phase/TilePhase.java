@@ -8,7 +8,7 @@ import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.TileDiscardedEvent;
 import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.figure.Builder;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
 import com.jcloisterzone.game.state.ActionsState;

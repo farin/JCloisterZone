@@ -1,7 +1,7 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.AbbeyCapability.AbbeyToken;
 import com.jcloisterzone.game.state.ActionsState;

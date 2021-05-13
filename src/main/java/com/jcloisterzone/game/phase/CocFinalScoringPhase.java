@@ -5,7 +5,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.capability.CountCapabilityModel;

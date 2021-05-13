@@ -4,7 +4,7 @@ import com.jcloisterzone.action.GoldPieceAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.TokenPlacedEvent;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;

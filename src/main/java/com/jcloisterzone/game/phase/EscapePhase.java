@@ -8,7 +8,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.state.ActionsState;

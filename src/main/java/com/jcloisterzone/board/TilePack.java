@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcloisterzone.Immutable;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;

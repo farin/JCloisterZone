@@ -18,7 +18,7 @@ import com.jcloisterzone.figure.*;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;

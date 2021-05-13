@@ -11,7 +11,7 @@ import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.PortalCapability;

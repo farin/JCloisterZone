@@ -5,7 +5,7 @@ import com.jcloisterzone.action.TilePlacementAction;
 import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.PlaceTileMessage;

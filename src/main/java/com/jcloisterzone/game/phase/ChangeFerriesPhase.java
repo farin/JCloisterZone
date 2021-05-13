@@ -5,7 +5,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;

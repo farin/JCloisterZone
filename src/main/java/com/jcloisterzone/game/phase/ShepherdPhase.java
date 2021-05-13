@@ -11,7 +11,7 @@ import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Shepherd;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.SheepCapability;
 import com.jcloisterzone.game.capability.SheepCapability.SheepToken;
 import com.jcloisterzone.game.state.ActionsState;

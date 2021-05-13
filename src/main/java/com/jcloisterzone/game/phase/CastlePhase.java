@@ -10,7 +10,7 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.CastleCapability.CastleToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;

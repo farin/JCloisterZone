@@ -7,7 +7,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;

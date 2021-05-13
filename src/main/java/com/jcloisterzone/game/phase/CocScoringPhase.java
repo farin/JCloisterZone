@@ -10,7 +10,7 @@ import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.RussianPromosTrapCapability;

@@ -2,7 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.ConfirmAction;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.CommitMessage;

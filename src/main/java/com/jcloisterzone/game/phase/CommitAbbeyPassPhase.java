@@ -1,6 +1,6 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 
 public class CommitAbbeyPassPhase extends CommitActionPhase {
 

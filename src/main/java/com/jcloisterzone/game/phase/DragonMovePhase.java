@@ -8,7 +8,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.state.ActionsState;

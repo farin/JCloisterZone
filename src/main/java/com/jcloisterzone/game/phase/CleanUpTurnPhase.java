@@ -2,7 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;

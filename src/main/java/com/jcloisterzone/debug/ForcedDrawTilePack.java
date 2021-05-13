@@ -3,7 +3,7 @@ package com.jcloisterzone.debug;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileGroup;
 import com.jcloisterzone.board.TilePack;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;

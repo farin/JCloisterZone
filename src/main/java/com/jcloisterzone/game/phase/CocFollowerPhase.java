@@ -10,7 +10,7 @@ import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.figure.*;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;

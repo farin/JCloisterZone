@@ -9,7 +9,7 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.TileAuctionedEvent;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;

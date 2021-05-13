@@ -8,7 +8,7 @@ import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Farm;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.*;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.CornCircleCapability;
 import com.jcloisterzone.game.capability.CornCircleCapability.CornCircleModifier;
 import com.jcloisterzone.game.state.ActionsState;

@@ -1,5 +1,6 @@
 package com.jcloisterzone.engine;
 
+import com.github.zafarkhaja.semver.Version;
 import com.google.gson.Gson;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.figure.*;
@@ -42,7 +43,6 @@ public class Engine implements  Runnable {
     @Argument(alias = "r", description = "Rerun engine on game end.")
     private static Boolean reload = false;
 
-
     private Scanner in;
     private PrintStream out;
     private PrintStream err;
@@ -55,6 +55,8 @@ public class Engine implements  Runnable {
     private long initialSeed;
 
     private boolean bulk;
+
+    private boolean compatJavaRandom = false;
 
     public Engine(InputStream in, PrintStream out, PrintStream err, PrintStream log) {
         this.in = new Scanner(in);
@@ -201,6 +203,11 @@ public class Engine implements  Runnable {
         } else if (line.equals("%bulk off")) {
             bulk = false;
             out.println(gson.toJson(game));
+        } else if (line.startsWith("%compat")) {
+            Version compat = Version.valueOf(line.replace("%compat ", ""));
+            if (compat.lessThan(Version.valueOf("5.7.0"))) {
+                compatJavaRandom = true;
+            }
         }
     }
 
@@ -227,7 +234,7 @@ public class Engine implements  Runnable {
         GameSetup gameSetup = createSetupFromMessage(setupMsg);
         game = new Game(gameSetup);
 
-        GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialSeed);
+        GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialSeed, compatJavaRandom);
         GameStateBuilder builder = new GameStateBuilder(gameSetup, setupMsg.getPlayers());
 
         if (setupMsg.getGameAnnotations() != null) {

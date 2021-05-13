@@ -3,7 +3,7 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TunnelAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.ActionsState;

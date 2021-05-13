@@ -1,13 +1,13 @@
-package com.jcloisterzone.game;
+package com.jcloisterzone.random;
 
 import java.util.Random;
 
-public class RandomGenerator {
+public class JavaRandomGenerator implements RandomGenerator {
 
     private final Random random;
     private long salt = 0;
 
-    public RandomGenerator(long seed) {
+    public JavaRandomGenerator(long seed) {
         random = new Random(seed);
     }
 

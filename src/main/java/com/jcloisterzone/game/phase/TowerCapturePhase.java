@@ -10,7 +10,7 @@ import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
-import com.jcloisterzone.game.RandomGenerator;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TowerCapability.TowerToken;
 import com.jcloisterzone.game.state.ActionsState;
