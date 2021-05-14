@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pack>
+  <tiles>
+    <tile id="WishingWells/CRrc.w">
+      <city>N W</city>
+      <road wells="1">S E</road>
+      <farm>SR</farm>
+      <farm>ER SL</farm>
+      <farm>EL</farm>
+      <wagon-move>
+        <neighbouring>S E N W</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="WishingWells/FCRC.w">
+      <city>W</city>
+      <city>E</city>
+      <road wells="1">S</road>
+      <farm>SR</farm>
+      <farm>SL</farm>
+      <farm>NL NR</farm>
+      <wagon-move>
+        <neighbouring>S W</neighbouring>
+        <neighbouring>E S</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="WishingWells/FIRi.w" group="river">
+      <road wells="1">S</road>
+      <river>W E</river>
+      <farm>ER SL</farm>
+      <farm>SR WL</farm>
+      <farm>NL NR EL WR</farm>
+    </tile>
+    <tile id="WishingWells/FRrC.w">
+      <city>W</city>
+      <road wells="1">S E</road>
+      <farm>SR</farm>
+      <farm>ER SL</farm>
+      <farm>NL NR EL</farm>
+      <wagon-move>
+        <neighbouring>S E W</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="WishingWells/IRir.w" group="river">
+      <river>N S</river>
+      <road wells="1">W E</road>
+      <farm>ER SL</farm>
+      <farm>SR WL</farm>
+      <farm>NL WR</farm>
+      <farm>NR EL</farm>
+    </tile>
+    <tile id="WishingWells/RCrc.w.s.p">
+      <city pennant="1">W E</city>
+      <farm>NL</farm>
+      <farm>NR</farm>
+      <farm>SL SR</farm>
+      <road tunnel="true">N S</road>
+    </tile>
+    <tile id="WishingWells/RfrC.w">
+      <road wells="1">N S</road>
+      <city>W</city>
+      <farm>NR EL ER SL</farm>
+      <farm>NL</farm>
+      <farm>SR</farm>
+      <wagon-move>
+        <neighbouring>N S W</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="WishingWells/RfrC.ws">
+      <road wells="1">N S</road>
+      <farm>NR EL ER SL</farm>
+      <city besieged="true">W</city>
+      <farm>NL SR</farm>
+    </tile>
+    <tile id="WishingWells/RFrf.w.t">
+      <road wells="1">S</road>
+      <road>N</road>
+      <farm>NL NR EL ER SL SR WL WR</farm>
+    </tile>
+    <tile id="WishingWells/RFRR.wwis">
+      <road wells="1" shed="1">S</road>
+      <road wells="1">W</road>
+      <road inn="true">N</road>
+      <farm>SR WL</farm>
+      <farm shed="1">NR EL ER SL</farm>
+      <farm>NL WR</farm>
+      <wagon-move>
+        <neighbouring>S W</neighbouring>
+        <neighbouring>N S</neighbouring>
+        <neighbouring>N W</neighbouring>
+      </wagon-move>
+    </tile>
+    <tile id="WishingWells/Rfr.w.i">
+      <road inn="true" wells="1">N S</road>
+      <farm inn="true">NR EL ER SL</farm>
+      <farm wells="1">NL SR WL WR</farm>
+    </tile>
+    <tile id="WishingWells/RrFC.w">
+      <city>W</city>
+      <road wells="1">N E</road>
+      <farm>ER SL SR</farm>
+      <farm>NL</farm>
+      <farm>NR EL</farm>
+      <wagon-move>
+        <neighbouring>N E W</neighbouring>
+      </wagon-move>
+    </tile>
+  </tiles>
+  <sets>
+    <tile-set id="wishing-wells">
+      <ref count="1" tile="WishingWells/CRrc.w" />
+      <ref count="1" tile="WishingWells/FCRC.w" />
+      <ref count="1" tile="WishingWells/FRrC.w" />
+      <ref count="1" tile="WishingWells/RCrc.w.s.p" />
+      <ref count="1" tile="WishingWells/RfrC.w" />
+      <ref count="1" tile="WishingWells/RfrC.ws" />
+      <ref count="1" tile="WishingWells/RFrf.w.t" />
+      <ref count="1" tile="WishingWells/RFRR.wwis" />
+      <ref count="1" tile="WishingWells/Rfr.w.i" />
+      <ref count="1" tile="WishingWells/RrFC.w" />
+    </tile-set>
+    <tile-set id="wishing-wells/river">
+      <ref count="1" tile="WishingWells/FIRi.w" />
+      <ref count="1" tile="WishingWells/IRir.w" />
+    </tile-set>
+  </sets>
+</pack>

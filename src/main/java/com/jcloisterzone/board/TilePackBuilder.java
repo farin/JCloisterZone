@@ -121,6 +121,10 @@ public class TilePackBuilder {
                 Files.list(definitionsDir).forEach(path -> {
                     definitions.add("tile-definitions/" + definitionsDir.relativize(path).toString());
                 });
+                Path fanDefinitionsDir = new File(TilePackBuilder.class.getClassLoader().getResource("tile-definitions/fan").getFile()).toPath();
+                Files.list(fanDefinitionsDir).forEach(path -> {
+                    definitions.add("tile-definitions/fan/" + fanDefinitionsDir.relativize(path).toString());
+                });
             }
         }
 

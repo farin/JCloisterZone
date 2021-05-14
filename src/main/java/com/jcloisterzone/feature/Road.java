@@ -154,6 +154,12 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
             args = args.put("meeples", meeplesCount);
             points += 2 * meeplesCount;
         }
+
+        int wells = getModifier(WellCapability.WELL, 0);
+        if (wells > 0) {
+            args = args.put("wells", wells);
+            points += inn ? 2 * wells : wells;
+        }
         return new PointsExpression(points, completed ? "road" : "road.incomplete", args);
 
     }

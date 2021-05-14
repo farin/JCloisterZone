@@ -88,7 +88,7 @@
       <farm>NL NR EL ER SL SR WL WR</farm>
     </tile>
     <tile id="AM/Rrr">
-      <road>N W E</road>
+      <road wells="1">N W E</road>
       <farm>WR NL</farm>
       <farm>NR EL</farm>
       <farm>ER SL SR WL</farm>
