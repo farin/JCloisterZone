@@ -114,14 +114,6 @@ public class TileBuilder {
         return feature;
     }
 
-//    public List<Feature> extendFeatures(String tileId) {
-//        List<Feature> result = List.empty();
-//        for (Capability cap: getCapabilities()) {
-//            result.appendAll(cap.extendFeatures(tileId));
-//        }
-//        return result;
-//    }
-
     private void processCloisterElement(Element e) {
         Cloister cloister = new Cloister();
         cloister = (Cloister) initFeature(tileId, cloister, e);
@@ -176,14 +168,14 @@ public class TileBuilder {
         	openEdges = openEdges.add(multiEdge);
         }
 
-        Map<FeatureModifier<Object>, Object> modifiers = HashMap.empty();
+        Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
         int pennants = attributeIntValue(e, "pennant", 0);
         int extraPoints = attributeIntValue(e, "extra-points", 0);
         if (pennants > 0) {
-            modifiers = modifiers.put((FeatureModifier<Object>)(Object) City.PENNANTS, pennants);
+            modifiers = modifiers.put(City.PENNANTS, pennants);
         }
         if (extraPoints > 0) {
-            modifiers = modifiers.put((FeatureModifier<Object>)(Object) City.EXTRA_POINTS, extraPoints);
+            modifiers = modifiers.put(City.EXTRA_POINTS, extraPoints);
         }
 
         City city = new City(

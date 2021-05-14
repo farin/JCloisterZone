@@ -9,6 +9,7 @@ import com.jcloisterzone.event.TokenReceivedEvent;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.Token;
@@ -22,6 +23,7 @@ import io.vavr.collection.Map;
 import org.w3c.dom.Element;
 
 public class TradeGoodsCapability extends Capability<Void> {
+    private static final long serialVersionUID = 1L;
 
 	public enum TradeGoods implements Token {
 	    WINE,
@@ -29,9 +31,10 @@ public class TradeGoodsCapability extends Capability<Void> {
 	    GRAIN
     }
 
+    public static TradeGoodsModifier TRADE_GOODS = new TradeGoodsModifier();
+
     private static final int RESOURCE_POINTS = 10;
 
-    private static final long serialVersionUID = 1L;
 
 
     @Override
@@ -40,8 +43,8 @@ public class TradeGoodsCapability extends Capability<Void> {
             if (!(feature instanceof City)) continue;
 
             City city = (City) feature;
-            Map<TradeGoods, Integer> cityTradeGoods = city.getTradeGoods();
-            if (cityTradeGoods.isEmpty()) {
+            Map<TradeGoods, Integer> cityTradeGoods = city.getModifier(TRADE_GOODS, null);
+            if (cityTradeGoods == null) {
                 continue;
             }
 
@@ -72,7 +75,7 @@ public class TradeGoodsCapability extends Capability<Void> {
             City city = (City) feature;
             String val = xml.getAttribute("resource");
             TradeGoods res = TradeGoods.valueOf(val.toUpperCase());
-            return city.setTradeGoods(HashMap.of(res, 1));
+            feature = city.putModifier(TRADE_GOODS, HashMap.of(res, 1));
         }
         return feature;
     }
@@ -105,5 +108,17 @@ public class TradeGoodsCapability extends Capability<Void> {
             }
         }
         return state;
+    }
+
+    public static class TradeGoodsModifier extends FeatureModifier<Map<TradeGoods, Integer>> {
+
+        public TradeGoodsModifier() {
+            super("trade-goods");
+        }
+
+        @Override
+        public Map<TradeGoods, Integer> mergeValues(Map<TradeGoods, Integer> tg1, Map<TradeGoods, Integer> tg2) {
+            return tg1.merge(tg2, (a, b) -> a + b);
+        }
     }
 }

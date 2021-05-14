@@ -17,10 +17,8 @@ public class InnCapability extends Capability<Void> {
 
     @Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
-        if (feature instanceof Road) {
-            if (attributeBoolValue(xml, "inn")) {
-                feature = ((Road) feature).putModifier(INN, true);
-            }
+        if ((feature instanceof Road) && attributeBoolValue(xml, "inn")) {
+            feature = ((Road) feature).putModifier(INN, true);
         }
         return feature;
     }

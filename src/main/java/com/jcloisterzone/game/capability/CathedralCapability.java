@@ -17,10 +17,8 @@ public class CathedralCapability extends Capability<Void> {
 
     @Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
-        if (feature instanceof City) {
-            if (attributeBoolValue(xml, "cathedral")) {
-                feature = ((City) feature).putModifier(CATHEDRAL, true);
-            }
+        if ((feature instanceof City) && attributeBoolValue(xml, "cathedral")) {
+            feature = ((City) feature).putModifier(CATHEDRAL, true);
         }
         return feature;
     }

@@ -20,7 +20,7 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
 
     private static final long serialVersionUID = 1L;
 
-    private final Map<FeatureModifier<Object>, Object> modifiers;
+    private final Map<FeatureModifier<?>, Object> modifiers;
     private final Set<FeaturePointer> openTunnelEnds;
 
     public Road(List<FeaturePointer> places, Set<Edge> openEdges) {
@@ -31,7 +31,7 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
             List<FeaturePointer> places,
             Set<Edge> openEdges,
             Set<FeaturePointer> neighboring,
-            Map<FeatureModifier<Object>, Object> modifiers,
+            Map<FeatureModifier<?>, Object> modifiers,
             Set<FeaturePointer> openTunnelEnds
         ) {
         super(places, openEdges, neighboring);
@@ -49,12 +49,12 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
     }
 
     @Override
-    public Map<FeatureModifier<Object>, Object> getModifiers() {
+    public Map<FeatureModifier<?>, Object> getModifiers() {
         return modifiers;
     }
 
     @Override
-    public Road setModifiers(Map<FeatureModifier<Object>, Object> modifiers) {
+    public Road setModifiers(Map<FeatureModifier<?>, Object> modifiers) {
         if (this.modifiers == modifiers) return this;
         return new Road(places, openEdges, neighboring, modifiers, openTunnelEnds);
     }

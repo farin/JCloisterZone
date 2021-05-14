@@ -6,8 +6,11 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.RemoveTileException;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
+import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.ModifiedFeature;
 import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.feature.modifier.BooleanModifier;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import io.vavr.collection.HashMap;
@@ -17,6 +20,8 @@ import org.w3c.dom.Element;
 
 import java.io.Serializable;
 import java.util.function.Function;
+
+import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 @Immutable
 public abstract class Capability<T> implements Serializable {
@@ -136,5 +141,4 @@ public abstract class Capability<T> implements Serializable {
     public static String nameForClass(Class<? extends Capability<?>> cls) {
         return cls.getSimpleName().replaceAll("Capability$", "");
     }
-
 }

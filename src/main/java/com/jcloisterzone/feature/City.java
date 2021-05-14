@@ -24,32 +24,30 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
     public static IntegerModifier EXTRA_POINTS = new IntegerModifier("extra-points");
 
     private final Set<Tuple2<ShortEdge, FeaturePointer>> multiEdges; // HS.CC!.v abstraction, multiple cities can connect to same edge
-    private final Map<TradeGoods, Integer> tradeGoods;
-    private final Map<FeatureModifier<Object>, Object> modifiers;
+    private final Map<FeatureModifier<?>, Object> modifiers;
 
-    public City(List<FeaturePointer> places, Set<Edge> openEdges, Map<FeatureModifier<Object>, Object> modifiers) {
-        this(places, openEdges, HashSet.empty(), HashSet.empty(), HashMap.empty(), HashMap.empty());
+    public City(List<FeaturePointer> places, Set<Edge> openEdges, Map<FeatureModifier<?>, Object> modifiers) {
+        this(places, openEdges, HashSet.empty(), HashSet.empty(), HashMap.empty());
     }
 
     public City(List<FeaturePointer> places,
             Set<Edge> openEdges, Set<FeaturePointer> neighboring,
             Set<Tuple2<ShortEdge, FeaturePointer>> multiEdges,
-            Map<TradeGoods, Integer> tradeGoods, Map<FeatureModifier<Object>, Object> modifiers) {
+            Map<FeatureModifier<?>, Object> modifiers) {
         super(places, openEdges, neighboring);
         this.multiEdges = multiEdges;
-        this.tradeGoods = tradeGoods;
         this.modifiers = modifiers;
     }
 
     @Override
-    public Map<FeatureModifier<Object>, Object> getModifiers() {
+    public Map<FeatureModifier<?>, Object> getModifiers() {
         return modifiers;
     }
 
     @Override
-    public City setModifiers(Map<FeatureModifier<Object>, Object> modifiers) {
+    public City setModifiers(Map<FeatureModifier<?>, Object> modifiers) {
         if (this.modifiers == modifiers) return this;
-        return new City(places, openEdges, neighboring, multiEdges, tradeGoods, modifiers);
+        return new City(places, openEdges, neighboring, multiEdges, modifiers);
     }
 
     @Override
@@ -60,7 +58,6 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
             mergeEdges(city),
             mergeNeighboring(city),
             mergeMultiEdges(city),
-            mergeTradeGoods(city),
             mergeModifiers(city)
         );
     }
@@ -72,14 +69,13 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
             openEdges.remove(edge),
             neighboring,
             multiEdges.filter(me -> !me._1.equals(edge)),
-            tradeGoods,
             modifiers
         );
     }
 
     @Override
     public City setOpenEdges(Set<Edge> openEdges) {
-        return new City(places, openEdges, neighboring, multiEdges, tradeGoods, modifiers);
+        return new City(places, openEdges, neighboring, multiEdges, modifiers);
     }
 
     @Override
@@ -89,17 +85,13 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
             placeOnBoardEdges(pos, rot),
             placeOnBoardNeighboring(pos, rot),
             placeOnBoardMultiEdges(pos, rot),
-            tradeGoods, modifiers
+            modifiers
         );
-    }
-
-    protected Map<TradeGoods, Integer> mergeTradeGoods(City city) {
-        return tradeGoods.merge(city.tradeGoods, (a, b) -> a + b);
     }
 
     public City setMultiEdges(Set<Tuple2<ShortEdge, FeaturePointer>> multiEdges) {
         if (this.multiEdges == multiEdges) return this;
-        return new City(places, openEdges, neighboring, multiEdges, tradeGoods, modifiers);
+        return new City(places, openEdges, neighboring, multiEdges, modifiers);
     }
 
     public Set<Tuple2<ShortEdge, FeaturePointer>> getMultiEdges() {
@@ -109,15 +101,7 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
     @Override
     public City setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
-        return new City(places, openEdges, neighboring, multiEdges, tradeGoods, modifiers);
-    }
-
-    public Map<TradeGoods, Integer> getTradeGoods() {
-        return tradeGoods;
-    }
-
-    public City setTradeGoods(Map<TradeGoods, Integer> tradeGoods) {
-        return new City(places, openEdges, neighboring, multiEdges, tradeGoods, modifiers);
+        return new City(places, openEdges, neighboring, multiEdges, modifiers);
     }
 
     @Override

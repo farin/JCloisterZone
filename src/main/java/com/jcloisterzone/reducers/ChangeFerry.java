@@ -72,8 +72,8 @@ public class ChangeFerry implements Reducer {
                             .placeOnBoard(fp.getPosition(), pt.getRotation());
                    });
 
-           Map<FeatureModifier<Object>, Object> EMPTY = HashMap.empty();
-           Map<FeatureModifier<Object>, Object> modifiers = initialFeatures.foldLeft(EMPTY, (res, road) -> road.mergeModifiers(res));
+           Map<FeatureModifier<?>, Object> EMPTY = HashMap.empty();
+           Map<FeatureModifier<?>, Object> modifiers = initialFeatures.foldLeft(EMPTY, (res, road) -> road.mergeModifiers(res));
 
            Set<FeaturePointer> openTunnelEnds = merged.getOpenTunnelEnds().intersect(places.toSet());
            Set<Edge> openEdges = merged.getOpenEdges().intersect(
