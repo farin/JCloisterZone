@@ -6,7 +6,9 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.game.capability.PigHerdCapability;
 import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.HashMap;
@@ -14,24 +16,35 @@ import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
-public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Farm> {
+public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Farm>, ModifiedFeature<Farm> {
 
     // for unplaced features, references is to (0, 0)
     protected final Set<FeaturePointer> adjoiningCities; //or castles
     protected final boolean adjoiningCityOfCarcassonne;
-    protected final int pigHerds;
 
+    private final Map<FeatureModifier<?>, Object> modifiers;
 
     public Farm(List<FeaturePointer> places, Set <FeaturePointer> adjoiningCities) {
-        this(places, adjoiningCities, false, 0);
+        this(places, adjoiningCities, false, HashMap.empty());
     }
 
     public Farm(List<FeaturePointer> places, Set<FeaturePointer> adjoiningCities,
-            boolean adjoiningCityOfCarcassonne, int pigHerds) {
+            boolean adjoiningCityOfCarcassonne, Map<FeatureModifier<?>, Object> modifiers) {
         super(places);
         this.adjoiningCities = adjoiningCities;
         this.adjoiningCityOfCarcassonne = adjoiningCityOfCarcassonne;
-        this.pigHerds = pigHerds;
+        this.modifiers = modifiers;
+    }
+
+    @Override
+    public Map<FeatureModifier<?>, Object> getModifiers() {
+        return modifiers;
+    }
+
+    @Override
+    public Farm setModifiers(Map<FeatureModifier<?>, Object> modifiers) {
+        if (this.modifiers == modifiers) return this;
+        return new Farm(places, adjoiningCities, adjoiningCityOfCarcassonne, modifiers);
     }
 
     @Override
@@ -41,7 +54,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
             mergePlaces(farm),
             mergeAdjoiningCities(farm),
             adjoiningCityOfCarcassonne || farm.adjoiningCityOfCarcassonne,
-            pigHerds + farm.pigHerds
+            mergeModifiers(farm)
         );
     }
 
@@ -51,7 +64,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
             placeOnBoardPlaces(pos, rot),
             placeOnBoardAdjoiningCities(pos, rot),
             adjoiningCityOfCarcassonne,
-            pigHerds
+            modifiers
         );
     }
 
@@ -80,15 +93,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
     }
 
     public Farm setAdjoiningCities(Set<FeaturePointer> adjoiningCities) {
-        return new Farm(places, adjoiningCities, adjoiningCityOfCarcassonne, pigHerds);
-    }
-
-    public int getPigHerds() {
-        return pigHerds;
-    }
-
-    public Farm setPigHerds(int pigHerds) {
-        return new Farm(places, adjoiningCities, adjoiningCityOfCarcassonne, pigHerds);
+        return new Farm(places, adjoiningCities, adjoiningCityOfCarcassonne, modifiers);
     }
 
     public boolean isAdjoiningCityOfCarcassonne() {
@@ -96,7 +101,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
     }
 
     public Farm setAdjoiningCityOfCarcassonne(boolean adjoiningCityOfCarcassonne) {
-        return new Farm(places, adjoiningCities, adjoiningCityOfCarcassonne, pigHerds);
+        return new Farm(places, adjoiningCities, adjoiningCityOfCarcassonne, modifiers);
     }
 
 
@@ -107,6 +112,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
     private PointsExpression getPoints(GameState state, Player player, String exprName, int basePoints) {
         Map<String, Integer> args = HashMap.empty();
         int pigCount = getPigCount(state, player);
+        int pigHerds = getModifier(PigHerdCapability.PIG_HERD, 0);
         if (pigCount > 0) args = args.put("pigs", pigCount);
         if (pigHerds > 0) args = args.put("pigHerds", pigHerds);
         int pointsPerCity = basePoints + pigHerds + pigCount;
