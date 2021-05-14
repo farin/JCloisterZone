@@ -6,8 +6,12 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.game.capability.ChurchCapability;
+import com.jcloisterzone.game.capability.MonasteriesCapability;
+import com.jcloisterzone.game.capability.ShrineCapability;
 import com.jcloisterzone.game.capability.VineyardCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -17,33 +21,39 @@ import io.vavr.collection.*;
 /**
  * Cloister or Shrine
  */
-public class Cloister extends TileFeature implements Scoreable, CloisterLike {
+public class Cloister extends TileFeature implements Scoreable, CloisterLike, ModifiedFeature<Cloister> {
 
     private static final long serialVersionUID = 1L;
     private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER));
+    private final Map<FeatureModifier<?>, Object> modifiers;
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 
-    protected final boolean shrine; // Cult expansion
-    protected final boolean monastery; // Monasteries expansion
-    protected final boolean church; // Darmstadt promo expansion
-
     public Cloister() {
-        this(INITIAL_PLACE, HashSet.empty(), false, false, false);
+        this(INITIAL_PLACE, HashSet.empty(), HashMap.empty());
     }
 
-    public Cloister(List<FeaturePointer> places, Set<FeaturePointer> neighboring, boolean shrine, boolean monastery, boolean church) {
+    public Cloister(List<FeaturePointer> places, Set<FeaturePointer> neighboring, Map<FeatureModifier<?>, Object> modifiers) {
         super(places);
         this.neighboring = neighboring;
-        this.shrine = shrine;
-        this.monastery = monastery;
-        this.church = church;
+        this.modifiers = modifiers;
+    }
+
+    @Override
+    public Map<FeatureModifier<?>, Object> getModifiers() {
+        return modifiers;
+    }
+
+    @Override
+    public Cloister setModifiers(Map<FeatureModifier<?>, Object> modifiers) {
+        if (this.modifiers == modifiers) return this;
+        return new Cloister(places, neighboring, modifiers);
     }
 
     @Override
     public Cloister setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
-        return new Cloister(places, neighboring, shrine, monastery, church);
+        return new Cloister(places, neighboring, modifiers);
     }
 
     @Override
@@ -53,34 +63,19 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
 
     @Override
     public Feature placeOnBoard(Position pos, Rotation rot) {
-        return new Cloister(placeOnBoardPlaces(pos, rot), placeOnBoardNeighboring(pos, rot), shrine, monastery, church);
+        return new Cloister(placeOnBoardPlaces(pos, rot), placeOnBoardNeighboring(pos, rot), modifiers);
     }
 
     public boolean isShrine() {
-        return shrine;
-    }
-
-    public Cloister setShrine(boolean shrine) {
-        if (this.shrine == shrine) return this;
-        return new Cloister(places, neighboring, shrine, monastery, church);
+        return hasModifier(ShrineCapability.SHRINE);
     }
 
     public boolean isMonastery() {
-        return monastery;
-    }
-
-    public Cloister setMonastery(boolean monastery) {
-        if (this.monastery == monastery) return this;
-        return new Cloister(places, neighboring, shrine, monastery, church);
+        return hasModifier(MonasteriesCapability.MONASTERY);
     }
 
     public boolean isChurch() {
-        return church;
-    }
-
-    public Cloister setChurch(boolean church) {
-        if (this.church == church) return this;
-        return new Cloister(places, neighboring, shrine, monastery, church);
+        return hasModifier(ChurchCapability.CHURCH);
     }
 
     public Stream<Tuple2<Meeple, FeaturePointer>> getMeeplesIncludingMonastery2(GameState state) {
@@ -147,7 +142,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike {
             points += adjacentVineyards * 3;
             args = args.put("vineyards", adjacentVineyards);
         }
-        String baseName = shrine ? "shrine" : "cloister";
+        String baseName = isShrine() ? "shrine" : "cloister";
         return new PointsExpression(points, adjacent == 8 ? baseName : baseName + ".incomplete", args);
     }
 

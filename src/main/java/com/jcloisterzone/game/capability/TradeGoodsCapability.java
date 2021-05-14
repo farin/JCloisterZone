@@ -35,8 +35,6 @@ public class TradeGoodsCapability extends Capability<Void> {
 
     private static final int RESOURCE_POINTS = 10;
 
-
-
     @Override
     public GameState onTurnScoring(GameState state, HashMap<Scoreable, ScoreFeatureReducer> completed) {
         for (Feature feature : completed.keySet()) {

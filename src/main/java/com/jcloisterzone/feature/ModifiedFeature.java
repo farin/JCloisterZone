@@ -2,8 +2,13 @@ package com.jcloisterzone.feature;
 
 import com.jcloisterzone.feature.modifier.BooleanModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
+import com.jcloisterzone.io.message.PassMessage;
 import io.vavr.Tuple;
+import io.vavr.Tuple2;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
+
+import java.util.ArrayList;
 
 public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
 
@@ -28,14 +33,25 @@ public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
 
     default Map<FeatureModifier<?>, Object> mergeModifiers(Map<FeatureModifier<?>, Object> otherModifiers) {
         var modifiers = getModifiers();
-        var merged = modifiers.map((mod, value) -> {
-            var otherValue = otherModifiers.get(mod).getOrNull();
-            if (otherValue != null) {
-                return Tuple.of(mod, ((FeatureModifier<Object>) mod).mergeValues(value, otherValue));
+        var missingOtherKeys = otherModifiers.keySet().diff(modifiers.keySet());
+
+        ArrayList<Tuple2<FeatureModifier<?>, Object>> entries = new ArrayList();
+        for (Tuple2<FeatureModifier<?>, Object> t: modifiers) {
+            var otherValue = otherModifiers.get(t._1).getOrNull();
+            if (otherValue == null) {
+                entries.add(t);
             } else {
-                return Tuple.of(mod, value);
+                Object val = ((FeatureModifier<Object>)t._1).mergeValues(t._2, otherValue);
+                if (val != null) {
+                    entries.add(t.update2(val));
+                }
             }
-        }).filter((mod, value) -> value != null);
-        return merged.merge(otherModifiers.filter((mod, value) -> !modifiers.containsKey((FeatureModifier<?>) mod)));
+        }
+
+        for (FeatureModifier<?> mod : missingOtherKeys) {
+            Object val = otherModifiers.get(mod).get();
+            entries.add(new Tuple2<>(mod, val));
+        }
+        return HashMap.ofEntries(entries);
     }
 }
