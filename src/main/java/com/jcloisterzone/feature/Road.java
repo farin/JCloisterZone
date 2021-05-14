@@ -5,9 +5,8 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.game.capability.FerriesCapability;
-import com.jcloisterzone.game.capability.FerriesCapabilityModel;
-import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.feature.modifier.FeatureModifier;
+import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTunnelToken;
 import io.vavr.Tuple2;
@@ -17,35 +16,47 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.Function;
 
-public class Road extends CompletableFeature<Road> {
+public class Road extends CompletableFeature<Road> implements ModifiedFeature<Road> {
 
     private static final long serialVersionUID = 1L;
 
-    private final boolean inn;
-    private final boolean labyrinth;
+    private final Map<FeatureModifier<Object>, Object> modifiers;
     private final Set<FeaturePointer> openTunnelEnds;
 
     public Road(List<FeaturePointer> places, Set<Edge> openEdges) {
-        this(places, openEdges, HashSet.empty(), false, false, HashSet.empty());
+        this(places, openEdges, HashSet.empty(), HashMap.empty(), HashSet.empty());
     }
 
     public Road(
             List<FeaturePointer> places,
             Set<Edge> openEdges,
             Set<FeaturePointer> neighboring,
-            boolean inn,
-            boolean labyrinth,
+            Map<FeatureModifier<Object>, Object> modifiers,
             Set<FeaturePointer> openTunnelEnds
         ) {
         super(places, openEdges, neighboring);
-        this.inn = inn;
-        this.labyrinth = labyrinth;
+        this.modifiers = modifiers;
         this.openTunnelEnds = openTunnelEnds;
     }
 
     @Override
     public boolean isOpen(GameState state) {
         return super.isOpen(state) || !openTunnelEnds.isEmpty();
+    }
+
+    public boolean isLabyrinth() {
+        return this.hasModifier(LabyrinthCapability.LABYRINTH);
+    }
+
+    @Override
+    public Map<FeatureModifier<Object>, Object> getModifiers() {
+        return modifiers;
+    }
+
+    @Override
+    public Road setModifiers(Map<FeatureModifier<Object>, Object> modifiers) {
+        if (this.modifiers == modifiers) return this;
+        return new Road(places, openEdges, neighboring, modifiers, openTunnelEnds);
     }
 
     @Override
@@ -55,8 +66,7 @@ public class Road extends CompletableFeature<Road> {
             mergePlaces(road),
             mergeEdges(road),
             mergeNeighboring(road),
-            inn || road.inn,
-            labyrinth || road.labyrinth,
+            mergeModifiers(road),
             mergeTunnelEnds(road)
         );
     }
@@ -67,8 +77,7 @@ public class Road extends CompletableFeature<Road> {
             places,
             openEdges.remove(edge),
             neighboring,
-            inn,
-            labyrinth,
+            modifiers,
             openTunnelEnds
         );
     }
@@ -79,8 +88,7 @@ public class Road extends CompletableFeature<Road> {
             places,
             openEdges,
             neighboring,
-            inn,
-            labyrinth,
+            modifiers,
             openTunnelEnds
         );
     }
@@ -105,28 +113,9 @@ public class Road extends CompletableFeature<Road> {
             placeOnBoardPlaces(pos, rot),
             placeOnBoardEdges(pos, rot),
             placeOnBoardNeighboring(pos, rot),
-            inn,
-            labyrinth,
+            modifiers,
             placeOnBoardTunnelEnds(pos, rot)
         );
-    }
-
-    public boolean isInn() {
-        return inn;
-    }
-
-    public Road setInn(boolean inn) {
-        if (this.inn == inn) return this;
-        return new Road(places, openEdges, neighboring, inn, labyrinth, openTunnelEnds);
-    }
-
-    public boolean isLabyrinth() {
-        return labyrinth;
-    }
-
-    public Road setLabyrinth(boolean labyrinth) {
-        if (this.labyrinth == labyrinth) return this;
-        return new Road(places, openEdges, neighboring, inn, labyrinth, openTunnelEnds);
     }
 
     public Set<FeaturePointer> getOpenTunnelEnds() {
@@ -135,19 +124,22 @@ public class Road extends CompletableFeature<Road> {
 
     public Road setOpenTunnelEnds(Set<FeaturePointer> openTunnelEnds) {
         if (this.openTunnelEnds == openTunnelEnds) return this;
-        return new Road(places, openEdges, neighboring, inn, labyrinth, openTunnelEnds);
+        return new Road(places, openEdges, neighboring, modifiers, openTunnelEnds);
     }
 
     @Override
     public Road setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
-        return new Road(places, openEdges, neighboring, inn, labyrinth, openTunnelEnds);
+        return new Road(places, openEdges, neighboring, modifiers, openTunnelEnds);
     }
 
     @Override
     public PointsExpression getStructurePoints(GameState state, boolean completed) {
         int tileCount = getTilePositions().size();
         Map<String, Integer> args = HashMap.of("tiles", tileCount);
+
+        boolean inn = hasModifier(InnCapability.INN);
+        boolean labyrinth = hasModifier(LabyrinthCapability.LABYRINTH);
 
         if (inn && !completed) {
             return new PointsExpression(0, "road.incomplete-inn", args);
@@ -188,7 +180,7 @@ public class Road extends CompletableFeature<Road> {
     private void iterateParts(GameState state, FeaturePointer from, Function<FeaturePointer, Boolean> callback) {
         java.util.Set<FeaturePointer> places = this.places.toJavaSet();
         places.remove(from);
-        Deque<FeaturePointer> queue = new ArrayDeque<FeaturePointer>();
+        Deque<FeaturePointer> queue = new ArrayDeque<>();
         queue.push(from);
 
         Map<FeaturePointer, PlacedTunnelToken> placedTunnels = state.getCapabilityModel(TunnelCapability.class);
@@ -226,7 +218,7 @@ public class Road extends CompletableFeature<Road> {
             }
 
             if (ferriesModel != null) {
-                FeaturePointer ferry = ferriesModel.getFerries().find(f -> fp.isPartOf(f)).getOrNull();
+                FeaturePointer ferry = ferriesModel.getFerries().find(fp::isPartOf).getOrNull();
                 if (ferry != null) {
                     FeaturePointer place = ferry.setLocation(ferry.getLocation().subtract(fp.getLocation()));
 

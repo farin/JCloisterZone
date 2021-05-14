@@ -5,6 +5,8 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.Road;
+import com.jcloisterzone.feature.modifier.BooleanModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.Vector;
@@ -18,12 +20,12 @@ public final class SiegeCapability extends Capability<Void> {
 	private static final long serialVersionUID = 1L;
 
 	public static final TileModifier SIEGE_ESCAPE_TILE = new TileModifier("SiegeEscapeTile");
+    public static final BooleanModifier BESIEGED = new BooleanModifier("besieged");
 
     @Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
         if (feature instanceof City && attributeBoolValue(xml, "besieged")) {
-            City city = (City) feature;
-            return city.setBesieged(true);
+            feature = ((City) feature).putModifier(BESIEGED, true);
         }
         return feature;
     }

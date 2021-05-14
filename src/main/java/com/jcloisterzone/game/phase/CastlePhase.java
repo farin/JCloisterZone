@@ -10,6 +10,7 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.CastleCapability.CastleToken;
 import com.jcloisterzone.game.state.ActionsState;
@@ -36,7 +37,7 @@ public class CastlePhase extends Phase {
         PlacedTile lastPlaced = state.getLastPlaced();
         Position pos = lastPlaced.getPosition();
         return state.getTileFeatures2(pos, City.class)
-            .filter(t -> t._2.isCastleBase())
+            .filter(t -> t._2.hasModifier(CastleCapability.CASTLE_BASE))
             .filter(t -> t._2.getPlaces().size() == 2)
             .filter(t -> {
                 List<Follower> followers = t._2.getFollowers(state).toList();

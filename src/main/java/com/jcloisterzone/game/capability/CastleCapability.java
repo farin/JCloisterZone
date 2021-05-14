@@ -5,6 +5,7 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
+import com.jcloisterzone.feature.modifier.ExclusiveBooleanModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.Token;
@@ -25,6 +26,8 @@ public class CastleCapability extends Capability<Void> {
 
 	private static final long serialVersionUID = 1L;
 
+	public static ExclusiveBooleanModifier CASTLE_BASE = new ExclusiveBooleanModifier("castle-base");
+
     @Override
     public GameState onStartGame(GameState state) {
         int tokens = state.getPlayers().length() < 5 ? 3 : 2;
@@ -37,7 +40,7 @@ public class CastleCapability extends Capability<Void> {
             City city = (City) feature;
             boolean castleForbidden = "false".equals(xml.getAttribute( "castle-base"));
             if (city.getOpenEdges().size() == 1 && city.getMultiEdges().isEmpty() && !castleForbidden) {
-                feature = city.setCastleBase(true);
+                feature = ((City) feature).putModifier(CASTLE_BASE, true);
             }
         }
         return feature;

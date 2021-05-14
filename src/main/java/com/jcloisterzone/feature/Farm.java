@@ -7,6 +7,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
@@ -147,7 +148,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
                 City city = (City) feature;
                 if (city.isCompleted(state)) {
                     points += pointsPerCity;
-                    if (city.isBesieged()) {
+                    if (city.hasModifier(SiegeCapability.BESIEGED)) {
                         // besieged cities has double value
                         points += pointsPerCity;
                         besiegedCount++;

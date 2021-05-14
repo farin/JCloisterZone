@@ -2,6 +2,7 @@ package com.jcloisterzone.board;
 
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.*;
+import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
@@ -175,11 +176,19 @@ public class TileBuilder {
         	openEdges = openEdges.add(multiEdge);
         }
 
+        Map<FeatureModifier<Object>, Object> modifiers = HashMap.empty();
+        int pennants = attributeIntValue(e, "pennant", 0);
+        int extraPoints = attributeIntValue(e, "extra-points", 0);
+        if (pennants > 0) {
+            modifiers = modifiers.put((FeatureModifier<Object>)(Object) City.PENNANTS, pennants);
+        }
+        if (extraPoints > 0) {
+            modifiers = modifiers.put((FeatureModifier<Object>)(Object) City.EXTRA_POINTS, extraPoints);
+        }
+
         City city = new City(
             List.of(place),
-            openEdges,
-            attributeIntValue(e, "pennant", 0),
-            attributeIntValue(e, "extra-points", 0)
+            openEdges, modifiers
         );
 
         city = (City) initFeature(tileId, city, e);

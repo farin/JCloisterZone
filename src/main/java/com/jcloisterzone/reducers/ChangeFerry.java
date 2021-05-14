@@ -5,16 +5,16 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Structure;
+import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.FerriesCapabilityModel;
+import com.jcloisterzone.game.capability.InnCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import io.vavr.Tuple2;
-import io.vavr.collection.List;
-import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
+import io.vavr.collection.*;
 
 public class ChangeFerry implements Reducer {
 
@@ -71,8 +71,10 @@ public class ChangeFerry implements Reducer {
                         return (Road) pt.getInitialFeaturePartOf(fp.getLocation())
                             .placeOnBoard(fp.getPosition(), pt.getRotation());
                    });
-           boolean isInn = initialFeatures.foldLeft(false, (res, road) -> res || road.isInn());
-           boolean isLabyrinth = initialFeatures.foldLeft(false, (res, road) -> res || road.isLabyrinth());
+
+           Map<FeatureModifier<Object>, Object> EMPTY = HashMap.empty();
+           Map<FeatureModifier<Object>, Object> modifiers = initialFeatures.foldLeft(EMPTY, (res, road) -> road.mergeModifiers(res));
+
            Set<FeaturePointer> openTunnelEnds = merged.getOpenTunnelEnds().intersect(places.toSet());
            Set<Edge> openEdges = merged.getOpenEdges().intersect(
                initialFeatures.flatMap(f -> f.getOpenEdges()).toSet()
@@ -80,7 +82,7 @@ public class ChangeFerry implements Reducer {
            Set<FeaturePointer> neighbouring = merged.getNeighboring().intersect(
                initialFeatures.flatMap(f -> f.getNeighboring()).toSet()
            );
-           return new Road(places, openEdges, neighbouring, isInn, isLabyrinth, openTunnelEnds);
+           return new Road(places, openEdges, neighbouring, modifiers, openTunnelEnds);
         });
 
         // handle special case, ferry connected two ends of same road (after disconnect)
