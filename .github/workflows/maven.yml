@@ -1,0 +1,37 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Java CI with Maven
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml -Dengine.version=${{ steps.get_version.outputs.VERSION }} -Dengine.builddate=`date +%Y-%m-%d`
+#    - uses: actions/upload-artifact@v2
+#      with:
+#        name: Engine.jar
+#        path: build/
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/Engine.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
