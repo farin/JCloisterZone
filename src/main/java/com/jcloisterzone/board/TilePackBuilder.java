@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -94,44 +95,14 @@ public class TilePackBuilder {
     }
 
 
-    public TilePack createTilePack() throws IOException {
+    public TilePack createTilePack(java.util.List<String> definitions) throws IOException {
         java.util.Map<String, Integer> tilesCount = new java.util.HashMap<>();
         java.util.Set<String> removedTiles = new java.util.HashSet<>();
-
-        java.util.List<String> definitions = new ArrayList<>();
-
-        CodeSource src = TilePackBuilder.class.getProtectionDomain().getCodeSource();
-        if (src != null) {
-            URL jar = src.getLocation();
-            if (jar.toString().endsWith(".jar")) {
-                // invoked from bundled app
-                ZipInputStream zip = new ZipInputStream(jar.openStream());
-                while (true) {
-                    ZipEntry e = zip.getNextEntry();
-                    if (e == null)
-                        break;
-                    String name = e.getName();
-                    if (name.startsWith("tile-definitions/") && name.endsWith(".xml")) {
-                        definitions.add(name);
-                    }
-                }
-            } else {
-                // invoked in development
-                Path definitionsDir = new File(TilePackBuilder.class.getClassLoader().getResource("tile-definitions").getFile()).toPath();
-                Files.list(definitionsDir).forEach(path -> {
-                    definitions.add("tile-definitions/" + definitionsDir.relativize(path).toString());
-                });
-                Path fanDefinitionsDir = new File(TilePackBuilder.class.getClassLoader().getResource("tile-definitions/fan").getFile()).toPath();
-                Files.list(fanDefinitionsDir).forEach(path -> {
-                    definitions.add("tile-definitions/fan/" + fanDefinitionsDir.relativize(path).toString());
-                });
-            }
-        }
 
         definitions.forEach(path -> {
             InputStream defFile;
             try {
-                defFile = TilePackBuilder.class.getClassLoader().getResource(path).openStream();
+                defFile = new FileInputStream(new File(path));
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
                 return;
@@ -168,7 +139,7 @@ public class TilePackBuilder {
         definitions.forEach(path -> {
             InputStream defFile;
             try {
-                defFile = TilePackBuilder.class.getClassLoader().getResource(path).openStream();
+                defFile = new FileInputStream(new File(path));
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
                 return;

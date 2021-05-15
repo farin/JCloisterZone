@@ -36,12 +36,14 @@ public class GameStateBuilder {
     private Map<String, Object> gameAnnotations;
 
     private GameState state;
+    java.util.List<String> definitions;
 
 
-    public GameStateBuilder(GameSetup setup, int playersCount) {
+    public GameStateBuilder(java.util.List<String> definitions, GameSetup setup, int playersCount) {
         if (playersCount < 1) {
             throw new IllegalArgumentException("No player in game");
         }
+        this.definitions = definitions;
         this.setup = setup;
         this.playersCount = playersCount;
     }
@@ -119,7 +121,7 @@ public class GameStateBuilder {
         tilePackBuilder.setTileSets(setup.getTileSets());
 
         try {
-            TilePack tilePack = tilePackBuilder.createTilePack();
+            TilePack tilePack = tilePackBuilder.createTilePack(definitions);
             state = state.setTilePack(tilePack);
         } catch (IOException e) {
             throw new RuntimeException("Can't parse tile definitions", e);

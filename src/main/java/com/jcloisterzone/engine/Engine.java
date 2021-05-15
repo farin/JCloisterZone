@@ -27,11 +27,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
 import java.util.function.Predicate;
 import java.util.jar.Manifest;
 
@@ -57,6 +54,7 @@ public class Engine implements  Runnable {
     private boolean bulk;
 
     private boolean compatJavaRandom = false;
+    private ArrayList<String> tileDefinitions = new ArrayList<>();
 
     public Engine(InputStream in, PrintStream out, PrintStream err, PrintStream log) {
         this.in = new Scanner(in);
@@ -198,19 +196,29 @@ public class Engine implements  Runnable {
     }
 
     private void parseDirective(String line) {
-        if (line.equals("%bulk on")) {
-            bulk = true;
-        } else if (line.equals("%bulk off")) {
-            bulk = false;
-            out.println(gson.toJson(game));
-        } else if (line.startsWith("%compat")) {
-            Version compat = Version.valueOf(line.replace("%compat ", ""));
-            if (compat.lessThan(Version.valueOf("5.7.0"))) {
-                compatJavaRandom = true;
-            }
+        String[] s = line.split("\\s+", 2);
+        var directive = s[0];
+        var value = s[1];
+        switch (directive) {
+            case "%bulk":
+                bulk = "on".equals(value);
+                if (!bulk) {
+                    out.println(gson.toJson(game));
+                }
+                break;
+            case "%compat":
+                Version compat = Version.valueOf(value);
+                if (compat.lessThan(Version.valueOf("5.7.0"))) {
+                    compatJavaRandom = true;
+                }
+                break;
+            case "%load":
+                tileDefinitions.add(value);
+                break;
+            default:
+                err.println("#unknown directive " + line);
         }
     }
-
 
     @Override
     public void run() {
@@ -235,7 +243,7 @@ public class Engine implements  Runnable {
         game = new Game(gameSetup);
 
         GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialSeed, compatJavaRandom);
-        GameStateBuilder builder = new GameStateBuilder(gameSetup, setupMsg.getPlayers());
+        GameStateBuilder builder = new GameStateBuilder(tileDefinitions, gameSetup, setupMsg.getPlayers());
 
         if (setupMsg.getGameAnnotations() != null) {
             builder.setGameAnnotations(setupMsg.getGameAnnotations());
