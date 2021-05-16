@@ -138,40 +138,18 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"shrine", ShrineCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"festival", FestivalCapability.class);
 
-        boolean containsRiver = setupMsg.getSets().keySet().stream().anyMatch(s -> s.startsWith("river/"));
-        boolean containsCornCircle = setupMsg.getSets().keySet().stream().anyMatch(s -> s.startsWith("corn-circles/"));
-        boolean containsSiege = setupMsg.getSets().keySet().stream().anyMatch(s -> s.startsWith("siege/"));
-        boolean containsFlier = setupMsg.getSets().keySet().stream().anyMatch(s -> s.startsWith("flier:"));
-        if (containsRiver) {
-            capabilities = capabilities.add(RiverCapability.class);
-        }
-        if (containsCornCircle) {
-            capabilities = capabilities.add(CornCircleCapability.class);
-        }
-        if (containsSiege) {
-            capabilities = capabilities.add(SiegeCapability.class);
-        }
-        if (containsFlier) {
-            capabilities = capabilities.add(FlierCapability.class);
-        }
-        if (setupMsg.getSets().containsKey("darmstadt")) {
-            capabilities = capabilities.add(ChurchCapability.class);
-        }
-        if (setupMsg.getSets().containsKey("labyrinth")) {
-            capabilities = capabilities.add(LabyrinthCapability.class);
-        }
-        if (setupMsg.getSets().containsKey("wind-roses")) {
-            capabilities = capabilities.add(WindRoseCapability.class);
-        }
-        if (setupMsg.getSets().containsKey("monasteries")) {
-            capabilities = capabilities.add(MonasteriesCapability.class);
-        }
-        if (setupMsg.getSets().containsKey("russian-promos/2013")) {
-            capabilities = capabilities.add(YagaCapability.class);
-        }
-        if (setupMsg.getSets().containsKey("russian-promos/2016")) {
-            capabilities = capabilities.add(RussianPromosTrapCapability.class);
-        }
+        capabilities = addCapabilities(capabilities, setupMsg,"river", RiverCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"corn-circle", CornCircleCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"siege", SiegeCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"flier", FlierCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"church", ChurchCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"labyrinth", LabyrinthCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"wind-rose", WindRoseCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"monastery", MonasteriesCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"yaga", YagaCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"russian-trap", RussianPromosTrapCapability.class);
+
+        capabilities = addCapabilities(capabilities, setupMsg,"well", WellCapability.class);
 
         Map<Rule, Object> rules = HashMap.empty();
         if (setupMsg.getElements().containsKey("farmers")) {
@@ -366,6 +344,11 @@ public class Engine implements  Runnable {
                 engine.run();
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
             }
         } while (reload);
     }
