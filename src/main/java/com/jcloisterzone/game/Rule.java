@@ -27,7 +27,10 @@ public enum Rule {
     KING_AND_ROBBER_SCORING("king-and-robber-scoring", String.class, new Object[] { "default", "10/20", "15/40", "continuously" }),
     TINY_CITY_SCORING("tiny-city-scoring", String.class, new Object[] { "4", "2" }),
     COC_FINAL_SCORING("coc-final-scoring", String.class, new Object[] { "market-only", "any-district"}),
-    COUNT_MOVE("count-move", String.class, new Object[] { "by-player", "clockwise", "follow-meeple"});
+    COUNT_MOVE("count-move", String.class, new Object[] { "by-player", "clockwise", "follow-meeple"}),
+    // Fan expansions
+    ROBBERSSON_ACTION("robbersson-action", String.class, new Object[] { "may", "must" }),
+    ;
 
     String key;
     Class<?> type;
