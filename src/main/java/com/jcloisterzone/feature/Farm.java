@@ -72,7 +72,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
         List<FeaturePointer> places = getPlaces();
         if (places.length() == 1) {
             Location loc = places.get().getLocation();
-            if (loc == Location.INNER_FARM || loc == Location.INNER_FARM_B) {
+            if (loc.isInner()) {
                 return false;
             }
             // otherwise it can be still closed when placed next to Abbey

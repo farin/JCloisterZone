@@ -42,12 +42,12 @@ public class LocationTest {
         try {
             Location.N.union(Location.CLOISTER);
             fail();
-        } catch (AssertionError ae) {
+        } catch (IllegalArgumentException ae) {
         }
         try {
             Location.N.union(Location.INNER_FARM);
             fail();
-        } catch (AssertionError ae) {
+        } catch (IllegalArgumentException ae) {
         }
     }
 
@@ -63,7 +63,7 @@ public class LocationTest {
         try {
             Location.N.subtract(Location.CLOISTER);
             fail();
-        } catch (AssertionError ae) {
+        } catch (IllegalArgumentException ae) {
         }
     }
 

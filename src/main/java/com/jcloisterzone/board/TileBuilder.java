@@ -160,7 +160,7 @@ public class TileBuilder {
 
         if (e.hasAttribute("multi-edge")) {
         	Location multiEdgeLoc = attrAsLocation(e, "multi-edge");
-        	if (!multiEdgeLoc.isEdgeLocation()) {
+        	if (!multiEdgeLoc.isEdge()) {
         		throw new IllegalArgumentException("Multi edge must be side location");
         	}
         	ShortEdge multiEdge = new ShortEdge(Position.ZERO, multiEdgeLoc);
@@ -238,7 +238,7 @@ public class TileBuilder {
     private FeaturePointer initFeaturePointer(Stream<Location> sides, Class<? extends Feature> clazz) {
         AtomicReference<Location> locRef = new AtomicReference<>();
         sides.forEach(l -> {
-            assert clazz.equals(Farm.class) == l.isFarmLocation() : String.format("Invalid location %s kind for tile %s", l, tileId);
+            assert l.isInner() || clazz.equals(Farm.class) == l.isFarmEdge() : String.format("Invalid location %s kind for tile %s", l, tileId);
             assert l.intersect(locRef.get()) == null;
             locRef.set(locRef.get() == null ? l : locRef.get().union(l));
         });
@@ -248,7 +248,7 @@ public class TileBuilder {
 
     public static Set<Edge> initOpenEdges(Stream<Location> sides) {
         return HashSet.ofAll(
-            sides.filter(Location::isEdgeLocation).map(loc -> new Edge(Position.ZERO, loc))
+            sides.filter(Location::isEdge).map(loc -> new Edge(Position.ZERO, loc))
         );
     }
 }

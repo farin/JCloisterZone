@@ -28,11 +28,11 @@ import io.vavr.collection.Vector;
  *   Bit order                 Constants for farm locations            Constants for roads/rivers/cities
  *
  *   +---------+                    +------------+                       +-----------------+
- *   |  0   1  |                    |    1    2  |                       |    256    512   |
- *   |7       2|                    |128        4|                       |32768        1024|
- *   |         |                    |            |                       |                 |
- *   |6       3|                    | 64        8|                       |16384        2048|
- *   |  5   4  |                    |   32   16  |                       |    8192   4096  |
+ *   |  0   1  |                    |    1    2  |                       |       768       |
+ *   |7       2|                    |128        4|                       |                 |
+ *   |         |                    |            |                       |49152        3072|
+ *   |6       3|                    | 64        8|                       |                 |
+ *   |  5   4  |                    |   32   16  |                       |      12288      |
  *   +---------+                    +------------+                       +-----------------+
  *
  *  City/road/river locations are shifted by 8 bit so they can coexist with farm locations.
@@ -42,10 +42,10 @@ public class Location implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    transient private String name;
-    private int mask;
+    private final String name;
+    private final Integer mask;
 
-    private static java.util.Map<Integer, Location> instances = new java.util.HashMap<>();
+    private static java.util.Map<Integer, Location> edgeInstances = new java.util.HashMap<>(); // key is mask, or name for inner locations
 
     /**
      * Gets an instance with the given {@code mask}. Multiple calls with the same mask will return the same instance.
@@ -53,19 +53,23 @@ public class Location implements Serializable {
      * @param mask bit mask of the instance required
      * @return an instance with the given {@code mask}
      */
-    public static Location create(int mask) {
-        if (mask == 0) return null;
-        Location loc = instances.get(mask);
-        if (loc != null) return loc;
-        return new Location(null, mask);
+    public static Location create(String name, Integer mask) {
+        if (mask != null && mask == 0) throw new IllegalArgumentException("Empty mask is not allowed");
+        if (mask == null) {
+            try {
+                return (Location) Location.class.getField(name).get(null);
+            } catch (IllegalAccessException | NoSuchFieldException | ClassCastException e) {
+                throw new IllegalArgumentException(e);
+            }
+        } else {
+            Location loc = edgeInstances.get(mask);
+            if (loc != null) return loc;
+            return new Location(name, mask);
+        }
     }
 
     private Object readResolve() throws ObjectStreamException {
-        return create(mask);
-    }
-
-    public int getMask() {
-        return mask;
+        return create(name, mask);
     }
 
     /**
@@ -73,12 +77,42 @@ public class Location implements Serializable {
      * @param name the name for the instance
      * @param mask the mask for the instance
      */
-    private Location(String name, int mask) {
+    private Location(String name, Integer mask) {
         this.name = name;
         this.mask = mask;
-
-        instances.put(mask, this);
+        if (mask != null) {
+            edgeInstances.put(mask, this);
+        }
     }
+
+    /**
+     * Instantiates a new inner {@code Location} with the given {@code name}
+     * @param name the name for the instance
+     */
+    private Location(String name) {
+        this(name, null);
+    }
+
+    // edge locations for fields
+
+    /** North left farm */
+    public static final Location NL = new Location("NL", 0b00000001);
+    /** North right farm */
+    public static final Location NR = new Location("NR", 0b00000010);
+    /** East left farm */
+    public static final Location EL = new Location("EL", 0b00000100);
+    /** East right farm */
+    public static final Location ER = new Location("ER", 0b00001000);
+    /** South left farm */
+    public static final Location SL = new Location("SL", 0b00010000);
+    /** South right farm */
+    public static final Location SR = new Location("SR", 0b00100000);
+    /** West left farm */
+    public static final Location WL = new Location("WL", 0b01000000);
+    /** West right farm */
+    public static final Location WR = new Location("WR", 0b10000000);
+
+    // edge locations for other features
 
     /** North */
     public static final Location N = new Location("N", 0b00000011 << 8);
@@ -114,43 +148,31 @@ public class Location implements Serializable {
     /** Instance used to express the cardinal direction of east (as opposed to a feature-space facing east */
     public static final Location _E = new Location("_E", 0b11110011 << 8);
 
-    /** A cloister space */
-    public static final Location CLOISTER = new Location("CLOISTER", 0b00000100 << 16);
-    /** An abbot space (monasteries from "German Monasteries" and "Monasteries in Belgium"*/
-    public static final Location MONASTERY = new Location("MONASTERY", 0b00001000 << 16);
-    /** A tower space */
-    public static final Location TOWER = new Location("TOWER", 0b00010000 << 16);
-    /** A flier space (a follower can be placed here just for moment, before a dice roll) */
-    public static final Location FLYING_MACHINE = new Location("FLYING_MACHINE", 0b00100000 << 16);
-    /** City of Carcassonne specials (Count) */
-    public static final Location QUARTER_CASTLE = new Location("QUARTER_CASTLE", 0b01000000 << 16);
-    public static final Location QUARTER_MARKET = new Location("QUARTER_MARKET", 0b10000000 << 16);
-    public static final Location QUARTER_BLACKSMITH = new Location("QUARTER_BLACKSMITH", 0b00000001 << 24);
-    public static final Location QUARTER_CATHEDRAL = new Location("QUARTER_CATHEDRAL", 0b00000010 << 24);
-
-    // --- farm locations ---
+    // inner locations
 
     /** Inner farm*/
-    public static final Location INNER_FARM = new Location("INNER_FARM", 0b00000001 << 16);
+    public static final Location INNER_FARM = new Location("INNER_FARM");
     /** for tiles with two inner farms */
-    public static final Location INNER_FARM_B = new Location("INNER_FARM_B", 0b00000010 << 16);
+    public static final Location INNER_FARM_B = new Location("INNER_FARM_B");
 
-    /** North left farm */
-    public static final Location NL = new Location("NL", 0b00000001);
-    /** North right farm */
-    public static final Location NR = new Location("NR", 0b00000010);
-    /** East left farm */
-    public static final Location EL = new Location("EL", 0b00000100);
-    /** East right farm */
-    public static final Location ER = new Location("ER", 0b00001000);
-    /** South left farm */
-    public static final Location SL = new Location("SL", 0b00010000);
-    /** South right farm */
-    public static final Location SR = new Location("SR", 0b00100000);
-    /** West left farm */
-    public static final Location WL = new Location("WL", 0b01000000);
-    /** West right farm */
-    public static final Location WR = new Location("WR", 0b10000000);
+    /** Inner city */
+    public static final Location INNER_CITY = new Location("INNER_CITY");
+    /** Inner road */
+    public static final Location INNER_ROAD = new Location("INNER_ROAD");
+
+    /** A cloister space */
+    public static final Location CLOISTER = new Location("CLOISTER");
+    /** An abbot space (monasteries from "German Monasteries" and "Monasteries in Belgium"*/
+    public static final Location MONASTERY = new Location("MONASTERY");
+    /** A tower space */
+    public static final Location TOWER = new Location("TOWER");
+    /** A flier space (a follower can be placed here just for moment, before a dice roll) */
+    public static final Location FLYING_MACHINE = new Location("FLYING_MACHINE");
+    /** City of Carcassonne specials (Count) */
+    public static final Location QUARTER_CASTLE = new Location("QUARTER_CASTLE");
+    public static final Location QUARTER_MARKET = new Location("QUARTER_MARKET") ;
+    public static final Location QUARTER_BLACKSMITH = new Location("QUARTER_BLACKSMITH");
+    public static final Location QUARTER_CATHEDRAL = new Location("QUARTER_CATHEDRAL");
 
     public static final List<Location> SIDES = List.of(N, E, S, W);
     public static final List<Location> FARM_SIDES = List.of(NL, NR, EL, ER, SL, SR, WL, WR);
@@ -166,7 +188,11 @@ public class Location implements Serializable {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Location)) return false;
-        return mask == ((Location)obj).mask;
+        Location other =  ((Location)obj);
+        if (mask != null) {
+            return other.mask != null && mask == other.mask;
+        }
+        return name.equals(other.name);
     }
 
     /**
@@ -175,7 +201,7 @@ public class Location implements Serializable {
      */
     @Override
     public int hashCode() {
-        return mask;
+        return mask == null ? name.hashCode() : mask;
     }
 
     /**
@@ -199,6 +225,7 @@ public class Location implements Serializable {
      * @return an instance that is the mirror of {@code this}
      */
     public Location rev() {
+        if (mask == null) throw new UnsupportedOperationException("Not available for inner locations");
         // odd bits shift by 5, even by 3;
         int mLo = mask & 0xff;
         mLo = ((mLo & 0b01010101) << 5) | ((mLo & 0b10101010) << 3);
@@ -208,7 +235,7 @@ public class Location implements Serializable {
         mHi = ((mHi & 0b01010101) << 5) | ((mHi & 0b10101010) << 3);
         mHi = (mHi | (mHi >> 8)) & 0xff;
 
-        return create((mask & ~0xffff) | (mHi << 8) | mLo);
+        return create(null, (mask & ~0xffff) | (mHi << 8) | mLo);
     }
 
     /**
@@ -217,13 +244,14 @@ public class Location implements Serializable {
      * @return rotated instance
      */
     private Location shift(int i) {
+        if (mask == null) throw new UnsupportedOperationException("Not available for inner locations");
         int mLo = (mask & 0x00ff) << i; // shift lower bits
         mLo = (mLo | mLo >> 8) & 0x00ff; // recover bits lost in the shift
 
         int mHi = (mask & 0xff00) << i; // shift higher bits
         mHi = (mHi | mHi >> 8) & 0xff00; // recover bits lost in the shift
 
-        return create((mask & ~0xffff) | mHi | mLo); // merge all other bits (e.g., abbot, tower etc.) and return
+        return create(null, (mask & ~0xffff) | mHi | mLo); // merge all other bits (e.g., abbot, tower etc.) and return
     }
 
     /**
@@ -232,6 +260,7 @@ public class Location implements Serializable {
      * @return the rotated instance
      */
     public Location rotateCCW(Rotation rot) {
+        if (mask == null) return this;
         return shift((rot.ordinal() * 6) % 8); // magic formula to map 0 1 2 3 to 0 6 4 2 (equivalent of 0 -2 -4 -6)
     }
 
@@ -241,21 +270,22 @@ public class Location implements Serializable {
      * @return the rotated instance
      */
     public Location rotateCW(Rotation rot) {
+        if (mask == null) return this;
         return shift(rot.ordinal() * 2);
     }
 
     public Location getLeftFarm() {
-        assert isEdgeLocation();
-        return create((mask >> 8) & 0b01010101);
+        if (!isEdge()) throw new UnsupportedOperationException("Edge expected");
+        return create(null, (mask >> 8) & 0b01010101);
     }
 
     public Location getRightFarm() {
-        assert isEdgeLocation();
-        return create((mask >> 8) & 0b010101010);
+        if (!isEdge()) throw new UnsupportedOperationException("Edge expected");
+        return create(null,(mask >> 8) & 0b010101010);
     }
 
     public Location farmToSide() {
-        assert isFarmLocation();
+        if (!isFarmEdge()) throw new UnsupportedOperationException("Farm edge expected");
         int mask = 0;
         if (Location.NL.isPartOf(this)) mask |= Location.N.mask;
         if (Location.NR.isPartOf(this)) mask |= Location.N.mask;
@@ -265,7 +295,7 @@ public class Location implements Serializable {
         if (Location.SR.isPartOf(this)) mask |= Location.S.mask;
         if (Location.WL.isPartOf(this)) mask |= Location.W.mask;
         if (Location.WR.isPartOf(this)) mask |= Location.W.mask;
-        return create(mask);
+        return create(null, mask);
     }
 
     /**
@@ -275,7 +305,7 @@ public class Location implements Serializable {
      * @return {@code true} if {@code this} is part of {@code loc}, {@code false} otherwise
      */
     public boolean isPartOf(Location loc) {
-        if (mask == 0) return this == loc;
+        if (mask == null || loc.mask == null) return this == loc;
         return ((mask ^ loc.mask) & mask) == 0;
     }
 
@@ -288,9 +318,9 @@ public class Location implements Serializable {
         if (name != null) return name;
         StringBuilder str = new StringBuilder();
         for (Location atom : FARM_SIDES) {
-            if (intersect(atom) != null) {
+            if (hasIntersection(atom)) {
                 if (str.length() > 0) str.append(".");
-                str.append(atom);
+                str.append(atom.name);
             }
         }
         return str.toString();
@@ -303,8 +333,9 @@ public class Location implements Serializable {
      */
     public Location union(Location loc) {
         if (loc == null) return this;
-        assert !isSpecialLocation() && ((isEdgeLocation() == loc.isEdgeLocation()) & isFarmLocation() == loc.isFarmLocation()) : "union("+this+','+loc+')';
-        return create(mask | loc.mask);
+        if (isInner()) throw new UnsupportedOperationException("Not allowed for inner location");
+        if (loc.isInner() || (isEdge() && !loc.isEdge()) || (isFarmEdge() && !loc.isFarmEdge())) throw new IllegalArgumentException("Same edge type is required");
+        return create(null, mask | loc.mask);
     }
 
     /**
@@ -315,8 +346,9 @@ public class Location implements Serializable {
      */
     public Location subtract(Location loc) {
         if (loc == null) return this;
-        assert !isSpecialLocation() && isEdgeLocation() == loc.isEdgeLocation() & isFarmLocation() == loc.isFarmLocation() : "subtract("+this+','+loc+')';
-        return create((~(mask & loc.mask)) & mask);
+        if (isInner()) throw new UnsupportedOperationException("Not alloed for inner location");
+        if (loc.isInner() || (isEdge() && !loc.isEdge()) || (isFarmEdge() && !loc.isFarmEdge())) throw new IllegalArgumentException("Same edge type is required");
+        return create(null, (~(mask & loc.mask)) & mask);
     }
 
     /**
@@ -325,9 +357,15 @@ public class Location implements Serializable {
      * @return the location resulting from the intersection
      */
     public Location intersect(Location loc) {
-        if (loc == null || (mask & loc.mask) == 0) return null;
-        assert !isSpecialLocation() && isEdgeLocation() == loc.isEdgeLocation() & isFarmLocation() == loc.isFarmLocation() : "intersect("+this+','+loc+')';
-        return create(mask & loc.mask);
+        // TODO it would be better rise expception for inompatible types instead. But not sure if code relies on it.
+        if (loc == null || isInner() || loc.isInner()) return null;
+        if ((isEdge() && !loc.isEdge()) || (isFarmEdge() && !loc.isFarmEdge())) return null;
+        if ((mask & loc.mask) == 0) return null;
+        return create(null, mask & loc.mask);
+    }
+
+    private boolean hasIntersection(Location loc) {
+        return mask != null && loc.mask != null && (mask & loc.mask) > 0;
     }
 
     /**
@@ -335,11 +373,11 @@ public class Location implements Serializable {
      * @return the sides components of {@code this}
      */
     public List<Location> splitToSides() {
-        return Location.SIDES.filter(side -> intersect(side) != null);
+        return Location.SIDES.filter(side -> hasIntersection(side));
     }
 
     public List<Location> splitToFarmSides() {
-        return Location.FARM_SIDES.filter(side -> intersect(side) != null);
+        return Location.FARM_SIDES.filter(side -> hasIntersection(side));
     }
 
     /**
@@ -388,7 +426,7 @@ public class Location implements Serializable {
 
     /* get included full farm coners */
     public Vector<Corner> getCorners() {
-        if (!isFarmLocation()) {
+        if (!isFarmEdge()) {
             return Vector.empty();
         }
         Vector<Corner> res = Vector.empty();
@@ -399,21 +437,24 @@ public class Location implements Serializable {
         return res;
     }
 
+    public boolean isInner() {
+        return mask == null;
+    }
 
     /**
      * Checks if {@code this} is a farm location.
      * @return {@code true} if {@code this} is a farm location, {@code false} otherwise
      */
-    public boolean isFarmLocation() {
-        return ((mask & 0x30000) | (mask & 0xFF)) > 0;
+    public boolean isFarmEdge() {
+        return mask != null && (mask & 0xFF) > 0;
     }
 
     /**
      * Checks if {@code this} is an edge location.
      * @return {@code true} if {@code this} is an edge location, {@code false} otherwise
      */
-    public boolean isEdgeLocation() {
-        return (mask & 0xFF00) > 0;
+    public boolean isEdge() {
+        return mask != null && (mask & 0xFF00) > 0;
     }
 
     /**
