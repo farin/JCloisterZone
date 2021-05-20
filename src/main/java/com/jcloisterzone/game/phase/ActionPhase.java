@@ -25,6 +25,7 @@ import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
 import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.PrincessCapability;
+import com.jcloisterzone.game.capability.RobbersSonCapability;
 import com.jcloisterzone.game.capability.TowerCapability.TowerToken;
 import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.ActionsState;
@@ -76,6 +77,16 @@ public class ActionPhase extends AbstractActionPhase {
             }
         }
 
+        if (state.getCapabilities().contains(RobbersSonCapability.class) &&
+                "must".equals(state.getStringRule(Rule.ROBBERSSON_ACTION))) {
+            ReturnMeepleAction robbersSonAction = (ReturnMeepleAction) state.getPlayerActions().getActions().
+                    find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.ROBBERSSON).getOrNull();
+            if (robbersSonAction != null) {
+                actions = Vector.of(robbersSonAction);
+                state = state.setPlayerActions(new ActionsState(player, actions, false));
+            }
+        }
+
         if (state.getPlayerActions().getActions().isEmpty()) {
             state = clearActions(state);
             return next(state);
@@ -119,6 +130,16 @@ public class ActionPhase extends AbstractActionPhase {
                     state = state.addFlag(Flag.PRINCESS_USED);
                 } else {
                     throw new IllegalArgumentException("Pointer doesn't match princess action");
+                }
+                break;
+            case ROBBERSSON:
+                ReturnMeepleAction roberrsSonAction = (ReturnMeepleAction) state.getPlayerActions()
+                    .getActions().find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.ROBBERSSON)
+                    .getOrElseThrow(() -> new IllegalArgumentException("Return meeple is not allowed"));
+                if (roberrsSonAction.getOptions().contains(ptr)) {
+                    state = state.addFlag(Flag.ROBBERSSON_USED);
+                } else {
+                    throw new IllegalArgumentException("Pointer doesn't match robber's son action");
                 }
                 break;
             case FESTIVAL:
