@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
@@ -40,10 +41,10 @@ public final class RobberCapability extends Capability<Void> {
         }
 
         if (state.getStringRule(Rule.KING_AND_ROBBER_SCORING).equals("continuously") && completedRoadsThisTurn > 0) {
-            Player currentHolder = state.getPlayers().getPlayerWithToken(BiggestFeatureAward.KING);
+            Player currentHolder = state.getPlayers().getPlayerWithToken(BiggestFeatureAward.ROBBER);
             if (currentHolder != null) {
                 state = (new AddPoints(currentHolder, completedRoadsThisTurn)).apply(state);
-                ReceivedPoints rp = new ReceivedPoints(new PointsExpression(completedRoadsThisTurn, "robber"), currentHolder, null);
+                ReceivedPoints rp = new ReceivedPoints(new PointsExpression("robber", new ExprItem(completedRoadsThisTurn, "roads", completedRoadsThisTurn)), currentHolder, null);
                 state = state.appendEvent(new ScoreEvent(rp, false, false));
             }
         }
@@ -75,6 +76,8 @@ public final class RobberCapability extends Capability<Void> {
             return state;
         }
 
+        String itemName = "robber";
+        Integer count = null;
         int points;
         if (rule.equals("10/20")) {
             points = 10;
@@ -87,10 +90,12 @@ public final class RobberCapability extends Capability<Void> {
                 points = 15;
             }
         } else {
+            itemName = "roads";
             points = countCompletedRoads(state);
+            count = points;
         }
         state = (new AddPoints(player, points)).apply(state);
-        ReceivedPoints rp = new ReceivedPoints(new PointsExpression(points, "robber"), player, null);
+        ReceivedPoints rp = new ReceivedPoints(new PointsExpression("robber", new ExprItem(count, itemName, points)), player, null);
         state = state.appendEvent(new ScoreEvent(rp, false, true));
         return state;
     }

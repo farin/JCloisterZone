@@ -4,6 +4,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
@@ -42,8 +43,7 @@ public class FairyPhase extends Phase {
             }
 
             state = new AddPoints(m.getPlayer(), FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN).apply(state);
-
-            PointsExpression expr = new PointsExpression(FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN, "fairy.turn");
+            PointsExpression expr = new PointsExpression("fairy.turn", new ExprItem("fairy", FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN));
             state = state.appendEvent(new ScoreEvent(new ReceivedPoints(expr, m.getPlayer(), fairyFp), false, false));
             break;
         }

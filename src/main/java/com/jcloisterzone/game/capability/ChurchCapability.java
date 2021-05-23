@@ -3,6 +3,7 @@ package com.jcloisterzone.game.capability;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Cloister;
@@ -69,7 +70,7 @@ public class ChurchCapability extends Capability<Void> {
                 fp = onTile._2;
             }
 
-            PointsExpression expr = new PointsExpression(CHURCH_TILES_BONUS, "cloister.church");
+            PointsExpression expr = new PointsExpression("church", new ExprItem("church", CHURCH_TILES_BONUS));
             bonusPoints = bonusPoints.append(new ReceivedPoints(expr, player, fp));
         }
 

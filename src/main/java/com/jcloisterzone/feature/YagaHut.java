@@ -4,6 +4,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.HashMap;
@@ -54,9 +55,12 @@ public class YagaHut extends TileFeature implements Completable, CloisterLike {
     @Override
     public PointsExpression getStructurePoints(GameState state, boolean completed) {
         Position p = places.get().getPosition();
+        int adjacent = state.getAdjacentAndDiagonalTiles2(p).size();
         int emptyTiles = 8 - state.getAdjacentAndDiagonalTiles2(p).size();
-        int points = 1 + emptyTiles;
-        return new PointsExpression(points, "yaga-hut", HashMap.of("emptyTiles", emptyTiles));
+        return new PointsExpression("yaga-hut", List.of(
+                new ExprItem("yaga", 9),
+                new ExprItem(adjacent, "tiles", -adjacent)
+        ));
     }
 
     public static String name() {

@@ -91,7 +91,7 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
             // not owners but still followers can exist - eg. Mayor on city without pennants
             //Stream<Tuple2<Follower, FeaturePointer>> followers = feature.getFollowers2(state);
             for (Player player : feature.getFollowers(state).map(Follower::getPlayer).distinct()) {
-                PointsExpression expr = new PointsExpression(0, feature.getClass().getSimpleName().toLowerCase() + ".empty");
+                PointsExpression expr = new PointsExpression(feature.getClass().getSimpleName().toLowerCase() + ".empty", List.empty());
                 receivedPoints = receivedPoints.append(new ReceivedPoints( expr, player, getSampleSource(state, player, bonusPoints)));
             }
         } else {

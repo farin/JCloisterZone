@@ -3,6 +3,7 @@ package com.jcloisterzone.feature;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Rule;
@@ -64,7 +65,6 @@ public interface Scoreable extends Structure {
         return powers.filterValues(t -> t._1 == maxPower && t._2 == maxTiebreaker).keySet();
     }
 
-
     default Follower getSampleFollower(GameState state, Player player) {
         return getFollowers(state).find(f -> f.getPlayer().equals(player)).getOrNull();
     }
@@ -73,10 +73,10 @@ public interface Scoreable extends Structure {
         return getFollowers2(state).find(t -> t._1.getPlayer().equals(player)).getOrNull();
     }
 
-    default PointsExpression getLittleBuildingPoints(GameState state) {
+    default List<ExprItem> getLittleBuildingPoints(GameState state) {
         Map<Position, LittleBuilding> buildings = state.getCapabilityModel(LittleBuildingsCapability.class);
         if (buildings == null) {
-            return null;
+            return List.empty();
         }
         Set<Position> position = getTilePositions();
         Seq<LittleBuilding> buldingsSeq = buildings.filterKeys(pos -> position.contains(pos)).values();

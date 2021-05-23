@@ -5,6 +5,7 @@ import com.jcloisterzone.board.PlacementOption;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
@@ -66,7 +67,7 @@ public final class ShrineCapability extends Capability<Void> {
                 continue;
             }
 
-            PointsExpression expr = new PointsExpression(0, cloister.isShrine() ? "shrine.challenged" : "cloister.challenged");
+            PointsExpression expr = new PointsExpression(cloister.isShrine() ? "shrine.challenged" : "cloister.challenged", new ExprItem("shrine-challenge", 0));
             ScoreEvent scoreEvent = new ScoreEvent(new ReceivedPoints(expr, meeple.getPlayer(), meeple.getDeployment(state)), true, false);
             state = state.appendEvent(scoreEvent);
             state = (new UndeployMeeples(cloister, true)).apply(state);

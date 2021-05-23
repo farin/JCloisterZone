@@ -4,6 +4,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.*;
@@ -47,9 +48,8 @@ public class Garden extends TileFeature implements Scoreable, CloisterLike {
     public PointsExpression getStructurePoints(GameState state, boolean completed) {
         Position p = places.get().getPosition();
         int adjacent = state.getAdjacentAndDiagonalTiles2(p).size();
-        Map<String, Integer> args = HashMap.of("tiles", adjacent + 1);
-        int points = adjacent + 1;
-        return new PointsExpression(points, adjacent == 8 ? "garden" : "garden.incomplete", args);
+        int tiles = adjacent + 1;
+        return new PointsExpression(adjacent == 8 ? "garden" : "garden.incomplete", new ExprItem(tiles, "tiles", tiles));
     }
 
     public static String name() {

@@ -103,7 +103,7 @@ public class ScoringPhase extends Phase {
             Farm placedBarnFarm = placedBarnPtr == null ? null : (Farm) state.getFeature(placedBarnPtr);
             if (placedBarnFarm != null) {
                 //ScoreFeature is scoring just followers!
-                state = (new ScoreFarm(placedBarnFarm, false)).apply(state);
+                state = (new ScoreFarm(placedBarnFarm, false, "barn-placed")).apply(state);
                 state = (new UndeployMeeples(placedBarnFarm, false)).apply(state);
             }
 

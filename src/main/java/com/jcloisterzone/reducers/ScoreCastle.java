@@ -1,6 +1,7 @@
 package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.game.ScoreFeatureReducer;
@@ -12,7 +13,7 @@ public class ScoreCastle extends ScoreFeature implements ScoreFeatureReducer {
 
     public ScoreCastle(Castle feature, PointsExpression points, boolean isFinal) {
         super(feature, isFinal);
-        this.points = points;
+        this.points = new PointsExpression("castle", new ExprItem("castle." + points.getName(), points.getPoints()));
     }
 
     @Override

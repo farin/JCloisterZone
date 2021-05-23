@@ -10,14 +10,20 @@ import io.vavr.collection.Map;
 public class ScoreFarm extends ScoreFeature {
 
     protected Map<Player, PointsExpression> playerPoints = HashMap.empty();
+    private final String exprSubtitle;
+
+    public ScoreFarm(Farm feature, boolean isFinal, String exprSubtitle) {
+        super(feature, isFinal);
+        this.exprSubtitle = exprSubtitle;
+    }
 
     public ScoreFarm(Farm feature, boolean isFinal) {
-        super(feature, isFinal);
+        this(feature, isFinal, null);
     }
 
     @Override
     protected PointsExpression getFeaturePoints(GameState state, Player player) {
-        PointsExpression value = getFeature().getPoints(state, player);
+        PointsExpression value = getFeature().getPoints(state, exprSubtitle, player);
         playerPoints = playerPoints.put(player, value);
         return value;
     }

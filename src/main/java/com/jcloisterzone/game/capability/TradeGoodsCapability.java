@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
@@ -98,7 +99,7 @@ public class TradeGoodsCapability extends Capability<Void> {
             List<ReceivedPoints> pts = List.empty();
             for (Player player: hiPlayers) {
                 state = (new AddPoints(player, RESOURCE_POINTS)).apply(state);
-                PointsExpression expr = new PointsExpression(RESOURCE_POINTS, "trade-goods." + tr.name());
+                PointsExpression expr = new PointsExpression("trade-goods", new ExprItem("trade-goods." + tr.name(), RESOURCE_POINTS));
                 pts = pts.append(new ReceivedPoints(expr, player, null));
             }
             if (!pts.isEmpty()) {

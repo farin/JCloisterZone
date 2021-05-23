@@ -3,6 +3,7 @@ package com.jcloisterzone.reducers;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
@@ -34,15 +35,13 @@ public class FinalScoring implements Reducer {
     }
 
     private PointsExpression getMonasteryPoints(GameState state, Cloister monastery) {
-        int points = 1;
         Position pos = monastery.getPosition();
-        Map<String, Integer> args = HashMap.empty();
+        List<ExprItem> items = List.of(new ExprItem(1, "tiles", 1));
         for (Location loc : Location.SIDES) {
             int size = getContinuousRowSize(state, pos, loc);
-            points += size;
-            args = args.put(loc.toString(), size);
+            items = items.append(new ExprItem(size, "tiles." + loc.toString(), size));
         }
-        return new PointsExpression(points, "monastery", args).merge(monastery.getLittleBuildingPoints(state));
+        return new PointsExpression("monastery", items).appendAll(monastery.getLittleBuildingPoints(state));
     }
 
     @Override
@@ -53,7 +52,7 @@ public class FinalScoring implements Reducer {
 
         for (Castle castle : getOccupiedScoreables(state, Castle.class)) {
             // no points for castles at the end
-            state = (new ScoreCastle(castle, new PointsExpression(0, "castle.incomplete"), true)).apply(state);
+            state = (new ScoreCastle(castle, new PointsExpression("castle.incomplete", List.empty()), true)).apply(state);
         }
 
         Stream<Cloister> monasteries = state.getFeatures().filter(f -> f instanceof Cloister && ((Cloister) f).isMonastery()).map(f -> (Cloister) f);

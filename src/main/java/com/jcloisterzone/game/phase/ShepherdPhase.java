@@ -3,6 +3,7 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.action.FlockAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
@@ -27,6 +28,8 @@ import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Vector;
+
+import java.util.function.Function;
 
 
 public class ShepherdPhase extends Phase {
@@ -120,8 +123,14 @@ public class ShepherdPhase extends Phase {
 		int points = tokens.map(SheepToken::sheepCount).sum().intValue();
 		List<ReceivedPoints> receivedPoints = List.empty();
 
-		Map<String, Integer> exprArgs = tokens.groupBy(SheepToken::name).mapValues(list -> list.size());
-		PointsExpression expr = new PointsExpression(points, "flock", exprArgs);
+		List<ExprItem> exprs = tokens.groupBy(Function.identity())
+				.toList()
+				.sortBy(t -> t._1.ordinal())
+				.map(t -> {
+					var size = t._2.size();
+					return new ExprItem(size, "sheep." + t._1.name(), t._1.sheepCount() * size);
+				});
+		PointsExpression expr = new PointsExpression("flock", exprs);
 		for (Tuple2<Meeple, FeaturePointer> t : shepherdsOnFarm) {
 		    Shepherd m = (Shepherd) t._1;
 		    state = (new AddPoints(m.getPlayer(), points)).apply(state);

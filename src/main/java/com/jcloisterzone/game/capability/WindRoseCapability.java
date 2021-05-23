@@ -5,6 +5,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileModifier;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
@@ -63,7 +64,7 @@ public class WindRoseCapability extends Capability<PlacedTile> {
         if (isInProperQuadrant(rose, pt.getPosition(), ptRose.getPosition())) {
             Player p = state.getTurnPlayer();
             state = (new AddPoints(p, WIND_ROSE_POINTS)).apply(state);
-            PointsExpression expr = new PointsExpression(WIND_ROSE_POINTS, "wind-rose", HashMap.empty());
+            PointsExpression expr = new PointsExpression("wind-rose", new ExprItem("wind-rose", WIND_ROSE_POINTS));
             ScoreEvent scoreEvent = new ScoreEvent(new ReceivedPoints(expr, p, pt.getPosition()), false, false);
             state = state.appendEvent(scoreEvent);
         }

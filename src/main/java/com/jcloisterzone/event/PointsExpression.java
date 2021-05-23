@@ -1,48 +1,49 @@
 package com.jcloisterzone.event;
 
 import com.jcloisterzone.Immutable;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.Map;
+import io.vavr.collection.List;
 
 @Immutable
 public class PointsExpression {
 
-    private final int points;
     private final String name;
-    private final Map<String, Integer> args;
+    private final List<ExprItem> items;
 
-    public PointsExpression(int points, String name, Map<String, Integer> args) {
-        this.points = points;
+    public PointsExpression(String name,  List<ExprItem> items) {
         this.name = name;
-        this.args = args;
+        this.items = items;
     }
 
-    public PointsExpression(int points, String name) {
-        this(points, name, HashMap.empty());
+    public PointsExpression(String name, ExprItem...items) {
+        this(name, List.of(items));
     }
+
 
     public int getPoints() {
-        return points;
+        return items.map(exp -> exp.getPoints()).sum().intValue();
     }
 
     public String getName() {
         return name;
     }
 
-    public Map<String, Integer> getArgs() {
-        return args;
+    public List<ExprItem> getItems() {
+        return items;
     }
 
     public PointsExpression merge(PointsExpression expr) {
-        if (expr == null || expr.points == 0) {
+        if (expr == null || expr.getPoints() == 0) {
             return this;
         }
-        Map<String, Integer> args = this.args.merge(expr.args);
-        return new PointsExpression(points + expr.points, name + '+' + expr.name, args);
+        List<ExprItem>  items = this.items.appendAll(expr.items);
+        return new PointsExpression(name + '+' + expr.name, items);
     }
 
-    public PointsExpression add(int points, Map<String, Integer> args ) {
-        args = this.args.merge(args);
-        return new PointsExpression(this.points + points, name, args);
+    public PointsExpression append(ExprItem item) {
+        return new PointsExpression(name, this.items.append(item));
+    }
+
+    public PointsExpression appendAll(List<ExprItem> items) {
+        return new PointsExpression(name, this.items.appendAll(items));
     }
 }

@@ -4,6 +4,7 @@ import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
@@ -50,13 +51,11 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
         Witch witch = state.getNeutralFigures().getWitch();
         if (mage != null && mage.getFeature(state) == this) {
             int tileCount = getTilePositions().size();
-            expr = expr.merge(new PointsExpression(tileCount, "mage"));
+            expr = expr.append(new ExprItem("mage", tileCount));
         }
         if (witch != null && witch.getFeature(state) == this) {
             int points = expr.getPoints();
-            if (points % 2 == 1) points++;
-            points /= 2;
-            expr = new PointsExpression(points, expr.getName() + "+witch", expr.getArgs());
+            expr = expr.append(new ExprItem("witch", -points / 2));
         }
         return expr;
     }

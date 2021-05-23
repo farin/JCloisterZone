@@ -3,6 +3,7 @@ package com.jcloisterzone.game.capability;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.LittleBuildingAction;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
@@ -55,17 +56,20 @@ public class LittleBuildingsCapability extends Capability<Map<Position, LittleBu
         return state.appendAction(new LittleBuildingAction(options, pos));
     }
 
-    public static PointsExpression getBuildingsPoints(RulesMixin rules, Seq<LittleBuilding> buildings) {
+    public static List<ExprItem> getBuildingsPoints(RulesMixin rules, Seq<LittleBuilding> buildings) {
         if ("3/2/1".equals(rules.getStringRule(Rule.LITTLE_BUILDINGS_SCORING))) {
             Map<LittleBuilding, Integer> counts = buildings.groupBy(t -> t).mapValues(l -> l.size());
-            int towerCount = counts.getOrElse(LittleBuilding.LB_TOWER, 0);
             int houseCount = counts.getOrElse(LittleBuilding.LB_HOUSE, 0);
             int shedCount = counts.getOrElse(LittleBuilding.LB_SHED, 0);
-            int points = towerCount * 3 + houseCount * 2 + shedCount;
-            return new PointsExpression(points, "little-buildings.321", HashMap.of("towers", towerCount, "houses", houseCount, "sheds", shedCount));
+            int towerCount = counts.getOrElse(LittleBuilding.LB_TOWER, 0);
+            return List.of(
+                    new ExprItem(houseCount, "little-buildings." + LittleBuilding.LB_HOUSE.name(), 1 * houseCount),
+                    new ExprItem(shedCount, "little-buildings." + LittleBuilding.LB_SHED.name(), 2 * shedCount),
+                    new ExprItem(towerCount, "little-buildings." + LittleBuilding.LB_TOWER.name(), 3 * towerCount)
+            );
         } else {
             int count = buildings.size();
-            return new PointsExpression(count, "little-buildings.default", HashMap.of("buildings", count));
+            return List.of(new ExprItem(count, "little-buildings", count));
         }
     }
 }

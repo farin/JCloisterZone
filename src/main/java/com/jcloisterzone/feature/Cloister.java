@@ -5,6 +5,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.figure.Follower;
@@ -136,14 +137,15 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
         	}
         }
 
-        Map<String, Integer> args = HashMap.of("tiles", adjacent + 1);
-        int points = adjacent + 1;
+        List<ExprItem> exprItems = List.of(
+           new ExprItem(adjacent + 1, "tiles", adjacent + 1)
+        );
+
         if (adjacent == 8 && adjacentVineyards > 0) {
-            points += adjacentVineyards * 3;
-            args = args.put("vineyards", adjacentVineyards);
+            exprItems = exprItems.append(new ExprItem(adjacentVineyards, "vineyards", adjacentVineyards * 3));
         }
         String baseName = isShrine() ? "shrine" : "cloister";
-        return new PointsExpression(points, adjacent == 8 ? baseName : baseName + ".incomplete", args);
+        return new PointsExpression(adjacent == 8 ? baseName : baseName + ".incomplete", exprItems);
     }
 
     public static String name() {

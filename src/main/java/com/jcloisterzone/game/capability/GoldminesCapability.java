@@ -5,6 +5,7 @@ import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileModifier;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
@@ -25,6 +26,7 @@ import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
+import org.apache.commons.math3.analysis.function.Exp;
 import org.w3c.dom.Element;
 
 import java.util.Collections;
@@ -177,7 +179,7 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
                 points = 4 * pieces;
             }
             state = (new AddPoints(player, points)).apply(state);
-            PointsExpression expr = new PointsExpression(points, "gold", HashMap.of("pieces", pieces));
+            PointsExpression expr = new PointsExpression("gold", new ExprItem(pieces, "gold", points));
             state = state.appendEvent(new ScoreEvent(new ReceivedPoints(expr, player, null), false, true));
         }
         return state;

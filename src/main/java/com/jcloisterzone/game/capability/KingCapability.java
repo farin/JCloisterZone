@@ -1,6 +1,7 @@
 package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
@@ -20,6 +21,7 @@ import com.jcloisterzone.reducers.AddPoints;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
+import org.apache.commons.math3.analysis.function.Exp;
 
 public final class KingCapability extends Capability<Void> {
 
@@ -43,7 +45,7 @@ public final class KingCapability extends Capability<Void> {
             Player currentHolder = state.getPlayers().getPlayerWithToken(BiggestFeatureAward.KING);
             if (currentHolder != null) {
                 state = (new AddPoints(currentHolder, completedCitiesThisTurn)).apply(state);
-                ReceivedPoints rp = new ReceivedPoints(new PointsExpression(completedCitiesThisTurn, "king"), currentHolder, null);
+                ReceivedPoints rp = new ReceivedPoints(new PointsExpression("king", new ExprItem(completedCitiesThisTurn, "cities", completedCitiesThisTurn)), currentHolder, null);
                 state = state.appendEvent(new ScoreEvent(rp, false, false));
             }
         }
@@ -76,6 +78,8 @@ public final class KingCapability extends Capability<Void> {
         }
 
         String exprName = "king";
+        String itemName = "king";
+        Integer count = null;
         int points;
         if (rule.equals("10/20")) {
             points = 10;
@@ -83,15 +87,18 @@ public final class KingCapability extends Capability<Void> {
             boolean hasAlsoRobber = ps.getPlayerTokenCount(player.getIndex(), BiggestFeatureAward.ROBBER) > 0;
             if (hasAlsoRobber) {
                 exprName = "king+robber";
+                itemName = "king+robber";
                 points = 40;
             } else {
                 points = 15;
             }
         } else {
+            itemName = "cities";
             points = countCompletedCities(state);
+            count = points;
         }
         state = (new AddPoints(player, points)).apply(state);
-        ReceivedPoints rp = new ReceivedPoints(new PointsExpression(points, exprName), player, null);
+        ReceivedPoints rp = new ReceivedPoints(new PointsExpression(exprName, new ExprItem(count, itemName, points)), player, null);
         state = state.appendEvent(new ScoreEvent(rp, false, true));
         return state;
     }

@@ -170,12 +170,12 @@ public class TileBuilder {
 
         Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
         int pennants = attributeIntValue(e, "pennant", 0);
-        int extraPoints = attributeIntValue(e, "extra-points", 0);
+        boolean darmstadtium = attributeBoolValue(e, "darmstadtium");
         if (pennants > 0) {
             modifiers = modifiers.put(City.PENNANTS, pennants);
         }
-        if (extraPoints > 0) {
-            modifiers = modifiers.put(City.EXTRA_POINTS, extraPoints);
+        if (darmstadtium) {
+            modifiers = modifiers.put(City.DARMSTADTIUM, true);
         }
 
         City city = new City(

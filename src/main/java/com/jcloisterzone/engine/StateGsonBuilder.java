@@ -6,24 +6,8 @@ import com.jcloisterzone.action.*;
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.event.CastleCreated;
-import com.jcloisterzone.event.DoubleTurnEvent;
-import com.jcloisterzone.event.FlierRollEvent;
-import com.jcloisterzone.event.FollowerCaptured;
-import com.jcloisterzone.event.MeepleDeployed;
-import com.jcloisterzone.event.MeepleReturned;
-import com.jcloisterzone.event.NeutralFigureMoved;
-import com.jcloisterzone.event.PlayEvent;
-import com.jcloisterzone.event.PlayerTurnEvent;
-import com.jcloisterzone.event.PrisonersExchangeEvent;
-import com.jcloisterzone.event.RansomPaidEvent;
-import com.jcloisterzone.event.ScoreEvent;
+import com.jcloisterzone.event.*;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
-import com.jcloisterzone.event.TileAuctionedEvent;
-import com.jcloisterzone.event.TileDiscardedEvent;
-import com.jcloisterzone.event.TilePlacedEvent;
-import com.jcloisterzone.event.TokenPlacedEvent;
-import com.jcloisterzone.event.TokenReceivedEvent;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -437,11 +421,15 @@ public class StateGsonBuilder {
                     pts.addProperty("player", rp.getPlayer().getIndex());
                     pts.addProperty("points", rp.getPoints());
                     pts.addProperty("name", rp.getExpression().getName());
-                    JsonObject args = new JsonObject();
-                    for (Tuple2<String, Integer> t : rp.getExpression().getArgs()) {
-                        args.addProperty(t._1, t._2);
+                    JsonArray items = new JsonArray();
+                    for (ExprItem exprItem : rp.getExpression().getItems()) {
+                        JsonObject obj = new JsonObject();
+                        obj.addProperty("count", exprItem.getCount());
+                        obj.addProperty("name", exprItem.getName());
+                        obj.addProperty("points", exprItem.getPoints());
+                        items.add(obj);
                     }
-                    pts.add("args", args);
+                    pts.add("items", items);
                     pts.add("ptr", context.serialize(rp.getSource()));
                     points.add(pts);
                 }

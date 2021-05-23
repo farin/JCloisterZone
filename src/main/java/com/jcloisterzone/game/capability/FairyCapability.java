@@ -8,6 +8,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Scoreable;
@@ -85,7 +86,7 @@ public class FairyCapability extends Capability<Void> {
                 if (onTileRule && !ptr.getPosition().equals(t._2.getPosition())) continue;
                 if (!onTileRule && !((MeeplePointer) ptr).match(m)) continue;
 
-                PointsExpression expr = new PointsExpression(FAIRY_POINTS_FINISHED_OBJECT, "fairy.completed");
+                PointsExpression expr = new PointsExpression("fairy.completed", new ExprItem("fairy", FAIRY_POINTS_FINISHED_OBJECT));
                 return bonusPoints.append(new ReceivedPoints(expr, m.getPlayer(), t._2));
             }
         }

@@ -8,6 +8,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.*;
@@ -82,7 +83,8 @@ public class RussianPromosTrapCapability extends Capability<Void> {
 
             for (Tuple2<Player, Integer> t : counts) {
                 Player player = t._1;
-                PointsExpression expr = new PointsExpression(-2 * t._2, "vodyanoy", HashMap.of("followers",t._2));
+                int followersCount = t._2;
+                PointsExpression expr = new PointsExpression( "vodyanoy", new ExprItem(followersCount, "meeples", -2 * followersCount));
                 state = (new AddPoints(player, expr.getPoints())).apply(state);
                 receivedPoints = receivedPoints.append(new ScoreEvent.ReceivedPoints(expr, player, vodyanoy.getSampleFollower2(state, player)._2));
             }
