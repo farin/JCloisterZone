@@ -6,13 +6,17 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.feature.modifier.BooleanOrModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
+import com.jcloisterzone.feature.modifier.IntegerAddModifier;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.*;
+import com.jcloisterzone.game.setup.GameElementQuery;
+import com.jcloisterzone.game.setup.RuleQuery;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTunnelToken;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
-import org.apache.commons.math3.analysis.function.Exp;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -22,6 +26,10 @@ import java.util.function.Function;
 public class Road extends CompletableFeature<Road> implements ModifiedFeature<Road> {
 
     private static final long serialVersionUID = 1L;
+
+    public static IntegerAddModifier WELLS = new IntegerAddModifier("road[wells]", new GameElementQuery("well"));
+    public static BooleanOrModifier INN = new BooleanOrModifier("road[inn]", new GameElementQuery("inn"));
+    public static BooleanOrModifier LABYRINTH = new BooleanOrModifier("road[labyrinth]", new RuleQuery(Rule.LABYRINTH_VARIANT, "advanced"));
 
     private final Map<FeatureModifier<?>, Object> modifiers;
     private final Set<FeaturePointer> openTunnelEnds;
@@ -48,7 +56,7 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
     }
 
     public boolean isLabyrinth() {
-        return this.hasModifier(LabyrinthCapability.LABYRINTH);
+        return this.hasModifier(LABYRINTH);
     }
 
     @Override
@@ -141,8 +149,8 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
         int tileCount = getTilePositions().size();
         Map<String, Integer> args = HashMap.of("tiles", tileCount);
 
-        boolean inn = hasModifier(InnCapability.INN);
-        boolean labyrinth = hasModifier(LabyrinthCapability.LABYRINTH);
+        boolean inn = hasModifier(INN);
+        boolean labyrinth = hasModifier(LABYRINTH);
 
         if (inn && !completed) {
             return new PointsExpression("road.incomplete", new ExprItem("inn", 0));
@@ -159,7 +167,7 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
             exprItems.add(new ExprItem(meeplesCount, "meeples", 2 * meeplesCount));
         }
 
-        int wells = getModifier(WellCapability.WELL, 0);
+        int wells = getModifier(WELLS, 0);
         if (wells > 0) {
             exprItems.add(new ExprItem(wells, "wells", inn ? 2 * wells : wells));
         }

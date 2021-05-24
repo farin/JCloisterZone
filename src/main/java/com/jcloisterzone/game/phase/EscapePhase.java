@@ -34,7 +34,7 @@ public class EscapePhase extends Phase {
     public StepResult enter(GameState state) {
         Player player = state.getTurnPlayer();
         Stream<City> cities = state.getFeatures(City.class)
-            .filter(c -> c.hasModifier(SiegeCapability.BESIEGED))
+            .filter(c -> c.hasModifier(City.BESIEGED))
             .filter(c -> c.isOccupiedBy(state, player));
 
         Function<City, Stream<MeeplePointer>> getCityFollowers = city -> {

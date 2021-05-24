@@ -14,6 +14,7 @@ import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.setup.GameElementQuery;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlayersState;
 import com.jcloisterzone.reducers.AddPoints;
@@ -112,12 +113,17 @@ public class TradeGoodsCapability extends Capability<Void> {
     public static class TradeGoodsModifier extends FeatureModifier<Map<TradeGoods, Integer>> {
 
         public TradeGoodsModifier() {
-            super("trade-goods");
+            super("city[resource]", new GameElementQuery("trade-goods"));
         }
 
         @Override
         public Map<TradeGoods, Integer> mergeValues(Map<TradeGoods, Integer> tg1, Map<TradeGoods, Integer> tg2) {
             return tg1.merge(tg2, (a, b) -> a + b);
+        }
+
+        @Override
+        public Map<TradeGoods, Integer> valueOf(String attr) {
+            throw new UnsupportedOperationException();
         }
     }
 }

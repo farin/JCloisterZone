@@ -23,12 +23,13 @@ public class TileBuilder {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
+    private final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.DARMSTADTIUM };
+
     private java.util.Map<Location, Feature> features;
     private java.util.List<Tuple3<ShortEdge, Location, FeaturePointer>> multiEdges; //Edge, edge location, target feature (which is declared without edge)
     private String tileId;
 
     private GameState state;
-
 
     public GameState getGameState() {
         return state;
@@ -169,13 +170,11 @@ public class TileBuilder {
         }
 
         Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
-        int pennants = attributeIntValue(e, "pennant", 0);
-        boolean darmstadtium = attributeBoolValue(e, "darmstadtium");
-        if (pennants > 0) {
-            modifiers = modifiers.put(City.PENNANTS, pennants);
-        }
-        if (darmstadtium) {
-            modifiers = modifiers.put(City.DARMSTADTIUM, true);
+
+        for (FeatureModifier mod: CITY_MODIFIERS) {
+           if (e.hasAttribute(mod.getName())) {
+               modifiers = modifiers.put(mod, mod.valueOf(e.getAttribute(mod.getName())));
+           }
         }
 
         City city = new City(

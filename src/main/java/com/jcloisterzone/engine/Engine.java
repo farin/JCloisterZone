@@ -165,6 +165,7 @@ public class Engine implements  Runnable {
 
         GameSetup gameSetup = new GameSetup(
                 HashMap.ofAll(setupMsg.getSets()),
+                HashMap.ofAll(setupMsg.getElements()),
                 meeples,
                 capabilities,
                 rules,

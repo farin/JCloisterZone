@@ -1,9 +1,7 @@
 package com.jcloisterzone.feature;
 
-import com.jcloisterzone.feature.modifier.BooleanModifier;
+import com.jcloisterzone.feature.modifier.BooleanOrModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
-import com.jcloisterzone.io.message.PassMessage;
-import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
@@ -19,7 +17,7 @@ public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
         return setModifiers(getModifiers().put((FeatureModifier<?>) modifier, (Object) value));
     }
 
-    default boolean hasModifier(BooleanModifier modifier) {
+    default boolean hasModifier(BooleanOrModifier modifier) {
         return getModifier(modifier, false);
     }
 

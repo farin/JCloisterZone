@@ -7,13 +7,12 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.feature.modifier.BooleanOrModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.game.capability.ChurchCapability;
-import com.jcloisterzone.game.capability.MonasteriesCapability;
-import com.jcloisterzone.game.capability.ShrineCapability;
 import com.jcloisterzone.game.capability.VineyardCapability;
+import com.jcloisterzone.game.setup.GameElementQuery;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import io.vavr.Tuple2;
@@ -26,6 +25,11 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
 
     private static final long serialVersionUID = 1L;
     private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER));
+
+    public static final BooleanOrModifier SHRINE = new BooleanOrModifier("cloister[shrine]", new GameElementQuery("shrine"));
+    public static final BooleanOrModifier MONASTERY = new BooleanOrModifier("cloister[monastery]", new GameElementQuery("cloister"));
+    public static final BooleanOrModifier CHURCH = new BooleanOrModifier("cloister[church]", new GameElementQuery("church"));
+
     private final Map<FeatureModifier<?>, Object> modifiers;
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
@@ -68,15 +72,15 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
     }
 
     public boolean isShrine() {
-        return hasModifier(ShrineCapability.SHRINE);
+        return hasModifier(SHRINE);
     }
 
     public boolean isMonastery() {
-        return hasModifier(MonasteriesCapability.MONASTERY);
+        return hasModifier(MONASTERY);
     }
 
     public boolean isChurch() {
-        return hasModifier(ChurchCapability.CHURCH);
+        return hasModifier(CHURCH);
     }
 
     public Stream<Tuple2<Meeple, FeaturePointer>> getMeeplesIncludingMonastery2(GameState state) {

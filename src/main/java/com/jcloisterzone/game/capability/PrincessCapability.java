@@ -5,7 +5,7 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.feature.modifier.BooleanModifier;
+import com.jcloisterzone.feature.modifier.BooleanOrModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
@@ -20,12 +20,10 @@ public class PrincessCapability extends Capability<Void> {
 
 	private static final long serialVersionUID = 1L;
 
-    public static final BooleanModifier PRINCESS = new BooleanModifier("princess");
-
     @Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
         if (feature instanceof City && attributeBoolValue(xml, "princess")) {
-            feature = ((City)feature).putModifier(PRINCESS, true);
+            feature = ((City)feature).putModifier(City.PRINCESS, true);
         }
         return feature;
     }
@@ -41,7 +39,7 @@ public class PrincessCapability extends Capability<Void> {
         .filter(t -> {
             if (t._2 instanceof City) {
                 City part = (City) lastTile.getInitialFeaturePartOf(t._1);
-                return part.hasModifier(PrincessCapability.PRINCESS);
+                return part.hasModifier(City.PRINCESS);
             } else {
                 return false;
             }

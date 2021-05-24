@@ -12,7 +12,7 @@ import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.feature.modifier.BooleanModifier;
+import com.jcloisterzone.feature.modifier.BooleanOrModifier;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
@@ -32,12 +32,10 @@ public final class ShrineCapability extends Capability<Void> {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final BooleanModifier SHRINE = new BooleanModifier("shrine");
-
     @Override
     public Feature initFeature(GameState settings, String tileId, Feature feature, Element xml) {
         if ((feature instanceof Cloister) && attributeBoolValue(xml, "shrine")) {
-            feature = ((Cloister)feature).putModifier(SHRINE, true);
+            feature = ((Cloister)feature).putModifier(Cloister.SHRINE, true);
         }
         return feature;
     }
