@@ -42,7 +42,7 @@ public class ChurchCapability extends Capability<Void> {
             return bonusPoints;
         }
         Cloister cloister = (Cloister) feature;
-        if (!cloister.isChurch()) {
+        if (!cloister.isChurch(state)) {
             return bonusPoints;
         }
 

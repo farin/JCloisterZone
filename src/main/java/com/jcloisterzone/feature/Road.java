@@ -34,8 +34,8 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
     private final Map<FeatureModifier<?>, Object> modifiers;
     private final Set<FeaturePointer> openTunnelEnds;
 
-    public Road(List<FeaturePointer> places, Set<Edge> openEdges) {
-        this(places, openEdges, HashSet.empty(), HashMap.empty(), HashSet.empty());
+    public Road(List<FeaturePointer> places, Set<Edge> openEdges, Map<FeatureModifier<?>, Object> modifiers) {
+        this(places, openEdges, HashSet.empty(), modifiers, HashSet.empty());
     }
 
     public Road(
@@ -55,8 +55,8 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
         return super.isOpen(state) || !openTunnelEnds.isEmpty();
     }
 
-    public boolean isLabyrinth() {
-        return this.hasModifier(LABYRINTH);
+    public boolean isLabyrinth(GameState state) {
+        return this.hasModifier(state, LABYRINTH);
     }
 
     @Override
@@ -149,8 +149,8 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
         int tileCount = getTilePositions().size();
         Map<String, Integer> args = HashMap.of("tiles", tileCount);
 
-        boolean inn = hasModifier(INN);
-        boolean labyrinth = hasModifier(LABYRINTH);
+        boolean inn = hasModifier(state, INN);
+        boolean labyrinth = hasModifier(state, LABYRINTH);
 
         if (inn && !completed) {
             return new PointsExpression("road.incomplete", new ExprItem("inn", 0));
@@ -167,7 +167,7 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
             exprItems.add(new ExprItem(meeplesCount, "meeples", 2 * meeplesCount));
         }
 
-        int wells = getModifier(WELLS, 0);
+        int wells = getModifier(state, WELLS, 0);
         if (wells > 0) {
             exprItems.add(new ExprItem(wells, "wells", inn ? 2 * wells : wells));
         }

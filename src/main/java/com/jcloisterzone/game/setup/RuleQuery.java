@@ -2,6 +2,7 @@ package com.jcloisterzone.game.setup;
 
 import com.jcloisterzone.game.GameSetup;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.state.GameState;
 
 public class RuleQuery implements SetupQuery {
 
@@ -14,8 +15,8 @@ public class RuleQuery implements SetupQuery {
     }
 
     @Override
-    public Boolean apply(GameSetup gameSetup) {
-        Object value = gameSetup.getRules().get(this.rule).getOrNull();
+    public Boolean apply(GameState state) {
+        Object value = state.getRules().get(this.rule).getOrNull();
         return this.value.equals(value);
     }
 }

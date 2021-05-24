@@ -71,20 +71,20 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
         return new Cloister(placeOnBoardPlaces(pos, rot), placeOnBoardNeighboring(pos, rot), modifiers);
     }
 
-    public boolean isShrine() {
-        return hasModifier(SHRINE);
+    public boolean isShrine(GameState state) {
+        return hasModifier(state, SHRINE);
     }
 
-    public boolean isMonastery() {
-        return hasModifier(MONASTERY);
+    public boolean isMonastery(GameState state) {
+        return hasModifier(state, MONASTERY);
     }
 
-    public boolean isChurch() {
-        return hasModifier(CHURCH);
+    public boolean isChurch(GameState state) {
+        return hasModifier(state, CHURCH);
     }
 
     public Stream<Tuple2<Meeple, FeaturePointer>> getMeeplesIncludingMonastery2(GameState state) {
-        if (isMonastery()) {
+        if (isMonastery(state)) {
             FeaturePointer place = places.get();
             Set<FeaturePointer> fps = HashSet.of(place, new FeaturePointer(place.getPosition(), Location.MONASTERY));
             return Stream.ofAll(state.getDeployedMeeples()).filter(t -> fps.contains(t._2));
@@ -93,7 +93,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
     }
 
     public Stream<Meeple> getMeeplesIncludingMonastery(GameState state) {
-        if (isMonastery()) {
+        if (isMonastery(state)) {
             return getMeeplesIncludingMonastery2(state).map(Tuple2::_1);
         }
         return getMeeples(state);
@@ -148,7 +148,7 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
         if (adjacent == 8 && adjacentVineyards > 0) {
             exprItems = exprItems.append(new ExprItem(adjacentVineyards, "vineyards", adjacentVineyards * 3));
         }
-        String baseName = isShrine() ? "shrine" : "cloister";
+        String baseName = isShrine(state) ? "shrine" : "cloister";
         return new PointsExpression(adjacent == 8 ? baseName : baseName + ".incomplete", exprItems);
     }
 

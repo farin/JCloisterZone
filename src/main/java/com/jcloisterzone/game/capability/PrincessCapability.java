@@ -21,14 +21,6 @@ public class PrincessCapability extends Capability<Void> {
 	private static final long serialVersionUID = 1L;
 
     @Override
-    public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
-        if (feature instanceof City && attributeBoolValue(xml, "princess")) {
-            feature = ((City)feature).putModifier(City.PRINCESS, true);
-        }
-        return feature;
-    }
-
-    @Override
     public GameState onActionPhaseEntered(GameState state) {
         if (state.getFlags().contains(Flag.PRINCESS_USED)) {
             return state;
@@ -39,7 +31,7 @@ public class PrincessCapability extends Capability<Void> {
         .filter(t -> {
             if (t._2 instanceof City) {
                 City part = (City) lastTile.getInitialFeaturePartOf(t._1);
-                return part.hasModifier(City.PRINCESS);
+                return part.hasModifier(state, City.PRINCESS);
             } else {
                 return false;
             }

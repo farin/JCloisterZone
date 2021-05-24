@@ -127,8 +127,6 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"robber", RobberCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"gold", GoldminesCapability.class);
 
-        capabilities = addCapabilities(capabilities, setupMsg,"cathedral", CathedralCapability.class);
-        capabilities = addCapabilities(capabilities, setupMsg,"inn", InnCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"princess", PrincessCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"portal", PortalCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"pig-herd", PigHerdCapability.class);
@@ -143,13 +141,10 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"siege", SiegeCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"flier", FlierCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"church", ChurchCapability.class);
-        capabilities = addCapabilities(capabilities, setupMsg,"labyrinth", LabyrinthCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"wind-rose", WindRoseCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"monastery", MonasteriesCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"yaga", YagaCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"russian-trap", RussianPromosTrapCapability.class);
-
-        capabilities = addCapabilities(capabilities, setupMsg,"well", WellCapability.class);
 
         Map<Rule, Object> rules = HashMap.empty();
         if (setupMsg.getElements().containsKey("farmers")) {

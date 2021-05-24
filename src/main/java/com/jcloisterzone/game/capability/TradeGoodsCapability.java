@@ -43,7 +43,7 @@ public class TradeGoodsCapability extends Capability<Void> {
             if (!(feature instanceof City)) continue;
 
             City city = (City) feature;
-            Map<TradeGoods, Integer> cityTradeGoods = city.getModifier(TRADE_GOODS, null);
+            Map<TradeGoods, Integer> cityTradeGoods = city.getModifier(state, TRADE_GOODS, null);
             if (cityTradeGoods == null) {
                 continue;
             }

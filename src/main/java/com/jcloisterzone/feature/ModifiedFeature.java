@@ -2,6 +2,7 @@ package com.jcloisterzone.feature;
 
 import com.jcloisterzone.feature.modifier.BooleanOrModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
+import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
@@ -17,11 +18,14 @@ public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
         return setModifiers(getModifiers().put((FeatureModifier<?>) modifier, (Object) value));
     }
 
-    default boolean hasModifier(BooleanOrModifier modifier) {
-        return getModifier(modifier, false);
+    default boolean hasModifier(GameState state, BooleanOrModifier modifier) {
+        return getModifier(state, modifier, false);
     }
 
-    default <T> T getModifier(FeatureModifier<T> modifier, T defaultValue) {
+    default <T> T getModifier(GameState state, FeatureModifier<T> modifier, T defaultValue) {
+        if (modifier.getEnabledBy() != null && !modifier.getEnabledBy().apply(state)) {
+            return defaultValue;
+        }
         return (T) getModifiers().get((FeatureModifier<?>) modifier).getOrElse(defaultValue);
     }
 

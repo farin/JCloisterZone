@@ -21,14 +21,6 @@ public final class SiegeCapability extends Capability<Void> {
 	public static final TileModifier SIEGE_ESCAPE_TILE = new TileModifier("SiegeEscapeTile");
 
     @Override
-    public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
-        if (feature instanceof City && attributeBoolValue(xml, "besieged")) {
-            feature = ((City) feature).putModifier(City.BESIEGED, true);
-        }
-        return feature;
-    }
-
-    @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "city")
                 .filter(cityEl -> attributeBoolValue(cityEl, "besieged"))

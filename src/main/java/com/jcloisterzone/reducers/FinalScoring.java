@@ -55,7 +55,8 @@ public class FinalScoring implements Reducer {
             state = (new ScoreCastle(castle, new PointsExpression("castle.incomplete", List.empty()), true)).apply(state);
         }
 
-        Stream<Cloister> monasteries = state.getFeatures().filter(f -> f instanceof Cloister && ((Cloister) f).isMonastery()).map(f -> (Cloister) f);
+        GameState _state = state;
+        Stream<Cloister> monasteries = state.getFeatures().filter(f -> f instanceof Cloister && ((Cloister) f).isMonastery(_state)).map(f -> (Cloister) f);
 
         for (Cloister monastery: monasteries) {
             PointsExpression expr = getMonasteryPoints(state, monastery);

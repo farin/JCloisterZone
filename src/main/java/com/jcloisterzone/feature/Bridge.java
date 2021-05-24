@@ -5,6 +5,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.TileBuilder;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
@@ -17,7 +18,7 @@ public class Bridge extends Road {
     private static final long serialVersionUID = 1L;
 
     public Bridge(List<FeaturePointer> places, Set<Edge> openEdges) {
-        super(places, openEdges);
+        super(places, openEdges, HashMap.empty());
     }
 
     public Bridge(Location bridgeLoc) {

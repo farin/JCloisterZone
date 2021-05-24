@@ -65,7 +65,7 @@ public abstract class AbstractActionPhase extends Phase {
             // Placing as abbot is implemented through virtual MONASTERY location.
             places = places.flatMap(t -> {
                 Structure struct = t._2;
-                if (struct instanceof Cloister && ((Cloister)struct).isMonastery()) {
+                if (struct instanceof Cloister && ((Cloister)struct).isMonastery(state)) {
                     return List.of(t, new Tuple2<>(Location.MONASTERY, struct));
                 }
                 return List.of(t);
@@ -113,12 +113,12 @@ public abstract class AbstractActionPhase extends Phase {
                 }
                 if (struct instanceof Road) {
                     Road road = (Road) struct;
-                    if (road.isLabyrinth()) {
+                    if (road.isLabyrinth(state)) {
                         // current tile musn't be labyrinth center - apply regular ocuupation rule to it
-                        if (!((Road) state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())).isLabyrinth()) {
+                        if (!((Road) state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())).isLabyrinth(state)) {
                             // find if there is empty labyrinth segment
                             Set<FeaturePointer> segment = road.findSegmentBorderedBy(state, t._1,
-                                    fp -> ((Road) state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth()).toSet();
+                                    fp -> ((Road) state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth(state)).toSet();
                             boolean segmentIsEmpty = Stream.ofAll(state.getDeployedMeeples())
                                     .filter(x -> segment.contains(x._2))
                                     .isEmpty();

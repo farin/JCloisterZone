@@ -112,15 +112,15 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
     @Override
     public PointsExpression getStructurePoints(GameState state, boolean completed) {
         int tileCount = getTilePositions().size();
-        int pennants = getModifier(PENNANTS, 0);
-        boolean cathedral = hasModifier(CATHEDRAL);
+        int pennants = getModifier(state, PENNANTS, 0);
+        boolean cathedral = hasModifier(state, CATHEDRAL);
 
         if (cathedral && !completed) {
             return new PointsExpression("city.incomplete", new ExprItem("cathedral", 0));
         }
 
         boolean tinyCity = completed && tileCount == 2 && "2".equals(state.getStringRule(Rule.TINY_CITY_SCORING));
-        boolean besieged = hasModifier(BESIEGED);
+        boolean besieged = hasModifier(state, BESIEGED);
         var exprItems = new ArrayList<ExprItem>();
         exprItems.add(new ExprItem(tileCount, "tiles", tileCount * (completed && !tinyCity ? 2 : 1)));
         if (pennants > 0)  {
@@ -132,7 +132,7 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
         if (cathedral) {
             exprItems.add(new ExprItem("cathedral", tileCount));
         }
-        if (completed && hasModifier(DARMSTADTIUM)) {
+        if (completed && hasModifier(state, DARMSTADTIUM)) {
             exprItems.add(new ExprItem("darmstadtium", 3));
         }
 

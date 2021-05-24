@@ -23,7 +23,8 @@ public class TileBuilder {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.DARMSTADTIUM };
+    private final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.CATHEDRAL, City.PRINCESS, City.BESIEGED, City.DARMSTADTIUM };
+    private final FeatureModifier[] ROAD_MODIFIERS = new FeatureModifier[] { Road.INN, Road.LABYRINTH, Road.WELLS };
 
     private java.util.Map<Location, Feature> features;
     private java.util.List<Tuple3<ShortEdge, Location, FeaturePointer>> multiEdges; //Edge, edge location, target feature (which is declared without edge)
@@ -141,10 +142,15 @@ public class TileBuilder {
 
     private void processRoadElement(Stream<Location> sides, Element e, boolean isTunnelActive) {
         FeaturePointer fp = initFeaturePointer(sides, Road.class);
-        Road road = new Road(
-            List.of(fp),
-            initOpenEdges(sides)
-        );
+
+        Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
+        for (FeatureModifier mod: ROAD_MODIFIERS) {
+            if (e.hasAttribute(mod.getName())) {
+                modifiers = modifiers.put(mod, mod.valueOf(e.getAttribute(mod.getName())));
+            }
+        }
+
+        Road road = new Road(List.of(fp), initOpenEdges(sides), modifiers);
 
         if (isTunnelActive && attributeBoolValue(e, "tunnel")) {
             road = road.setOpenTunnelEnds(HashSet.of(fp));
@@ -170,7 +176,6 @@ public class TileBuilder {
         }
 
         Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
-
         for (FeatureModifier mod: CITY_MODIFIERS) {
            if (e.hasAttribute(mod.getName())) {
                modifiers = modifiers.put(mod, mod.valueOf(e.getAttribute(mod.getName())));

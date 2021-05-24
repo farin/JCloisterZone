@@ -69,12 +69,12 @@ public class WagonPhase extends Phase {
 
                                 if (nei instanceof Road) {
                                     Road road = (Road) nei;
-                                    if (road.isLabyrinth()) {
+                                    if (road.isLabyrinth(_state)) {
                                         // current tile musn't be labyrinth center - apply regular ocuupation rule to it
-                                        if (!((Road) _state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())).isLabyrinth()) {
+                                        if (!((Road) _state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())).isLabyrinth(_state)) {
                                             // find if there is empty labyrinth segment
                                             Set<FeaturePointer> segment = road.findSegmentBorderedBy(_state, t._1,
-                                                    fp -> ((Road) _state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth()).toSet();
+                                                    fp -> ((Road) _state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth(_state)).toSet();
                                             boolean segmentIsEmpty = Stream.ofAll(_state.getDeployedMeeples())
                                                     .filter(x -> segment.contains(x._2))
                                                     .isEmpty();
@@ -92,7 +92,7 @@ public class WagonPhase extends Phase {
                         })
                         .flatMap(t -> {
                             Structure struct = t._2;
-                            if (struct instanceof Cloister && ((Cloister)struct).isMonastery()) {
+                            if (struct instanceof Cloister && ((Cloister)struct).isMonastery(_state)) {
                                 return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Location.MONASTERY), struct));
                             }
                             return List.of(t);

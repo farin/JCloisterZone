@@ -37,7 +37,7 @@ public class CastlePhase extends Phase {
         PlacedTile lastPlaced = state.getLastPlaced();
         Position pos = lastPlaced.getPosition();
         return state.getTileFeatures2(pos, City.class)
-            .filter(t -> t._2.hasModifier(CastleCapability.CASTLE_BASE))
+            .filter(t -> t._2.hasModifier(state, CastleCapability.CASTLE_BASE))
             .filter(t -> t._2.getPlaces().size() == 2)
             .filter(t -> {
                 List<Follower> followers = t._2.getFollowers(state).toList();

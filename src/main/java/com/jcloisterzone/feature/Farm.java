@@ -136,7 +136,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
                 City city = (City) feature;
                 if (city.isCompleted(state)) {
                     cityCount++;
-                    if (city.hasModifier(City.BESIEGED)) {
+                    if (city.hasModifier(state, City.BESIEGED)) {
                         besiegedCount++;
                     }
                 }
@@ -163,7 +163,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
         var scoredObjects = cityCount + castleCount + (adjoiningCityOfCarcassonne ? 1 : 0);
         if ( scorePigsForPlayer != null && scoredObjects > 0) {
             int pigCount = getPigCount(state, scorePigsForPlayer);
-            int pigHerds = getModifier(PIG_HERD, 0);
+            int pigHerds = getModifier(state, PIG_HERD, 0);
             if (pigCount > 0) {
                 exprItems.add(pigCount, new ExprItem(pigCount, "pigs", pigCount * scoredObjects));
             }
