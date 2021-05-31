@@ -5,7 +5,7 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.modifier.BooleanAndModifier;
+import com.jcloisterzone.feature.modifier.BooleanAllModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.Token;
@@ -25,7 +25,7 @@ public class CastleCapability extends Capability<Void> {
 
 	private static final long serialVersionUID = 1L;
 
-	public static BooleanAndModifier CASTLE_BASE = new BooleanAndModifier("city[castle-base]", new GameElementQuery("castle"));
+	public static BooleanAllModifier CASTLE_BASE = new BooleanAllModifier("city[castle-base]", new GameElementQuery("castle"));
 
     @Override
     public GameState onStartGame(GameState state) {
@@ -57,8 +57,6 @@ public class CastleCapability extends Capability<Void> {
         java.util.Map<Castle, ScoreFeatureReducer> scoredCastles = new java.util.HashMap<>();
         Array<Tuple2<Completable, ScoreFeatureReducer>> scored = Array.ofAll(completed).sortBy(t -> -t._2.getFeaturePoints().getPoints());
         HashMap<Castle, ScoreFeatureReducer> allScoredCastled = HashMap.empty();
-
-
 
         for (Castle castle : getOccupiedCastles(state)) {
             Set<Position> vicinity = castle.getVicinity();

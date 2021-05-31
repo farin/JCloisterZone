@@ -8,6 +8,8 @@ public abstract class FeatureModifier<T> {
     private final String name;
     private final SetupQuery enabledBy;
 
+    private String scoringScript;
+
     public FeatureModifier(String selector, SetupQuery enabledBy) {
         this.selector = selector;
         this.name = selector.replaceAll("\\w+\\[(\\w+)\\]", "$1");
@@ -24,6 +26,14 @@ public abstract class FeatureModifier<T> {
 
     public SetupQuery getEnabledBy() {
         return enabledBy;
+    }
+
+    public String getScoringScript() {
+        return scoringScript;
+    }
+
+    public void setScoringScript(String scoringScript) {
+        this.scoringScript = scoringScript;
     }
 
     @Override

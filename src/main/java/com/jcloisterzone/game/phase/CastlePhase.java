@@ -58,7 +58,6 @@ public class CastlePhase extends Phase {
                 CastleAction action = new CastleAction(options);
                 ActionsState as = new ActionsState(player, action, true);
                 return promote(state.setPlayerActions(as));
-
             }
 
             player = player.getNextPlayer(state);

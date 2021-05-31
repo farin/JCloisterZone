@@ -3,18 +3,13 @@ package com.jcloisterzone.game.capability;
 import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.feature.modifier.BooleanOrModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.io.message.ReturnMeepleMessage.ReturnMeepleSource;
 import io.vavr.collection.Set;
-import org.w3c.dom.Element;
-
-import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 public class PrincessCapability extends Capability<Void> {
 

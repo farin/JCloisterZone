@@ -23,6 +23,8 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -55,6 +57,8 @@ public class Engine implements  Runnable {
 
     private boolean compatJavaRandom = false;
     private ArrayList<String> tileDefinitions = new ArrayList<>();
+
+    // private static ScriptEngine graalEngine;
 
     public Engine(InputStream in, PrintStream out, PrintStream err, PrintStream log) {
         this.in = new Scanner(in);
@@ -311,6 +315,13 @@ public class Engine implements  Runnable {
         }
         return "dev-snapshot";
     }
+
+//    public static ScriptEngine getSctiptEngine() {
+//        if (graalEngine == null) {
+//            graalEngine = new ScriptEngineManager().getEngineByName("graal.js");
+//        }
+//        return graalEngine;
+//    }
 
     public static void main(String[] args) throws IOException {
         if (args.length > 0 && "--version".equals(args[0])) {

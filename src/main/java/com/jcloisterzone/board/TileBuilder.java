@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -23,8 +25,11 @@ public class TileBuilder {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.CATHEDRAL, City.PRINCESS, City.BESIEGED, City.DARMSTADTIUM };
-    private final FeatureModifier[] ROAD_MODIFIERS = new FeatureModifier[] { Road.INN, Road.LABYRINTH, Road.WELLS };
+    private static final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.CATHEDRAL, City.PRINCESS, City.BESIEGED, City.DARMSTADTIUM };
+    private static final FeatureModifier[] ROAD_MODIFIERS = new FeatureModifier[] { Road.INN, Road.LABYRINTH };
+
+    private java.util.List<FeatureModifier> externalModifiers;
+    private java.util.Map<String, java.util.List<FeatureModifier>> modifiersByType;
 
     private java.util.Map<Location, Feature> features;
     private java.util.List<Tuple3<ShortEdge, Location, FeaturePointer>> multiEdges; //Edge, edge location, target feature (which is declared without edge)
@@ -38,6 +43,26 @@ public class TileBuilder {
 
     public void setGameState(GameState state) {
         this.state = state;
+    }
+
+    public void setExternalModifiers(java.util.List<FeatureModifier> externalModifiers) {
+        this.externalModifiers = externalModifiers;
+        this.modifiersByType = new java.util.HashMap<>();
+        modifiersByType.put("road", new ArrayList<>(Arrays.asList(ROAD_MODIFIERS)));
+        modifiersByType.put("city", new ArrayList<>(Arrays.asList(CITY_MODIFIERS)));
+        for (FeatureModifier mod : externalModifiers) {
+            String key = mod.getSelector().split("\\[")[0];
+            var list = modifiersByType.get(key);
+            if (list == null) {
+                list = new ArrayList<>();
+                modifiersByType.put(key, list);
+            }
+            list.add(mod);
+        }
+    }
+
+    public java.util.List<FeatureModifier> getExternalModifiers() {
+        return externalModifiers;
     }
 
     public Tile createTile(String tileId, Vector<Element> tileElements, boolean isTunnelActive) {
@@ -144,7 +169,7 @@ public class TileBuilder {
         FeaturePointer fp = initFeaturePointer(sides, Road.class);
 
         Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
-        for (FeatureModifier mod: ROAD_MODIFIERS) {
+        for (FeatureModifier mod: modifiersByType.get("road")) {
             if (e.hasAttribute(mod.getName())) {
                 modifiers = modifiers.put(mod, mod.valueOf(e.getAttribute(mod.getName())));
             }
@@ -176,7 +201,7 @@ public class TileBuilder {
         }
 
         Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
-        for (FeatureModifier mod: CITY_MODIFIERS) {
+        for (FeatureModifier mod: modifiersByType.get("city")) {
            if (e.hasAttribute(mod.getName())) {
                modifiers = modifiers.put(mod, mod.valueOf(e.getAttribute(mod.getName())));
            }

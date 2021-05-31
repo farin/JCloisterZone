@@ -7,7 +7,7 @@ import com.jcloisterzone.board.ShortEdge;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.feature.modifier.BooleanOrModifier;
+import com.jcloisterzone.feature.modifier.BooleanAnyModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.feature.modifier.IntegerAddModifier;
 import com.jcloisterzone.game.Rule;
@@ -23,10 +23,10 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
     private static final long serialVersionUID = 1L;
 
     public static IntegerAddModifier PENNANTS = new IntegerAddModifier("city[pennants]", null);
-    public static BooleanOrModifier DARMSTADTIUM = new BooleanOrModifier("city[darmstadtium]", null);
-    public static final BooleanOrModifier BESIEGED = new BooleanOrModifier("city[besieged]", new GameElementQuery("siege"));
-    public static final BooleanOrModifier CATHEDRAL = new BooleanOrModifier("city[cathedral]", new GameElementQuery("cathedral"));
-    public static final BooleanOrModifier PRINCESS = new BooleanOrModifier("city[princess]", new GameElementQuery("princess"));
+    public static BooleanAnyModifier DARMSTADTIUM = new BooleanAnyModifier("city[darmstadtium]", null);
+    public static final BooleanAnyModifier BESIEGED = new BooleanAnyModifier("city[besieged]", new GameElementQuery("siege"));
+    public static final BooleanAnyModifier CATHEDRAL = new BooleanAnyModifier("city[cathedral]", new GameElementQuery("cathedral"));
+    public static final BooleanAnyModifier PRINCESS = new BooleanAnyModifier("city[princess]", new GameElementQuery("princess"));
 
     private final Set<Tuple2<ShortEdge, FeaturePointer>> multiEdges; // HS.CC!.v abstraction, multiple cities can connect to same edge
     private final Map<FeatureModifier<?>, Object> modifiers;

@@ -2,9 +2,9 @@ package com.jcloisterzone.feature.modifier;
 
 import com.jcloisterzone.game.setup.SetupQuery;
 
-public class BooleanAndModifier extends BooleanOrModifier {
+public class BooleanAllModifier extends BooleanModifier {
 
-    public BooleanAndModifier(String selector, SetupQuery enabledBy) {
+    public BooleanAllModifier(String selector, SetupQuery enabledBy) {
         super(selector, enabledBy);
     }
 

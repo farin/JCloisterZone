@@ -7,7 +7,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.feature.modifier.BooleanOrModifier;
+import com.jcloisterzone.feature.modifier.BooleanAnyModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -26,9 +26,9 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
     private static final long serialVersionUID = 1L;
     private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER));
 
-    public static final BooleanOrModifier SHRINE = new BooleanOrModifier("cloister[shrine]", new GameElementQuery("shrine"));
-    public static final BooleanOrModifier MONASTERY = new BooleanOrModifier("cloister[monastery]", new GameElementQuery("cloister"));
-    public static final BooleanOrModifier CHURCH = new BooleanOrModifier("cloister[church]", new GameElementQuery("church"));
+    public static final BooleanAnyModifier SHRINE = new BooleanAnyModifier("cloister[shrine]", new GameElementQuery("shrine"));
+    public static final BooleanAnyModifier MONASTERY = new BooleanAnyModifier("cloister[monastery]", new GameElementQuery("cloister"));
+    public static final BooleanAnyModifier CHURCH = new BooleanAnyModifier("cloister[church]", new GameElementQuery("church"));
 
     private final Map<FeatureModifier<?>, Object> modifiers;
 

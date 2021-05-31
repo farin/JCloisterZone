@@ -4,7 +4,6 @@ import com.jcloisterzone.board.RemoveTileException;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
-import com.jcloisterzone.feature.modifier.BooleanOrModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.state.GameState;
