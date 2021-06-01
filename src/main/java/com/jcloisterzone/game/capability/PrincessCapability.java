@@ -3,32 +3,17 @@ package com.jcloisterzone.game.capability;
 import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.feature.modifier.BooleanModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.io.message.ReturnMeepleMessage.ReturnMeepleSource;
 import io.vavr.collection.Set;
-import org.w3c.dom.Element;
-
-import static com.jcloisterzone.XMLUtils.attributeBoolValue;
 
 public class PrincessCapability extends Capability<Void> {
 
 	private static final long serialVersionUID = 1L;
-
-    public static final BooleanModifier PRINCESS = new BooleanModifier("princess");
-
-    @Override
-    public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
-        if (feature instanceof City && attributeBoolValue(xml, "princess")) {
-            feature = ((City)feature).putModifier(PRINCESS, true);
-        }
-        return feature;
-    }
 
     @Override
     public GameState onActionPhaseEntered(GameState state) {
@@ -41,7 +26,7 @@ public class PrincessCapability extends Capability<Void> {
         .filter(t -> {
             if (t._2 instanceof City) {
                 City part = (City) lastTile.getInitialFeaturePartOf(t._1);
-                return part.hasModifier(PrincessCapability.PRINCESS);
+                return part.hasModifier(state, City.PRINCESS);
             } else {
                 return false;
             }

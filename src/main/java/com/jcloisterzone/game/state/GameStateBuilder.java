@@ -54,7 +54,7 @@ public class GameStateBuilder {
         createPlayers();
 
         state = GameState.createInitial(
-            setup.getRules(), capabilities, players, 0
+            setup.getRules(), setup.getElements(), capabilities, players, 0
         );
 
         state = state.mapPlayers(ps ->

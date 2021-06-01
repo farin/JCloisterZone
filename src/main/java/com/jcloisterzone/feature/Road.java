@@ -4,16 +4,26 @@ import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.engine.Engine;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
+import com.jcloisterzone.feature.modifier.BooleanAnyModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
+import com.jcloisterzone.feature.modifier.IntegerAddModifier;
+import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.*;
+import com.jcloisterzone.game.setup.GameElementQuery;
+import com.jcloisterzone.game.setup.RuleQuery;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTunnelToken;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
-import org.apache.commons.math3.analysis.function.Exp;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Value;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -23,11 +33,15 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
 
     private static final long serialVersionUID = 1L;
 
+    // public static IntegerAddModifier WELLS = new IntegerAddModifier("road[wells]", new GameElementQuery("well"));
+    public static BooleanAnyModifier INN = new BooleanAnyModifier("road[inn]", new GameElementQuery("inn"));
+    public static BooleanAnyModifier LABYRINTH = new BooleanAnyModifier("road[labyrinth]", new RuleQuery(Rule.LABYRINTH_VARIANT, "advanced"));
+
     private final Map<FeatureModifier<?>, Object> modifiers;
     private final Set<FeaturePointer> openTunnelEnds;
 
-    public Road(List<FeaturePointer> places, Set<Edge> openEdges) {
-        this(places, openEdges, HashSet.empty(), HashMap.empty(), HashSet.empty());
+    public Road(List<FeaturePointer> places, Set<Edge> openEdges, Map<FeatureModifier<?>, Object> modifiers) {
+        this(places, openEdges, HashSet.empty(), modifiers, HashSet.empty());
     }
 
     public Road(
@@ -47,8 +61,8 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
         return super.isOpen(state) || !openTunnelEnds.isEmpty();
     }
 
-    public boolean isLabyrinth() {
-        return this.hasModifier(LabyrinthCapability.LABYRINTH);
+    public boolean isLabyrinth(GameState state) {
+        return this.hasModifier(state, LABYRINTH);
     }
 
     @Override
@@ -141,8 +155,8 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
         int tileCount = getTilePositions().size();
         Map<String, Integer> args = HashMap.of("tiles", tileCount);
 
-        boolean inn = hasModifier(InnCapability.INN);
-        boolean labyrinth = hasModifier(LabyrinthCapability.LABYRINTH);
+        boolean inn = hasModifier(state, INN);
+        boolean labyrinth = hasModifier(state, LABYRINTH);
 
         if (inn && !completed) {
             return new PointsExpression("road.incomplete", new ExprItem("inn", 0));
@@ -159,12 +173,8 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
             exprItems.add(new ExprItem(meeplesCount, "meeples", 2 * meeplesCount));
         }
 
-        int wells = getModifier(WellCapability.WELL, 0);
-        if (wells > 0) {
-            exprItems.add(new ExprItem(wells, "wells", inn ? 2 * wells : wells));
-        }
+        scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", tileCount, "completed", completed));
         return new PointsExpression(completed ? "road" : "road.incomplete", List.ofAll(exprItems));
-
     }
 
     @Override

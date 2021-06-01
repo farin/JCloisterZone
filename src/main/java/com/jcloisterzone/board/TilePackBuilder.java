@@ -1,9 +1,15 @@
 package com.jcloisterzone.board;
 
 import com.jcloisterzone.XMLUtils;
+import com.jcloisterzone.feature.modifier.BooleanAllModifier;
+import com.jcloisterzone.feature.modifier.BooleanAnyModifier;
+import com.jcloisterzone.feature.modifier.FeatureModifier;
+import com.jcloisterzone.feature.modifier.IntegerAddModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.TunnelCapability;
+import com.jcloisterzone.game.setup.GameElementQuery;
+import com.jcloisterzone.game.setup.SetupQuery;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Map;
@@ -17,13 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.security.CodeSource;
-import java.util.ArrayList;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.lang.reflect.InvocationTargetException;
 
 import static com.jcloisterzone.XMLUtils.attributeIntValue;
 
@@ -98,6 +98,7 @@ public class TilePackBuilder {
     public TilePack createTilePack(java.util.List<String> definitions) throws IOException {
         java.util.Map<String, Integer> tilesCount = new java.util.HashMap<>();
         java.util.Set<String> removedTiles = new java.util.HashSet<>();
+        java.util.List<FeatureModifier> modifiers = new java.util.ArrayList<>();
 
         definitions.forEach(path -> {
             InputStream defFile;
@@ -108,6 +109,29 @@ public class TilePackBuilder {
                 return;
             }
             Element element = XMLUtils.parseDocument(defFile).getDocumentElement();
+
+            XMLUtils.elementStream(element.getElementsByTagName("modifier")).forEach(modifierEl -> {
+                Class<? extends FeatureModifier> cls = null;
+                switch (modifierEl.getAttribute("type")) {
+                    case "+": cls = IntegerAddModifier.class; break;
+                    case "all": cls = BooleanAllModifier.class; break;
+                    case "any": cls = BooleanAnyModifier.class; break;
+                }
+                String selector = modifierEl.getAttribute("selector");
+                SetupQuery enabledBy = null;
+                if (modifierEl.hasAttribute("enabled-by")) {
+                    enabledBy = new GameElementQuery(modifierEl.getAttribute("enabled-by"));
+                }
+                var scoringScript= modifierEl.getElementsByTagName("scoring").item(0).getTextContent();
+
+                try {
+                    FeatureModifier modifier = cls.getConstructor(String.class, SetupQuery.class).newInstance(selector, enabledBy);
+                    modifier.setScoringScript(scoringScript);
+                    modifiers.add(modifier);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+            });
 
             XMLUtils.elementStream(element.getElementsByTagName("tile-set")).forEach(tileSetElement -> {
                 String tileSetId = tileSetElement.getAttribute("id");
@@ -135,6 +159,8 @@ public class TilePackBuilder {
                 logger.error(e.getMessage(), e);
             }
         });
+
+        tileBuilder.setExternalModifiers(modifiers);
 
         definitions.forEach(path -> {
             InputStream defFile;

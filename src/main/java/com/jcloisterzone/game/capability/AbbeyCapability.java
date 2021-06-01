@@ -28,7 +28,7 @@ public class AbbeyCapability extends Capability<Integer> {
 
     static {
         HashMap<Location, Feature> features = io.vavr.collection.HashMap.of(
-            Location.CLOISTER, new Cloister()
+            Location.CLOISTER, new Cloister(HashMap.empty())
         );
         ABBEY_TILE = new Tile(ABBEY_TILE_ID, features);
     }

@@ -204,7 +204,7 @@ public class ScoringPhase extends Phase {
 
               Also this complicates with flying machines.
             */
-            if (completable instanceof Cloister && ((Cloister) completable).isMonastery()) {
+            if (completable instanceof Cloister && ((Cloister) completable).isMonastery(state)) {
                 Cloister monastery = (Cloister) completable;
                 List<Tuple2<Meeple, FeaturePointer>> meeples = monastery.getMeeplesIncludingMonastery2(state).toList();
                 if (meeples.size() > 0 && meeples.filter(t -> t._2.getLocation() == Location.CLOISTER).size() == 0) {

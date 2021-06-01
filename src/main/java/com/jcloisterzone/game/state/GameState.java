@@ -30,6 +30,7 @@ public class GameState implements ActionsMixin, BoardMixin,
 
     private static final long serialVersionUID = 1L;
 
+    private final Map<String, Object> elements;
     private final Map<Rule, Object> rules;
 
     private final CapabilitiesState capabilities;
@@ -58,11 +59,13 @@ public class GameState implements ActionsMixin, BoardMixin,
 
     public static GameState createInitial(
             Map<Rule, Object> rules,
+            Map<String, Object> elements,
             Seq<Capability<?>> capabilities,
             Array<Player> players,
             int turnPlayerIndex) {
         return new GameState(
             rules,
+            elements,
             CapabilitiesState.createInitial(capabilities),
             PlayersState.createInitial(players, turnPlayerIndex),
             null,
@@ -86,6 +89,7 @@ public class GameState implements ActionsMixin, BoardMixin,
 
     public GameState(
             Map<Rule, Object> rules,
+            Map<String, Object> elements,
             CapabilitiesState capabilities,
             PlayersState players,
             TilePack tilePack, Tile drawnTile,
@@ -101,6 +105,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             boolean commited,
             boolean passed) {
         this.rules = rules;
+        this.elements = elements;
         this.capabilities = capabilities;
         this.players = players;
         this.tilePack = tilePack;
@@ -123,7 +128,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setCapabilities(CapabilitiesState capabilities) {
         if (capabilities == this.capabilities) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -136,7 +141,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setPlayers(PlayersState players) {
         if (players == this.players) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -148,7 +153,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setTilePack(TilePack tilePack) {
         if (tilePack == this.tilePack) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -164,7 +169,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setDrawnTile(Tile drawnTile) {
         if (drawnTile == this.drawnTile) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -177,7 +182,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setPlacedTiles(LinkedHashMap<Position, PlacedTile> placedTiles) {
         if (placedTiles == this.placedTiles) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -190,7 +195,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setFeatureMap(Map<FeaturePointer, Feature> featureMap) {
         if (featureMap == this.featureMap) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -207,7 +212,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setDiscardedTiles(List<Tile> discardedTiles) {
         if (discardedTiles == this.discardedTiles) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -219,7 +224,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setNeutralFigures(NeutralFiguresState neutralFigures) {
         if (neutralFigures == this.neutralFigures) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -235,7 +240,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setDeployedMeeples(LinkedHashMap<Meeple, FeaturePointer> deployedMeeples) {
         if (deployedMeeples == this.deployedMeeples) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -248,7 +253,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setPlayerActions(ActionsState playerActions) {
         if (playerActions == this.playerActions) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -265,7 +270,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setFlags(Set<Flag> flags) {
         if (flags == this.flags) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -278,7 +283,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setEvents(Queue<PlayEvent> events) {
         if (events == this.events) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -290,7 +295,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setPhase(Phase phase) {
         if (phase == this.phase) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -302,7 +307,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setTurnNumber(int turnNumber) {
         if (turnNumber == this.turnNumber) return this;
         return new GameState(
-            rules, capabilities, players,
+            rules, elements, capabilities, players,
             tilePack, drawnTile, placedTiles, discardedTiles,
             featureMap, neutralFigures,
             deployedMeeples, playerActions,
@@ -314,7 +319,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setCommited(boolean commited) {
         if (commited == this.commited) return this;
         return new GameState(
-                rules, capabilities, players,
+                rules, elements, capabilities, players,
                 tilePack, drawnTile, placedTiles, discardedTiles,
                 featureMap, neutralFigures,
                 deployedMeeples, playerActions,
@@ -326,13 +331,17 @@ public class GameState implements ActionsMixin, BoardMixin,
     public GameState setPassed(boolean passed) {
         if (passed == this.passed) return this;
         return new GameState(
-                rules, capabilities, players,
+                rules, elements, capabilities, players,
                 tilePack, drawnTile, placedTiles, discardedTiles,
                 featureMap, neutralFigures,
                 deployedMeeples, playerActions,
                 flags, events,
                 phase, turnNumber, commited, passed
         );
+    }
+
+    public Map<String, Object> getElements() {
+        return elements;
     }
 
     @Override

@@ -8,9 +8,9 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
+import com.jcloisterzone.feature.modifier.IntegerAddModifier;
 import com.jcloisterzone.figure.Pig;
-import com.jcloisterzone.game.capability.PigHerdCapability;
-import com.jcloisterzone.game.capability.SiegeCapability;
+import com.jcloisterzone.game.setup.GameElementQuery;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.*;
 
@@ -18,16 +18,15 @@ import java.util.ArrayList;
 
 public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Farm>, ModifiedFeature<Farm> {
 
+    // TODO rename attribute to pig-herd
+    public static final IntegerAddModifier PIG_HERD = new IntegerAddModifier("farm[pig]", new GameElementQuery("pig-herd"));
+
     // for unplaced features, references is to (0, 0)
     protected final Set<FeaturePointer> adjoiningCities; //or castles
     protected final boolean adjoiningCityOfCarcassonne;
 
     private final Map<FeatureModifier<?>, Object> modifiers;
-
-    public Farm(List<FeaturePointer> places, Set <FeaturePointer> adjoiningCities) {
-        this(places, adjoiningCities, false, HashMap.empty());
-    }
-
+    
     public Farm(List<FeaturePointer> places, Set<FeaturePointer> adjoiningCities,
             boolean adjoiningCityOfCarcassonne, Map<FeatureModifier<?>, Object> modifiers) {
         super(places);
@@ -133,7 +132,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
                 City city = (City) feature;
                 if (city.isCompleted(state)) {
                     cityCount++;
-                    if (city.hasModifier(SiegeCapability.BESIEGED)) {
+                    if (city.hasModifier(state, City.BESIEGED)) {
                         besiegedCount++;
                     }
                 }
@@ -160,7 +159,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
         var scoredObjects = cityCount + castleCount + (adjoiningCityOfCarcassonne ? 1 : 0);
         if ( scorePigsForPlayer != null && scoredObjects > 0) {
             int pigCount = getPigCount(state, scorePigsForPlayer);
-            int pigHerds = getModifier(PigHerdCapability.PIG_HERD, 0);
+            int pigHerds = getModifier(state, PIG_HERD, 0);
             if (pigCount > 0) {
                 exprItems.add(pigCount, new ExprItem(pigCount, "pigs", pigCount * scoredObjects));
             }
@@ -169,6 +168,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
             }
         }
 
+        scoreScriptedModifiers(exprItems, java.util.Map.of("cities", cityCount, "castles", castleCount));
         return new PointsExpression(exprName, List.ofAll(exprItems));
     }
 

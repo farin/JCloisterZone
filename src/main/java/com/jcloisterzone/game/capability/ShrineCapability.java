@@ -12,7 +12,6 @@ import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.feature.modifier.BooleanModifier;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
@@ -32,12 +31,10 @@ public final class ShrineCapability extends Capability<Void> {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final BooleanModifier SHRINE = new BooleanModifier("shrine");
-
     @Override
     public Feature initFeature(GameState settings, String tileId, Feature feature, Element xml) {
         if ((feature instanceof Cloister) && attributeBoolValue(xml, "shrine")) {
-            feature = ((Cloister)feature).putModifier(SHRINE, true);
+            feature = ((Cloister)feature).putModifier(Cloister.SHRINE, true);
         }
         return feature;
     }
@@ -56,7 +53,7 @@ public final class ShrineCapability extends Capability<Void> {
             .flatMap(cloister -> {
                 Position pos = cloister.getPlace().getPosition();
                 return getAdjacentCloisters(_state, pos)
-                    .filter(c -> c.isShrine() ^ cloister.isShrine());
+                    .filter(c -> c.isShrine(_state) ^ cloister.isShrine(_state));
             })
             .filter(c -> c.isOpen(_state))
             .distinct();
@@ -67,7 +64,7 @@ public final class ShrineCapability extends Capability<Void> {
                 continue;
             }
 
-            PointsExpression expr = new PointsExpression(cloister.isShrine() ? "shrine.challenged" : "cloister.challenged", new ExprItem("shrine-challenge", 0));
+            PointsExpression expr = new PointsExpression(cloister.isShrine(state) ? "shrine.challenged" : "cloister.challenged", new ExprItem("shrine-challenge", 0));
             ScoreEvent scoreEvent = new ScoreEvent(new ReceivedPoints(expr, meeple.getPlayer(), meeple.getDeployment(state)), true, false);
             state = state.appendEvent(scoreEvent);
             state = (new UndeployMeeples(cloister, true)).apply(state);
@@ -84,7 +81,7 @@ public final class ShrineCapability extends Capability<Void> {
             return true;
         }
         Array<Cloister> cloisters = getAdjacentCloisters(state, placement.getPosition());
-        Array<Cloister> oppositeCloisters = cloisters.filter(c -> c.isShrine() ^ cloister.isShrine());
+        Array<Cloister> oppositeCloisters = cloisters.filter(c -> c.isShrine(state) ^ cloister.isShrine(state));
         if (oppositeCloisters.size() > 1) {
             // Disallow placement next to more than one Cloister of opposite type.
             return false;
@@ -94,7 +91,7 @@ public final class ShrineCapability extends Capability<Void> {
             Cloister opposite = oppositeCloisters.get();
             Position oppositePos = opposite.getPlace().getPosition();
             if (!getAdjacentCloisters(state, oppositePos)
-                .filter(c -> c.isShrine() == cloister.isShrine())
+                .filter(c -> c.isShrine(state) == cloister.isShrine(state))
                 .isEmpty()
             ) {
                 return false;

@@ -9,7 +9,6 @@ import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
-import com.jcloisterzone.feature.modifier.BooleanModifier;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
@@ -29,12 +28,10 @@ public class ChurchCapability extends Capability<Void> {
 
     public static final int CHURCH_TILES_BONUS = 3;
 
-    public static final BooleanModifier CHURCH = new BooleanModifier("church");
-
     @Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
         if (feature instanceof Cloister && attributeBoolValue(xml, "church")) {
-            feature = ((Cloister)feature).putModifier(CHURCH, true);
+            feature = ((Cloister)feature).putModifier(Cloister.CHURCH, true);
         }
         return feature;
     }
@@ -45,7 +42,7 @@ public class ChurchCapability extends Capability<Void> {
             return bonusPoints;
         }
         Cloister cloister = (Cloister) feature;
-        if (!cloister.isChurch()) {
+        if (!cloister.isChurch(state)) {
             return bonusPoints;
         }
 

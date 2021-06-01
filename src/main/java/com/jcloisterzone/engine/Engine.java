@@ -23,6 +23,8 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -55,6 +57,8 @@ public class Engine implements  Runnable {
 
     private boolean compatJavaRandom = false;
     private ArrayList<String> tileDefinitions = new ArrayList<>();
+
+    // private static ScriptEngine graalEngine;
 
     public Engine(InputStream in, PrintStream out, PrintStream err, PrintStream log) {
         this.in = new Scanner(in);
@@ -127,8 +131,6 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"robber", RobberCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"gold", GoldminesCapability.class);
 
-        capabilities = addCapabilities(capabilities, setupMsg,"cathedral", CathedralCapability.class);
-        capabilities = addCapabilities(capabilities, setupMsg,"inn", InnCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"princess", PrincessCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"portal", PortalCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"pig-herd", PigHerdCapability.class);
@@ -143,13 +145,10 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"siege", SiegeCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"flier", FlierCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"church", ChurchCapability.class);
-        capabilities = addCapabilities(capabilities, setupMsg,"labyrinth", LabyrinthCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"wind-rose", WindRoseCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"monastery", MonasteriesCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"yaga", YagaCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"russian-trap", RussianPromosTrapCapability.class);
-
-        capabilities = addCapabilities(capabilities, setupMsg,"well", WellCapability.class);
 
         Map<Rule, Object> rules = HashMap.empty();
         if (setupMsg.getElements().containsKey("farmers")) {
@@ -165,6 +164,7 @@ public class Engine implements  Runnable {
 
         GameSetup gameSetup = new GameSetup(
                 HashMap.ofAll(setupMsg.getSets()),
+                HashMap.ofAll(setupMsg.getElements()),
                 meeples,
                 capabilities,
                 rules,
@@ -315,6 +315,13 @@ public class Engine implements  Runnable {
         }
         return "dev-snapshot";
     }
+
+//    public static ScriptEngine getSctiptEngine() {
+//        if (graalEngine == null) {
+//            graalEngine = new ScriptEngineManager().getEngineByName("graal.js");
+//        }
+//        return graalEngine;
+//    }
 
     public static void main(String[] args) throws IOException {
         if (args.length > 0 && "--version".equals(args[0])) {
