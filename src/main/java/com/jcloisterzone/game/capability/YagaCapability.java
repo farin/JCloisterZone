@@ -19,7 +19,7 @@ public class YagaCapability extends Capability<Void> {
         assert yagaEl.size() <= 1;
         if (yagaEl.size() > 0) {
             YagaHut feature =  new YagaHut();
-            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.CLOISTER, feature));
+            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.MONASTERY, feature));
         }
         return tile;
     }

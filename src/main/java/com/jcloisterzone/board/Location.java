@@ -17,7 +17,7 @@ import io.vavr.collection.Vector;
  * - a south-to-north feature-space (e.g., a river, a road, a city)
  * - a city space spanning in all directions
  * - an abbot space (monasteries)
- * - a cloister space
+ * - a monastery space
  * - a flier space
  * - a tower space
  * - a field-space on the left of the west side
@@ -160,10 +160,10 @@ public class Location implements Serializable {
     /** Inner road - fan expansions only */
     public static final Location INNER_ROAD = new Location("INNER_ROAD");
 
-    /** A cloister space */
-    public static final Location CLOISTER = new Location("CLOISTER");
-    /** An abbot space (monasteries from "German Monasteries" and "Monasteries in Belgium"*/
+    /** A monastery space */
     public static final Location MONASTERY = new Location("MONASTERY");
+    /** An abbot space (monasteries from "German Monasteries" and "Monasteries in Belgium"*/
+    public static final Location MONASTERY_AS_ABBOT = new Location("MONASTERY_AS_ABBOT");
     /** A tower space */
     public static final Location TOWER = new Location("TOWER");
     /** A flier space (a follower can be placed here just for moment, before a dice roll) */

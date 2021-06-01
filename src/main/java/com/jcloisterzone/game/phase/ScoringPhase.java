@@ -149,9 +149,9 @@ public class ScoringPhase extends Phase {
             .map(pt -> pt._2.getPosition()).toSet();
 
 
-        for (CloisterLike cloister : state.getFeatures(CloisterLike.class)) {
-            if (neighbourPositions.contains(cloister.getPosition())) {
-                state = scoreCompleted(state, cloister);
+        for (Monastic monastic : state.getFeatures(Monastic.class)) {
+            if (neighbourPositions.contains(monastic.getPosition())) {
+                state = scoreCompleted(state, monastic);
             }
         }
 
@@ -204,10 +204,10 @@ public class ScoringPhase extends Phase {
 
               Also this complicates with flying machines.
             */
-            if (completable instanceof Cloister && ((Cloister) completable).isMonastery(state)) {
-                Cloister monastery = (Cloister) completable;
-                List<Tuple2<Meeple, FeaturePointer>> meeples = monastery.getMeeplesIncludingMonastery2(state).toList();
-                if (meeples.size() > 0 && meeples.filter(t -> t._2.getLocation() == Location.CLOISTER).size() == 0) {
+            if (completable instanceof Monastery && ((Monastery) completable).isSpecialMonastery(state)) {
+                Monastery monastery = (Monastery) completable;
+                List<Tuple2<Meeple, FeaturePointer>> meeples = monastery.getMeeplesIncludingSpecialMonastery2(state).toList();
+                if (meeples.size() > 0 && meeples.filter(t -> t._2.getLocation() == Location.MONASTERY).size() == 0) {
                     // only abbots on monastery
                     return state;
                 }

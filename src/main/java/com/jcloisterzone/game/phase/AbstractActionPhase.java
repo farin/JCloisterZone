@@ -65,8 +65,8 @@ public abstract class AbstractActionPhase extends Phase {
             // Placing as abbot is implemented through virtual MONASTERY location.
             places = places.flatMap(t -> {
                 Structure struct = t._2;
-                if (struct instanceof Cloister && ((Cloister)struct).isMonastery(state)) {
-                    return List.of(t, new Tuple2<>(Location.MONASTERY, struct));
+                if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(state)) {
+                    return List.of(t, new Tuple2<>(Location.MONASTERY_AS_ABBOT, struct));
                 }
                 return List.of(t);
             });
@@ -76,7 +76,7 @@ public abstract class AbstractActionPhase extends Phase {
             if (!allowCompleted) {
                 //exclude completed
                 places = places.filter(t -> {
-                    if (t._1 == Location.MONASTERY) {
+                    if (t._1 == Location.MONASTERY_AS_ABBOT) {
                         // monastery is never completed
                         return true;
                     }
@@ -100,8 +100,8 @@ public abstract class AbstractActionPhase extends Phase {
                 }
                 Structure struct = t._2;
                 Stream<Meeple> meeples;
-                if (struct instanceof Cloister) {
-                    meeples = ((Cloister) struct).getMeeplesIncludingMonastery(state);
+                if (struct instanceof Monastery) {
+                    meeples = ((Monastery) struct).getMeeplesIncludingMonastery(state);
                 } else {
                     meeples = struct.getMeeples(state);
                 }

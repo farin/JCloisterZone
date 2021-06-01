@@ -305,7 +305,7 @@ msgid "Count number of followers on hill as tiebreaker."
 msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:31
-msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
+msgid "Escape monastery can be placed adjacent to any tile of a besieged city."
 msgstr ""
 "Mãnãstirea salvatoare poate fi plasatã pe orice dalã adiacentã unui oraş sub "
 "asediu."

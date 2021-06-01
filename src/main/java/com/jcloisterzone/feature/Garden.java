@@ -9,13 +9,10 @@ import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.*;
 
-/**
- * Cloister or Shrine
- */
-public class Garden extends TileFeature implements Scoreable, CloisterLike {
+public class Garden extends TileFeature implements Monastic {
 
     private static final long serialVersionUID = 1L;
-    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER));
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.MONASTERY));
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 

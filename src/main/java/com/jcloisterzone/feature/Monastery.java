@@ -21,26 +21,26 @@ import io.vavr.collection.*;
 import java.util.ArrayList;
 
 /**
- * Cloister or Shrine
+ * Monastery, shrine, special monastery from German monasteries expansion or Church from Darmstart
  */
-public class Cloister extends TileFeature implements Scoreable, CloisterLike, ModifiedFeature<Cloister> {
+public class Monastery extends TileFeature implements Monastic, ModifiedFeature<Monastery> {
 
     private static final long serialVersionUID = 1L;
-    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER));
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.MONASTERY));
 
-    public static final BooleanAnyModifier SHRINE = new BooleanAnyModifier("cloister[shrine]", new GameElementQuery("shrine"));
-    public static final BooleanAnyModifier MONASTERY = new BooleanAnyModifier("cloister[monastery]", new GameElementQuery("cloister"));
-    public static final BooleanAnyModifier CHURCH = new BooleanAnyModifier("cloister[church]", new GameElementQuery("church"));
+    public static final BooleanAnyModifier SHRINE = new BooleanAnyModifier("monastery[shrine]", new GameElementQuery("shrine"));
+    public static final BooleanAnyModifier SPECIAL_MONASTERY = new BooleanAnyModifier("monastery[special]", null);
+    public static final BooleanAnyModifier CHURCH = new BooleanAnyModifier("monastery[church]", new GameElementQuery("church"));
 
     private final Map<FeatureModifier<?>, Object> modifiers;
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 
-    public Cloister(Map<FeatureModifier<?>, Object> modifiers) {
+    public Monastery(Map<FeatureModifier<?>, Object> modifiers) {
         this(INITIAL_PLACE, HashSet.empty(), modifiers);
     }
 
-    public Cloister(List<FeaturePointer> places, Set<FeaturePointer> neighboring, Map<FeatureModifier<?>, Object> modifiers) {
+    public Monastery(List<FeaturePointer> places, Set<FeaturePointer> neighboring, Map<FeatureModifier<?>, Object> modifiers) {
         super(places);
         this.neighboring = neighboring;
         this.modifiers = modifiers;
@@ -52,15 +52,15 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
     }
 
     @Override
-    public Cloister setModifiers(Map<FeatureModifier<?>, Object> modifiers) {
+    public Monastery setModifiers(Map<FeatureModifier<?>, Object> modifiers) {
         if (this.modifiers == modifiers) return this;
-        return new Cloister(places, neighboring, modifiers);
+        return new Monastery(places, neighboring, modifiers);
     }
 
     @Override
-    public Cloister setNeighboring(Set<FeaturePointer> neighboring) {
+    public Monastery setNeighboring(Set<FeaturePointer> neighboring) {
         if (this.neighboring == neighboring) return this;
-        return new Cloister(places, neighboring, modifiers);
+        return new Monastery(places, neighboring, modifiers);
     }
 
     @Override
@@ -70,39 +70,39 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
 
     @Override
     public Feature placeOnBoard(Position pos, Rotation rot) {
-        return new Cloister(placeOnBoardPlaces(pos, rot), placeOnBoardNeighboring(pos, rot), modifiers);
+        return new Monastery(placeOnBoardPlaces(pos, rot), placeOnBoardNeighboring(pos, rot), modifiers);
     }
 
     public boolean isShrine(GameState state) {
         return hasModifier(state, SHRINE);
     }
 
-    public boolean isMonastery(GameState state) {
-        return hasModifier(state, MONASTERY);
+    public boolean isSpecialMonastery(GameState state) {
+        return hasModifier(state, SPECIAL_MONASTERY);
     }
 
     public boolean isChurch(GameState state) {
         return hasModifier(state, CHURCH);
     }
 
-    public Stream<Tuple2<Meeple, FeaturePointer>> getMeeplesIncludingMonastery2(GameState state) {
-        if (isMonastery(state)) {
+    public Stream<Tuple2<Meeple, FeaturePointer>> getMeeplesIncludingSpecialMonastery2(GameState state) {
+        if (isSpecialMonastery(state)) {
             FeaturePointer place = places.get();
-            Set<FeaturePointer> fps = HashSet.of(place, new FeaturePointer(place.getPosition(), Location.MONASTERY));
+            Set<FeaturePointer> fps = HashSet.of(place, new FeaturePointer(place.getPosition(), Location.MONASTERY_AS_ABBOT));
             return Stream.ofAll(state.getDeployedMeeples()).filter(t -> fps.contains(t._2));
         }
         return getMeeples2(state);
     }
 
     public Stream<Meeple> getMeeplesIncludingMonastery(GameState state) {
-        if (isMonastery(state)) {
-            return getMeeplesIncludingMonastery2(state).map(Tuple2::_1);
+        if (isSpecialMonastery(state)) {
+            return getMeeplesIncludingSpecialMonastery2(state).map(Tuple2::_1);
         }
         return getMeeples(state);
     }
 
     public Stream<Tuple2<Follower, FeaturePointer>> getMonasteryFollowers2(GameState state) {
-        FeaturePointer place = getPlace().setLocation(Location.MONASTERY);
+        FeaturePointer place = getPlace().setLocation(Location.MONASTERY_AS_ABBOT);
         return Stream.ofAll(state.getDeployedMeeples()).filter(t -> t._1 instanceof Follower && t._2.equals(place)).map(t -> t.map1(f -> (Follower) f));
     }
 
@@ -149,14 +149,14 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
         if (completed && adjacentVineyards > 0) {
             exprItems.add(new ExprItem(adjacentVineyards, "vineyards", adjacentVineyards * 3));
         }
-        String baseName = isShrine(state) ? "shrine" : "cloister";
+        String baseName = isShrine(state) ? "shrine" : "monastery";
 
         scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", adjacent + 1, "completed", completed));
         return new PointsExpression(completed ? baseName : baseName + ".incomplete",  List.ofAll(exprItems));
     }
 
     public static String name() {
-        return "Cloister";
+        return "Monastery";
     }
 
     protected Set<FeaturePointer> placeOnBoardNeighboring(Position pos, Rotation rot) {

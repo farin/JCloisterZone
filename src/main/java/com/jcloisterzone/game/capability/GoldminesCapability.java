@@ -12,7 +12,7 @@ import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.TokenReceivedEvent;
 import com.jcloisterzone.feature.Castle;
-import com.jcloisterzone.feature.CloisterLike;
+import com.jcloisterzone.feature.Monastic;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
@@ -26,7 +26,6 @@ import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
-import org.apache.commons.math3.analysis.function.Exp;
 import org.w3c.dom.Element;
 
 import java.util.Collections;
@@ -60,8 +59,8 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
     }
 
     private Set<Position> getFeatureClaimPositions(GameState state, Scoreable feature) {
-        if (feature instanceof CloisterLike) {
-            Position cloisterPosition = ((CloisterLike) feature).getPosition();
+        if (feature instanceof Monastic) {
+            Position cloisterPosition = ((Monastic) feature).getPosition();
             return state.getAdjacentAndDiagonalTiles(cloisterPosition)
                 .map(PlacedTile::getPosition)
                 .append(cloisterPosition) // and merge also central tile

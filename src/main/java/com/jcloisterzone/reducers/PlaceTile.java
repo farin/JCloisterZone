@@ -151,7 +151,7 @@ public class PlaceTile implements Reducer {
             // Abbey is always just placed tile
             // it's not possible to be adjacent to placed tile because it abbey can be placed only to existing hole.
             java.util.Map<CompletableFeature<?>, CompletableFeature<?>> featureReplacement = new java.util.HashMap<>();
-            FeaturePointer abbeyFp = new FeaturePointer(pos, Location.CLOISTER);
+            FeaturePointer abbeyFp = new FeaturePointer(pos, Location.MONASTERY);
             Set<FeaturePointer> abbeyNeighboring = HashSet.empty();
             for (Location side : Location.SIDES) {
                 FeaturePointer adjPartOfPtr = new FeaturePointer(pos.add(side), side.rev());
@@ -196,7 +196,7 @@ public class PlaceTile implements Reducer {
                 abbeyNeighboring = abbeyNeighboring.add(adjPtr);
             }
             if (!abbeyNeighboring.isEmpty()) {
-                Cloister abbey = (Cloister) fpUpdate.get(abbeyFp);
+                Monastery abbey = (Monastery) fpUpdate.get(abbeyFp);
                 fpUpdate.put(abbeyFp, abbey.setNeighboring(abbeyNeighboring));
             }
         }

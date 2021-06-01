@@ -17,7 +17,7 @@ import io.vavr.collection.*;
 import java.util.ArrayList;
 
 public class Field extends TileFeature implements Scoreable, MultiTileFeature<Field>, ModifiedFeature<Field> {
-    
+
     public static final IntegerAddModifier PIG_HERD = new IntegerAddModifier("field[pig-herd]", new GameElementQuery("pig-herd"));
 
     // for unplaced features, references is to (0, 0)

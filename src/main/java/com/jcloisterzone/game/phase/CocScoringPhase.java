@@ -5,7 +5,7 @@ import com.jcloisterzone.action.ConfirmAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Cloister;
+import com.jcloisterzone.feature.Monastery;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.feature.Feature;
@@ -142,10 +142,10 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
                     return true;
                 }
 
-                if (f instanceof Cloister) { // Cloister, not CloisterLike
-                    Position cloisterPos = ((Cloister) f).getPosition();
+                if (f instanceof Monastery) { // Monastery, not Monastic
+                    Position monPos = ((Monastery) f).getPosition();
                     if (!Position.ADJACENT_AND_DIAGONAL
-                        .map(t -> cloisterPos.add(t._2))
+                        .map(t -> monPos.add(t._2))
                         .filter(p -> p.equals(lastPlacedPos))
                         .isEmpty()) {
                         return true;

@@ -44,7 +44,7 @@ public class EscapePhase extends Phase {
         };
 
         Predicate<Position> cloisterExists = pos -> {
-            return state.getFeature(new FeaturePointer(pos, Location.CLOISTER)) != null;
+            return state.getFeature(new FeaturePointer(pos, Location.MONASTERY)) != null;
         };
 
         Set<MeeplePointer> options;

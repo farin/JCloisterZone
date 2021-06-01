@@ -7,7 +7,6 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.game.state.GameState;
-import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
@@ -15,12 +14,12 @@ import io.vavr.collection.Set;
 /**
  * Baba Yaga's hut from Russion Promos expansion.
  *
- * Implemented as separate feature type to be not involved in Cult shrine-cloister challenges.
+ * Implemented as separate feature type to be not involved in Cult shrine-monastery challenges.
  */
-public class YagaHut extends TileFeature implements Completable, CloisterLike {
+public class YagaHut extends TileFeature implements Completable, Monastic {
 
     private static final long serialVersionUID = 1L;
-    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.CLOISTER));
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.MONASTERY));
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 

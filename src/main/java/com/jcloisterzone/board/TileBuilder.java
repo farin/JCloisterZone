@@ -25,6 +25,7 @@ public class TileBuilder {
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static final FeatureModifier[] MONASTERY_MODIFIERS = new FeatureModifier[] { Monastery.SPECIAL_MONASTERY, Monastery.SHRINE, Monastery.CHURCH };
     private static final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.CATHEDRAL, City.PRINCESS, City.BESIEGED, City.DARMSTADTIUM };
     private static final FeatureModifier[] ROAD_MODIFIERS = new FeatureModifier[] { Road.INN, Road.LABYRINTH };
 
@@ -50,6 +51,7 @@ public class TileBuilder {
         this.modifiersByType = new java.util.HashMap<>();
         modifiersByType.put("road", new ArrayList<>(Arrays.asList(ROAD_MODIFIERS)));
         modifiersByType.put("city", new ArrayList<>(Arrays.asList(CITY_MODIFIERS)));
+        modifiersByType.put("monastery", new ArrayList<>(Arrays.asList(MONASTERY_MODIFIERS)));
         for (FeatureModifier mod : externalModifiers) {
             String key = mod.getSelector().split("\\[")[0];
             var list = modifiersByType.get(key);
@@ -75,9 +77,9 @@ public class TileBuilder {
 
         for (Element xml : tileElements) {
             NodeList nl;
-            nl = xml.getElementsByTagName("cloister");
+            nl = xml.getElementsByTagName("monastery");
             for (int i = 0; i < nl.getLength(); i++) {
-                processCloisterElement((Element) nl.item(i));
+                processMonasteryElement((Element) nl.item(i));
             }
             nl = xml.getElementsByTagName("road");
             for (int i = 0; i < nl.getLength(); i++) {
@@ -151,11 +153,11 @@ public class TileBuilder {
         return modifiers;
     }
 
-    private void processCloisterElement(Element e) {
-        Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("cloister", e);
-        Cloister cloister = new Cloister(modifiers);
-        cloister = (Cloister) initFeature(tileId, cloister, e);
-        features.put(Location.CLOISTER, cloister);
+    private void processMonasteryElement(Element e) {
+        Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("monastery", e);
+        Monastery monastery = new Monastery(modifiers);
+        monastery = (Monastery) initFeature(tileId, monastery, e);
+        features.put(Location.MONASTERY, monastery);
 
     }
 

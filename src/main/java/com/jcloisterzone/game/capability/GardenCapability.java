@@ -17,7 +17,7 @@ public class GardenCapability extends Capability<Void> {
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "garden").isEmpty()) {
             Garden garden = new Garden();
-            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.CLOISTER, garden));
+            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.MONASTERY, garden));
         }
         return tile;
     }

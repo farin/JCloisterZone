@@ -40,7 +40,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
     private Class<? extends Scoreable> getFeatureTypeForLocation(Location loc) {
         if (loc == Location.QUARTER_CASTLE) return City.class;
         if (loc == Location.QUARTER_BLACKSMITH) return Road.class;
-        if (loc == Location.QUARTER_CATHEDRAL) return Cloister.class;
+        if (loc == Location.QUARTER_CATHEDRAL) return Monastery.class;
         if (loc == Location.QUARTER_MARKET) return Field.class;
         throw new IllegalArgumentException("Illegal location " + loc);
     }

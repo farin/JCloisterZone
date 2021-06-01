@@ -10,16 +10,6 @@ import static org.junit.Assert.fail;
 
 public class LocationTest {
 
-//	@Test
-//	public void isSpecialLocation() {
-//		assertTrue(Location.E.isSideLocation());
-//		assertTrue(Location.NW.isSideLocation());
-//		assertTrue(Location.create(135).isSideLocation());
-//		assertFalse(Location.CENTER.isSideLocation());
-//		assertFalse(Location.CLOISTER.isSideLocation());
-//		assertFalse(Location.TOWER.isSideLocation());
-//	}
-
     @Test
     public void isPartOf() {
         assertTrue(Location.E.isPartOf(Location.E));
@@ -40,7 +30,7 @@ public class LocationTest {
     @Test
     public void unionExcept() {
         try {
-            Location.N.union(Location.CLOISTER);
+            Location.N.union(Location.MONASTERY);
             fail();
         } catch (IllegalArgumentException ae) {
         }
@@ -61,7 +51,7 @@ public class LocationTest {
     @Test()
     public void subtractExcept() {
         try {
-            Location.N.subtract(Location.CLOISTER);
+            Location.N.subtract(Location.MONASTERY);
             fail();
         } catch (IllegalArgumentException ae) {
         }

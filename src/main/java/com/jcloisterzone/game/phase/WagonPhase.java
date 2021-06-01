@@ -63,8 +63,8 @@ public class WagonPhase extends Phase {
                                 if (nei.isCompleted(_state)) {
                                     return false;
                                 }
-                                if (nei instanceof Cloister) {
-                                    return ((Cloister) nei).getMeeplesIncludingMonastery(_state).isEmpty();
+                                if (nei instanceof Monastery) {
+                                    return ((Monastery) nei).getMeeplesIncludingMonastery(_state).isEmpty();
                                 }
 
                                 if (nei instanceof Road) {
@@ -92,8 +92,8 @@ public class WagonPhase extends Phase {
                         })
                         .flatMap(t -> {
                             Structure struct = t._2;
-                            if (struct instanceof Cloister && ((Cloister)struct).isMonastery(_state)) {
-                                return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Location.MONASTERY), struct));
+                            if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(_state)) {
+                                return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Location.MONASTERY_AS_ABBOT), struct));
                             }
                             return List.of(t);
                         })

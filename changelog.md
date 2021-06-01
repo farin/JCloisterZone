@@ -142,7 +142,7 @@ Game engine changes:
 *2020-06-02*
 
 * fixed monasteries scoring
-    - fixed regression when monasteries are scored additionally like cloister at the end of game
+    - fixed regression when monasteries are scored additionally like monastery at the end of game
     - Monasteries + Flier interaction - majority take count when scoring abbots on the monasteries
 * fixed monasteries and castle interaction - monastery should not trigger castle scoring when only abbots are deployed there
     - see note http://wikicarpedia.com/index.php/Bridges,_Castles_and_Bazaars_(1st_edition)#cite_note-28
@@ -252,7 +252,7 @@ Game engine changes:
         the most followers in Carcassonne will be the one to redeploy the last figure.
 * fix: road with bridge can remain not scored. This can happen when bridge was placed result of tile placement
   on adjacent tile (and only when tile bridge is rotated once). Such bridge can also cause error during final scoring.
-* fix: gold was not awarded from cloister tile itself (but only from adjacent tiles)
+* fix: gold was not awarded from monastery tile itself (but only from adjacent tiles)
 * fix: missing bid buttons when game is saved and loaded during bazaar auction
 
 ## 4.2.1
@@ -270,8 +270,8 @@ Game engine changes:
   score properly followers moved on barn field just before final scoring
 * fix: some legal wagon moves were missing
 * fix: City of C. followers can be now redeployed also onto features closed by abbey.
-* fix: when moves from multiple City of C. quarters are available (eg legal move on cloister and road at
-  one time) there was possibility that follower was moved from wrong quarter (eg. from blacksmith to cloister)
+* fix: when moves from multiple City of C. quarters are available (eg legal move on monastery and road at
+  one time) there was possibility that follower was moved from wrong quarter (eg. from blacksmith to monastery)
 * fix: builder double turn allowed wrongly add follower into City of C. after each turn part if opponent
   feature was scored during first part
 * fix: restrict corn circles actions to followers only (instead of meeples)
@@ -364,7 +364,7 @@ Added MORE_TUNNEL_TOKENS rule (each player has three token sets for 2 players ga
 
 #### Russion promos
 
-Baba Yaga's hut is now not involved in shrine-cloister challenges (when played together with The Cult expansion)
+Baba Yaga's hut is now not involved in shrine-monastery challenges (when played together with The Cult expansion)
 
 ### Technical Notes
 
@@ -403,7 +403,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 * #112 - warn aboul last chance to place abbey
 * fixed few winter extra tiles definitions to match original winter tiles
 * fixed #184 - opponent can accidentally skip follower placement on Abbey
-* fixed #182 - Cloister/Shrine can't be placed next to cloister AND shrine
+* fixed #182 - Cloister/Shrine can't be placed next to monastery AND shrine
 
 ## 3.3.1
 *2015-08-25*
@@ -520,7 +520,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 * rules update: flier & phantom interaction - can't used flier with both common follower and phantom in single turn
 * rules update: wagon can move to/from abbey
 * fix: nasty rare tower capture and wagon glitches - mainly causing occasionally ai freezing (i hope there is no more similar bugs left)
-* fix: wagon can move from cloister inside city to city and vice-versa on bridge and bazaars tile
+* fix: wagon can move from monastery inside city to city and vice-versa on bridge and bazaars tile
 * fix: loading game resets point statistics
 * fix: in some cases unable to start loaded game initially created with "randomize seating order"
 
@@ -545,7 +545,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 * persistent settings
 * field hints (press F key to toggle)
 * The Besiegers expansions (Die Belagerer)
-* Cathars/Siege: custom rule for RGG's escape variant (cloister must be adjacent to any city tile instead of directly to besieged tile)
+* Cathars/Siege: custom rule for RGG's escape variant (monastery must be adjacent to any city tile instead of directly to besieged tile)
 * random seating order option
 * game setup panel: flash effect when  expansion/rule is changed remotely
 * custom rule: dragon movement after scorinhg (RGG)

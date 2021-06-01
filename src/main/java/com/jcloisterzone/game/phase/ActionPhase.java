@@ -12,7 +12,7 @@ import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.TokenPlacedEvent;
-import com.jcloisterzone.feature.CloisterLike;
+import com.jcloisterzone.feature.Monastic;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.figure.neutral.Fairy;
@@ -108,7 +108,7 @@ public class ActionPhase extends AbstractActionPhase {
         Meeple meeple = state.getDeployedMeeples().find(m -> ptr.match(m._1)).map(t -> t._1)
             .getOrElseThrow(() -> new IllegalArgumentException("Pointer doesn't match any meeple"));
 
-        CloisterLike assignAbbotScore = null;
+        Monastic assignAbbotScore = null;
 
         switch (msg.getSource()) {
             case PRINCESS:
@@ -130,7 +130,7 @@ public class ActionPhase extends AbstractActionPhase {
                 if (meeple.getPlayer() != state.getPlayerActions().getPlayer() || !(meeple instanceof Abbot)) {
                     throw new IllegalArgumentException("Not abbot owner");
                 }
-                assignAbbotScore = (CloisterLike) state.getFeature(ptr.asFeaturePointer());
+                assignAbbotScore = (Monastic) state.getFeature(ptr.asFeaturePointer());
                 break;
             case TRAP:
                 if (meeple.getPlayer() != state.getPlayerActions().getPlayer()) {

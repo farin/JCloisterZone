@@ -11,7 +11,7 @@ import io.vavr.collection.*;
 /**
  * Any feature completed when it is surrounded by eight land tiles.
  */
-public interface CloisterLike extends Completable {
+public interface Monastic extends Completable, Scoreable {
 
     @Override
     default boolean isOpen(GameState state) {

@@ -32,14 +32,14 @@ public class FinalScoring implements Reducer {
         return size;
     }
 
-    private PointsExpression getMonasteryPoints(GameState state, Cloister monastery) {
+    private PointsExpression getSpecialMonasteryPoints(GameState state, Monastery monastery) {
         Position pos = monastery.getPosition();
         List<ExprItem> items = List.of(new ExprItem(1, "tiles", 1));
         for (Location loc : Location.SIDES) {
             int size = getContinuousRowSize(state, pos, loc);
             items = items.append(new ExprItem(size, "tiles." + loc.toString(), size));
         }
-        return new PointsExpression("monastery", items).appendAll(monastery.getLittleBuildingPoints(state));
+        return new PointsExpression("spacial-monastery", items).appendAll(monastery.getLittleBuildingPoints(state));
     }
 
     @Override
@@ -54,10 +54,10 @@ public class FinalScoring implements Reducer {
         }
 
         GameState _state = state;
-        Stream<Cloister> monasteries = state.getFeatures().filter(f -> f instanceof Cloister && ((Cloister) f).isMonastery(_state)).map(f -> (Cloister) f);
+        Stream<Monastery> monasteries = state.getFeatures().filter(f -> f instanceof Monastery && ((Monastery) f).isSpecialMonastery(_state)).map(f -> (Monastery) f);
 
-        for (Cloister monastery: monasteries) {
-            PointsExpression expr = getMonasteryPoints(state, monastery);
+        for (Monastery monastery: monasteries) {
+            PointsExpression expr = getSpecialMonasteryPoints(state, monastery);
             List<ReceivedPoints> receivedPoints = List.empty();
 
             for (Player player : monastery.getMonasteryOwners(state)) {

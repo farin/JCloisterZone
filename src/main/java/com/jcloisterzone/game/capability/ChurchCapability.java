@@ -6,7 +6,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
-import com.jcloisterzone.feature.Cloister;
+import com.jcloisterzone.feature.Monastery;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
@@ -29,24 +29,16 @@ public class ChurchCapability extends Capability<Void> {
     public static final int CHURCH_TILES_BONUS = 3;
 
     @Override
-    public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
-        if (feature instanceof Cloister && attributeBoolValue(xml, "church")) {
-            feature = ((Cloister)feature).putModifier(Cloister.CHURCH, true);
-        }
-        return feature;
-    }
-
-    @Override
     public List<ReceivedPoints> appendFiguresBonusPoints(GameState state, List<ReceivedPoints> bonusPoints, Scoreable feature, boolean isFinal) {
-        if (isFinal || !(feature instanceof Cloister)) {
+        if (isFinal || !(feature instanceof Monastery)) {
             return bonusPoints;
         }
-        Cloister cloister = (Cloister) feature;
-        if (!cloister.isChurch(state)) {
+        Monastery monastery = (Monastery) feature;
+        if (!monastery.isChurch(state)) {
             return bonusPoints;
         }
 
-        Position cloisterPosition = cloister.getPlace().getPosition();
+        Position cloisterPosition = monastery.getPlace().getPosition();
         Set<Position> positions = Position.ADJACENT_AND_DIAGONAL.map(pt -> cloisterPosition.add(pt._2)).toSet().add(cloisterPosition);
         Map<Player, LinkedHashMap<Meeple, FeaturePointer>> adjacentMeepleCount = state.getDeployedMeeples()
                 .filter(mt -> mt._1 instanceof  Follower)
@@ -61,7 +53,7 @@ public class ChurchCapability extends Capability<Void> {
             Tuple2<Meeple, FeaturePointer> onTile = followers.filter(t -> t._2.getPosition().equals(cloisterPosition)).getOrNull();
             FeaturePointer fp;
             if (onTile == null) {
-                // if user hasn't follower on cloister itself, use random follower from adjacent tile
+                // if user hasn't follower on monastery itself, use random follower from adjacent tile
                 fp = followers.get()._2;
             } else {
                 fp = onTile._2;
