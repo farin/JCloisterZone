@@ -18,6 +18,8 @@ import com.jcloisterzone.game.state.PlacedTile;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
 
+import java.util.ArrayList;
+
 /**
  * Cloister or Shrine
  */
@@ -34,8 +36,8 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 
-    public Cloister() {
-        this(INITIAL_PLACE, HashSet.empty(), HashMap.empty());
+    public Cloister(Map<FeatureModifier<?>, Object> modifiers) {
+        this(INITIAL_PLACE, HashSet.empty(), modifiers);
     }
 
     public Cloister(List<FeaturePointer> places, Set<FeaturePointer> neighboring, Map<FeatureModifier<?>, Object> modifiers) {
@@ -141,15 +143,16 @@ public class Cloister extends TileFeature implements Scoreable, CloisterLike, Mo
         	}
         }
 
-        List<ExprItem> exprItems = List.of(
-           new ExprItem(adjacent + 1, "tiles", adjacent + 1)
-        );
+        var exprItems = new ArrayList<ExprItem>();
+        exprItems.add(new ExprItem(adjacent + 1, "tiles", adjacent + 1));
 
-        if (adjacent == 8 && adjacentVineyards > 0) {
-            exprItems = exprItems.append(new ExprItem(adjacentVineyards, "vineyards", adjacentVineyards * 3));
+        if (completed && adjacentVineyards > 0) {
+            exprItems.add(new ExprItem(adjacentVineyards, "vineyards", adjacentVineyards * 3));
         }
         String baseName = isShrine(state) ? "shrine" : "cloister";
-        return new PointsExpression(adjacent == 8 ? baseName : baseName + ".incomplete", exprItems);
+
+        scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", adjacent + 1, "completed", completed));
+        return new PointsExpression(completed ? baseName : baseName + ".incomplete",  List.ofAll(exprItems));
     }
 
     public static String name() {

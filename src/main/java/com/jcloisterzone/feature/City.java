@@ -136,6 +136,8 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
             exprItems.add(new ExprItem("darmstadtium", 3));
         }
 
+        scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", tileCount, "completed", completed));
+
         String name = "city";
         if (tinyCity) {
             name = "city.tiny";

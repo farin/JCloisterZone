@@ -26,11 +26,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
     protected final boolean adjoiningCityOfCarcassonne;
 
     private final Map<FeatureModifier<?>, Object> modifiers;
-
-    public Farm(List<FeaturePointer> places, Set <FeaturePointer> adjoiningCities) {
-        this(places, adjoiningCities, false, HashMap.empty());
-    }
-
+    
     public Farm(List<FeaturePointer> places, Set<FeaturePointer> adjoiningCities,
             boolean adjoiningCityOfCarcassonne, Map<FeatureModifier<?>, Object> modifiers) {
         super(places);
@@ -172,6 +168,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
             }
         }
 
+        scoreScriptedModifiers(exprItems, java.util.Map.of("cities", cityCount, "castles", castleCount));
         return new PointsExpression(exprName, List.ofAll(exprItems));
     }
 

@@ -1,13 +1,17 @@
 package com.jcloisterzone.feature;
 
+import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.feature.modifier.BooleanAnyModifier;
 import com.jcloisterzone.feature.modifier.BooleanModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
+import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Value;
 
 import java.util.ArrayList;
 
@@ -61,5 +65,35 @@ public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
             entries.add(new Tuple2<>(mod, val));
         }
         return HashMap.ofEntries(entries);
+    }
+
+    default void scoreScriptedModifiers(java.util.List<ExprItem> exprItems, java.util.Map<String, Object> members) {
+        Set<FeatureModifier<?>> scriptedModifiers = getScriptedModifiers();
+        if (!scriptedModifiers.isEmpty()) {
+            try (Context context = Context.create("js")) {
+                Value bindings = context.getBindings("js");
+                members.forEach((key, value) -> {
+                    bindings.putMember("key", value);
+                });
+
+                getModifiers().forEach((mod, value) -> {
+                    bindings.putMember(mod.getName(), value);
+                });
+
+                scriptedModifiers.forEach(mod -> {
+                    Value res = context.eval("js", "(() => { " + mod.getScoringScript() + "})()");
+                    if (res.hasArrayElements()) {
+                        long size = res.getArraySize();
+                        for (int i = 0; i < size; i++) {
+                            Value item = res.getArrayElement(i);
+                            String name = item.getMember("name").asString();
+                            int points = item.getMember("points").asInt();
+                            Integer count = item.hasMember("count") ? item.getMember("count").asInt() : null;
+                            exprItems.add(new ExprItem(count, name, points));
+                        }
+                    }
+                });
+            }
+        }
     }
 }

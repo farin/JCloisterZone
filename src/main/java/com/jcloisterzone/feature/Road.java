@@ -173,30 +173,7 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
             exprItems.add(new ExprItem(meeplesCount, "meeples", 2 * meeplesCount));
         }
 
-        Set<FeatureModifier<?>> scriptedModifiers = getScriptedModifiers();
-        if (!scriptedModifiers.isEmpty()) {
-            try (Context context = Context.create("js")) {
-                Value bindings = context.getBindings("js");
-                bindings.putMember("tiles", tileCount);
-                getModifiers().forEach((mod, value) -> {
-                    bindings.putMember(mod.getName(), value);
-                });
-
-                scriptedModifiers.forEach(mod -> {
-                    Value res = context.eval("js", "(() => { " + mod.getScoringScript() + "})()");
-                    if (res.hasArrayElements()) {
-                        long size = res.getArraySize();
-                        for (int i = 0; i < size; i++) {
-                            Value item = res.getArrayElement(i);
-                            String name = item.getMember("name").asString();
-                            int points = item.getMember("points").asInt();
-                            Integer count = item.hasMember("count") ? item.getMember("count").asInt() : null;
-                            exprItems.add(new ExprItem(count, name, points));
-                        }
-                    }
-                });
-            }
-        }
+        scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", tileCount, "completed", completed));
         return new PointsExpression(completed ? "road" : "road.incomplete", List.ofAll(exprItems));
     }
 

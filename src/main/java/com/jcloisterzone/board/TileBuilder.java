@@ -141,8 +141,19 @@ public class TileBuilder {
         return feature;
     }
 
+    private Map<FeatureModifier<?>, Object> getFeatureModifiers(String featureType, Element el) {
+        Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
+        for (FeatureModifier mod: modifiersByType.get("road")) {
+            if (el.hasAttribute(mod.getName())) {
+                modifiers = modifiers.put(mod, mod.valueOf(el.getAttribute(mod.getName())));
+            }
+        }
+        return modifiers;
+    }
+
     private void processCloisterElement(Element e) {
-        Cloister cloister = new Cloister();
+        Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("cloister", e);
+        Cloister cloister = new Cloister(modifiers);
         cloister = (Cloister) initFeature(tileId, cloister, e);
         features.put(Location.CLOISTER, cloister);
 
@@ -168,13 +179,7 @@ public class TileBuilder {
     private void processRoadElement(Stream<Location> sides, Element e, boolean isTunnelActive) {
         FeaturePointer fp = initFeaturePointer(sides, Road.class);
 
-        Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
-        for (FeatureModifier mod: modifiersByType.get("road")) {
-            if (e.hasAttribute(mod.getName())) {
-                modifiers = modifiers.put(mod, mod.valueOf(e.getAttribute(mod.getName())));
-            }
-        }
-
+        Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("road", e);
         Road road = new Road(List.of(fp), initOpenEdges(sides), modifiers);
 
         if (isTunnelActive && attributeBoolValue(e, "tunnel")) {
@@ -200,13 +205,7 @@ public class TileBuilder {
         	openEdges = openEdges.add(multiEdge);
         }
 
-        Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
-        for (FeatureModifier mod: modifiersByType.get("city")) {
-           if (e.hasAttribute(mod.getName())) {
-               modifiers = modifiers.put(mod, mod.valueOf(e.getAttribute(mod.getName())));
-           }
-        }
-
+        Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("city", e);
         City city = new City(
             List.of(place),
             openEdges, modifiers
@@ -255,10 +254,8 @@ public class TileBuilder {
             adjoiningCities = HashSet.empty();
         }
 
-        Farm farm = new Farm(
-            List.of(place),
-            adjoiningCities
-        );
+        Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("farm", e);
+        Farm farm = new Farm(List.of(place),  adjoiningCities,  false, modifiers);
 
         farm = (Farm) initFeature(tileId, farm, e);
         features.put(place.getLocation(), farm);

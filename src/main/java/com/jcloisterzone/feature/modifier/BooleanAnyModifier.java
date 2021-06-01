@@ -13,4 +13,5 @@ public class BooleanAnyModifier extends BooleanModifier {
     public Boolean mergeValues(Boolean a, Boolean b) {
         return a || b;
     }
+
 }
