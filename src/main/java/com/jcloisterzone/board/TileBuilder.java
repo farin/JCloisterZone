@@ -145,9 +145,12 @@ public class TileBuilder {
 
     private Map<FeatureModifier<?>, Object> getFeatureModifiers(String featureType, Element el) {
         Map<FeatureModifier<?>, Object> modifiers = HashMap.empty();
-        for (FeatureModifier mod: modifiersByType.get("road")) {
-            if (el.hasAttribute(mod.getName())) {
-                modifiers = modifiers.put(mod, mod.valueOf(el.getAttribute(mod.getName())));
+        var declaredModifiers = modifiersByType.get(featureType);
+        if (declaredModifiers != null) {
+            for (FeatureModifier mod : declaredModifiers) {
+                if (el.hasAttribute(mod.getName())) {
+                    modifiers = modifiers.put(mod, mod.valueOf(el.getAttribute(mod.getName())));
+                }
             }
         }
         return modifiers;
