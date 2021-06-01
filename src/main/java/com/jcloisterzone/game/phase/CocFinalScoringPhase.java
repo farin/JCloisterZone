@@ -3,7 +3,7 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
@@ -65,7 +65,7 @@ public class CocFinalScoringPhase extends AbstractCocScoringPhase {
     @Override
     protected Function<Feature, Boolean> getAllowedFeaturesFilter(GameState state) {
         return f -> {
-            if (f instanceof Farm) {
+            if (f instanceof Field) {
                 return true;
             }
             if (f instanceof Completable) {

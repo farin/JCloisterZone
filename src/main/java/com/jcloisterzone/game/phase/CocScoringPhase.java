@@ -7,7 +7,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Cloister;
 import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.random.RandomGenerator;
@@ -99,33 +99,33 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
             }
         }
 
-        java.util.HashSet<Feature> barnInvolvedFarms = new java.util.HashSet<>();
+        java.util.HashSet<Feature> barnInvolvedFields = new java.util.HashSet<>();
 
         if (state.getCapabilities().contains(BarnCapability.class)) {
             FeaturePointer placedBarnPtr = state.getCapabilityModel(BarnCapability.class);
-            Farm placedBarnFarm = placedBarnPtr == null ? null : (Farm) state.getFeature(placedBarnPtr);
-            if (placedBarnFarm != null) {
-                barnInvolvedFarms.add(placedBarnFarm);
+            Field placedBarnField = placedBarnPtr == null ? null : (Field) state.getFeature(placedBarnPtr);
+            if (placedBarnField != null) {
+                barnInvolvedFields.add(placedBarnField);
 
             }
 
             Position pos = lastPlaced.getPosition();
             state.getTileFeatures2(pos)
                 .map(Tuple2::_2)
-                .filter(f -> f != placedBarnFarm)
-                .filter(Predicates.instanceOf(Farm.class))
-                .map(f -> (Farm) f)
-                .filter(farm -> farm.getSpecialMeeples(state)
+                .filter(f -> f != placedBarnField)
+                .filter(Predicates.instanceOf(Field.class))
+                .map(f -> (Field) f)
+                .filter(f -> f.getSpecialMeeples(state)
                     .find(Predicates.instanceOf(Barn.class))
                     .isDefined()
                 )
-                .filter(farm -> !farm.getFollowers(state).isEmpty())  //must contains at least one follower
-                .forEach(farm -> barnInvolvedFarms.add(farm));
+                .filter(f -> !f.getFollowers(state).isEmpty())  //must contains at least one follower
+                .forEach(f -> barnInvolvedFields.add(f));
         }
 
         return f -> {
-            if (f instanceof Farm) {
-                return barnInvolvedFarms.contains(f);
+            if (f instanceof Field) {
+                return barnInvolvedFields.contains(f);
             }
             if (f instanceof Completable) {
                 Completable completable = (Completable) f;

@@ -25,7 +25,7 @@ public class LocationTest {
         assertTrue(Location.E.isPartOf(Location.E));
         assertTrue(Location.N.isPartOf(Location.NW));
         assertFalse(Location.E.isPartOf(Location.NW));
-        assertFalse(Location.INNER_FARM.isPartOf(Location.N));
+        assertFalse(Location.INNER_FIELD.isPartOf(Location.N));
         assertTrue(Location._N.isPartOf(Location.NWSE));
     }
 
@@ -45,7 +45,7 @@ public class LocationTest {
         } catch (IllegalArgumentException ae) {
         }
         try {
-            Location.N.union(Location.INNER_FARM);
+            Location.N.union(Location.INNER_FIELD);
             fail();
         } catch (IllegalArgumentException ae) {
         }
@@ -111,11 +111,11 @@ public class LocationTest {
     }
 
     @Test
-    public void farmToSide() {
-        assertEquals(Location.E, Location.EL.farmToSide());
-        assertEquals(Location.E, Location.ER.farmToSide());
-        assertEquals(Location.E, Location.EL.union(Location.ER).farmToSide());
-        assertEquals(Location.NW, Location.NL.union(Location.WR).farmToSide());
+    public void fieldToSide() {
+        assertEquals(Location.E, Location.EL.fieldToSide());
+        assertEquals(Location.E, Location.ER.fieldToSide());
+        assertEquals(Location.E, Location.EL.union(Location.ER).fieldToSide());
+        assertEquals(Location.NW, Location.NL.union(Location.WR).fieldToSide());
     }
 }
 

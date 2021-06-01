@@ -288,7 +288,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
-"Allow direct barn placement on a farm where another barn is already placed."
+"Allow direct barn placement on a field where another barn is already placed."
 msgstr ""
 "Permitir la colocación directa de un granero en una granja en la que ya esté "
 "presente otro granero"
@@ -308,7 +308,7 @@ msgstr ""
 "ciudad sitiada."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:33
-msgid "The Pig herd is present on the farm tile."
+msgid "The Pig herd is present on the field tile."
 msgstr "La Piara está presente en la pieza de granja."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:35
@@ -1100,7 +1100,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"<html>Press <b>F</b> to toggle field hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
 "<html>Presionar <b>F</b> para alternar los consejos de las granjas o <b>X</"
@@ -1175,7 +1175,7 @@ msgstr "JCloisterZone "
 #~ msgid "Select meeple to undeploy"
 #~ msgstr "Selecciona meeple para recoger"
 
-#~ msgid "Confirm placement on a farm"
+#~ msgid "Confirm placement on a field"
 #~ msgstr "Confirmar la colocación en una granja"
 
 #~ msgid "Confirm placement on a tower"
@@ -1184,7 +1184,7 @@ msgstr "JCloisterZone "
 #~ msgid "Place a follower"
 #~ msgstr "Colocar un seguidor"
 
-#~ msgid "Do you really want to place a follower on farm?"
+#~ msgid "Do you really want to place a follower on field?"
 #~ msgstr "¿Seguro que quieres colocar un seguidor en la granja?"
 
 #~ msgid "Confirm follower placement"

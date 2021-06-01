@@ -56,7 +56,7 @@ public class EdgePattern implements Serializable {
 
     /**
      * Gets an instance constructed according to {@code str}. The format for {@code str} is a string exactly four
-     * characters long, each of which is one of the {@link EdgeType}s: 'R' for road, 'C' for city, 'F' for farm and
+     * characters long, each of which is one of the {@link EdgeType}s: 'R' for road, 'C' for city, 'F' for field and
      * 'I' for river. In order, each character describe the type of the North, East, South, and West edges.
      *
      * @param str the string defining the {@link EdgePattern}
@@ -222,11 +222,11 @@ public class EdgePattern implements Serializable {
     public boolean isBridgeAllowed(Location bridge) {
         assert bridge == Location.NS || bridge == Location.WE;
         if (bridge == Location.NS) {
-            if (at(Location.N) != EdgeType.FARM) return false;
-            if (at(Location.S) != EdgeType.FARM) return false;
+            if (at(Location.N) != EdgeType.FIELD) return false;
+            if (at(Location.S) != EdgeType.FIELD) return false;
         } else {
-            if (at(Location.W) != EdgeType.FARM) return false;
-            if (at(Location.E) != EdgeType.FARM) return false;
+            if (at(Location.W) != EdgeType.FIELD) return false;
+            if (at(Location.E) != EdgeType.FIELD) return false;
         }
         return true;
     }
@@ -239,7 +239,7 @@ public class EdgePattern implements Serializable {
      */
     private EdgeType getBridgeReplacement(Location side) {
         switch (at(side)) {
-        case FARM: return EdgeType.ROAD;
+        case FIELD: return EdgeType.ROAD;
         case UNKNOWN: return EdgeType.UNKNOWN;
         default: throw new IllegalArgumentException();
         }

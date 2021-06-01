@@ -3,7 +3,7 @@
 ## 5.6.1
 *2021-05-13*
 * adjusted transparency for active player colored background
-* farm scoring breakdown enhancements (missing pig bonus for castle items and adjacent City of Carcassonne)
+* field scoring breakdown enhancements (missing pig bonus for castle items and adjacent City of Carcassonne)
 * fix: undo button confirms actions instead doing undo
 * fix: scoring breakdown height on small screens
 
@@ -135,7 +135,7 @@ Game engine changes:
 * fix: castle can be created on besiged cities
 * fix: disallow undo for dragon moves
 * fix: trigger double turn even if builder was eaten by dragon
-* fix: Shepherd can co-existent on farm with barn
+* fix: Shepherd can co-existent on field with barn
 * fix: Add Little Buildings bonus also for German Monasterie
 
 ## 4.6.1
@@ -171,14 +171,14 @@ Game engine changes:
 ## 4.5.1
 *2020-05-01*
 
-* fixed #313: Shepherd placement on empty and closed farm cause error
+* fixed #313: Shepherd placement on empty and closed field cause error
 
 ## 4.5.0
 *2020-05-01*
 
 * newart plugin extended by River/River II and Abbey & Mayor tiles
 * rules: allow farmer placement on field with shepherd (#305)
-* rules: Shepherd is automatically returned when farm is "closed" (#281)
+* rules: Shepherd is automatically returned when field is "closed" (#281)
 * fixed #306: H&S null pointer exception when trying to place tile next to weird CCCF tile
 * fixed #304: Adjacent monastery and shrine should not challenge each if one of them is unoccupied
 * fixed #283: Sheep/wolf token counting error (panel should display remaining tokes not sheep sum)
@@ -265,9 +265,9 @@ Game engine changes:
 * fixed #257: Farm hints display correct color for farms with barns.
 * fixed #258: Pig/Barn issue, when pig was deployed instead of barn.
 * fix: Barn and Market quarter:
-  followers for the City of C. can be deployed on farm when barn is placed
-  or when barn farm is extended by another farm with followers
-  score properly followers moved on barn farm just before final scoring
+  followers for the City of C. can be deployed on field when barn is placed
+  or when barn field is extended by another field with followers
+  score properly followers moved on barn field just before final scoring
 * fix: some legal wagon moves were missing
 * fix: City of C. followers can be now redeployed also onto features closed by abbey.
 * fix: when moves from multiple City of C. quarters are available (eg legal move on cloister and road at
@@ -332,7 +332,7 @@ Game engine changes:
   No UI for creation such game is present yet, but same as multiple sets
   it can be achieved by manual edit of preset in config.yaml
   (Such games can be normally played with remote players)
-* fixed definition for FE.RC tile (Festival) - city wasn't bind to farm (farm may score one city less sometimes)
+* fixed definition for FE.RC tile (Festival) - city wasn't bind to field (field may score one city less sometimes)
 
 
 ### Current expansions changes
@@ -387,8 +387,8 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 * Russian Promos "expansion"
 * dark theme (there is definitely place for many improvements, especially in create game view)
 * fixed: Impossible to undo Goldmine tile placement
-* fixed The Corn Circles II tile definitions - cities was linked to farm (this bug can cause less points on farm in some cases)
-* fixed BB.CFR.b tile definition - another missing city-farm link
+* fixed The Corn Circles II tile definitions - cities was linked to field (this bug can cause less points on field in some cases)
+* fixed BB.CFR.b tile definition - another missing city-field link
 
 ## 3.4.1
 *2015-10-31*
@@ -467,7 +467,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 * fix: "2-tiles bug" - if playing with GQ11 & King and Scout - at game and counter still shows 2 tiles
 * fix: can't place on tower if there isn't normal placement possibility
 * fix: It is not possible to place the phantom as an abbot on a German monastery
-* fix: checking show farm hints option before game starts is broken
+* fix: checking show field hints option before game starts is broken
 
 
 ## 3.1.0
@@ -543,7 +543,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 * yaml configuration (ini file not sufficient for stuctured presets)
 * game setup presets: selected expansions/rules can be stored as named preset
 * persistent settings
-* farm hints (press F key to toggle)
+* field hints (press F key to toggle)
 * The Besiegers expansions (Die Belagerer)
 * Cathars/Siege: custom rule for RGG's escape variant (cloister must be adjacent to any city tile instead of directly to besieged tile)
 * random seating order option
@@ -558,7 +558,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 * connect dialog: last remote host is remembered
 * rules update: Abbey placements is permitted after last landscape tile is drawn and placed
 * rules update: dragon and followers are permitted on features outsidethe City of Carcassonne (Count tiles) (accesible by portal or flier)
-* rules update: City of Carcassonne (Count expansion) treat as city for farm scoring and King purposes.
+* rules update: City of Carcassonne (Count expansion) treat as city for field scoring and King purposes.
 * rules update: pig herds not stack (bonus is be awarded only once)
 * rules update: ransom can be paid only once during builder double turn
 * AI: Phantom support
@@ -612,7 +612,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 * add check for new version on startup (can be disabled in config.ini)
 * biggest city size / longest road length hint for king and scout bonuses is back (displayed on mouse over king or robber icon)
 * improved highlight shapes and meeples positioning for many tiles
-* one catapult tile changed - fĂŞte divides farm
+* one catapult tile changed - fĂŞte divides field
 * emphasize captured follower when ransom can be paid (click on it to pay 3 points)
 * internal: meeple position on tile can be defined for each theme (points.xml in theme jar)
 * fix: corn circles - only followers are considered for corn actions
@@ -635,7 +635,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 
 * ro localization
 * config.ini - ai_place_tile_delay
-* fix: multiplied barn points when two or more barn are placed on same farm
+* fix: multiplied barn points when two or more barn are placed on same field
 
 ## 2.1.1
 *2012-06-12*
@@ -667,7 +667,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 *2012-02-09*
 
 * abbey phase: skip button gains focus (so Enter key can skip abbey easily)
-* rule clarification: farmers on 'barn farm' are scored during score phase in same time as other followers
+* rule clarification: farmers on 'barn field' are scored during score phase in same time as other followers
 (http://carcassonnecentral.com/forum/index.php?topic=982.msg11991#msg11991)
 * fix: invalid load of discarded tiles (when tiles is present in pack more than once)
 * fix: abbey "re-close feature issue" - city resources from vicinity cities can be assigned again, more than correct point for knight&scout bonus can be assigned)
@@ -677,7 +677,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 
 * Italian translation (thx to Giorgio C.)
 * River1 images replaced (images didn't work in Linux and they had a bad quality)
-* fix: do not allow pig deployment on barn farm
+* fix: do not allow pig deployment on barn field
 * fix: some legal wagon moves can be missing
 * fix: game load for Princess and dragon when all dragon tiles were placed caused crash
 
@@ -693,7 +693,7 @@ Baba Yaga's hut is now not involved in shrine-cloister challenges (when played t
 * fix: fairy + builder's double turn - 1 point for fairy is added only once
 * fix: princess & dragon + river II - dragon is placed on lake with volcano
 * fix: barn cannot be eaten by dragon
-* fix: seducing last follower from city/farm must also remove builder/pig
+* fix: seducing last follower from city/field must also remove builder/pig
 * fix: multiple network stubs if 'Create new game' selected from menu more then once
 
 ## 2.0
@@ -793,7 +793,7 @@ Remarkable points:
 * The Tunnel expansion
 * translation to Finnish (thanks to Jari H.)
 * fixed: mayor is not displayed in remote client
-* fixed: farm can contain two pig herds
+* fixed: field can contain two pig herds
 * fixed: preview icon remains rarely displayed after tile placement
 
 ## 1.5.3
@@ -824,11 +824,11 @@ Remarkable points:
 * code refactoring -> no backward compatibility !
 * The Cult expansion
 * princess and dragon - AI time consumption fixed for 'magic gate' tiles
-* fixed: final farm scoring
+* fixed: final field scoring
 
 ## 1.3.2
 * small rules change: follower can be placed on tower with minimal height 1 (it means no placement directly on tower base)
-* fixed: follower correctly displayed when placed on farm on two tiles from Traders & Builders (tileId: T0121_C, T0121_W)
+* fixed: follower correctly displayed when placed on field on two tiles from Traders & Builders (tileId: T0121_C, T0121_W)
 
 ## 1.3.1
 * fixed: possible crash (NullPointerException) when playing Tower and Princess expansions
@@ -840,7 +840,7 @@ Remarkable points:
 * default checkbox state for expansions can by set in config
 * action selection can be done by click on appropriate icon on panel
 * figures on farms marked (also on towers)
-* optional placement confirmation during follower placement on tower or farm
+* optional placement confirmation during follower placement on tower or field
 * show dragon remaining moves
 * flash on last placed tile
 * placement history (use 'x' key to activate)

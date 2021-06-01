@@ -288,7 +288,7 @@ msgstr "Plaats de Fee op een tegel. (in plaats van naast een volgeling)"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
-"Allow direct barn placement on a farm where another barn is already placed."
+"Allow direct barn placement on a field where another barn is already placed."
 msgstr ""
 "Sta directe plaatsing van boerderij toe op weilanden waar reeds een "
 "boerderij geplaatst is."
@@ -307,7 +307,7 @@ msgstr ""
 "Ontsnappings klooster mag aangrenzend aan elke tegel van een belegerde stad."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:33
-msgid "The Pig herd is present on the farm tile."
+msgid "The Pig herd is present on the field tile."
 msgstr "De varkensstal is aanwezig op de weiland tegel."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:35
@@ -1100,7 +1100,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"<html>Press <b>F</b> to toggle field hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
 "<html>Druk op <b>F</b> om weiland hints in/uit te schakelen of <b>X</b> om "
@@ -1178,7 +1178,7 @@ msgstr "JCloisterzone "
 #~ msgid "Place a follower"
 #~ msgstr "Plaats een horige"
 
-#~ msgid "Do you really want to place a follower on farm?"
+#~ msgid "Do you really want to place a follower on field?"
 #~ msgstr "Wil je echt een horige op een weiland plaatsen?"
 
 #~ msgid "Confirm follower placement"
@@ -1194,7 +1194,7 @@ msgstr "JCloisterzone "
 #~ "Wil je echt een horige op de toren plaatsen?\n"
 #~ "(Om te voorkomen dat er bijkomende stukken op de toren geplaatst worden)"
 
-#~ msgid "Confirm placement on a farm"
+#~ msgid "Confirm placement on a field"
 #~ msgstr "Bevestig plaatsing op weiland"
 
 #~ msgid "Confirm placement on a tower"

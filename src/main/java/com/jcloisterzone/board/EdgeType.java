@@ -1,13 +1,13 @@
 package com.jcloisterzone.board;
 
 /**
- * Enumerates all possible edge types. An edge can contain a farm, a river, a city or a road. An unknown type is also
+ * Enumerates all possible edge types. An edge can contain a field, a river, a city or a road. An unknown type is also
  * provided.
  */
 public enum EdgeType {
     ROAD(0b0001, 'R'),
     CITY(0b0010, 'C'),
-    FARM(0b0100, 'F'),
+    FIELD(0b0100, 'F'),
     RIVER(0b1000, 'I'),
     UNKNOWN(0b1111, '?');
 

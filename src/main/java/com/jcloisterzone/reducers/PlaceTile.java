@@ -157,7 +157,7 @@ public class PlaceTile implements Reducer {
                 FeaturePointer adjPartOfPtr = new FeaturePointer(pos.add(side), side.rev());
                 CompletableFeature<?> originalAdj = (CompletableFeature) state.getFeaturePartOf(adjPartOfPtr);
                 if (originalAdj == null) {
-                    //farm (or empty tile - which can happen only in debug when non-hole placement is enabled)
+                    // field (or empty tile - which can happen only in debug when non-hole placement is enabled)
                     continue;
                 }
 

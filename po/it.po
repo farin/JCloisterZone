@@ -287,7 +287,7 @@ msgstr "Piazza la fata sulla tessera (invece che vicino a un seguace)"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
-"Allow direct barn placement on a farm where another barn is already placed."
+"Allow direct barn placement on a field where another barn is already placed."
 msgstr ""
 "Permetti il piazzamento diretto del fienile su una fattoria dove è già "
 "presente un altro fienile."
@@ -309,7 +309,7 @@ msgstr ""
 "una città assediata"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:33
-msgid "The Pig herd is present on the farm tile."
+msgid "The Pig herd is present on the field tile."
 msgstr "La mandria di maiali è presente sulla tessera della fattoria"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:35
@@ -1099,7 +1099,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"<html>Press <b>F</b> to toggle field hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
 "<html>Premi <b>F</b> per attivare o disattivare i suggerimenti per la "

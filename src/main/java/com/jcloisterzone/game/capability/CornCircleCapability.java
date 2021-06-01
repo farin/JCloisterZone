@@ -4,7 +4,7 @@ import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
@@ -33,7 +33,7 @@ public class CornCircleCapability extends Capability<CornCircleOption> {
 
 	private static final CornCircleModifier CORN_CIRCLE_ROAD = new CornCircleModifier(Road.class);
 	private static final CornCircleModifier CORN_CIRCLE_CITY = new CornCircleModifier(City.class);
-	private static final CornCircleModifier CORN_CIRCLE_FARM = new CornCircleModifier(Farm.class);
+	private static final CornCircleModifier CORN_CIRCLE_FIELD = new CornCircleModifier(Field.class);
 
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
@@ -51,11 +51,11 @@ public class CornCircleCapability extends Capability<CornCircleOption> {
             case "City":
             	modifier = CORN_CIRCLE_CITY;
             	break;
-            case "Farm":
+            case "Field":
             	if (!state.getBooleanRule(Rule.FARMERS)) {
             		return tile;
 				}
-            	modifier = CORN_CIRCLE_FARM;
+            	modifier = CORN_CIRCLE_FIELD;
             	break;
             default:
             	throw new IllegalArgumentException("Invalid corn circle type.");

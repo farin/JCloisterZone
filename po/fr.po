@@ -291,7 +291,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
-"Allow direct barn placement on a farm where another barn is already placed."
+"Allow direct barn placement on a field where another barn is already placed."
 msgstr ""
 "Permettre le placement d''une grange sur un pré où une autre grange a déjà "
 "été placée."
@@ -313,7 +313,7 @@ msgstr ""
 "de n''importe quelle tuile d''une ville assiégée."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:33
-msgid "The Pig herd is present on the farm tile."
+msgid "The Pig herd is present on the field tile."
 msgstr "Troupeau de cochon présent sur les tuiles comportant un pré."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:35
@@ -1108,7 +1108,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"<html>Press <b>F</b> to toggle field hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
 "<html>Appuyez sur <b>F</b> pour afficher la superficie des prés ou sur <b>X</"

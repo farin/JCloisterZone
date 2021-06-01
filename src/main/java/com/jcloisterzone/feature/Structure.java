@@ -12,7 +12,7 @@ import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 
 /**
- * A feature on which can be meeple deployed (this includes also Farm feature).
+ * A feature on which can be meeple deployed (this includes also Field feature).
  */
 public interface Structure extends Feature {
 

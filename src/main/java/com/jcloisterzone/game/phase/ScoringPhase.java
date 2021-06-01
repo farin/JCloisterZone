@@ -15,8 +15,8 @@ import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.ScoreCompletable;
-import com.jcloisterzone.reducers.ScoreFarm;
-import com.jcloisterzone.reducers.ScoreFarmWhenBarnIsConnected;
+import com.jcloisterzone.reducers.ScoreField;
+import com.jcloisterzone.reducers.ScoreFieldWhenBarnIsConnected;
 import com.jcloisterzone.reducers.UndeployMeeples;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
@@ -100,25 +100,25 @@ public class ScoringPhase extends Phase {
 
         if (state.getCapabilities().contains(BarnCapability.class)) {
             FeaturePointer placedBarnPtr = state.getCapabilityModel(BarnCapability.class);
-            Farm placedBarnFarm = placedBarnPtr == null ? null : (Farm) state.getFeature(placedBarnPtr);
-            if (placedBarnFarm != null) {
+            Field placedBarnField = placedBarnPtr == null ? null : (Field) state.getFeature(placedBarnPtr);
+            if (placedBarnField != null) {
                 //ScoreFeature is scoring just followers!
-                state = (new ScoreFarm(placedBarnFarm, false, "barn-placed")).apply(state);
-                state = (new UndeployMeeples(placedBarnFarm, false)).apply(state);
+                state = (new ScoreField(placedBarnField, false, "barn-placed")).apply(state);
+                state = (new UndeployMeeples(placedBarnField, false)).apply(state);
             }
 
             GameState _state = state;
-            for (Farm farm : state.getTileFeatures2(pos)
+            for (Field field : state.getTileFeatures2(pos)
                 .map(Tuple2::_2)
-                .filter(f -> f != placedBarnFarm)
-                .filter(Predicates.instanceOf(Farm.class))
-                .map(f -> (Farm) f)
-                .filter(farm -> farm.getSpecialMeeples(_state)
+                .filter(f -> f != placedBarnField)
+                .filter(Predicates.instanceOf(Field.class))
+                .map(f -> (Field) f)
+                .filter(f -> f.getSpecialMeeples(_state)
                     .find(Predicates.instanceOf(Barn.class))
                     .isDefined()
                 )) {
-                state = (new ScoreFarmWhenBarnIsConnected(farm)).apply(state);
-                state = (new UndeployMeeples(farm, false)).apply(state);
+                state = (new ScoreFieldWhenBarnIsConnected(field)).apply(state);
+                state = (new UndeployMeeples(field, false)).apply(state);
             }
         }
 

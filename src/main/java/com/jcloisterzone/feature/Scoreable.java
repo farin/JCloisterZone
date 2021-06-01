@@ -18,7 +18,7 @@ import io.vavr.collection.*;
  * Feature which can be scored.
  *
  * Counterintuitive {@code getPoints()} is not present on the interface because of different nature
- * of {@code Completable}, {@code Farm} and {@code Castle} scoring
+ * of {@code Completable}, {@code Field} and {@code Castle} scoring
  *
  */
 public interface Scoreable extends Structure {

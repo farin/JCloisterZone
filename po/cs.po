@@ -285,7 +285,7 @@ msgstr "Umisťovat vílu na celé  pole. (místo umístění vedle jedné figurk
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
-"Allow direct barn placement on a farm where another barn is already placed."
+"Allow direct barn placement on a field where another barn is already placed."
 msgstr "Povolit přímé umístění stodoly na louku s již položenou stodolou."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:27
@@ -302,7 +302,7 @@ msgstr ""
 "Klášter pro útěk může sousedit s libovolnou kartičkou obleženého města."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:33
-msgid "The Pig herd is present on the farm tile."
+msgid "The Pig herd is present on the field tile."
 msgstr "Prasečí ohrada na kartě s loukou."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:35
@@ -1092,7 +1092,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"<html>Press <b>F</b> to toggle field hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
 "<html>Stiskni <b>F</b> pro zvýraznění jednotlivých luk nebo <b>X</b> pro "
@@ -1178,7 +1178,7 @@ msgstr ""
 #~ msgid "Select meeple to undeploy"
 #~ msgstr "Vyber která figurka bude idebrána"
 
-#~ msgid "Confirm placement on a farm"
+#~ msgid "Confirm placement on a field"
 #~ msgstr "Potvrzovat položení na louku"
 
 #~ msgid "Confirm placement on a tower"
@@ -1187,7 +1187,7 @@ msgstr ""
 #~ msgid "Place a follower"
 #~ msgstr "Potvzení položení figurky"
 
-#~ msgid "Do you really want to place a follower on farm?"
+#~ msgid "Do you really want to place a follower on field?"
 #~ msgstr "Opravdu chcete položit figurku na louku?"
 
 #~ msgid "Confirm follower placement"

@@ -10,7 +10,7 @@ import io.vavr.collection.Vector;
 
 
 /**
- * Represents locations on a tile. A location is any "space" where tile features, such as rivers, roads, farms, abbots,
+ * Represents locations on a tile. A location is any "space" where tile features, such as rivers, roads, fields, abbots,
  * etc. can be located.
  * Examples of locations include:
  * - a south-to-east feature-space (e.g., a river, a road, a city)
@@ -20,12 +20,12 @@ import io.vavr.collection.Vector;
  * - a cloister space
  * - a flier space
  * - a tower space
- * - a farm-space on the left of the west side
- * - a farm space facing no sides (surrounded by other features)
+ * - a field-space on the left of the west side
+ * - a field space facing no sides (surrounded by other features)
  *
  * Multiple locations in the same tile can coexist and they are represented using bits as flags.
  *
- *   Bit order                 Constants for farm locations            Constants for roads/rivers/cities
+ *   Bit order                 Constants for field locations            Constants for roads/rivers/cities
  *
  *   +---------+                    +------------+                       +-----------------+
  *   |  0   1  |                    |    1    2  |                       |       768       |
@@ -35,7 +35,7 @@ import io.vavr.collection.Vector;
  *   |  5   4  |                    |   32   16  |                       |      12288      |
  *   +---------+                    +------------+                       +-----------------+
  *
- *  City/road/river locations are shifted by 8 bit so they can coexist with farm locations.
+ *  City/road/river locations are shifted by 8 bit so they can coexist with field locations.
  */
 @Immutable
 public class Location implements Serializable {
@@ -95,21 +95,21 @@ public class Location implements Serializable {
 
     // edge locations for fields
 
-    /** North left farm */
+    /** North left field */
     public static final Location NL = new Location("NL", 0b00000001);
-    /** North right farm */
+    /** North right field */
     public static final Location NR = new Location("NR", 0b00000010);
-    /** East left farm */
+    /** East left field */
     public static final Location EL = new Location("EL", 0b00000100);
-    /** East right farm */
+    /** East right field */
     public static final Location ER = new Location("ER", 0b00001000);
-    /** South left farm */
+    /** South left field */
     public static final Location SL = new Location("SL", 0b00010000);
-    /** South right farm */
+    /** South right field */
     public static final Location SR = new Location("SR", 0b00100000);
-    /** West left farm */
+    /** West left field */
     public static final Location WL = new Location("WL", 0b01000000);
-    /** West right farm */
+    /** West right field */
     public static final Location WR = new Location("WR", 0b10000000);
 
     // edge locations for other features
@@ -150,14 +150,14 @@ public class Location implements Serializable {
 
     // inner locations
 
-    /** Inner farm*/
-    public static final Location INNER_FARM = new Location("INNER_FARM");
-    /** for tiles with two inner farms */
-    public static final Location INNER_FARM_B = new Location("INNER_FARM_B");
+    /** Inner field */
+    public static final Location INNER_FIELD = new Location("INNER_FIELD");
+    /** for tiles with two inner fields */
+    public static final Location INNER_FIELD_B = new Location("INNER_FIELD_B");
 
-    /** Inner city */
+    /** Inner city - fan expansions only */
     public static final Location INNER_CITY = new Location("INNER_CITY");
-    /** Inner road */
+    /** Inner road - fan expansions only */
     public static final Location INNER_ROAD = new Location("INNER_ROAD");
 
     /** A cloister space */
@@ -175,7 +175,7 @@ public class Location implements Serializable {
     public static final Location QUARTER_CATHEDRAL = new Location("QUARTER_CATHEDRAL");
 
     public static final List<Location> SIDES = List.of(N, E, S, W);
-    public static final List<Location> FARM_SIDES = List.of(NL, NR, EL, ER, SL, SR, WL, WR);
+    public static final List<Location> FIELD_SIDES = List.of(NL, NR, EL, ER, SL, SR, WL, WR);
     public static final List<Location> BRIDGES = List.of(NS, WE);
     public static final List<Location> QUARTERS = List.of(QUARTER_CASTLE, QUARTER_MARKET, QUARTER_BLACKSMITH, QUARTER_CATHEDRAL);
 
@@ -274,18 +274,18 @@ public class Location implements Serializable {
         return shift(rot.ordinal() * 2);
     }
 
-    public Location getLeftFarm() {
+    public Location getLeftField() {
         if (!isEdge()) throw new UnsupportedOperationException("Edge expected");
         return create(null, (mask >> 8) & 0b01010101);
     }
 
-    public Location getRightFarm() {
+    public Location getRightField() {
         if (!isEdge()) throw new UnsupportedOperationException("Edge expected");
         return create(null,(mask >> 8) & 0b010101010);
     }
 
-    public Location farmToSide() {
-        if (!isFarmEdge()) throw new UnsupportedOperationException("Farm edge expected");
+    public Location fieldToSide() {
+        if (!isFieldEdge()) throw new UnsupportedOperationException("Field edge expected");
         int mask = 0;
         if (Location.NL.isPartOf(this)) mask |= Location.N.mask;
         if (Location.NR.isPartOf(this)) mask |= Location.N.mask;
@@ -317,7 +317,7 @@ public class Location implements Serializable {
     public String toString() {
         if (name != null) return name;
         StringBuilder str = new StringBuilder();
-        for (Location atom : FARM_SIDES) {
+        for (Location atom : FIELD_SIDES) {
             if (hasIntersection(atom)) {
                 if (str.length() > 0) str.append(".");
                 str.append(atom.name);
@@ -334,7 +334,7 @@ public class Location implements Serializable {
     public Location union(Location loc) {
         if (loc == null) return this;
         if (isInner()) throw new UnsupportedOperationException("Not allowed for inner location");
-        if (loc.isInner() || (isEdge() && !loc.isEdge()) || (isFarmEdge() && !loc.isFarmEdge())) throw new IllegalArgumentException("Same edge type is required");
+        if (loc.isInner() || (isEdge() && !loc.isEdge()) || (isFieldEdge() && !loc.isFieldEdge())) throw new IllegalArgumentException("Same edge type is required");
         return create(null, mask | loc.mask);
     }
 
@@ -347,7 +347,7 @@ public class Location implements Serializable {
     public Location subtract(Location loc) {
         if (loc == null) return this;
         if (isInner()) throw new UnsupportedOperationException("Not alloed for inner location");
-        if (loc.isInner() || (isEdge() && !loc.isEdge()) || (isFarmEdge() && !loc.isFarmEdge())) throw new IllegalArgumentException("Same edge type is required");
+        if (loc.isInner() || (isEdge() && !loc.isEdge()) || (isFieldEdge() && !loc.isFieldEdge())) throw new IllegalArgumentException("Same edge type is required");
         return create(null, (~(mask & loc.mask)) & mask);
     }
 
@@ -359,7 +359,7 @@ public class Location implements Serializable {
     public Location intersect(Location loc) {
         // TODO it would be better rise expception for inompatible types instead. But not sure if code relies on it.
         if (loc == null || isInner() || loc.isInner()) return null;
-        if ((isEdge() && !loc.isEdge()) || (isFarmEdge() && !loc.isFarmEdge())) return null;
+        if ((isEdge() && !loc.isEdge()) || (isFieldEdge() && !loc.isFieldEdge())) return null;
         if ((mask & loc.mask) == 0) return null;
         return create(null, mask & loc.mask);
     }
@@ -376,8 +376,8 @@ public class Location implements Serializable {
         return Location.SIDES.filter(side -> hasIntersection(side));
     }
 
-    public List<Location> splitToFarmSides() {
-        return Location.FARM_SIDES.filter(side -> hasIntersection(side));
+    public List<Location> splitToFieldSides() {
+        return Location.FIELD_SIDES.filter(side -> hasIntersection(side));
     }
 
     /**
@@ -424,9 +424,9 @@ public class Location implements Serializable {
         return getRotationOf(loc) != null;
     }
 
-    /* get included full farm coners */
+    /* get included full field coners */
     public Vector<Corner> getCorners() {
-        if (!isFarmEdge()) {
+        if (!isFieldEdge()) {
             return Vector.empty();
         }
         Vector<Corner> res = Vector.empty();
@@ -442,10 +442,10 @@ public class Location implements Serializable {
     }
 
     /**
-     * Checks if {@code this} is a farm location.
-     * @return {@code true} if {@code this} is a farm location, {@code false} otherwise
+     * Checks if {@code this} is a field location.
+     * @return {@code true} if {@code this} is a field location, {@code false} otherwise
      */
-    public boolean isFarmEdge() {
+    public boolean isFieldEdge() {
         return mask != null && (mask & 0xFF) > 0;
     }
 

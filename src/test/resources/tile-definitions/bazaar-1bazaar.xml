@@ -3,6 +3,6 @@
     <tile id="R.bi">
         <bazaar/>
         <road inn="yes">S</road>
-        <farm>NL NR EL ER SL SR WL WR</farm>
+        <field>NL NR EL ER SL SR WL WR</field>
     </tile>
 </pack>

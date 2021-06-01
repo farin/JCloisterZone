@@ -41,7 +41,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
         if (loc == Location.QUARTER_CASTLE) return City.class;
         if (loc == Location.QUARTER_BLACKSMITH) return Road.class;
         if (loc == Location.QUARTER_CATHEDRAL) return Cloister.class;
-        if (loc == Location.QUARTER_MARKET) return Farm.class;
+        if (loc == Location.QUARTER_MARKET) return Field.class;
         throw new IllegalArgumentException("Illegal location " + loc);
     }
 

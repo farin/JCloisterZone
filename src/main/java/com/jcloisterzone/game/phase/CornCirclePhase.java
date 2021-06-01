@@ -5,7 +5,7 @@ import com.jcloisterzone.action.*;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.random.RandomGenerator;
@@ -97,7 +97,7 @@ public class CornCirclePhase extends Phase {
         switch (option) {
         case DEPLOY:
             Vector<Class<? extends Meeple>> meepleTypes = Vector.of(SmallFollower.class, BigFollower.class, Phantom.class);
-            if (!cornType.equals(Farm.class)) {
+            if (!cornType.equals(Field.class)) {
                 meepleTypes = meepleTypes.append(Wagon.class);
             }
             if (cornType.equals(City.class)) {

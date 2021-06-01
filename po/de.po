@@ -287,7 +287,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
-"Allow direct barn placement on a farm where another barn is already placed."
+"Allow direct barn placement on a field where another barn is already placed."
 msgstr ""
 "Erlaube das Setzen eines Gutshofes auf eine Wiese mit bereits vorhandenen "
 "Gutshöfen."
@@ -307,7 +307,7 @@ msgstr ""
 "ermöglichen."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:33
-msgid "The Pig herd is present on the farm tile."
+msgid "The Pig herd is present on the field tile."
 msgstr ""
 "Die Schweineherde wird gewertet. (Entsprechend der Regel des Flussplättchen.)"
 
@@ -1100,7 +1100,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"<html>Press <b>F</b> to toggle field hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
 "<html>Drücke <b>F</b> für die Wiesenmarkierung oder <b>X</b> um die zuletzt "
@@ -1175,7 +1175,7 @@ msgstr "JCloisterZone "
 #~ msgid "Select meeple to undeploy"
 #~ msgstr "Figur wählen zum Zurücknehmen"
 
-#~ msgid "Confirm placement on a farm"
+#~ msgid "Confirm placement on a field"
 #~ msgstr "Setzen auf Wiese bestätigen"
 
 #~ msgid "Confirm placement on a tower"
@@ -1184,7 +1184,7 @@ msgstr "JCloisterZone "
 #~ msgid "Place a follower"
 #~ msgstr "Eine Figur setzen"
 
-#~ msgid "Do you really want to place a follower on farm?"
+#~ msgid "Do you really want to place a follower on field?"
 #~ msgstr "Willst du wirklich eine Figur auf eine Wiese setzen?"
 
 #~ msgid "Confirm follower placement"

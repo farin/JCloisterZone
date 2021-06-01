@@ -145,7 +145,7 @@ public class Tile implements Serializable {
     private EdgeType computeSideEdge(Location loc) {
         Tuple2<Location, Feature> tuple = initialFeatures.find(item -> loc.isPartOf(item._1)).getOrNull();
 
-        if (tuple == null) return EdgeType.FARM;
+        if (tuple == null) return EdgeType.FIELD;
         if (tuple._2 instanceof Road) return EdgeType.ROAD;
         if (tuple._2 instanceof City) return EdgeType.CITY;
         if (tuple._2 instanceof River) return EdgeType.RIVER;

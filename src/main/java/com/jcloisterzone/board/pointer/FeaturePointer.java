@@ -6,7 +6,7 @@ import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
-import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.feature.Feature;
 
 import io.vavr.collection.List;
@@ -43,14 +43,14 @@ public class FeaturePointer implements BoardPointer {
     }
 
     public Stream<FeaturePointer> getAdjacent(Class<? extends Feature> forType) {
-        boolean isFarm = Farm.class.isAssignableFrom(forType);
+        boolean isField = Field.class.isAssignableFrom(forType);
 
-        if (isFarm) {
+        if (isField) {
             return Stream.ofAll(Location.SIDES)
                 .flatMap(loc -> {
                     List<FeaturePointer> res = List.empty();
-                    Location l = loc.getLeftFarm();
-                    Location r = loc.getRightFarm();
+                    Location l = loc.getLeftField();
+                    Location r = loc.getRightField();
                     if (l.intersect(location) != null) {
                         res = res.prepend( new FeaturePointer(position.add(loc), l.rev()));
                     }

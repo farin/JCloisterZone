@@ -290,7 +290,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
-"Allow direct barn placement on a farm where another barn is already placed."
+"Allow direct barn placement on a field where another barn is already placed."
 msgstr ""
 "Permite plasarea directă a hambarului pe o fermă care conține deja unul."
 
@@ -311,7 +311,7 @@ msgstr ""
 "asediu."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:33
-msgid "The Pig herd is present on the farm tile."
+msgid "The Pig herd is present on the field tile."
 msgstr "Ferma de porci este prezentă pe dala cu fermă."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:35
@@ -1105,7 +1105,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"<html>Press <b>F</b> to toggle field hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
 "<html>Apãsați <b>F</b> pentru a activa sau dezactiva sugestiile de ferme sau "
@@ -1182,7 +1182,7 @@ msgstr "JCloisterZone "
 #~ msgid "Select meeple to undeploy"
 #~ msgstr "Selectare supus pentru retragere"
 
-#~ msgid "Confirm placement on a farm"
+#~ msgid "Confirm placement on a field"
 #~ msgstr "Confirmare așezare fermă"
 
 #~ msgid "Confirm placement on a tower"
@@ -1191,7 +1191,7 @@ msgstr "JCloisterZone "
 #~ msgid "Place a follower"
 #~ msgstr "Plasați un slujitor"
 
-#~ msgid "Do you really want to place a follower on farm?"
+#~ msgid "Do you really want to place a follower on field?"
 #~ msgstr "Doriți să plasați un slujitor pe fermă?"
 
 #~ msgid "Confirm follower placement"
@@ -1259,7 +1259,7 @@ msgstr "JCloisterZone "
 #~ msgid "King and Scout"
 #~ msgstr "Rege şi cercetaş"
 
-#~ msgid "Each city is scored with one farm only."
+#~ msgid "Each city is scored with one field only."
 #~ msgstr "Fiecare oraş este punctat doar dacã are o fermã."
 
 #~ msgid "The Builder and the pig cannot be placed on a volcano."

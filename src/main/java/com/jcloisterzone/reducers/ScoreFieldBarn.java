@@ -5,7 +5,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
-import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Special;
@@ -14,31 +14,31 @@ import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
 
-public class ScoreFarmBarn implements ScoreFeatureReducer {
+public class ScoreFieldBarn implements ScoreFeatureReducer {
 
-    private final Farm farm;
+    private final Field field;
     private final boolean isFinal;
 
     // "out" variable - computed owners are store to instance
     // to be available to reducer caller
     private Map<Player, PointsExpression> playerPoints = HashMap.empty();
 
-    public ScoreFarmBarn(Farm farm, boolean isFinal) {
-        this.farm = farm;
+    public ScoreFieldBarn(Field field, boolean isFinal) {
+        this.field = field;
         this.isFinal = isFinal;
     }
 
     @Override
     public Scoreable getFeature() {
-        return farm;
+        return field;
     }
 
     @Override
     public GameState apply(GameState state) {
-        Stream<Tuple2<Special, FeaturePointer>> barns = farm.getSpecialMeeples2(state)
+        Stream<Tuple2<Special, FeaturePointer>> barns = field.getSpecialMeeples2(state)
             .filter(t -> t._1 instanceof Barn);
 
-        PointsExpression expr = farm.getBarnPoints(state);
+        PointsExpression expr = field.getBarnPoints(state);
         List<ReceivedPoints> receivedPoints = List.empty();
 
         for (Tuple2<Special, FeaturePointer> t : barns) {

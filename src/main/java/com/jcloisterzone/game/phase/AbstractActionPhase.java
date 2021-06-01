@@ -55,7 +55,7 @@ public abstract class AbstractActionPhase extends Phase {
             places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik));
 
             if (!state.getBooleanRule(Rule.FARMERS)) {
-                places = places.filter(t -> !(t._2 instanceof Farm));
+                places = places.filter(t -> !(t._2 instanceof Field));
             }
 
             // towers are handled by Tower capability separately (needs collect towers on all tiles)
@@ -236,7 +236,7 @@ public abstract class AbstractActionPhase extends Phase {
         }
 
         Stream<Tuple2<FeaturePointer, Structure>> structures = getAvailableStructures(state, Stream.of(targetTile), HashSet.empty());
-        structures = structures.filter(t -> !(t._2 instanceof Farm));
+        structures = structures.filter(t -> !(t._2 instanceof Field));
         Set<FeaturePointer> options = getMeepleAvailableStructures(state, meeple, structures, true);
 
         if (options.isEmpty()) {

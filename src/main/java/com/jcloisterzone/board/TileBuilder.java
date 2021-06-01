@@ -87,9 +87,9 @@ public class TileBuilder {
             for (int i = 0; i < nl.getLength(); i++) {
                 processCityElement((Element) nl.item(i));
             }
-            nl = xml.getElementsByTagName("farm");
+            nl = xml.getElementsByTagName("field");
             for (int i = 0; i < nl.getLength(); i++) {
-                processFarmElement((Element) nl.item(i));
+                processFieldElement((Element) nl.item(i));
             }
             nl = xml.getElementsByTagName("tower");
             for (int i = 0; i < nl.getLength(); i++) {
@@ -131,9 +131,9 @@ public class TileBuilder {
     }
 
     public Feature initFeature(String tileId, Feature feature, Element xml) {
-        if (feature instanceof Farm && tileId.startsWith("CO/")) {
+        if (feature instanceof Field && tileId.startsWith("CO/")) {
             //this is not part of Count capability because it is integral behaviour valid also when capability is off
-            feature = ((Farm) feature).setAdjoiningCityOfCarcassonne(true);
+            feature = ((Field) feature).setAdjoiningCityOfCarcassonne(true);
         }
         for (Capability<?> cap: state.getCapabilities().toSeq()) {
             feature = cap.initFeature(state, tileId, feature, xml);
@@ -227,10 +227,9 @@ public class TileBuilder {
         features.put(place.getLocation(), river);
     }
 
-    //TODO move expansion specific stuff
-    private void processFarmElement(Element e) {
+    private void processFieldElement(Element e) {
         Stream<Location> sides = contentAsLocations(e);
-        FeaturePointer place = initFeaturePointer(sides, Farm.class);
+        FeaturePointer place = initFeaturePointer(sides, Field.class);
         Set<FeaturePointer> adjoiningCities;
 
         if (e.hasAttribute("city")) {
@@ -254,17 +253,17 @@ public class TileBuilder {
             adjoiningCities = HashSet.empty();
         }
 
-        Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("farm", e);
-        Farm farm = new Farm(List.of(place),  adjoiningCities,  false, modifiers);
+        Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("field", e);
+        Field field = new Field(List.of(place),  adjoiningCities,  false, modifiers);
 
-        farm = (Farm) initFeature(tileId, farm, e);
-        features.put(place.getLocation(), farm);
+        field = (Field) initFeature(tileId, field, e);
+        features.put(place.getLocation(), field);
     }
 
     private FeaturePointer initFeaturePointer(Stream<Location> sides, Class<? extends Feature> clazz) {
         AtomicReference<Location> locRef = new AtomicReference<>();
         sides.forEach(l -> {
-            assert l.isInner() || clazz.equals(Farm.class) == l.isFarmEdge() : String.format("Invalid location %s kind for tile %s", l, tileId);
+            assert l.isInner() || clazz.equals(Field.class) == l.isFieldEdge() : String.format("Invalid location %s kind for tile %s", l, tileId);
             assert l.intersect(locRef.get()) == null;
             locRef.set(locRef.get() == null ? l : locRef.get().union(l));
         });

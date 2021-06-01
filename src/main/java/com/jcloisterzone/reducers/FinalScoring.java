@@ -13,9 +13,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.Predicates;
-import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
-import io.vavr.collection.Map;
 import io.vavr.collection.Stream;
 
 public class FinalScoring implements Reducer {
@@ -73,21 +71,21 @@ public class FinalScoring implements Reducer {
             }
         }
 
-        for (Farm farm : getOccupiedScoreables(state, Farm.class)) {
-            boolean hasBarn = farm.getSpecialMeeples(state)
+        for (Field field : getOccupiedScoreables(state, Field.class)) {
+            boolean hasBarn = field.getSpecialMeeples(state)
                 .find(Predicates.instanceOf(Barn.class)).isDefined();
-            boolean hasFollowers = !farm.getFollowers(state).isEmpty();
+            boolean hasFollowers = !field.getFollowers(state).isEmpty();
 
             if (hasBarn) {
                 if (hasFollowers) {
                     // special case, followers deployed using City of Carcassonne before final scoring
-                    state = (new ScoreFarmWhenBarnIsConnected(farm)).apply(state);
-                    state = (new UndeployMeeples(farm, false)).apply(state);
+                    state = (new ScoreFieldWhenBarnIsConnected(field)).apply(state);
+                    state = (new UndeployMeeples(field, false)).apply(state);
                 }
-                state = (new ScoreFarmBarn(farm, true)).apply(state);
+                state = (new ScoreFieldBarn(field, true)).apply(state);
             } else {
                 if (hasFollowers) {
-                    state = (new ScoreFarm(farm, true)).apply(state);
+                    state = (new ScoreField(field, true)).apply(state);
                 }
             }
         }

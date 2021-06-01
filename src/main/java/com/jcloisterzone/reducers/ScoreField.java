@@ -2,22 +2,22 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
 
-public class ScoreFarm extends ScoreFeature {
+public class ScoreField extends ScoreFeature {
 
     protected Map<Player, PointsExpression> playerPoints = HashMap.empty();
     private final String exprSubtitle;
 
-    public ScoreFarm(Farm feature, boolean isFinal, String exprSubtitle) {
+    public ScoreField(Field feature, boolean isFinal, String exprSubtitle) {
         super(feature, isFinal);
         this.exprSubtitle = exprSubtitle;
     }
 
-    public ScoreFarm(Farm feature, boolean isFinal) {
+    public ScoreField(Field feature, boolean isFinal) {
         this(feature, isFinal, null);
     }
 
@@ -39,8 +39,8 @@ public class ScoreFarm extends ScoreFeature {
     }
 
     @Override
-    public Farm getFeature() {
-        return (Farm) super.getFeature();
+    public Field getFeature() {
+        return (Field) super.getFeature();
     }
 
 }

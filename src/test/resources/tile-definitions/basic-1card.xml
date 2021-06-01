@@ -3,8 +3,8 @@
     <tile count="2" id="RCr">
         <road>W E</road>
         <city>N</city>
-        <farm city="N">EL WR</farm>
-        <farm>ER SL SR WL</farm>
+        <field city="N">EL WR</field>
+        <field>ER SL SR WL</field>
         <position x="0" y="0"/>
     </tile>
 </pack>

@@ -296,7 +296,7 @@ msgstr "妖精をタイルに置きます。（コマのそばより。）"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
-"Allow direct barn placement on a farm where another barn is already placed."
+"Allow direct barn placement on a field where another barn is already placed."
 msgstr "別の納屋がすでに配置されている草原で直接納屋配置することを許可します。"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:27
@@ -312,7 +312,7 @@ msgid "Escape cloister can be placed adjacent to any tile of a besieged city."
 msgstr "攻囲された都市のタイルの隣に避難修道院の配置が可能です。"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:33
-msgid "The Pig herd is present on the farm tile."
+msgid "The Pig herd is present on the field tile."
 msgstr "豚の群れが草原タイルに存在しています。"
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:35
@@ -1105,7 +1105,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"<html>Press <b>F</b> to toggle field hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
 "<html><b>F</b>キーを押すと草原ヒント表示を切り替えます。<b>X</b>キーを押すと"

@@ -16,10 +16,10 @@ import io.vavr.collection.*;
 
 import java.util.ArrayList;
 
-public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Farm>, ModifiedFeature<Farm> {
+public class Field extends TileFeature implements Scoreable, MultiTileFeature<Field>, ModifiedFeature<Field> {
 
     // TODO rename attribute to pig-herd
-    public static final IntegerAddModifier PIG_HERD = new IntegerAddModifier("farm[pig]", new GameElementQuery("pig-herd"));
+    public static final IntegerAddModifier PIG_HERD = new IntegerAddModifier("field[pig]", new GameElementQuery("pig-herd"));
 
     // for unplaced features, references is to (0, 0)
     protected final Set<FeaturePointer> adjoiningCities; //or castles
@@ -27,8 +27,8 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
 
     private final Map<FeatureModifier<?>, Object> modifiers;
     
-    public Farm(List<FeaturePointer> places, Set<FeaturePointer> adjoiningCities,
-            boolean adjoiningCityOfCarcassonne, Map<FeatureModifier<?>, Object> modifiers) {
+    public Field(List<FeaturePointer> places, Set<FeaturePointer> adjoiningCities,
+                 boolean adjoiningCityOfCarcassonne, Map<FeatureModifier<?>, Object> modifiers) {
         super(places);
         this.adjoiningCities = adjoiningCities;
         this.adjoiningCityOfCarcassonne = adjoiningCityOfCarcassonne;
@@ -41,25 +41,25 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
     }
 
     @Override
-    public Farm setModifiers(Map<FeatureModifier<?>, Object> modifiers) {
+    public Field setModifiers(Map<FeatureModifier<?>, Object> modifiers) {
         if (this.modifiers == modifiers) return this;
-        return new Farm(places, adjoiningCities, adjoiningCityOfCarcassonne, modifiers);
+        return new Field(places, adjoiningCities, adjoiningCityOfCarcassonne, modifiers);
     }
 
     @Override
-    public Farm merge(Farm farm) {
-        assert farm != this;
-        return new Farm(
-            mergePlaces(farm),
-            mergeAdjoiningCities(farm),
-            adjoiningCityOfCarcassonne || farm.adjoiningCityOfCarcassonne,
-            mergeModifiers(farm)
+    public Field merge(Field field) {
+        assert field != this;
+        return new Field(
+            mergePlaces(field),
+            mergeAdjoiningCities(field),
+            adjoiningCityOfCarcassonne || field.adjoiningCityOfCarcassonne,
+            mergeModifiers(field)
         );
     }
 
     @Override
     public Feature placeOnBoard(Position pos, Rotation rot) {
-        return new Farm(
+        return new Field(
             placeOnBoardPlaces(pos, rot),
             placeOnBoardAdjoiningCities(pos, rot),
             adjoiningCityOfCarcassonne,
@@ -78,7 +78,7 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
         }
         for (FeaturePointer fp : places) {
             Position pos = fp.getPosition();
-            for (Location loc : fp.getLocation().splitToFarmSides().map(Location::farmToSide).distinct()) {
+            for (Location loc : fp.getLocation().splitToFieldSides().map(Location::fieldToSide).distinct()) {
                 if (!state.getPlacedTiles().containsKey(pos.add(loc))) {
                     return true;
                 }
@@ -91,16 +91,16 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
         return adjoiningCities;
     }
 
-    public Farm setAdjoiningCities(Set<FeaturePointer> adjoiningCities) {
-        return new Farm(places, adjoiningCities, adjoiningCityOfCarcassonne, modifiers);
+    public Field setAdjoiningCities(Set<FeaturePointer> adjoiningCities) {
+        return new Field(places, adjoiningCities, adjoiningCityOfCarcassonne, modifiers);
     }
 
     public boolean isAdjoiningCityOfCarcassonne() {
         return adjoiningCityOfCarcassonne;
     }
 
-    public Farm setAdjoiningCityOfCarcassonne(boolean adjoiningCityOfCarcassonne) {
-        return new Farm(places, adjoiningCities, adjoiningCityOfCarcassonne, modifiers);
+    public Field setAdjoiningCityOfCarcassonne(boolean adjoiningCityOfCarcassonne) {
+        return new Field(places, adjoiningCities, adjoiningCityOfCarcassonne, modifiers);
     }
 
     private int getPigCount(GameState state, Player player) {
@@ -108,15 +108,15 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
     }
 
     public PointsExpression getPoints(GameState state, String exprSubtitle, Player player) {
-        return getCityPoints(state, exprSubtitle == null ? "farm" : "farm." + exprSubtitle, 3, player).appendAll(getLittleBuildingPoints(state));
+        return getCityPoints(state, exprSubtitle == null ? "field" : "field." + exprSubtitle, 3, player).appendAll(getLittleBuildingPoints(state));
     }
     public PointsExpression getPointsWhenBarnIsConnected(GameState state, Player player) {
-        return getCityPoints(state, "farm.barn-connected", 1, player).appendAll(getLittleBuildingPoints(state));
+        return getCityPoints(state, "field.barn-connected", 1, player).appendAll(getLittleBuildingPoints(state));
     }
 
     public PointsExpression getBarnPoints(GameState state) {
         //no pig herds according to Complete Annotated Rules
-        return getCityPoints(state, "farm", 4, null).appendAll(getLittleBuildingPoints(state));
+        return getCityPoints(state, "field", 4, null).appendAll(getLittleBuildingPoints(state));
     }
 
     private PointsExpression getCityPoints(GameState state, String exprName, int pointsPerCity, Player scorePigsForPlayer) {
@@ -173,12 +173,12 @@ public class Farm extends TileFeature implements Scoreable, MultiTileFeature<Far
     }
 
     public static String name() {
-        return "Farm";
+        return "Field";
     }
 
     // immutable helpers
 
-    protected Set<FeaturePointer> mergeAdjoiningCities(Farm obj) {
+    protected Set<FeaturePointer> mergeAdjoiningCities(Field obj) {
         return this.adjoiningCities.union(obj.adjoiningCities);
     }
 

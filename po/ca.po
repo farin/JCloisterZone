@@ -288,7 +288,7 @@ msgstr "Posa la fada a la lloseta nova, no al costat d''un seguidor."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:25
 msgid ""
-"Allow direct barn placement on a farm where another barn is already placed."
+"Allow direct barn placement on a field where another barn is already placed."
 msgstr ""
 "Permet posar directament un graner en un camp on ja n''hi hagi un altre."
 
@@ -309,7 +309,7 @@ msgstr ""
 "assetjada."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:33
-msgid "The Pig herd is present on the farm tile."
+msgid "The Pig herd is present on the field tile."
 msgstr "La porcada està present a la lloseta del camp."
 
 #: src/main/java/com/jcloisterzone/game/Rule.java:35
@@ -1100,7 +1100,7 @@ msgstr ""
 
 #: src/main/java/com/jcloisterzone/ui/panel/HelpPanel.java:33
 msgid ""
-"<html>Press <b>F</b> to toggle farm hints or <b>X</b> to see last placed "
+"<html>Press <b>F</b> to toggle field hints or <b>X</b> to see last placed "
 "tiles.</html>"
 msgstr ""
 "<html>Premeu <b>F</b> per habilitar/deshabilitar l''ajuda dels camps i <b>X</"

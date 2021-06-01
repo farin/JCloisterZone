@@ -6,7 +6,7 @@ import com.jcloisterzone.board.Corner;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
@@ -73,26 +73,26 @@ public final class BarnCapability extends Capability<FeaturePointer> {
         return setModel(state, null);
     }
 
-    private Tuple2<FeaturePointer, Farm> getFarmLocationPartOf(GameState state, FeaturePointer fp) {
+    private Tuple2<FeaturePointer, Field> getFieldLocationPartOf(GameState state, FeaturePointer fp) {
         return state.getFeatureMap()
             .find(t -> fp.isPartOf(t._1))
-            .map(t -> t.map2(f -> (Farm) f))
+            .map(t -> t.map2(f -> (Field) f))
             .getOrNull();
     }
 
-    private boolean containsCorner(Tuple2<FeaturePointer, Farm> t, Corner c) {
+    private boolean containsCorner(Tuple2<FeaturePointer, Field> t, Corner c) {
         return t != null && t._1.getLocation().getCorners().contains(c);
     }
 
-    private Tuple2<FeaturePointer, Farm> getCornerFeature(GameState state, Position pos) {
-        Tuple2<FeaturePointer, Farm> t;
-        t = getFarmLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y - 1), Location.SL));
+    private Tuple2<FeaturePointer, Field> getCornerFeature(GameState state, Position pos) {
+        Tuple2<FeaturePointer, Field> t;
+        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y - 1), Location.SL));
         if (!containsCorner(t, Corner.SE)) return null;
-        t = getFarmLocationPartOf(state, new FeaturePointer(new Position(pos.x, pos.y - 1), Location.WL));
+        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x, pos.y - 1), Location.WL));
         if (!containsCorner(t, Corner.SW)) return null;
-        t = getFarmLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y), Location.EL));
+        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y), Location.EL));
         if (!containsCorner(t, Corner.NE)) return null;
-        t = getFarmLocationPartOf(state, new FeaturePointer(pos, Location.NL));
+        t = getFieldLocationPartOf(state, new FeaturePointer(pos, Location.NL));
         if (!containsCorner(t, Corner.NW)) return null;
         return t;
     }

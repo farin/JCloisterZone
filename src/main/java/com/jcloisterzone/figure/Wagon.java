@@ -3,7 +3,7 @@ package com.jcloisterzone.figure;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Farm;
+import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.feature.Garden;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.feature.Tower;
@@ -25,8 +25,8 @@ public class Wagon extends Follower {
         if (feature instanceof Tower) {
             return new DeploymentCheckResult("Cannot place wagon on the tower.");
         }
-        if (feature instanceof Farm) {
-            return new DeploymentCheckResult("Cannot place wagon on the farm.");
+        if (feature instanceof Field) {
+            return new DeploymentCheckResult("Cannot place wagon on the field.");
         }
         if (feature instanceof Garden) {
             return new DeploymentCheckResult("Cannot place wagon on the garden.");
