@@ -32,22 +32,24 @@ import org.w3c.dom.Element;
 
 public class RussianPromosTrapCapability extends Capability<Void> {
 
+    public static final Location TRAP_LOCATION = Location.TOWER;
+
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "razboynik").isEmpty()) {
             SoloveiRazboynik razboynik = new SoloveiRazboynik();
-            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.TOWER, razboynik));
+            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(TRAP_LOCATION, razboynik));
         }
         if (!XMLUtils.getElementStreamByTagName(tileElements, "vodyanoy").isEmpty()) {
             Vodyanoy vodyanoy = new Vodyanoy();
-            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(Location.TOWER, vodyanoy));
+            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(TRAP_LOCATION, vodyanoy));
         }
         return tile;
     }
 
     @Override
     public boolean isMeepleDeploymentAllowed(GameState state, Position pos) {
-        return !(state.getPlacedTile(pos).getInitialFeaturePartOf(Location.TOWER) instanceof Vodyanoy);
+        return !(state.getPlacedTile(pos).getInitialFeaturePartOf(TRAP_LOCATION) instanceof Vodyanoy);
     }
 
     @Override
@@ -107,7 +109,7 @@ public class RussianPromosTrapCapability extends Capability<Void> {
                 if (road == null) {
                     road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Location.NS)).getOrNull();
                 }
-                FeaturePointer trap = new FeaturePointer(pos, Location.TOWER);
+                FeaturePointer trap = new FeaturePointer(pos, TRAP_LOCATION);
                 for (Tuple2<Follower, FeaturePointer> t : road.getFollowers2(state)) {
                     Follower meeple = t._1;
                     if (!alreadyExposed.contains(meeple.getId())) {
@@ -117,7 +119,7 @@ public class RussianPromosTrapCapability extends Capability<Void> {
                 }
             } else if (feature instanceof Vodyanoy) {
                 Position pos = feature.getPlaces().get().getPosition();
-                FeaturePointer trap = new FeaturePointer(pos, Location.TOWER);
+                FeaturePointer trap = new FeaturePointer(pos, TRAP_LOCATION);
 
                 for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
                     Meeple meeple = t._1;

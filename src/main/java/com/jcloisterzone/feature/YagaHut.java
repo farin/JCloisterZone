@@ -17,7 +17,6 @@ import io.vavr.collection.Set;
  * Implemented as separate feature type to be not involved in Cult shrine-monastery challenges.
  */
 public class YagaHut extends TileFeature implements Completable, Monastic {
-
     private static final long serialVersionUID = 1L;
     private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.MONASTERY));
 

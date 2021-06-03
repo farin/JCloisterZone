@@ -165,9 +165,12 @@ public class Location implements Serializable {
     /** An abbot space (monasteries from "German Monasteries" and "Monasteries in Belgium"*/
     public static final Location MONASTERY_AS_ABBOT = new Location("MONASTERY_AS_ABBOT");
     /** A tower space */
+    public static final Location GARDEN = new Location("GARDEN");
+    /** A tower space */
     public static final Location TOWER = new Location("TOWER");
     /** A flier space (a follower can be placed here just for moment, before a dice roll) */
     public static final Location FLYING_MACHINE = new Location("FLYING_MACHINE");
+
     /** City of Carcassonne specials (Count) */
     public static final Location QUARTER_CASTLE = new Location("QUARTER_CASTLE");
     public static final Location QUARTER_MARKET = new Location("QUARTER_MARKET") ;

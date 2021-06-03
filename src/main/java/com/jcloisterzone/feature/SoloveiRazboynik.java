@@ -4,11 +4,12 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
 import io.vavr.collection.List;
 
 public class SoloveiRazboynik extends TileFeature implements Structure, TrapFeature {
 
-    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.TOWER));
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, RussianPromosTrapCapability.TRAP_LOCATION));
 
     public SoloveiRazboynik() {
         this(INITIAL_PLACE);
