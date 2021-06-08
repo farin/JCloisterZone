@@ -65,7 +65,7 @@ public class RiverCapability extends Capability<Void> {
         Location riverLoc = tile.getInitialFeatures()
             .filterValues(Predicates.instanceOf(River.class))
             .map(Tuple2::_1)
-            .map(l -> l.rotateCW(rot))
+            .map(fp -> fp.getLocation().rotateCW(rot))
             .getOrNull();
 
         if (riverLoc == null) {

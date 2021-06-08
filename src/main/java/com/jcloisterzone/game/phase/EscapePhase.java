@@ -7,6 +7,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
+import com.jcloisterzone.feature.Monastery;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
@@ -44,7 +45,7 @@ public class EscapePhase extends Phase {
         };
 
         Predicate<Position> cloisterExists = pos -> {
-            return state.getFeature(new FeaturePointer(pos, Location.MONASTERY)) != null;
+            return state.getFeature(new FeaturePointer(pos, Monastery.class, Location.I)) != null;
         };
 
         Set<MeeplePointer> options;

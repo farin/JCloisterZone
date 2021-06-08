@@ -150,33 +150,23 @@ public class Location implements Serializable {
 
     // inner locations
 
-    /** Inner field */
-    public static final Location INNER_FIELD = new Location("INNER_FIELD");
-    /** for tiles with two inner fields */
-    public static final Location INNER_FIELD_B = new Location("INNER_FIELD_B");
+    public static final Location I = new Location("I");
+    public static final Location II = new Location("II");
+    public static final Location III = new Location("III");
+    public static final Location IV = new Location("IV");
 
-    /** Inner city - fan expansions only */
-    public static final Location INNER_CITY = new Location("INNER_CITY");
-    /** Inner road - fan expansions only */
-    public static final Location INNER_ROAD = new Location("INNER_ROAD");
-
-    /** A monastery space */
-    public static final Location MONASTERY = new Location("MONASTERY");
     /** An abbot space (monasteries from "German Monasteries" and "Monasteries in Belgium"*/
+    // TODO remame to AS_ABBOT
     public static final Location MONASTERY_AS_ABBOT = new Location("MONASTERY_AS_ABBOT");
-    /** A tower space */
-    public static final Location GARDEN = new Location("GARDEN");
-    /** A tower space */
-    public static final Location TOWER = new Location("TOWER");
-    /** A flier space (a follower can be placed here just for moment, before a dice roll) */
-    public static final Location FLYING_MACHINE = new Location("FLYING_MACHINE");
 
     /** City of Carcassonne specials (Count) */
+    // TODO use inner instead ?
     public static final Location QUARTER_CASTLE = new Location("QUARTER_CASTLE");
     public static final Location QUARTER_MARKET = new Location("QUARTER_MARKET") ;
     public static final Location QUARTER_BLACKSMITH = new Location("QUARTER_BLACKSMITH");
     public static final Location QUARTER_CATHEDRAL = new Location("QUARTER_CATHEDRAL");
 
+    public static final List<Location> INNER_LOCATIONS = List.of(I, II, III, IV);
     public static final List<Location> SIDES = List.of(N, E, S, W);
     public static final List<Location> FIELD_SIDES = List.of(NL, NR, EL, ER, SL, SR, WL, WR);
     public static final List<Location> BRIDGES = List.of(NS, WE);

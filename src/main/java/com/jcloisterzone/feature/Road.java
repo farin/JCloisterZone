@@ -212,7 +212,7 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
                 continue;
             }
 
-            for (FeaturePointer adj : fp.getAdjacent(Road.class)) {
+            for (FeaturePointer adj : fp.getAdjacent()) {
                 FeaturePointer place = findPartOf(places, adj);
                 if (place != null && places.remove(place)) {
                     queue.push(place);

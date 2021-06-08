@@ -32,7 +32,7 @@ public class ScoringPhase extends Phase {
     }
 
     private GameState scoreCompletedOnTile(GameState state, PlacedTile tile) {
-        for (Tuple2<Location, Completable> t : state.getTileFeatures2(tile.getPosition(), Completable.class)) {
+        for (Tuple2<FeaturePointer, Completable> t : state.getTileFeatures2(tile.getPosition(), Completable.class)) {
             state = scoreCompleted(state, t._2);
         }
         return state;
@@ -57,9 +57,9 @@ public class ScoringPhase extends Phase {
 
             // disconnected
             List<FeaturePointer> affected = from.subtract(to).splitToSides()
-                .map(loc -> new FeaturePointer(t._1, loc));
+                .map(loc -> new FeaturePointer(t._1, Road.class, loc));
             // connected (merge only first side is enough, it's connected, sides must belong to same road
-            affected = affected.append(new FeaturePointer(t._1, to.subtract(from).splitToSides().get()));
+            affected = affected.append(new FeaturePointer(t._1, Road.class, to.subtract(from).splitToSides().get()));
 
             for (FeaturePointer fp : affected) {
                 Road road = (Road) state.getFeature(fp);
@@ -72,8 +72,12 @@ public class ScoringPhase extends Phase {
     private GameState scoreCompletedNearAbbey(GameState state, Position pos) {
         for (Tuple2<Location, PlacedTile> t : state.getAdjacentTiles2(pos)) {
             PlacedTile pt = t._2;
-            FeaturePointer fp = new FeaturePointer(pt.getPosition(), t._1.rev());
-            Feature feature = state.getFeaturePartOf(fp);
+            var adj = state.getFeaturePartOf2(pt.getPosition(), t._1.rev());
+            if (adj == null) {
+                continue;
+            }
+            FeaturePointer fp = adj._1;
+            Feature feature = adj._2;
             if (feature instanceof Completable) {
                 state = scoreCompleted(state, (Completable) feature);
             }
@@ -207,15 +211,13 @@ public class ScoringPhase extends Phase {
             if (completable instanceof Monastery && ((Monastery) completable).isSpecialMonastery(state)) {
                 Monastery monastery = (Monastery) completable;
                 List<Tuple2<Meeple, FeaturePointer>> meeples = monastery.getMeeplesIncludingSpecialMonastery2(state).toList();
-                if (meeples.size() > 0 && meeples.filter(t -> t._2.getLocation() == Location.MONASTERY).size() == 0) {
+                if (meeples.size() > 0 && meeples.filter(t -> t._2.getLocation() == Location.I).size() == 0) {
                     // only abbots on monastery
                     return state;
                 }
             }
             ScoreCompletable scoreReducer = new ScoreCompletable(completable, false);
             state = scoreReducer.apply(state);
-
-
             completedMutable.put(completable, scoreReducer);
         }
         return state;

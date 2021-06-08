@@ -8,6 +8,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.random.RandomGenerator;
@@ -67,14 +68,13 @@ public class CocFollowerPhase extends Phase {
         );
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
         boolean marketAllowed = state.getBooleanRule(Rule.FARMERS);
-        Stream<Tuple2<FeaturePointer, Quarter>> quarters = state.getTileFeatures2(quarterPos)
-            .filter(t -> t._1.isCityOfCarcassonneQuarter() && (marketAllowed || t._1 != Location.QUARTER_MARKET))
-            .map(t -> new Tuple2<>(new FeaturePointer(quarterPos, t._1), (Quarter) t._2));
+        Stream<Tuple2<FeaturePointer, Feature>> quarters = state.getTileFeatures2(quarterPos)
+            .filter(t -> t._1.getLocation().isCityOfCarcassonneQuarter() && (marketAllowed || t._1.getLocation() != Location.QUARTER_MARKET));
 
         GameState _state = state;
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
             Set<FeaturePointer> locations = quarters
-                .filter(t -> meeple.isDeploymentAllowed(_state, t._1, t._2) == DeploymentCheckResult.OK)
+                .filter(t -> meeple.isDeploymentAllowed(_state, t._1, (Quarter) t._2) == DeploymentCheckResult.OK)
                 .map(t -> t._1)
                 .toSet();
 

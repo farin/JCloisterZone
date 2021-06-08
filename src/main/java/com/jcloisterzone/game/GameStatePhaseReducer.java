@@ -25,19 +25,11 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
 
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
-    // private final Map<Class<? extends Phase>, Phase> phases = new HashMap<>();
     private final Phase firstPhase;
     private final RandomGenerator random;
 
-    public GameStatePhaseReducer(GameSetup setup, long initialSeed, boolean compatJavaRandom) {
-        //this.compatJavaRandom = compatJavaRandom;
-
-        if (compatJavaRandom) {
-            random = new JavaRandomGenerator(initialSeed);
-        } else {
-            random = new MersenneTwisterRandomGenerator(initialSeed);
-        }
-
+    public GameStatePhaseReducer(GameSetup setup, long initialSeed) {
+        random = new MersenneTwisterRandomGenerator(initialSeed);
         Phase endChain, next;
 
         CleanUpTurnPhase cleanUpTurnPhase;

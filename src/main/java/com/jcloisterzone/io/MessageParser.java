@@ -6,11 +6,13 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
+import com.jcloisterzone.feature.*;
 import com.jcloisterzone.io.message.Message;
 import com.jcloisterzone.io.message.ReplayableMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.lang.reflect.Type;
 
 public final class MessageParser {
@@ -37,6 +39,33 @@ public final class MessageParser {
             public Location deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                     throws JsonParseException {
                 return Location.valueOf(json.getAsString());
+            }
+        });
+        builder.registerTypeAdapter(FeaturePointer.class, new FeaturePointerSerializer());
+        builder.registerTypeAdapter(FeaturePointer.class, new JsonDeserializer<FeaturePointer>() {
+            @Override
+            public FeaturePointer deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                JsonObject obj = (JsonObject) json;
+                Position pos = context.deserialize(obj.get("position"), Position.class);
+                Location loc = context.deserialize(obj.get("location"), Location.class);
+                String featureType = obj.get("feature").getAsString();
+                Class<? extends Feature> feature = null;
+                // TOOD use annotation
+                switch (featureType) {
+                    case "City": feature = City.class; break;
+                    case "Road": feature = Road.class; break;
+                    case "Field": feature = Field.class; break;
+                    case "Monastery": feature = Monastery.class; break;
+                    case "Garden": feature = Garden.class; break;
+                    case "Tower": feature = Tower.class; break;
+                    case "Quarter": feature = Quarter.class; break;
+                    case "YagaHut": feature = YagaHut.class; break;
+                    case "Vodyanoy": feature = Vodyanoy.class; break;
+                    case "SoloveiRazboynik": feature = SoloveiRazboynik.class; break;
+                    case "FlyingMachine": feature = FlyingMachine.class; break;
+                    case "Castle": feature = Castle.class; break;
+                }
+                return new FeaturePointer(pos, feature, loc);
             }
         });
         builder.registerTypeAdapter(BoardPointer.class, new BoardPointerSerializer());
@@ -125,6 +154,17 @@ public final class MessageParser {
         @Override
         public JsonElement serialize(Location src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.toString());
+        }
+    }
+
+    public static class FeaturePointerSerializer implements JsonSerializer<FeaturePointer> {
+        @Override
+        public JsonElement serialize(FeaturePointer fp, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject obj = new JsonObject();
+            obj.add("position", context.serialize(fp.getPosition()));
+            obj.add("location", context.serialize(fp.getLocation()));
+            obj.addProperty("feature", fp.getFeature().getSimpleName());
+            return obj;
         }
     }
 

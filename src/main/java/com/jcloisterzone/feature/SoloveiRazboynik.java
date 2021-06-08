@@ -9,7 +9,7 @@ import io.vavr.collection.List;
 
 public class SoloveiRazboynik extends TileFeature implements Structure, TrapFeature {
 
-    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, RussianPromosTrapCapability.TRAP_LOCATION));
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, SoloveiRazboynik.class, Location.I));
 
     public SoloveiRazboynik() {
         this(INITIAL_PLACE);

@@ -32,24 +32,22 @@ import org.w3c.dom.Element;
 
 public class RussianPromosTrapCapability extends Capability<Void> {
 
-    public static final Location TRAP_LOCATION = Location.TOWER;
-
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
         if (!XMLUtils.getElementStreamByTagName(tileElements, "razboynik").isEmpty()) {
             SoloveiRazboynik razboynik = new SoloveiRazboynik();
-            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(TRAP_LOCATION, razboynik));
+            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(razboynik.getPlace(), razboynik));
         }
         if (!XMLUtils.getElementStreamByTagName(tileElements, "vodyanoy").isEmpty()) {
             Vodyanoy vodyanoy = new Vodyanoy();
-            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(TRAP_LOCATION, vodyanoy));
+            tile = tile.setInitialFeatures(tile.getInitialFeatures().put(vodyanoy.getPlace(), vodyanoy));
         }
         return tile;
     }
 
     @Override
     public boolean isMeepleDeploymentAllowed(GameState state, Position pos) {
-        return !(state.getPlacedTile(pos).getInitialFeaturePartOf(TRAP_LOCATION) instanceof Vodyanoy);
+        return !state.getPlacedTile(pos).getTile().getInitialFeatures().keySet().filter(fp -> fp.getFeature().equals(Vodyanoy.class)).isEmpty();
     }
 
     @Override
@@ -105,11 +103,11 @@ public class RussianPromosTrapCapability extends Capability<Void> {
         for (Feature feature : state.getFeatures()) {
             if (feature instanceof SoloveiRazboynik) {
                 Position pos = feature.getPlaces().get().getPosition();
-                Road road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Location.WE)).getOrNull();
+                Road road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Road.class, Location.WE)).getOrNull();
                 if (road == null) {
-                    road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Location.NS)).getOrNull();
+                    road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Road.class, Location.NS)).getOrNull();
                 }
-                FeaturePointer trap = new FeaturePointer(pos, TRAP_LOCATION);
+                FeaturePointer trap = new FeaturePointer(pos, SoloveiRazboynik.class, Location.I);
                 for (Tuple2<Follower, FeaturePointer> t : road.getFollowers2(state)) {
                     Follower meeple = t._1;
                     if (!alreadyExposed.contains(meeple.getId())) {
@@ -119,7 +117,7 @@ public class RussianPromosTrapCapability extends Capability<Void> {
                 }
             } else if (feature instanceof Vodyanoy) {
                 Position pos = feature.getPlaces().get().getPosition();
-                FeaturePointer trap = new FeaturePointer(pos, TRAP_LOCATION);
+                FeaturePointer trap = new FeaturePointer(pos, Vodyanoy.class, Location.I);
 
                 for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
                     Meeple meeple = t._1;

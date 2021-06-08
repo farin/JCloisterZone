@@ -55,10 +55,7 @@ public class Engine implements  Runnable {
 
     private boolean bulk;
 
-    private boolean compatJavaRandom = false;
     private ArrayList<String> tileDefinitions = new ArrayList<>();
-
-    // private static ScriptEngine graalEngine;
 
     public Engine(InputStream in, PrintStream out, PrintStream err, PrintStream log) {
         this.in = new Scanner(in);
@@ -186,9 +183,9 @@ public class Engine implements  Runnable {
                 break;
             case "%compat":
                 Version compat = Version.valueOf(value);
-                if (compat.lessThan(Version.valueOf("5.7.0"))) {
-                    compatJavaRandom = true;
-                }
+//                if (compat.lessThan(Version.valueOf("5.7.0"))) {
+//                    compatJavaRandom = true;
+//                }
                 break;
             case "%load":
                 tileDefinitions.add(value);
@@ -220,7 +217,7 @@ public class Engine implements  Runnable {
         GameSetup gameSetup = createSetupFromMessage(setupMsg);
         game = new Game(gameSetup);
 
-        GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialSeed, compatJavaRandom);
+        GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialSeed);
         GameStateBuilder builder = new GameStateBuilder(tileDefinitions, gameSetup, setupMsg.getPlayers());
 
         if (setupMsg.getGameAnnotations() != null) {
@@ -315,13 +312,6 @@ public class Engine implements  Runnable {
         }
         return "dev-snapshot";
     }
-
-//    public static ScriptEngine getSctiptEngine() {
-//        if (graalEngine == null) {
-//            graalEngine = new ScriptEngineManager().getEngineByName("graal.js");
-//        }
-//        return graalEngine;
-//    }
 
     public static void main(String[] args) throws IOException {
         if (args.length > 0 && "--version".equals(args[0])) {

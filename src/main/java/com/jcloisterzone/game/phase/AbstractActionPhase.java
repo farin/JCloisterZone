@@ -50,7 +50,7 @@ public abstract class AbstractActionPhase extends Phase {
                 return Stream.empty();
             }
 
-            Stream<Tuple2<Location, Structure>> places = state.getTileFeatures2(pos, Structure.class);
+            Stream<Tuple2<FeaturePointer, Structure>> places = state.getTileFeatures2(pos, Structure.class);
 
             places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik));
 
@@ -66,7 +66,7 @@ public abstract class AbstractActionPhase extends Phase {
             places = places.flatMap(t -> {
                 Structure struct = t._2;
                 if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(state)) {
-                    return List.of(t, new Tuple2<>(Location.MONASTERY_AS_ABBOT, struct));
+                    return List.of(t, new Tuple2<>(t._1.setLocation(Location.MONASTERY_AS_ABBOT), struct));
                 }
                 return List.of(t);
             });
@@ -76,7 +76,7 @@ public abstract class AbstractActionPhase extends Phase {
             if (!allowCompleted) {
                 //exclude completed
                 places = places.filter(t -> {
-                    if (t._1 == Location.MONASTERY_AS_ABBOT) {
+                    if (t._1.getLocation() == Location.MONASTERY_AS_ABBOT) {
                         // monastery is never completed
                         return true;
                     }
@@ -85,10 +85,10 @@ public abstract class AbstractActionPhase extends Phase {
             }
 
             if (state.hasFlag(Flag.FLYING_MACHINE_USED) || !allowCompleted) {
-                places = places.filter(t -> t._1 != Location.FLYING_MACHINE);
+                places = places.filter(t -> !t._1.getFeature().equals(FlyingMachine.class));
             }
 
-            return places.map(t -> t.map1(loc -> new FeaturePointer(pos, loc)));
+            return places;
         });
     }
 
@@ -115,10 +115,14 @@ public abstract class AbstractActionPhase extends Phase {
                     Road road = (Road) struct;
                     if (road.isLabyrinth(state)) {
                         // current tile musn't be labyrinth center - apply regular ocuupation rule to it
-                        if (!((Road) state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())).isLabyrinth(state)) {
+                        Road initial = (Road) state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())._2;
+                        if (!initial.isLabyrinth(state)) {
                             // find if there is empty labyrinth segment
                             Set<FeaturePointer> segment = road.findSegmentBorderedBy(state, t._1,
-                                    fp -> ((Road) state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth(state)).toSet();
+                                    fp -> {
+                                        Road r = (Road) state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())._2;
+                                        return r.isLabyrinth(state);
+                                    }).toSet();
                             boolean segmentIsEmpty = Stream.ofAll(state.getDeployedMeeples())
                                     .filter(x -> segment.contains(x._2))
                                     .isEmpty();
@@ -181,20 +185,15 @@ public abstract class AbstractActionPhase extends Phase {
     public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
         FeaturePointer fp = msg.getPointer();
 
-        if (fp.getLocation() == Location.FLYING_MACHINE) {
-            return handleDeployFlier(state, msg);
+        if (fp.getFeature().equals(FlyingMachine.class)) {
+            throw new IllegalArgumentException("Use DEPLOY_FLIER message instead");
         }
 
         Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
         PlacedTile placedTile = state.getLastPlaced();
 
         //TODO validate placement against players actions
-
-        if (fp.getLocation() == Location.FLYING_MACHINE) {
-            throw new IllegalArgumentException("Use DEPLOY_FLIER message instead");
-        }
-
-        if (fp.getLocation() != Location.TOWER
+        if (!fp.getFeature().equals(Tower.class)
             && placedTile.getTile().hasModifier(PortalCapability.MAGIC_PORTAL)
             && !fp.getPosition().equals(placedTile.getPosition())
         ) {

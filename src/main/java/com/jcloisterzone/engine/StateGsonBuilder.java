@@ -43,6 +43,7 @@ public class StateGsonBuilder {
         builder.registerTypeAdapter(ActionsState.class, new ActionsStateSerializer());
         builder.registerTypeAdapter(Position.class, new MessageParser.PositionSerializer());
         builder.registerTypeAdapter(Location.class, new MessageParser.LocationSerializer());
+        builder.registerTypeAdapter(FeaturePointer.class, new MessageParser.FeaturePointerSerializer());
         builder.registerTypeAdapter(BoardPointer.class, new MessageParser.BoardPointerSerializer());
         // actions
         builder.registerTypeAdapter(TilePlacementAction.class, new TilePlacementActionSerializer());
@@ -233,6 +234,7 @@ public class StateGsonBuilder {
             json.addProperty("type", m.getClass().getSimpleName());
             json.addProperty("player", m.getPlayer().getIndex());
             json.add("position", context.serialize(fp.getPosition()));
+            json.addProperty("feature", fp.getFeature().getSimpleName());
             json.add("location", context.serialize(fp.getLocation()));
             meeples.add(json);
         });
@@ -838,6 +840,7 @@ public class StateGsonBuilder {
             json.addProperty("type", "Flock");
             json.addProperty("meepleId", action.getShepherdPointer().getMeepleId());
             json.add("position", context.serialize(action.getShepherdPointer().getPosition()));
+            json.addProperty("feature", "Field");
             json.add("location", context.serialize(action.getShepherdPointer().getLocation()));
             return json;
         }

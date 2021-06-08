@@ -35,7 +35,7 @@ public class ChangeFerriesPhase extends Phase {
             .filter(f -> !f.getPosition().equals(pos));
 
         Set<FeaturePointer> options = state.getTileFeatures2(pos, Road.class)
-            .flatMap(t -> t._2.findNearest(state, new FeaturePointer(pos, t._1), fp -> ferries.find(f -> fp.isPartOf(f)).isDefined()))
+            .flatMap(t -> t._2.findNearest(state, t._1, fp -> ferries.find(f -> fp.isPartOf(f)).isDefined()))
             .distinct()
             .filter(ferryPart -> !model.getMovedFerries().containsKey(ferryPart.getPosition()))
             .flatMap(ferryPart -> {
@@ -47,11 +47,11 @@ public class ChangeFerriesPhase extends Phase {
                     .getTile()
                     .getInitialFeatures()
                     .filter(t -> t._2 instanceof Road)
-                    .map(Tuple2::_1)
+                    .map(t -> t._1.getLocation())
                     .combinations(2)
                     .map(pair -> pair.reduce(Location::union))
                     .map(loc -> loc.rotateCW(ferryTile.getRotation()))
-                    .map(loc -> new FeaturePointer(ferryPos, loc))
+                    .map(loc -> new FeaturePointer(ferryPos, Road.class, loc))
                     .filter(fp -> !ferries.contains(fp))
                     .toList();
             })

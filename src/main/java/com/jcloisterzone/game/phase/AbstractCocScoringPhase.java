@@ -62,7 +62,7 @@ public abstract class AbstractCocScoringPhase extends Phase {
                 }
 
                 Position quarterPosition = state.getPlacedTiles().filter(t -> t._2.getTile().getId().equals(CountCapability.QUARTER_ACTION_TILE_ID)).get()._1;
-                FeaturePointer quarterFp = new FeaturePointer(quarterPosition, quarter);
+                FeaturePointer quarterFp = new FeaturePointer(quarterPosition, Quarter.class, quarter);
 
                 return state.getDeployedMeeples()
                     .filter(t -> t._2.getLocation() == quarter)   // is deployed on quarter

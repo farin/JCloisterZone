@@ -10,7 +10,7 @@ import io.vavr.collection.List;
 public class Tower extends TileFeature implements Structure {
 
     private final int height;
-    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.TOWER));
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Tower.class, Location.I));
 
     public Tower() {
         this(INITIAL_PLACE, 0);

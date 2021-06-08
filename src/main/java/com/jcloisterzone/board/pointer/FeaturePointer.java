@@ -18,10 +18,12 @@ public class FeaturePointer implements BoardPointer {
     private static final long serialVersionUID = 1L;
 
     private final Position position;
+    private final Class<? extends Feature> feature;
     private final Location location;
 
-    public FeaturePointer(Position position, Location location) {
+    public FeaturePointer(Position position, Class<? extends Feature> feature, Location location) {
         this.position = position;
+        this.feature = feature;
         this.location = location;
     }
 
@@ -31,31 +33,29 @@ public class FeaturePointer implements BoardPointer {
     }
 
     public FeaturePointer translate(Position pos) {
-        return new FeaturePointer(position.add(pos), location);
+        return new FeaturePointer(position.add(pos), feature, location);
     }
 
     public FeaturePointer rotateCW(Rotation rot) {
-        return new FeaturePointer(position, location.rotateCW(rot));
+        return new FeaturePointer(position, feature, location.rotateCW(rot));
     }
 
     public FeaturePointer rotateCCW(Rotation rot) {
-        return new FeaturePointer(position, location.rotateCCW(rot));
+        return new FeaturePointer(position, feature, location.rotateCCW(rot));
     }
 
-    public Stream<FeaturePointer> getAdjacent(Class<? extends Feature> forType) {
-        boolean isField = Field.class.isAssignableFrom(forType);
-
-        if (isField) {
+    public Stream<FeaturePointer> getAdjacent() {
+        if (Field.class.isAssignableFrom(feature)) {
             return Stream.ofAll(Location.SIDES)
                 .flatMap(loc -> {
                     List<FeaturePointer> res = List.empty();
                     Location l = loc.getLeftField();
                     Location r = loc.getRightField();
                     if (l.intersect(location) != null) {
-                        res = res.prepend( new FeaturePointer(position.add(loc), l.rev()));
+                        res = res.prepend( new FeaturePointer(position.add(loc), feature, l.rev()));
                     }
                     if (r.intersect(location) != null) {
-                        res = res.prepend( new FeaturePointer(position.add(loc), r.rev()));
+                        res = res.prepend( new FeaturePointer(position.add(loc), feature, r.rev()));
                     }
                     return res;
                 });
@@ -63,13 +63,13 @@ public class FeaturePointer implements BoardPointer {
             return Stream.ofAll(Location.SIDES)
                 .filter(loc -> loc.intersect(location) != null)
                 .map(loc ->
-                    new FeaturePointer(position.add(loc), loc.rev())
+                    new FeaturePointer(position.add(loc), feature, loc.rev())
                 );
         }
     }
 
     public boolean isPartOf(FeaturePointer other) {
-        return position.equals(other.position) && location.isPartOf(other.location);
+        return position.equals(other.position) && feature.equals(other.feature) && location.isPartOf(other.location);
     }
 
     public Position getPosition() {
@@ -78,7 +78,16 @@ public class FeaturePointer implements BoardPointer {
 
     public FeaturePointer setPosition(Position position) {
         if (this.position == position) return this;
-        return new FeaturePointer(position, location);
+        return new FeaturePointer(position, feature, location);
+    }
+
+    public Class<? extends Feature> getFeature() {
+        return feature;
+    }
+
+    public FeaturePointer setFeature(Class<? extends Feature> feature) {
+        if (this.feature == feature) return this;
+        return new FeaturePointer(position, feature, location);
     }
 
     public Location getLocation() {
@@ -87,17 +96,17 @@ public class FeaturePointer implements BoardPointer {
 
     public FeaturePointer setLocation(Location location) {
         if (this.location == location) return this;
-        return new FeaturePointer(position, location);
+        return new FeaturePointer(position, feature, location);
     }
 
     @Override
     public String toString() {
-        return String.format("{%s,%s}", position, location);
+        return String.format("{%s,%s,%s}", position, feature.getSimpleName(), location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position, location);
+        return Objects.hash(position, feature, location);
     }
 
     @Override
@@ -107,6 +116,7 @@ public class FeaturePointer implements BoardPointer {
         if (getClass() != obj.getClass()) return false;
         FeaturePointer other = (FeaturePointer) obj;
         if (!Objects.equals(location, other.location)) return false;
+        if (!Objects.equals(feature, other.feature)) return false;
         if (!Objects.equals(position, other.position)) return false;
         return true;
     }

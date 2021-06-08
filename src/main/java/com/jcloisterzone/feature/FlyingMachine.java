@@ -19,7 +19,6 @@ public class FlyingMachine implements Structure {
     private Location direction;
 
     public FlyingMachine(FeaturePointer place, Location direction) {
-        assert place.getLocation() == Location.FLYING_MACHINE;
         this.place = place;
         this.direction = direction;
     }

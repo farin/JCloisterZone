@@ -55,7 +55,7 @@ public class Position implements BoardPointer, Comparable<Position> {
 
     @Override
     public FeaturePointer asFeaturePointer() {
-        return new FeaturePointer(this, null);
+        return new FeaturePointer(this, null,null);
     }
 
     @Override

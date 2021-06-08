@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.TokenPlacedEvent;
+import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
@@ -50,7 +51,7 @@ public class BridgeCapability extends Capability<Set<FeaturePointer>> {
         Set<FeaturePointer> options = HashSet.empty();
 
         for (Location bridgeLoc : Location.BRIDGES) {
-            FeaturePointer ptr = new FeaturePointer(pos, bridgeLoc);
+            FeaturePointer ptr = new FeaturePointer(pos, Road.class, bridgeLoc);
             if (state.isBridgePlacementAllowed(ptr)) {
                 options = options.add(ptr);
             }

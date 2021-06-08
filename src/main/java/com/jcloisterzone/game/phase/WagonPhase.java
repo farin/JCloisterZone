@@ -71,10 +71,14 @@ public class WagonPhase extends Phase {
                                     Road road = (Road) nei;
                                     if (road.isLabyrinth(_state)) {
                                         // current tile musn't be labyrinth center - apply regular ocuupation rule to it
-                                        if (!((Road) _state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())).isLabyrinth(_state)) {
+                                        Road initial = (Road) _state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())._2;
+                                        if (!initial.isLabyrinth(_state)) {
                                             // find if there is empty labyrinth segment
                                             Set<FeaturePointer> segment = road.findSegmentBorderedBy(_state, t._1,
-                                                    fp -> ((Road) _state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())).isLabyrinth(_state)).toSet();
+                                                    fp -> {
+                                                        Road r = (Road) _state.getPlacedTile(fp.getPosition()).getInitialFeaturePartOf(fp.getLocation())._2;
+                                                        return r.isLabyrinth(_state);
+                                                    }).toSet();
                                             boolean segmentIsEmpty = Stream.ofAll(_state.getDeployedMeeples())
                                                     .filter(x -> segment.contains(x._2))
                                                     .isEmpty();
@@ -93,7 +97,7 @@ public class WagonPhase extends Phase {
                         .flatMap(t -> {
                             Structure struct = t._2;
                             if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(_state)) {
-                                return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Location.MONASTERY_AS_ABBOT), struct));
+                                return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Monastery.class, Location.MONASTERY_AS_ABBOT), struct));
                             }
                             return List.of(t);
                         })
@@ -130,12 +134,7 @@ public class WagonPhase extends Phase {
             return Stream.ofAll(Position.ADJACENT_AND_DIAGONAL.values())
                     .map(p -> sourcePos.add(p))
                     .append(sourcePos)
-                    .flatMap(pos -> {
-                        return state.getTileFeatures2(pos, Structure.class).map(t -> {
-                            FeaturePointer fp = new FeaturePointer(pos, t._1);
-                            return new Tuple2<>(fp, t._2);
-                        });
-                    });
+                    .flatMap(pos -> state.getTileFeatures2(pos, Structure.class));
         }
     }
 

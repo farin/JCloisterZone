@@ -32,7 +32,7 @@ public class ChangeFerry implements Reducer {
         state = (new PlaceFerry(to)).apply(state);
 
         List<FeaturePointer> disconnectedParts = from.getLocation().subtract(to.getLocation()).splitToSides()
-                .map(loc -> new FeaturePointer(from.getPosition(), loc));
+                .map(loc -> new FeaturePointer(from.getPosition(), Road.class, loc));
 
         for (FeaturePointer fp: disconnectedParts) {
             Structure feature = state.getStructure(fp);
@@ -67,7 +67,7 @@ public class ChangeFerry implements Reducer {
            List<Road> initialFeatures = places
                    .map(fp -> {
                         PlacedTile pt = _state.getPlacedTile(fp.getPosition());
-                        return (Road) pt.getInitialFeaturePartOf(fp.getLocation())
+                        return (Road) pt.getInitialFeaturePartOf(fp.getLocation())._2
                             .placeOnBoard(fp.getPosition(), pt.getRotation());
                    });
 

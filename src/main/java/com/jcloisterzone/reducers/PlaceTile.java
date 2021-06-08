@@ -83,7 +83,7 @@ public class PlaceTile implements Reducer {
                         return f.merge(updatedAdj);
                     };
 
-                    Stream<FeaturePointer> adjacent = feature.getPlaces().get().getAdjacent(feature.getClass());
+                    Stream<FeaturePointer> adjacent = feature.getPlaces().get().getAdjacent();
                     feature = adjacent.foldLeft((MultiTileFeature) feature,  (f, adjFp) -> {
                     	// find adjacent feature part (already placed)
                         Tuple2<FeaturePointer, Feature> adjTuple = _state.getFeaturePartOf2(adjFp);
@@ -104,11 +104,11 @@ public class PlaceTile implements Reducer {
                         return f;
                     });
 
-                    // finally handle mutli-tile edge (Hills & Sheep HS.CC!.v tile)
+                    // finally handle multi-tile edge (Hills & Sheep HS.CC!.v tile)
                     if (feature instanceof City) {
                     	City city = (City) feature;
                     	Set<Edge> openEdges = city.getOpenEdges();
-                    	// if mutli-edge reference is no longer between open edges, another city was just merged this edge
+                    	// if multi-edge reference is no longer between open edges, another city was just merged this edge
                     	// and we need to merge third city there
                     	Set<Tuple2<ShortEdge, FeaturePointer>> mutliEdgeToMerge = city.getMultiEdges()
                                 .filter(e -> mergedEdges.contains(e._1.toEdge()));
@@ -151,15 +151,16 @@ public class PlaceTile implements Reducer {
             // Abbey is always just placed tile
             // it's not possible to be adjacent to placed tile because it abbey can be placed only to existing hole.
             java.util.Map<CompletableFeature<?>, CompletableFeature<?>> featureReplacement = new java.util.HashMap<>();
-            FeaturePointer abbeyFp = new FeaturePointer(pos, Location.MONASTERY);
+            FeaturePointer abbeyFp = new FeaturePointer(pos, Monastery.class, Location.I);
             Set<FeaturePointer> abbeyNeighboring = HashSet.empty();
             for (Location side : Location.SIDES) {
-                FeaturePointer adjPartOfPtr = new FeaturePointer(pos.add(side), side.rev());
-                CompletableFeature<?> originalAdj = (CompletableFeature) state.getFeaturePartOf(adjPartOfPtr);
-                if (originalAdj == null) {
+                var t = state.getFeaturePartOf2(pos.add(side), side.rev());
+                if (t == null) {
                     // field (or empty tile - which can happen only in debug when non-hole placement is enabled)
                     continue;
                 }
+                FeaturePointer adjPartOfPtr = t._1;
+                CompletableFeature<?> originalAdj = (CompletableFeature<?>) t._2;
 
                 // when same feature is merged on multiple abbey sides, then use update feature objects
                 // to not lost partial changes

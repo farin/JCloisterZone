@@ -86,13 +86,13 @@ public final class BarnCapability extends Capability<FeaturePointer> {
 
     private Tuple2<FeaturePointer, Field> getCornerFeature(GameState state, Position pos) {
         Tuple2<FeaturePointer, Field> t;
-        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y - 1), Location.SL));
+        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y - 1), Field.class, Location.SL));
         if (!containsCorner(t, Corner.SE)) return null;
-        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x, pos.y - 1), Location.WL));
+        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x, pos.y - 1), Field.class, Location.WL));
         if (!containsCorner(t, Corner.SW)) return null;
-        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y), Location.EL));
+        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y), Field.class, Location.EL));
         if (!containsCorner(t, Corner.NE)) return null;
-        t = getFieldLocationPartOf(state, new FeaturePointer(pos, Location.NL));
+        t = getFieldLocationPartOf(state, new FeaturePointer(pos, Field.class, Location.NL));
         if (!containsCorner(t, Corner.NW)) return null;
         return t;
     }

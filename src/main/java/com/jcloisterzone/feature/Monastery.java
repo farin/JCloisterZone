@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class Monastery extends TileFeature implements Monastic, ModifiedFeature<Monastery> {
 
     private static final long serialVersionUID = 1L;
-    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.MONASTERY));
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Monastery.class, Location.I));
 
     public static final BooleanAnyModifier SHRINE = new BooleanAnyModifier("monastery[shrine]", new GameElementQuery("shrine"));
     public static final BooleanAnyModifier SPECIAL_MONASTERY = new BooleanAnyModifier("monastery[special]", null);
@@ -88,7 +88,7 @@ public class Monastery extends TileFeature implements Monastic, ModifiedFeature<
     public Stream<Tuple2<Meeple, FeaturePointer>> getMeeplesIncludingSpecialMonastery2(GameState state) {
         if (isSpecialMonastery(state)) {
             FeaturePointer place = places.get();
-            Set<FeaturePointer> fps = HashSet.of(place, new FeaturePointer(place.getPosition(), Location.MONASTERY_AS_ABBOT));
+            Set<FeaturePointer> fps = HashSet.of(place, new FeaturePointer(place.getPosition(), Monastery.class, Location.MONASTERY_AS_ABBOT));
             return Stream.ofAll(state.getDeployedMeeples()).filter(t -> fps.contains(t._2));
         }
         return getMeeples2(state);

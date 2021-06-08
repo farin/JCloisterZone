@@ -25,7 +25,7 @@ public class PrincessCapability extends Capability<Void> {
         Set<MeeplePointer> options = state.getTileFeatures2(lastTile.getPosition(), Scoreable.class)
         .filter(t -> {
             if (t._2 instanceof City) {
-                City part = (City) lastTile.getInitialFeaturePartOf(t._1);
+                City part = (City) lastTile.getInitialFeaturePartOf(t._1.getLocation())._2;
                 return part.hasModifier(state, City.PRINCESS);
             } else {
                 return false;

@@ -12,7 +12,7 @@ import io.vavr.collection.*;
 public class Garden extends TileFeature implements Monastic {
 
     private static final long serialVersionUID = 1L;
-    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.GARDEN));
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Garden.class, Location.I));
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 

@@ -1,7 +1,9 @@
 package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.board.Location;
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Monastery;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
@@ -27,8 +29,8 @@ public class AbbeyCapability extends Capability<Integer> {
     public static Tile ABBEY_TILE;
 
     static {
-        HashMap<Location, Feature> features = io.vavr.collection.HashMap.of(
-            Location.MONASTERY, new Monastery(HashMap.empty())
+        HashMap<FeaturePointer, Feature> features = io.vavr.collection.HashMap.of(
+            new FeaturePointer(Position.ZERO, Monastery.class, Location.I), new Monastery(HashMap.empty())
         );
         ABBEY_TILE = new Tile(ABBEY_TILE_ID, features);
     }

@@ -44,7 +44,7 @@ public class CastlePhase extends Phase {
                 if (followers.size() != 1) return false;
                 return followers.get().getPlayer().equals(player);
             })
-            .map(t -> new FeaturePointer(pos, t._1))
+            .map(Tuple2::_1)
             .toSet();
     }
 

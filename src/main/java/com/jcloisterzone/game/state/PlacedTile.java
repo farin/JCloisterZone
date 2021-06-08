@@ -2,7 +2,9 @@ package com.jcloisterzone.game.state;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.*;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
+import io.vavr.Tuple2;
 
 import java.io.Serializable;
 import java.util.function.Function;
@@ -115,12 +117,11 @@ public class PlacedTile implements Serializable {
      * @param loc the location of interest
      * @return the features of the tile at the given location
      */
-    public Feature getInitialFeaturePartOf(Location loc) {
+    public Tuple2<FeaturePointer, Feature> getInitialFeaturePartOf(Location loc) {
         Location initialLoc = loc.rotateCCW(getRotation());
         return tile
             .getInitialFeatures()
-            .find(t -> initialLoc.isPartOf(t._1))
-            .map(t -> t._2)
+            .find(t -> initialLoc.isPartOf(t._1.getLocation()))
             .getOrNull();
     }
 

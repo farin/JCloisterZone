@@ -2,6 +2,7 @@ package com.jcloisterzone.game.state.mixins;
 
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.BridgeCapability;
 import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
@@ -86,7 +87,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
                             EdgePattern tileWithBridgePattern = t._1.rotate(rot);
                             if (border.isMatchingExact(tileWithBridgePattern)) {
                                 Location bridgeLocation = t._2.rotateCW(rot);
-                                return new PlacementOption(pos, rot, new FeaturePointer(pos, bridgeLocation));
+                                return new PlacementOption(pos, rot, new FeaturePointer(pos, Road.class, bridgeLocation));
                             }
                         }
                         // check bridges on adjacent tiles
@@ -98,9 +99,9 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
 
                             FeaturePointer bridgePtr;
                             if (side == Location.N || side == Location.S) {
-                                bridgePtr = new FeaturePointer(adjPos, Location.NS);
+                                bridgePtr = new FeaturePointer(adjPos, Road.class, Location.NS);
                             } else {
-                                bridgePtr = new FeaturePointer(adjPos, Location.WE);
+                                bridgePtr = new FeaturePointer(adjPos, Road.class, Location.WE);
                             }
 
                             // bridge must be legal on adjacent tile

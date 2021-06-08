@@ -35,10 +35,10 @@ public class PlaceFerryPhase extends Phase {
         if (tile.hasModifier(FerriesCapability.LAKE_FERRY)) {
             Set<FeaturePointer> ferries = tile.getInitialFeatures()
                 .filter(t -> t._2 instanceof Road)
-                .map(Tuple2::_1)
+                .map(t -> t._1.getLocation())
                 .combinations(2)
                 .map(pair -> pair.reduce(Location::union))
-                .map(loc -> new FeaturePointer(pos, loc.rotateCW(rot)))
+                .map(loc -> new FeaturePointer(pos, Road.class, loc.rotateCW(rot)))
                 .toSet();
 
             return promote(state.setPlayerActions(

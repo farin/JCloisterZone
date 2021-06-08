@@ -1,6 +1,7 @@
 package com.jcloisterzone.board;
 
 import com.jcloisterzone.Immutable;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.*;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
@@ -22,7 +23,7 @@ public class Tile implements Serializable {
     private final EdgePattern edgePattern;
     private final TileSymmetry symmetry;
 
-    private final Map<Location, Feature> initialFeatures;
+    private final Map<FeaturePointer, Feature> initialFeatures; // position for feature pointers are set to Position.ZERO
     private final Set<TileModifier> modifiers;
 
     /**
@@ -31,7 +32,7 @@ public class Tile implements Serializable {
      * @param id              the identifier of the tile
      * @param initialFeatures the {@link Feature}s of the tile
      */
-    public Tile(String id, Map<Location, Feature> initialFeatures) {
+    public Tile(String id, Map<FeaturePointer, Feature> initialFeatures) {
         this(id, initialFeatures, HashSet.empty());
     }
 
@@ -42,7 +43,7 @@ public class Tile implements Serializable {
      * @param initialFeatures the {@link Feature}s of the tile
      * @param modifiers
      */
-    public Tile(String id, Map<Location, Feature> initialFeatures, Set<TileModifier> modifiers) {
+    public Tile(String id, Map<FeaturePointer, Feature> initialFeatures, Set<TileModifier> modifiers) {
         this.id = id;
         this.initialFeatures = initialFeatures;
         this.modifiers = modifiers;
@@ -62,7 +63,7 @@ public class Tile implements Serializable {
      * @param initialFeatures the features to set
      * @return a new instance with the features set
      */
-    public Tile setInitialFeatures(Map<Location, Feature> initialFeatures) {
+    public Tile setInitialFeatures(Map<FeaturePointer, Feature> initialFeatures) {
         return new Tile(id, initialFeatures, modifiers);
     }
 
@@ -75,7 +76,7 @@ public class Tile implements Serializable {
     public Tile addBridge(Location bridgeLoc) {
         assert bridgeLoc == Location.NS || bridgeLoc == Location.WE;
         Bridge bridge = new Bridge(bridgeLoc);
-        return setInitialFeatures(initialFeatures.put(bridgeLoc, bridge));
+        return setInitialFeatures(initialFeatures.put(new FeaturePointer(null, Road.class, bridgeLoc), bridge));
     }
 
     @Override
@@ -116,7 +117,7 @@ public class Tile implements Serializable {
      *
      * @return the features of this tile
      */
-    public Map<Location, Feature> getInitialFeatures() {
+    public Map<FeaturePointer, Feature> getInitialFeatures() {
         return initialFeatures;
     }
 
@@ -143,7 +144,7 @@ public class Tile implements Serializable {
      * @return the edge type
      */
     private EdgeType computeSideEdge(Location loc) {
-        Tuple2<Location, Feature> tuple = initialFeatures.find(item -> loc.isPartOf(item._1)).getOrNull();
+        Tuple2<FeaturePointer, Feature> tuple = initialFeatures.find(item -> loc.isPartOf(item._1.getLocation())).getOrNull();
 
         if (tuple == null) return EdgeType.FIELD;
         if (tuple._2 instanceof Road) return EdgeType.ROAD;

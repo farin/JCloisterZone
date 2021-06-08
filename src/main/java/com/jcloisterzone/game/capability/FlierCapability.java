@@ -23,8 +23,9 @@ public class FlierCapability extends Capability<Void> {
         }
         if (flyingMachineEl.size() == 1) {
             Location direction = Location.valueOf(flyingMachineEl.get().getAttribute("direction"));
-            FlyingMachine feature = new FlyingMachine(new FeaturePointer(Position.ZERO, Location.FLYING_MACHINE), direction);
-            return tile.setInitialFeatures(tile.getInitialFeatures().put(Location.FLYING_MACHINE, feature));
+            FeaturePointer fp = new FeaturePointer(Position.ZERO, FlyingMachine.class, Location.I);
+            FlyingMachine feature = new FlyingMachine(fp, direction);
+            return tile.setInitialFeatures(tile.getInitialFeatures().put(fp, feature));
         }
         throw new IllegalStateException("multiple <flying-machine> elements");
     }

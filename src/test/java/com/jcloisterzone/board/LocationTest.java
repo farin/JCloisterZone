@@ -15,7 +15,7 @@ public class LocationTest {
         assertTrue(Location.E.isPartOf(Location.E));
         assertTrue(Location.N.isPartOf(Location.NW));
         assertFalse(Location.E.isPartOf(Location.NW));
-        assertFalse(Location.INNER_FIELD.isPartOf(Location.N));
+        assertFalse(Location.I.isPartOf(Location.N));
         assertTrue(Location._N.isPartOf(Location.NWSE));
     }
 
@@ -30,12 +30,7 @@ public class LocationTest {
     @Test
     public void unionExcept() {
         try {
-            Location.N.union(Location.MONASTERY);
-            fail();
-        } catch (IllegalArgumentException ae) {
-        }
-        try {
-            Location.N.union(Location.INNER_FIELD);
+            Location.N.union(Location.I);
             fail();
         } catch (IllegalArgumentException ae) {
         }
@@ -51,7 +46,7 @@ public class LocationTest {
     @Test()
     public void subtractExcept() {
         try {
-            Location.N.subtract(Location.MONASTERY);
+            Location.N.subtract(Location.I);
             fail();
         } catch (IllegalArgumentException ae) {
         }

@@ -55,7 +55,7 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
         Player player = state.getPlayerActions().getPlayer();
 
         Set<FeaturePointer> occupiedTowers = state.getDeployedMeeples()
-            .filter(t -> t._2.getLocation().equals(Location.TOWER))
+            .filter(t -> t._2.getFeature().equals(Tower.class))
             .map(Tuple2::_2)
             .toSet();
 

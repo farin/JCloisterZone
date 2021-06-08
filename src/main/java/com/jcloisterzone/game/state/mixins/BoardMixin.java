@@ -90,29 +90,30 @@ public interface BoardMixin {
             .map(f -> (T) f);
     }
 
-    default Stream<Tuple2<Location, Feature>> getTileFeatures2(Position pos) {
+    default Stream<Tuple2<FeaturePointer, Feature>> getTileFeatures2(Position pos) {
         PlacedTile placedTile = getPlacedTile(pos);
         if (placedTile == null) {
             return Stream.empty();
         }
         Rotation rot = placedTile.getRotation();
         Map<FeaturePointer, Feature> allFeatures = getFeatureMap();
-        return Stream.ofAll(placedTile.getTile().getInitialFeatures())
-            .map(t -> t.update1(t._1.rotateCW(rot)))
-            .map(t -> t.update2(
-                allFeatures.get(new FeaturePointer(pos, t._1)).get()
-            ));
+        return Stream.ofAll(placedTile.getTile().getInitialFeatures()).map(t -> {
+            FeaturePointer fp = t._1;
+            fp = new FeaturePointer(pos, fp.getFeature(), fp.getLocation().rotateCW(rot));
+            Feature feature = allFeatures.get(fp).get();
+            return new Tuple2<>(fp, feature);
+        });
     }
 
     @SuppressWarnings("unchecked")
-    default <T extends Feature> Stream<Tuple2<Location, T>> getTileFeatures2(Position pos, Class<T> cls) {
+    default <T extends Feature> Stream<Tuple2<FeaturePointer, T>> getTileFeatures2(Position pos, Class<T> cls) {
         return getTileFeatures2(pos)
            .filter(t -> cls.isInstance(t._2))
-           .map(t -> (Tuple2<Location, T>) t);
+           .map(t -> (Tuple2<FeaturePointer, T>) t);
     }
 
     default Feature getFeature(FeaturePointer fp) {
-        if (fp.getLocation() == Location.MONASTERY_AS_ABBOT) fp = fp.setLocation(Location.MONASTERY);
+        if (fp.getLocation() == Location.MONASTERY_AS_ABBOT) fp = fp.setLocation(Location.I);
         return getFeatureMap().get(fp).getOrNull();
     }
 
@@ -121,8 +122,21 @@ public interface BoardMixin {
         return f instanceof Structure ? (Structure) f : null;
     }
 
+    default Feature getFeaturePartOf(Position pos, Location loc) {
+        if (loc == Location.MONASTERY_AS_ABBOT) loc = Location.I;
+        var t = getPlacedTile(pos).getInitialFeaturePartOf(loc);
+        return getFeatureMap().get(t._1.setPosition(pos)).getOrNull();
+    }
+
+    default Tuple2<FeaturePointer, Feature> getFeaturePartOf2(Position pos, Location loc) {
+        if (loc == Location.MONASTERY_AS_ABBOT) loc = Location.I;
+        var t = getPlacedTile(pos).getInitialFeaturePartOf(loc);
+        var feature =  getFeatureMap().get(t._1.setPosition(pos)).getOrNull();
+        return feature == null ? null : new Tuple2<>(t._1.setPosition(pos), feature);
+    }
+
     default Feature getFeaturePartOf(FeaturePointer fp) {
-        FeaturePointer normFp = fp.getLocation() == Location.MONASTERY_AS_ABBOT ? fp.setLocation(Location.MONASTERY) : fp;
+        FeaturePointer normFp = fp.getLocation() == Location.MONASTERY_AS_ABBOT ? fp.setLocation(Location.I) : fp;
         return getFeatureMap()
             .find(t -> normFp.isPartOf(t._1))
             .map(Tuple2::_2)
@@ -137,7 +151,7 @@ public interface BoardMixin {
     /** Returns Tuple2 with feature and "full" feature pointer.
      */
     default Tuple2<FeaturePointer, Feature> getFeaturePartOf2(FeaturePointer fp) {
-        FeaturePointer normFp = fp.getLocation() == Location.MONASTERY_AS_ABBOT ? fp.setLocation(Location.MONASTERY) : fp;
+        FeaturePointer normFp = fp.getLocation() == Location.MONASTERY_AS_ABBOT ? fp.setLocation(Location.I) : fp;
         return getFeatureMap()
             .find(t -> normFp.isPartOf(t._1))
             .getOrNull();

@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleDeployed;
+import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.random.RandomGenerator;
@@ -40,13 +41,13 @@ public class CocCountPhase extends Phase {
             else if (quarter.equals(Location.QUARTER_BLACKSMITH)) nextQuarter = Location.QUARTER_CATHEDRAL;
             else nextQuarter = Location.QUARTER_CASTLE;
 
-            state = (new MoveNeutralFigure<FeaturePointer>(count, new FeaturePointer(quarterPos, nextQuarter), player)).apply(state);
+            state = (new MoveNeutralFigure<FeaturePointer>(count, new FeaturePointer(quarterPos, Quarter.class, nextQuarter), player)).apply(state);
             return next(state);
         }
 
         if ("follow-meeple".equals(rule)) {
             MeepleDeployed cocDeployment = (MeepleDeployed) state.getEvents().findLast(ev -> ev instanceof MeepleDeployed && ((MeepleDeployed)ev).getLocation().isCityOfCarcassonneQuarter()).get();
-            state = (new MoveNeutralFigure<FeaturePointer>(count, new FeaturePointer(quarterPos, cocDeployment.getLocation()), player)).apply(state);
+            state = (new MoveNeutralFigure<FeaturePointer>(count, new FeaturePointer(quarterPos, Quarter.class, cocDeployment.getLocation()), player)).apply(state);
             return next(state);
         }
 
@@ -54,7 +55,7 @@ public class CocCountPhase extends Phase {
         if (!state.getBooleanRule(Rule.FARMERS)) {
             quarters = quarters.remove(Location.QUARTER_MARKET);
         }
-        Set<FeaturePointer> options = quarters.map(loc -> new FeaturePointer(quarterPos, loc)).toSet();
+        Set<FeaturePointer> options = quarters.map(loc -> new FeaturePointer(quarterPos, Quarter.class, loc)).toSet();
         NeutralFigureAction action = new NeutralFigureAction(count, options);
 
         state = state.setPlayerActions(new ActionsState(player, action, true));

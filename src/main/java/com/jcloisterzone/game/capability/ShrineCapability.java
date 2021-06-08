@@ -100,9 +100,8 @@ public final class ShrineCapability extends Capability<Void> {
         return state
             .getAdjacentAndDiagonalTiles(pos)
             .map(pt -> state.getFeature(
-                new FeaturePointer(pt.getPosition(), Location.MONASTERY)
+                new FeaturePointer(pt.getPosition(), Monastery.class, Location.I)
             ))
-            .filter(Predicates.instanceOf(Monastery.class)) // filter out Yaga huts
             .map(f -> (Monastery) f)
             .toArray();
     }

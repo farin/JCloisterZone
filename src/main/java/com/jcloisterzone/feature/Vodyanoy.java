@@ -8,7 +8,7 @@ import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
 import io.vavr.collection.List;
 
 public class Vodyanoy extends TileFeature implements Scoreable, TrapFeature {
-    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, RussianPromosTrapCapability.TRAP_LOCATION));
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Vodyanoy.class, Location.I));
 
     public Vodyanoy() {
         this(INITIAL_PLACE);

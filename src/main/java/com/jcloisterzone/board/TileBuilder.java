@@ -32,7 +32,7 @@ public class TileBuilder {
     private java.util.List<FeatureModifier> externalModifiers;
     private java.util.Map<String, java.util.List<FeatureModifier>> modifiersByType;
 
-    private java.util.Map<Location, Feature> features;
+    private java.util.Map<FeaturePointer, Feature> features;
     private java.util.List<Tuple3<ShortEdge, Location, FeaturePointer>> multiEdges; //Edge, edge location, target feature (which is declared without edge)
     private String tileId;
 
@@ -104,9 +104,9 @@ public class TileBuilder {
         }
 
         for (Tuple3<ShortEdge, Location, FeaturePointer> multiEdge: multiEdges) {
-        	java.util.Map.Entry<Location, Feature> matched = null;
-        	for (java.util.Map.Entry<Location, Feature> entry : features.entrySet()) {
-        		if (multiEdge._2.isPartOf(entry.getKey())) {
+        	java.util.Map.Entry<FeaturePointer, Feature> matched = null;
+        	for (java.util.Map.Entry<FeaturePointer, Feature> entry : features.entrySet()) {
+        		if (multiEdge._2.isPartOf(entry.getKey().getLocation())) {
         			matched = entry;
         			break;
         		}
@@ -123,7 +123,7 @@ public class TileBuilder {
         	features.put(matched.getKey(), target);
         }
 
-        io.vavr.collection.HashMap<Location, Feature> _features = io.vavr.collection.HashMap.ofAll(features);
+        io.vavr.collection.HashMap<FeaturePointer, Feature> _features = io.vavr.collection.HashMap.ofAll(features);
         Tile tileDef = new Tile(tileId, _features);
 
         features = null;
@@ -160,14 +160,14 @@ public class TileBuilder {
         Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("monastery", e);
         Monastery monastery = new Monastery(modifiers);
         monastery = (Monastery) initFeature(tileId, monastery, e);
-        features.put(Location.MONASTERY, monastery);
+        features.put(new FeaturePointer(Position.ZERO, Monastery.class, Location.I), monastery);
 
     }
 
     private void processTowerElement(Element e) {
         Tower tower = new Tower();
         tower = (Tower) initFeature(tileId, tower, e);
-        features.put(Location.TOWER, tower);
+        features.put(new FeaturePointer(Position.ZERO, Tower.class, Location.I), tower);
     }
 
     private void processRoadElement(Element e, boolean isTunnelActive) {
@@ -192,7 +192,7 @@ public class TileBuilder {
         }
 
         road = (Road) initFeature(tileId, road, e);
-        features.put(fp.getLocation(), road);
+        features.put(fp, road);
     }
 
     private void processCityElement(Element e) {
@@ -217,7 +217,7 @@ public class TileBuilder {
         );
 
         city = (City) initFeature(tileId, city, e);
-        features.put(place.getLocation(), city);
+        features.put(place, city);
     }
 
     private void processRiverElement(Element e) {
@@ -229,7 +229,7 @@ public class TileBuilder {
         );
 
         river = (River) initFeature(tileId, river, e);
-        features.put(place.getLocation(), river);
+        features.put(place, river);
     }
 
     private void processFieldElement(Element e) {
@@ -241,9 +241,9 @@ public class TileBuilder {
             //List<City> cities = new ArrayList<>();
             Stream<Location> citiesLocs = attrAsLocations(e, "city");
             citiesLocs = citiesLocs.map(partial -> {
-                for(Entry<Location, Feature> entry : features.entrySet()) {
+                for(Entry<FeaturePointer, Feature> entry : features.entrySet()) {
                     if (entry.getValue() instanceof City) {
-                        Location loc = entry.getKey();
+                        Location loc = entry.getKey().getLocation();
                         if (partial.isPartOf(loc)) {
                             return loc;
                         }
@@ -252,7 +252,7 @@ public class TileBuilder {
                 throw new IllegalArgumentException(String.format("Unable to match adjoining city %s for tile %s", partial, tileId));
             });
             adjoiningCities = HashSet.ofAll(citiesLocs.map(
-                loc -> new FeaturePointer(Position.ZERO, loc)
+                loc -> new FeaturePointer(Position.ZERO, City.class, loc)
             ));
         } else {
             adjoiningCities = HashSet.empty();
@@ -262,7 +262,7 @@ public class TileBuilder {
         Field field = new Field(List.of(place),  adjoiningCities,  false, modifiers);
 
         field = (Field) initFeature(tileId, field, e);
-        features.put(place.getLocation(), field);
+        features.put(place, field);
     }
 
     private FeaturePointer initFeaturePointer(Stream<Location> sides, Class<? extends Feature> clazz) {
@@ -273,7 +273,7 @@ public class TileBuilder {
             locRef.set(locRef.get() == null ? l : locRef.get().union(l));
         });
         //logger.debug(tile.getId() + "/" + piece.getClass().getSimpleName() + "/"  + loc);
-        return new FeaturePointer(Position.ZERO, locRef.get());
+        return new FeaturePointer(Position.ZERO, clazz, locRef.get());
     }
 
     public static Set<Edge> initOpenEdges(Stream<Location> sides) {

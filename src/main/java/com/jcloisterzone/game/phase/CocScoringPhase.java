@@ -92,7 +92,7 @@ public class CocScoringPhase extends AbstractCocScoringPhase {
         if (AbbeyCapability.isAbbey(lastPlaced.getTile())) {
             for (Tuple2<Location, PlacedTile> t : state.getAdjacentTiles2(lastPlacedPos)) {
                 PlacedTile pt = t._2;
-                Feature feature = state.getFeaturePartOf(new FeaturePointer(pt.getPosition(), t._1.rev()));
+                Feature feature = state.getFeaturePartOf(pt.getPosition(), t._1.rev());
                 if (feature instanceof Completable) {
                     justPlacedAbbeyAdjacent.add((Completable) feature);
                 }

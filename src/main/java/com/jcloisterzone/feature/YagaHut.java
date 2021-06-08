@@ -18,7 +18,7 @@ import io.vavr.collection.Set;
  */
 public class YagaHut extends TileFeature implements Completable, Monastic {
     private static final long serialVersionUID = 1L;
-    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Location.MONASTERY));
+    private static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, YagaHut.class, Location.I));
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 

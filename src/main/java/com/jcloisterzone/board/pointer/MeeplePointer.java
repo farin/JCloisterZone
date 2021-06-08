@@ -3,6 +3,7 @@ package com.jcloisterzone.board.pointer;
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 
 import io.vavr.Tuple2;
@@ -23,8 +24,8 @@ public class MeeplePointer implements BoardPointer {
         this.meepleId = meepleId;
     }
 
-    public MeeplePointer(Position position, Location location, String meepleId) {
-        this(new FeaturePointer(position, location), meepleId);
+    public MeeplePointer(Position position, Class<? extends Feature> feature, Location location, String meepleId) {
+        this(new FeaturePointer(position, feature, location), meepleId);
     }
 
     public MeeplePointer(Tuple2<? extends Meeple, FeaturePointer> t) {

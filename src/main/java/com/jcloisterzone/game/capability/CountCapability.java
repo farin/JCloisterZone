@@ -33,7 +33,7 @@ public class CountCapability extends Capability<CountCapabilityModel> {
         state = setModel(state, new CountCapabilityModel(quarterPosition, null));
         state = (new MoveNeutralFigure<>(
                 count,
-                new FeaturePointer(quarterPosition, Location.QUARTER_CASTLE)
+                new FeaturePointer(quarterPosition, Quarter.class, Location.QUARTER_CASTLE)
         )).apply(state);
         return state;
     }
@@ -41,10 +41,11 @@ public class CountCapability extends Capability<CountCapabilityModel> {
     @Override
     public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) throws RemoveTileException {
         if (QUARTER_ACTION_TILE_ID.equals(tile.getId())) {
-            Map<Location, Feature> features = tile.getInitialFeatures();
-            features = features.merge(Location.QUARTERS.toMap(loc ->
-                new Tuple2<>(loc, new Quarter(new FeaturePointer(Position.ZERO, loc)))
-            ));
+            Map<FeaturePointer, Feature> features = tile.getInitialFeatures();
+            features = features.merge(Location.QUARTERS.toMap(loc -> {
+                FeaturePointer fp = new FeaturePointer(Position.ZERO, Quarter.class, loc);
+                return new Tuple2<>(fp, new Quarter(fp));
+            }));
             return tile.setInitialFeatures(features);
         }
         return tile;
