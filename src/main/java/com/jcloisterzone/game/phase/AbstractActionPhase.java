@@ -184,11 +184,7 @@ public abstract class AbstractActionPhase extends Phase {
     @PhaseMessageHandler
     public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
         FeaturePointer fp = msg.getPointer();
-
-        if (fp.getFeature().equals(FlyingMachine.class)) {
-            throw new IllegalArgumentException("Use DEPLOY_FLIER message instead");
-        }
-
+        
         Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
         PlacedTile placedTile = state.getLastPlaced();
 

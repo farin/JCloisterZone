@@ -32,7 +32,7 @@ public class WagonCapability extends Capability<Queue<Tuple2<Wagon, FeaturePoint
     public GameState onStartGame(GameState state) {
         return setModel(state, Queue.empty());
     }
-    
+
     @Override
     public GameState onTurnPartCleanUp(GameState state) {
         return setModel(state, Queue.empty());
