@@ -113,7 +113,7 @@ public class TradeGoodsCapability extends Capability<Void> {
     public static class TradeGoodsModifier extends FeatureModifier<Map<TradeGoods, Integer>> {
 
         public TradeGoodsModifier() {
-            super("city[resource]", new GameElementQuery("trade-goods"));
+            super("city[resource]", new GameElementQuery("traders"));
         }
 
         @Override

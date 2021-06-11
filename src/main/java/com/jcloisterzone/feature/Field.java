@@ -156,7 +156,7 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
 
         // besieged is already part of cityCount
         var scoredObjects = cityCount + castleCount + (adjoiningCityOfCarcassonne ? 1 : 0);
-        if ( scorePigsForPlayer != null && scoredObjects > 0) {
+        if (scorePigsForPlayer != null && scoredObjects > 0) {
             int pigCount = getPigCount(state, scorePigsForPlayer);
             int pigHerds = getModifier(state, PIG_HERD, 0);
             if (pigCount > 0) {
