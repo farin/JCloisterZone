@@ -59,12 +59,12 @@ public class LittleBuildingsCapability extends Capability<Map<Position, LittleBu
     public static List<ExprItem> getBuildingsPoints(RulesMixin rules, Seq<LittleBuilding> buildings) {
         if ("3/2/1".equals(rules.getStringRule(Rule.LITTLE_BUILDINGS_SCORING))) {
             Map<LittleBuilding, Integer> counts = buildings.groupBy(t -> t).mapValues(l -> l.size());
-            int houseCount = counts.getOrElse(LittleBuilding.LB_HOUSE, 0);
             int shedCount = counts.getOrElse(LittleBuilding.LB_SHED, 0);
+            int houseCount = counts.getOrElse(LittleBuilding.LB_HOUSE, 0);
             int towerCount = counts.getOrElse(LittleBuilding.LB_TOWER, 0);
             return List.of(
-                    new ExprItem(houseCount, "little-buildings." + LittleBuilding.LB_HOUSE.name(), 1 * houseCount),
-                    new ExprItem(shedCount, "little-buildings." + LittleBuilding.LB_SHED.name(), 2 * shedCount),
+                    new ExprItem(shedCount, "little-buildings." + LittleBuilding.LB_SHED.name(), 1 * shedCount),
+                    new ExprItem(houseCount, "little-buildings." + LittleBuilding.LB_HOUSE.name(), 2 * houseCount),
                     new ExprItem(towerCount, "little-buildings." + LittleBuilding.LB_TOWER.name(), 3 * towerCount)
             );
         } else {

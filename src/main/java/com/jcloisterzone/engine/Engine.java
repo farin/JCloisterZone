@@ -144,7 +144,6 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"church", ChurchCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"wind-rose", WindRoseCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"monastery", MonasteriesCapability.class);
-        capabilities = addCapabilities(capabilities, setupMsg,"yaga", YagaCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"russian-trap", RussianPromosTrapCapability.class);
 
         Map<Rule, Object> rules = HashMap.empty();

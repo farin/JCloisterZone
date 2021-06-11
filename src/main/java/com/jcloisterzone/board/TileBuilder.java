@@ -95,13 +95,17 @@ public class TileBuilder {
             for (int i = 0; i < nl.getLength(); i++) {
                 processFieldElement((Element) nl.item(i));
             }
-            nl = xml.getElementsByTagName("tower");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processTowerElement((Element) nl.item(i));
-            }
             nl = xml.getElementsByTagName("river");
             for (int i = 0; i < nl.getLength(); i++) {
                 processRiverElement((Element) nl.item(i));
+            }
+            nl = xml.getElementsByTagName("tower");
+            for (int i = 0; i < nl.getLength(); i++) {
+                initFeature((Element) nl.item(i), new Tower(), new FeaturePointer(Position.ZERO, Tower.class, Location.I));
+            }
+            nl = xml.getElementsByTagName("yaga-hut");
+            for (int i = 0; i < nl.getLength(); i++) {
+                initFeature((Element) nl.item(i), new YagaHut(), new FeaturePointer(Position.ZERO, YagaHut.class, Location.I));
             }
         }
 
@@ -181,10 +185,6 @@ public class TileBuilder {
         Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("monastery", e);
         Monastery monastery = new Monastery(modifiers);
         initFeature(e, monastery, new FeaturePointer(Position.ZERO, Monastery.class, Location.I));
-    }
-
-    private void processTowerElement(Element e) {
-        initFeature(e, new Tower(), new FeaturePointer(Position.ZERO, Tower.class, Location.I));
     }
 
     private void processRoadElement(Element e, boolean isTunnelActive) {

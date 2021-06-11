@@ -47,7 +47,7 @@ public class RussianPromosTrapCapability extends Capability<Void> {
 
     @Override
     public boolean isMeepleDeploymentAllowed(GameState state, Position pos) {
-        return !state.getPlacedTile(pos).getTile().getInitialFeatures().keySet().filter(fp -> fp.getFeature().equals(Vodyanoy.class)).isEmpty();
+        return state.getPlacedTile(pos).getTile().getInitialFeatures().keySet().filter(fp -> fp.getFeature().equals(Vodyanoy.class)).isEmpty();
     }
 
     @Override
