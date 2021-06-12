@@ -113,7 +113,7 @@ public interface BoardMixin {
     }
 
     default Feature getFeature(FeaturePointer fp) {
-        if (fp.getLocation() == Location.MONASTERY_AS_ABBOT) fp = fp.setLocation(Location.I);
+        if (fp.getLocation() == Location.AS_ABBOT) fp = fp.setLocation(Location.I);
         return getFeatureMap().get(fp).getOrNull();
     }
 
@@ -123,20 +123,20 @@ public interface BoardMixin {
     }
 
     default Feature getFeaturePartOf(Position pos, Location loc) {
-        if (loc == Location.MONASTERY_AS_ABBOT) loc = Location.I;
+        if (loc == Location.AS_ABBOT) loc = Location.I;
         var t = getPlacedTile(pos).getInitialFeaturePartOf(loc);
         return getFeatureMap().get(t._1.setPosition(pos)).getOrNull();
     }
 
     default Tuple2<FeaturePointer, Feature> getFeaturePartOf2(Position pos, Location loc) {
-        if (loc == Location.MONASTERY_AS_ABBOT) loc = Location.I;
+        if (loc == Location.AS_ABBOT) loc = Location.I;
         var t = getPlacedTile(pos).getInitialFeaturePartOf(loc);
         var feature =  getFeatureMap().get(t._1.setPosition(pos)).getOrNull();
         return feature == null ? null : new Tuple2<>(t._1.setPosition(pos), feature);
     }
 
     default Feature getFeaturePartOf(FeaturePointer fp) {
-        FeaturePointer normFp = fp.getLocation() == Location.MONASTERY_AS_ABBOT ? fp.setLocation(Location.I) : fp;
+        FeaturePointer normFp = fp.getLocation() == Location.AS_ABBOT ? fp.setLocation(Location.I) : fp;
         return getFeatureMap()
             .find(t -> normFp.isPartOf(t._1))
             .map(Tuple2::_2)
@@ -151,7 +151,7 @@ public interface BoardMixin {
     /** Returns Tuple2 with feature and "full" feature pointer.
      */
     default Tuple2<FeaturePointer, Feature> getFeaturePartOf2(FeaturePointer fp) {
-        FeaturePointer normFp = fp.getLocation() == Location.MONASTERY_AS_ABBOT ? fp.setLocation(Location.I) : fp;
+        FeaturePointer normFp = fp.getLocation() == Location.AS_ABBOT ? fp.setLocation(Location.I) : fp;
         return getFeatureMap()
             .find(t -> normFp.isPartOf(t._1))
             .getOrNull();

@@ -7,8 +7,6 @@ import com.jcloisterzone.Immutable;
 
 import io.vavr.collection.List;
 import io.vavr.collection.Vector;
-
-
 /**
  * Represents locations on a tile. A location is any "space" where tile features, such as rivers, roads, fields, abbots,
  * etc. can be located.
@@ -16,12 +14,6 @@ import io.vavr.collection.Vector;
  * - a south-to-east feature-space (e.g., a river, a road, a city)
  * - a south-to-north feature-space (e.g., a river, a road, a city)
  * - a city space spanning in all directions
- * - an abbot space (monasteries)
- * - a monastery space
- * - a flier space
- * - a tower space
- * - a field-space on the left of the west side
- * - a field space facing no sides (surrounded by other features)
  *
  * Multiple locations in the same tile can coexist and they are represented using bits as flags.
  *
@@ -149,15 +141,13 @@ public class Location implements Serializable {
     public static final Location _E = new Location("_E", 0b11110011 << 8);
 
     // inner locations
-
     public static final Location I = new Location("I");
     public static final Location II = new Location("II");
     public static final Location III = new Location("III");
     public static final Location IV = new Location("IV");
 
     /** An abbot space (monasteries from "German Monasteries" and "Monasteries in Belgium"*/
-    // TODO remame to AS_ABBOT
-    public static final Location MONASTERY_AS_ABBOT = new Location("MONASTERY_AS_ABBOT");
+    public static final Location AS_ABBOT = new Location("AS_ABBOT");
 
     /** City of Carcassonne specials (Count) */
     // TODO use inner instead ?
@@ -166,7 +156,6 @@ public class Location implements Serializable {
     public static final Location QUARTER_BLACKSMITH = new Location("QUARTER_BLACKSMITH");
     public static final Location QUARTER_CATHEDRAL = new Location("QUARTER_CATHEDRAL");
 
-    public static final List<Location> INNER_LOCATIONS = List.of(I, II, III, IV);
     public static final List<Location> SIDES = List.of(N, E, S, W);
     public static final List<Location> FIELD_SIDES = List.of(NL, NR, EL, ER, SL, SR, WL, WR);
     public static final List<Location> BRIDGES = List.of(NS, WE);

@@ -97,7 +97,7 @@ public class WagonPhase extends Phase {
                         .flatMap(t -> {
                             Structure struct = t._2;
                             if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(_state)) {
-                                return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Monastery.class, Location.MONASTERY_AS_ABBOT), struct));
+                                return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Monastery.class, Location.AS_ABBOT), struct));
                             }
                             return List.of(t);
                         })

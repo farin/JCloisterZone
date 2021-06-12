@@ -66,7 +66,7 @@ public abstract class AbstractActionPhase extends Phase {
             places = places.flatMap(t -> {
                 Structure struct = t._2;
                 if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(state)) {
-                    return List.of(t, new Tuple2<>(t._1.setLocation(Location.MONASTERY_AS_ABBOT), struct));
+                    return List.of(t, new Tuple2<>(t._1.setLocation(Location.AS_ABBOT), struct));
                 }
                 return List.of(t);
             });
@@ -76,7 +76,7 @@ public abstract class AbstractActionPhase extends Phase {
             if (!allowCompleted) {
                 //exclude completed
                 places = places.filter(t -> {
-                    if (t._1.getLocation() == Location.MONASTERY_AS_ABBOT) {
+                    if (t._1.getLocation() == Location.AS_ABBOT) {
                         // monastery is never completed
                         return true;
                     }
