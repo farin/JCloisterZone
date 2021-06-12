@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.RemoveTileException;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
+import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.state.GameState;
@@ -16,6 +17,7 @@ import io.vavr.collection.Vector;
 import org.w3c.dom.Element;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.function.Function;
 
 @Immutable
@@ -42,11 +44,11 @@ public abstract class Capability<T> implements Serializable {
     /**
      * @param state
      * @param tile
-     * @param tileElements XML elements defining tile. Because of tile inheritance, more than one element can exist.
+     * @param tileElement XML elements defining tile. Because of tile inheritance, more than one element can exist.
      * @return
      * @throws RemoveTileException
      */
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) throws RemoveTileException {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) throws RemoveTileException {
         return tile;
     }
 
@@ -63,6 +65,10 @@ public abstract class Capability<T> implements Serializable {
     }
 
     public GameState onTilePlaced(GameState state, PlacedTile placedTile) {
+        return state;
+    }
+
+    public GameState beforeCompletableScore(GameState state, java.util.Set<Completable> features) {
         return state;
     }
 
@@ -110,21 +116,7 @@ public abstract class Capability<T> implements Serializable {
 
     public static Class<? extends Capability<?>> classForName(String name) throws ClassNotFoundException {
         ClassLoader defaultLoader = Capability.class.getClassLoader();
-        try {
-            return classForName(name, defaultLoader);
-        } catch (ClassNotFoundException ex) {
-//            for (Plugin p : Client.getInstance().getPlugins()) {
-//                if (!p.isEnabled() || p.getLoader().equals(defaultLoader)) {
-//                    continue;
-//                }
-//                try {
-//                    return classForName(name, p.getLoader());
-//                } catch (ClassNotFoundException nested) {
-//                    // do nothing
-//                }
-//            }
-            throw ex;
-        }
+        return classForName(name, defaultLoader);
     }
 
     @SuppressWarnings("unchecked")

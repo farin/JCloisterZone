@@ -17,8 +17,8 @@ public class PortalCapability extends Capability<Void> {
     public static final TileModifier MAGIC_PORTAL = new TileModifier("MagicPortal");
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "portal").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "portal").isEmpty()) {
             tile = tile.addTileModifier(MAGIC_PORTAL);
         }
         return tile;

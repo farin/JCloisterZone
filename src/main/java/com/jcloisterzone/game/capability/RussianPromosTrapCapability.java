@@ -33,12 +33,12 @@ import org.w3c.dom.Element;
 public class RussianPromosTrapCapability extends Capability<Void> {
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "razboynik").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "razboynik").isEmpty()) {
             SoloveiRazboynik razboynik = new SoloveiRazboynik();
             tile = tile.setInitialFeatures(tile.getInitialFeatures().put(razboynik.getPlace(), razboynik));
         }
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "vodyanoy").isEmpty()) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "vodyanoy").isEmpty()) {
             Vodyanoy vodyanoy = new Vodyanoy();
             tile = tile.setInitialFeatures(tile.getInitialFeatures().put(vodyanoy.getPlace(), vodyanoy));
         }

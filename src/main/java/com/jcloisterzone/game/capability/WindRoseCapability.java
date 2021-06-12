@@ -72,12 +72,10 @@ public class WindRoseCapability extends Capability<PlacedTile> {
     }
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        for (Element el : tileElements) {
-            if (el.hasAttribute("wind-rose")) {
-                Location loc = Location.valueOf(el.getAttribute("wind-rose"));
-                tile = tile.addTileModifier(ROSES.get(loc).getOrElseThrow(IllegalArgumentException::new));
-            }
+    public Tile initTile(GameState state, Tile tile, Element el) {
+        if (el.hasAttribute("wind-rose")) {
+            Location loc = Location.valueOf(el.getAttribute("wind-rose"));
+            tile = tile.addTileModifier(ROSES.get(loc).getOrElseThrow(IllegalArgumentException::new));
         }
         return tile;
     }

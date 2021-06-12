@@ -27,16 +27,6 @@ public class Tile implements Serializable {
     private final Set<TileModifier> modifiers;
 
     /**
-     * Instantiates a new {@code TileDefinition}
-     *
-     * @param id              the identifier of the tile
-     * @param initialFeatures the {@link Feature}s of the tile
-     */
-    public Tile(String id, Map<FeaturePointer, Feature> initialFeatures) {
-        this(id, initialFeatures, HashSet.empty());
-    }
-
-    /**
      * Instantiates a new {@code TileDefinition}.
      *
      * @param id              the identifier of the tile

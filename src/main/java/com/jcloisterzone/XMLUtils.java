@@ -51,12 +51,16 @@ public class XMLUtils {
         return nodeStream(nl).filter(Predicates.instanceOf(Element.class)).map(node -> (Element) node);
     }
 
-    public static io.vavr.collection.Stream<Element> getChildElementStream(Vector<Element> tileElements) {
-        return Stream.concat(tileElements.map(el -> XMLUtils.elementStream(el.getChildNodes())));
+//    public static io.vavr.collection.Stream<Element> getChildElementStream(Vector<Element> tileElements) {
+//        return Stream.concat(tileElements.map(el -> XMLUtils.elementStream(el.getChildNodes())));
+//    }
+
+    public static io.vavr.collection.Stream<Element> getChildElementStream(Element tileElement) {
+        return XMLUtils.elementStream(tileElement.getChildNodes());
     }
 
-    public static io.vavr.collection.Stream<Element> getElementStreamByTagName(Vector<Element> tileElements, String tagName) {
-        return getChildElementStream(tileElements).filter(el -> el.getNodeName().equals(tagName));
+    public static io.vavr.collection.Stream<Element> getElementStreamByTagName(Element tileElement, String tagName) {
+        return getChildElementStream(tileElement).filter(el -> el.getNodeName().equals(tagName));
     }
 
     public static Element getElementByTagName(Element parent, String childName) {

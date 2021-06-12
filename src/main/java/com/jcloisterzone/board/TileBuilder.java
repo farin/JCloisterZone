@@ -4,6 +4,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.capability.WatchtowerCapability;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
@@ -68,44 +69,46 @@ public class TileBuilder {
         return externalModifiers;
     }
 
-    public Tile createTile(String tileId, Vector<Element> tileElements, boolean isTunnelActive) {
+    public Tile createTile(String tileId, Element tileElement, boolean isTunnelActive) {
 
         features = new java.util.HashMap<>();
         multiEdges = new java.util.ArrayList<>();
         neighbouring = new java.util.HashMap<>();
+        Set<TileModifier> tileModifiers = HashSet.empty();
         this.tileId = tileId;
 
         logger.debug("Creating " + tileId);
 
-        for (Element xml : tileElements) {
-            NodeList nl;
-            nl = xml.getElementsByTagName("monastery");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processMonasteryElement((Element) nl.item(i));
-            }
-            nl = xml.getElementsByTagName("road");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processRoadElement((Element) nl.item(i), isTunnelActive);
-            }
-            nl = xml.getElementsByTagName("city");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processCityElement((Element) nl.item(i));
-            }
-            nl = xml.getElementsByTagName("field");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processFieldElement((Element) nl.item(i));
-            }
-            nl = xml.getElementsByTagName("river");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processRiverElement((Element) nl.item(i));
-            }
-            nl = xml.getElementsByTagName("tower");
-            for (int i = 0; i < nl.getLength(); i++) {
-                initFeature((Element) nl.item(i), new Tower(), new FeaturePointer(Position.ZERO, Tower.class, Location.I));
-            }
-            nl = xml.getElementsByTagName("yaga-hut");
-            for (int i = 0; i < nl.getLength(); i++) {
-                initFeature((Element) nl.item(i), new YagaHut(), new FeaturePointer(Position.ZERO, YagaHut.class, Location.I));
+
+        NodeList nl = tileElement.getChildNodes();
+        for (int i = 0; i < nl.getLength(); i++) {
+            if (!(nl.item(i) instanceof Element)) continue;
+            Element el = (Element) nl.item(i);
+            switch (el.getTagName()) {
+                case "monastery":
+                    processMonasteryElement(el);
+                    break;
+                case "road":
+                    processRoadElement(el, isTunnelActive);
+                    break;
+                case "city":
+                    processCityElement(el);
+                    break;
+                case "field":
+                    processFieldElement(el);
+                    break;
+                case "river":
+                    processRiverElement(el);
+                    break;
+                case "tower":
+                    initFeature(el, new Tower(), new FeaturePointer(Position.ZERO, Tower.class, Location.I));
+                    break;
+                case "yaga-hut":
+                    initFeature(el, new YagaHut(), new FeaturePointer(Position.ZERO, YagaHut.class, Location.I));
+                    break;
+                case "watchtower":
+                    tileModifiers = tileModifiers.add(new WatchtowerCapability.WatchtowerModifier(el.getAttribute("bonus")));
+                    break;
             }
         }
 
@@ -139,7 +142,7 @@ public class TileBuilder {
         }
 
         io.vavr.collection.HashMap<FeaturePointer, Feature> _features = io.vavr.collection.HashMap.ofAll(features);
-        Tile tileDef = new Tile(tileId, _features);
+        Tile tileDef = new Tile(tileId, _features, tileModifiers);
 
         features = null;
         this.tileId = null;

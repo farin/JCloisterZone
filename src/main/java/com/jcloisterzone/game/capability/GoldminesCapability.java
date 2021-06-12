@@ -46,8 +46,8 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
 	 public static final TileModifier GOLDMINE = new TileModifier("Goldmine");
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "goldmine").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "goldmine").isEmpty()) {
             tile = tile.addTileModifier(GOLDMINE);
         }
         return tile;

@@ -30,8 +30,8 @@ public class FestivalCapability extends Capability<Void> {
 
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "festival").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "festival").isEmpty()) {
             tile = tile.addTileModifier(FESTIVAL);
         }
         return tile;

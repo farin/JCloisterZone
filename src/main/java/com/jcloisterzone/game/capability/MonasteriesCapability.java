@@ -17,7 +17,7 @@ public class MonasteriesCapability extends Capability<Void> {
 	private static final long serialVersionUID = 1L;
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) throws RemoveTileException {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) throws RemoveTileException {
         if ("replace".equals(state.getStringRule(Rule.KEEP_MONASTERIES))) {
             if (tile.getId().equals("BA/L") || tile.getId().equals("BA/LR")) {
                 throw new RemoveTileException();

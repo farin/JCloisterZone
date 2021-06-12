@@ -10,6 +10,7 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.HashMap;
+import io.vavr.collection.HashSet;
 
 
 /**
@@ -32,7 +33,7 @@ public class AbbeyCapability extends Capability<Integer> {
         HashMap<FeaturePointer, Feature> features = io.vavr.collection.HashMap.of(
             new FeaturePointer(Position.ZERO, Monastery.class, Location.I), new Monastery(HashMap.empty())
         );
-        ABBEY_TILE = new Tile(ABBEY_TILE_ID, features);
+        ABBEY_TILE = new Tile(ABBEY_TILE_ID, features, HashSet.empty());
     }
 
 

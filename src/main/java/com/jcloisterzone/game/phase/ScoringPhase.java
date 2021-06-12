@@ -22,23 +22,24 @@ import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
 
+import java.util.ArrayList;
+
 
 public class ScoringPhase extends Phase {
 
-    private java.util.Map<Completable, ScoreFeatureReducer> completedMutable = new java.util.HashMap<>();
+    private java.util.Map<Completable, ScoreCompletable> completedMutable = new java.util.HashMap<>();
 
     public ScoringPhase(RandomGenerator random, Phase defaultNext) {
         super(random, defaultNext);
     }
 
-    private GameState scoreCompletedOnTile(GameState state, PlacedTile tile) {
+    private void collectCompletedOnTile(GameState state, PlacedTile tile) {
         for (Tuple2<FeaturePointer, Completable> t : state.getTileFeatures2(tile.getPosition(), Completable.class)) {
-            state = scoreCompleted(state, t._2);
+            collectCompleted(state, t._2);
         }
-        return state;
     }
 
-    private GameState scoreClosedByFerries(GameState state) {
+    private void collectClosedByFerries(GameState state) {
         /*
             A scoring is handled by placement itself
             must take care about B & C
@@ -63,13 +64,12 @@ public class ScoringPhase extends Phase {
 
             for (FeaturePointer fp : affected) {
                 Road road = (Road) state.getFeature(fp);
-                state = scoreCompleted(state, road);
+                collectCompleted(state, road);
             }
         }
-        return state;
     }
 
-    private GameState scoreCompletedNearAbbey(GameState state, Position pos) {
+    private void collectCompletedNearAbbey(GameState state, Position pos) {
         for (Tuple2<Location, PlacedTile> t : state.getAdjacentTiles2(pos)) {
             PlacedTile pt = t._2;
             var adj = state.getFeaturePartOf2(pt.getPosition(), t._1.rev());
@@ -79,7 +79,7 @@ public class ScoringPhase extends Phase {
             FeaturePointer fp = adj._1;
             Feature feature = adj._2;
             if (feature instanceof Completable) {
-                state = scoreCompleted(state, (Completable) feature);
+                collectCompleted(state, (Completable) feature);
             }
             if (feature instanceof City) {
                 // also check if second city on multi edge is completed
@@ -88,11 +88,10 @@ public class ScoringPhase extends Phase {
                 Tuple2<ShortEdge, FeaturePointer> multiEdge = city.getMultiEdges().find(me -> me._1.equals(edge)).getOrNull();
                 if (multiEdge != null) {
                     City another = (City) state.getFeature(multiEdge._2);
-                    state = scoreCompleted(state, another);
+                    collectCompleted(state, another);
                 }
             }
         }
-        return state;
     }
 
     @Override
@@ -102,37 +101,13 @@ public class ScoringPhase extends Phase {
 
         Map<Wagon, FeaturePointer> deployedWagonsBefore = getDeployedWagons(state);
 
-        if (state.getCapabilities().contains(BarnCapability.class)) {
-            FeaturePointer placedBarnPtr = state.getCapabilityModel(BarnCapability.class);
-            Field placedBarnField = placedBarnPtr == null ? null : (Field) state.getFeature(placedBarnPtr);
-            if (placedBarnField != null) {
-                //ScoreFeature is scoring just followers!
-                state = (new ScoreField(placedBarnField, false, "barn-placed")).apply(state);
-                state = (new UndeployMeeples(placedBarnField, false)).apply(state);
-            }
-
-            GameState _state = state;
-            for (Field field : state.getTileFeatures2(pos)
-                .map(Tuple2::_2)
-                .filter(f -> f != placedBarnField)
-                .filter(Predicates.instanceOf(Field.class))
-                .map(f -> (Field) f)
-                .filter(f -> f.getSpecialMeeples(_state)
-                    .find(Predicates.instanceOf(Barn.class))
-                    .isDefined()
-                )) {
-                state = (new ScoreFieldWhenBarnIsConnected(field)).apply(state);
-                state = (new UndeployMeeples(field, false)).apply(state);
-            }
-        }
-
-        state = scoreCompletedOnTile(state, lastPlaced);
+        collectCompletedOnTile(state, lastPlaced);
         if (AbbeyCapability.isAbbey(lastPlaced.getTile())) {
-            state = scoreCompletedNearAbbey(state, pos);
+            collectCompletedNearAbbey(state, pos);
         }
 
         if (state.getCapabilities().contains(FerriesCapability.class)) {
-            state = scoreClosedByFerries(state);
+            collectClosedByFerries(state);
         }
 
         if (state.getCapabilities().contains(TunnelCapability.class)) {
@@ -145,7 +120,7 @@ public class ScoringPhase extends Phase {
             assert tunnelModified.size() <= 1;
 
             for (Feature road : tunnelModified) {
-                state = scoreCompleted(state, (Completable) road);
+                collectCompleted(state, (Completable) road);
             }
         }
 
@@ -155,7 +130,40 @@ public class ScoringPhase extends Phase {
 
         for (Monastic monastic : state.getFeatures(Monastic.class)) {
             if (neighbourPositions.contains(monastic.getPosition())) {
-                state = scoreCompleted(state, monastic);
+                collectCompleted(state, monastic);
+            }
+        }
+
+
+        for (Capability<?> cap : state.getCapabilities().toSeq()) {
+            state = cap.beforeCompletableScore(state, completedMutable.keySet());
+        }
+
+        for (ScoreCompletable scoreReducer : completedMutable.values()) {
+            state = scoreReducer.apply(state);
+        }
+
+        if (state.getCapabilities().contains(BarnCapability.class)) {
+            FeaturePointer placedBarnPtr = state.getCapabilityModel(BarnCapability.class);
+            Field placedBarnField = placedBarnPtr == null ? null : (Field) state.getFeature(placedBarnPtr);
+            if (placedBarnField != null) {
+                //ScoreFeature is scoring just followers!
+                state = (new ScoreField(placedBarnField, false, "barn-placed")).apply(state);
+                state = (new UndeployMeeples(placedBarnField, false)).apply(state);
+            }
+
+            GameState _state = state;
+            for (Field field : state.getTileFeatures2(pos)
+                    .map(Tuple2::_2)
+                    .filter(f -> f != placedBarnField)
+                    .filter(Predicates.instanceOf(Field.class))
+                    .map(f -> (Field) f)
+                    .filter(f -> f.getSpecialMeeples(_state)
+                            .find(Predicates.instanceOf(Barn.class))
+                            .isDefined()
+                    )) {
+                state = (new ScoreFieldWhenBarnIsConnected(field)).apply(state);
+                state = (new UndeployMeeples(field, false)).apply(state);
             }
         }
 
@@ -200,7 +208,7 @@ public class ScoringPhase extends Phase {
            .mapKeys(m -> (Wagon) m);
     }
 
-    private GameState scoreCompleted(GameState state, Completable completable) {
+    private void collectCompleted(GameState state, Completable completable) {
         if (completable.isCompleted(state) && !completedMutable.containsKey(completable)) {
             /*
               When playing with German / Dutch & Belgian Monasteries: Because an abbot scores only at the end of the game,
@@ -213,14 +221,12 @@ public class ScoringPhase extends Phase {
                 List<Tuple2<Meeple, FeaturePointer>> meeples = monastery.getMeeplesIncludingSpecialMonastery2(state).toList();
                 if (meeples.size() > 0 && meeples.filter(t -> t._2.getLocation() == Location.I).size() == 0) {
                     // only abbots on monastery
-                    return state;
+                    return;
                 }
             }
+
             ScoreCompletable scoreReducer = new ScoreCompletable(completable, false);
-            state = scoreReducer.apply(state);
             completedMutable.put(completable, scoreReducer);
         }
-        return state;
     }
-
 }

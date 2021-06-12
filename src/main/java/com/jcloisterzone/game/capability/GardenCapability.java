@@ -14,8 +14,8 @@ public class GardenCapability extends Capability<Void> {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "garden").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "garden").isEmpty()) {
             Garden garden = new Garden();
             tile = tile.setInitialFeatures(tile.getInitialFeatures().put(garden.getPlace(), garden));
         }

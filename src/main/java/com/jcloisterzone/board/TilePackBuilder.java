@@ -63,35 +63,35 @@ public class TilePackBuilder {
         return Math.min(expansionCount * baseCount, attributeIntValue(tileEl, "maxCount", Integer.MAX_VALUE));
     }
 
-    protected String getTileGroup(Tile tile, Vector<Element> tileElements) {
+    protected String getTileGroup(Tile tile, Element tileElement) {
         for (Capability<?> cap: state.getCapabilities().toSeq()) {
             String group = cap.getTileGroup(tile);
             if (group != null) return group;
         }
-        for (Element tileElement : tileElements) {
-            String group = tileElement.getAttribute("group");
-            if (!group.isEmpty()) {
-                return group;
-            }
+
+        String group = tileElement.getAttribute("group");
+        if (!group.isEmpty()) {
+            return group;
         }
+
         return DEFAULT_TILE_GROUP;
     }
 
-    public Tile initTile(Tile tile, Vector<Element> tileElements) throws RemoveTileException {
+    public Tile initTile(Tile tile, Element tileElement) throws RemoveTileException {
         for (Capability<?> cap: state.getCapabilities().toSeq()) {
-            tile = cap.initTile(state, tile, tileElements);
+            tile = cap.initTile(state, tile, tileElement);
         }
         return tile;
     }
 
-    public Tile createTile(String tileId, Vector<Element> tileElements) throws RemoveTileException {
+    public Tile createTile(String tileId, Element tileElement) throws RemoveTileException {
         if (usedIds.contains(tileId)) {
             throw new IllegalArgumentException("Multiple occurences of id " + tileId + " in tile definition xml.");
         }
         usedIds.add(tileId);
 
-        Tile tile = tileBuilder.createTile(tileId, tileElements, isTunnelActive(tileId));
-        return initTile(tile, tileElements);
+        Tile tile = tileBuilder.createTile(tileId, tileElement, isTunnelActive(tileId));
+        return initTile(tile, tileElement);
     }
 
 
@@ -184,15 +184,14 @@ public class TilePackBuilder {
                     count = Math.min(count, Integer.parseInt(tileElement.getAttribute("max")));
                 }
 
-                Vector<Element> tileElements = Vector.of(tileElement);
                 Tile tile;
                 try {
-                    tile = createTile(tileId, tileElements);
+                    tile = createTile(tileId, tileElement);
                 } catch (RemoveTileException ex) {
                     return;
                 }
 
-                String groupId = getTileGroup(tile, tileElements);
+                String groupId = getTileGroup(tile, tileElement);
                 java.util.List<Tile> group = tiles.get(groupId);
                 if (group == null) {
                     group = new java.util.ArrayList<>();

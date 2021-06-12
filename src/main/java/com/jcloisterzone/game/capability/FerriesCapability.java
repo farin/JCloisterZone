@@ -20,8 +20,8 @@ public class FerriesCapability extends Capability<FerriesCapabilityModel> {
 	public static final TileModifier LAKE_FERRY = new TileModifier("LakeFerry");
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "ferry").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "ferry").isEmpty()) {
             tile = tile.addTileModifier(LAKE_FERRY);
         }
         return tile;
