@@ -4,20 +4,15 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.engine.Game;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.state.GameState;
-import io.vavr.Tuple;
 import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
-import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
 /** Score feature followers */
@@ -65,15 +60,9 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
     }
 
     protected GameState addFiguresBonusPoints(GameState state) {
-        for (ReceivedPoints bonus : bonusPoints) {
-            Player player = bonus.getPlayer();
-            state = (new AddPoints(player, bonus.getPoints())).apply(state);
-        }
-
         for (Tuple2<String, List<ReceivedPoints>> t : bonusPoints.groupBy(bonus -> bonus.getExpression().getName())) {
-            state = state.appendEvent(new ScoreEvent(t._2, false, isFinal));
+            state = (new AddPoints(t._2, false, isFinal)).apply(state);
         }
-
         return state;
     }
 
@@ -97,13 +86,12 @@ public abstract class ScoreFeature implements ScoreFeatureReducer {
         } else {
             for (Player player : owners) {
                 PointsExpression expr = getFeaturePoints(state, player);
-                state = (new AddPoints(player, expr.getPoints())).apply(state);
                 receivedPoints = receivedPoints.append(new ReceivedPoints(expr, player, getSampleSource(state, player, bonusPoints)));
             }
         }
 
         if (!receivedPoints.isEmpty()) {
-            state = state.appendEvent(new ScoreEvent(receivedPoints, true, isFinal));
+            state = (new AddPoints(receivedPoints, true, isFinal)).apply(state);
         }
 
         state = addFiguresBonusPoints(state);

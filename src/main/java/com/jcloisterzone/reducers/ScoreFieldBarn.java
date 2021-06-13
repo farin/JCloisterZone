@@ -3,7 +3,6 @@ package com.jcloisterzone.reducers;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.feature.Scoreable;
@@ -43,16 +42,11 @@ public class ScoreFieldBarn implements ScoreFeatureReducer {
 
         for (Tuple2<Special, FeaturePointer> t : barns) {
             Barn barn = (Barn) t._1;
-            state = (new AddPoints(barn.getPlayer(), expr.getPoints())).apply(state);
             playerPoints = playerPoints.put(barn.getPlayer(), expr);
-
             receivedPoints = receivedPoints.append(new ReceivedPoints(expr, barn.getPlayer(), t._2));
         }
 
-        ScoreEvent scoreEvent = new ScoreEvent(receivedPoints, true, isFinal);
-        state = state.appendEvent(scoreEvent);
-
-        return state;
+        return (new AddPoints(receivedPoints, true, isFinal)).apply(state);
     }
 
     @Override

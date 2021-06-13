@@ -11,6 +11,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.reducers.AddPoints;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
@@ -103,7 +104,7 @@ public class WatchtowerCapability  extends Capability<Void> {
             if (count > 0) {
                 PointsExpression expr = new PointsExpression("watchtower", new ExprItem(count, exprName, count * watchtower.points));
                 var receivedPoints= List.ofAll(entry.getValue()).map(t -> new ScoreEvent.ReceivedPoints(expr, t._1.getPlayer(), t._2));
-                state = state.appendEvent(new ScoreEvent(receivedPoints, true, false));
+                state = (new AddPoints(receivedPoints, true)).apply(state);
             }
         }
 

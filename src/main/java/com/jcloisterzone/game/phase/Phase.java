@@ -1,10 +1,10 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.PayRansom;
 import com.jcloisterzone.io.message.PassMessage;
 import com.jcloisterzone.io.message.PayRansomMessage;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.PayRansom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

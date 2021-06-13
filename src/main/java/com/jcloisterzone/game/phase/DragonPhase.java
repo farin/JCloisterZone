@@ -2,9 +2,9 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.DragonCapability;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.random.RandomGenerator;
 
 public class DragonPhase extends Phase {
 

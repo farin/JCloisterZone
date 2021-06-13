@@ -3,13 +3,13 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TunnelAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.PlaceTokenMessage;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.reducers.PlaceTunnel;
 import io.vavr.collection.Vector;
 

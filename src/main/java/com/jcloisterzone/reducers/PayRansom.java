@@ -55,8 +55,8 @@ public class PayRansom implements Reducer {
         state = state.mapCapabilityModel(TowerCapability.class, m ->
             m.update(_jailer.getIndex(), l -> l.remove(_follower))
         );
-        state = (new AddPoints(player, -TowerCapability.RANSOM_POINTS)).apply(state);
-        state = (new AddPoints(jailer, TowerCapability.RANSOM_POINTS)).apply(state);
+        state = (new AddPointsSilently(player, -TowerCapability.RANSOM_POINTS)).apply(state);
+        state = (new AddPointsSilently(jailer, TowerCapability.RANSOM_POINTS)).apply(state);
         state = state.addFlag(Flag.RANSOM_PAID);
         state = state.appendEvent(
                 new RansomPaidEvent(PlayEvent.PlayEventMeta.createWithActivePlayer(state), follower, jailer)

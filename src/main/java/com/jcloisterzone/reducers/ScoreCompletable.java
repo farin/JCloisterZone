@@ -2,9 +2,7 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Completable;
-import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.Witch;
 import com.jcloisterzone.game.ScoreFeatureReducer;

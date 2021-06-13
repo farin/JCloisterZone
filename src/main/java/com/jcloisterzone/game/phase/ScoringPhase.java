@@ -6,14 +6,16 @@ import com.jcloisterzone.board.ShortEdge;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.feature.*;
-import com.jcloisterzone.figure.*;
+import com.jcloisterzone.figure.Barn;
+import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.reducers.ScoreCompletable;
 import com.jcloisterzone.reducers.ScoreField;
 import com.jcloisterzone.reducers.ScoreFieldWhenBarnIsConnected;
@@ -21,8 +23,6 @@ import com.jcloisterzone.reducers.UndeployMeeples;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
-
-import java.util.ArrayList;
 
 
 public class ScoringPhase extends Phase {

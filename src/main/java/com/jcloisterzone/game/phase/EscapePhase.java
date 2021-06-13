@@ -9,15 +9,15 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Monastery;
 import com.jcloisterzone.figure.Meeple;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.SiegeCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.reducers.UndeployMeeple;
 import com.jcloisterzone.io.message.ReturnMeepleMessage;
 import com.jcloisterzone.io.message.ReturnMeepleMessage.ReturnMeepleSource;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.UndeployMeeple;
 import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 

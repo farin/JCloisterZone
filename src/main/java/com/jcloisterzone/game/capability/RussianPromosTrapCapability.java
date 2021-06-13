@@ -12,7 +12,6 @@ import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.*;
-import com.jcloisterzone.figure.Abbot;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
@@ -21,13 +20,10 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.ReturnMeepleMessage;
 import com.jcloisterzone.reducers.AddPoints;
 import com.jcloisterzone.reducers.DeployMeeple;
-import io.vavr.Predicates;
-import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
-import io.vavr.collection.Vector;
 import org.w3c.dom.Element;
 
 public class RussianPromosTrapCapability extends Capability<Void> {
@@ -85,12 +81,11 @@ public class RussianPromosTrapCapability extends Capability<Void> {
                 Player player = t._1;
                 int followersCount = t._2;
                 PointsExpression expr = new PointsExpression( "vodyanoy", new ExprItem(followersCount, "meeples", -2 * followersCount));
-                state = (new AddPoints(player, expr.getPoints())).apply(state);
                 receivedPoints = receivedPoints.append(new ScoreEvent.ReceivedPoints(expr, player, vodyanoy.getSampleFollower2(state, player)._2));
             }
 
             if (!receivedPoints.isEmpty()) {
-                state = state.appendEvent(new ScoreEvent(receivedPoints, true, true));
+                state = (new AddPoints(receivedPoints, true, true)).apply(state);
             }
         }
         return state;

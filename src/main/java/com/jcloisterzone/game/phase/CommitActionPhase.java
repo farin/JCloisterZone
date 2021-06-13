@@ -2,10 +2,10 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.ConfirmAction;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.CommitMessage;
+import com.jcloisterzone.random.RandomGenerator;
 
 public class CommitActionPhase extends Phase {
 

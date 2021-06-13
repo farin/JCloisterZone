@@ -2,12 +2,12 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.TilePlacementAction;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.PassMessage;
 import com.jcloisterzone.io.message.PlaceTileMessage;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.reducers.SetNextPlayer;
 
 public class AbbeyEndGamePhase extends AbstractAbbeyPhase {

@@ -9,7 +9,6 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.feature.Monastic;
@@ -18,7 +17,6 @@ import com.jcloisterzone.figure.*;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
@@ -30,11 +28,12 @@ import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.*;
 import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import com.jcloisterzone.io.message.PlaceTokenMessage;
 import com.jcloisterzone.io.message.ReturnMeepleMessage;
 import com.jcloisterzone.io.message.ReturnMeepleMessage.ReturnMeepleSource;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.*;
 import io.vavr.collection.Vector;
 
 
@@ -147,8 +146,7 @@ public class ActionPhase extends AbstractActionPhase {
         if (assignAbbotScore != null) {
             PointsExpression points = assignAbbotScore.getStructurePoints(state, false);
             ReceivedPoints rp = new ReceivedPoints(points, meeple.getPlayer(), ptr.asFeaturePointer());
-            state = (new AddPoints(meeple.getPlayer(), points.getPoints())).apply(state);
-            state = state.appendEvent(new ScoreEvent(rp, false, false));
+            state = (new AddPoints(rp, false)).apply(state);
         }
 
         return next(state);

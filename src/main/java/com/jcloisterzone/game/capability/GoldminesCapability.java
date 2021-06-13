@@ -8,7 +8,6 @@ import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.TokenReceivedEvent;
 import com.jcloisterzone.feature.Castle;
@@ -177,9 +176,8 @@ public class GoldminesCapability  extends Capability<Map<Position, Integer>> {
             } else {
                 points = 4 * pieces;
             }
-            state = (new AddPoints(player, points)).apply(state);
             PointsExpression expr = new PointsExpression("gold", new ExprItem(pieces, "gold", points));
-            state = state.appendEvent(new ScoreEvent(new ReceivedPoints(expr, player, null), false, true));
+            state = (new AddPoints(new ReceivedPoints(expr, player, null), false, true)).apply(state);
         }
         return state;
     }
