@@ -204,7 +204,7 @@ public class TilePack implements Serializable {
      * @throws IllegalArgumentException if {@code index} is not strictly less than the size of the pack
      */
     public Tuple2<Tile, TilePack> drawTile(RandomGenerator random) {
-        int index = random.nextInt(getInternalSize());
+        int index = random.getInt(getInternalSize());
         for (TileGroup group : getActiveGroups()) {
             if (index < group.size()) {
                 Vector<Tile> tiles = group.getTiles();

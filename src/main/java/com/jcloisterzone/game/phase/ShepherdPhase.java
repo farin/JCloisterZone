@@ -172,7 +172,7 @@ public class ShepherdPhase extends Phase {
 
 	private SheepToken drawTokenFromBag(GameState state) {
 		Vector<SheepToken> bag = state.getCapabilities().get(SheepCapability.class).getBagConent(state);
-		return bag.get(getRandom().nextInt(bag.size()));
+		return bag.get(getRandom().getInt(bag.size()));
 	}
 
 }

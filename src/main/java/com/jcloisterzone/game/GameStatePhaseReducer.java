@@ -7,9 +7,6 @@ import com.jcloisterzone.io.MessageParser;
 import com.jcloisterzone.io.message.CommitMessage;
 import com.jcloisterzone.io.message.Message;
 import com.jcloisterzone.io.message.PassMessage;
-import com.jcloisterzone.random.JavaRandomGenerator;
-import com.jcloisterzone.random.RandomGenerator;
-import com.jcloisterzone.random.MersenneTwisterRandomGenerator;
 import com.jcloisterzone.random.RandomGenerator;
 import io.vavr.Function2;
 import org.slf4j.Logger;
@@ -26,10 +23,10 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Phase firstPhase;
-    private final RandomGenerator random;
+    private final RandomGenerator randomGenerator;
 
-    public GameStatePhaseReducer(GameSetup setup, long initialSeed) {
-        random = new MersenneTwisterRandomGenerator(initialSeed);
+    public GameStatePhaseReducer(GameSetup setup, double initialRandom) {
+        randomGenerator = new RandomGenerator(initialRandom);
         Phase endChain, next;
 
         CleanUpTurnPhase cleanUpTurnPhase;
@@ -39,47 +36,47 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
         AbbeyPhase abbeyPhase = null;
         AbbeyEndGamePhase abbeyEndGamePhase = null;
 
-        endChain = new GameOverPhase(random, null);
-        if (setup.contains(CountCapability.class)) endChain = new CocFinalScoringPhase(random, endChain);
-        if (setup.contains(AbbeyCapability.class)) endChain = abbeyEndGamePhase = new AbbeyEndGamePhase(random, endChain);
+        endChain = new GameOverPhase(randomGenerator, null);
+        if (setup.contains(CountCapability.class)) endChain = new CocFinalScoringPhase(randomGenerator, endChain);
+        if (setup.contains(AbbeyCapability.class)) endChain = abbeyEndGamePhase = new AbbeyEndGamePhase(randomGenerator, endChain);
 
-        next = cleanUpTurnPhase = new CleanUpTurnPhase(random, null);
-        if (setup.contains(BazaarCapability.class)) next = new BazaarPhase(random, next);
-        if (setup.getBooleanRule(Rule.ESCAPE)) next = new EscapePhase(random, next);
-        next = cleanUpTurnPartPhase = new CleanUpTurnPartPhase(random, next);
-        if (setup.contains(CornCircleCapability.class)) next = new CornCirclePhase(random, next);
+        next = cleanUpTurnPhase = new CleanUpTurnPhase(randomGenerator, null);
+        if (setup.contains(BazaarCapability.class)) next = new BazaarPhase(randomGenerator, next);
+        if (setup.getBooleanRule(Rule.ESCAPE)) next = new EscapePhase(randomGenerator, next);
+        next = cleanUpTurnPartPhase = new CleanUpTurnPartPhase(randomGenerator, next);
+        if (setup.contains(CornCircleCapability.class)) next = new CornCirclePhase(randomGenerator, next);
 
         if (setup.contains(DragonCapability.class) && "after-scoring".equals(setup.getStringRule(Rule.DRAGON_MOVEMENT))) {
-            next = new DragonPhase(random, next);
+            next = new DragonPhase(randomGenerator, next);
         }
-        if (setup.contains(CountCapability.class)) next = new CocFollowerPhase(random, next);
-        if (setup.contains(WagonCapability.class)) next = new WagonPhase(random, next);
-        next = new ScoringPhase(random, next);
-        if (setup.contains(CountCapability.class)) next = new CocScoringPhase(random, next);
-        next = new CommitActionPhase(random, next);
-        if (setup.contains(CastleCapability.class)) next = new CastlePhase(random, next);
+        if (setup.contains(CountCapability.class)) next = new CocFollowerPhase(randomGenerator, next);
+        if (setup.contains(WagonCapability.class)) next = new WagonPhase(randomGenerator, next);
+        next = new ScoringPhase(randomGenerator, next);
+        if (setup.contains(CountCapability.class)) next = new CocScoringPhase(randomGenerator, next);
+        next = new CommitActionPhase(randomGenerator, next);
+        if (setup.contains(CastleCapability.class)) next = new CastlePhase(randomGenerator, next);
         if (setup.contains(DragonCapability.class) && !"after-scoring".equals(setup.getStringRule(Rule.DRAGON_MOVEMENT))) {
-            next = new DragonPhase(random, next);
+            next = new DragonPhase(randomGenerator, next);
         }
-        if (setup.contains(SheepCapability.class)) next = new ShepherdPhase(random, next);
+        if (setup.contains(SheepCapability.class)) next = new ShepherdPhase(randomGenerator, next);
         if (setup.contains(FerriesCapability.class)) {
-            next = new ChangeFerriesPhase(random, next);
-            next = new PlaceFerryPhase(random, next);
+            next = new ChangeFerriesPhase(randomGenerator, next);
+            next = new PlaceFerryPhase(randomGenerator, next);
         }
-        if (setup.contains(RussianPromosTrapCapability.class)) next = new RussianPromosTrapPhase(random, next);
-        if (setup.contains(TunnelCapability.class)) next = new TunnelPhase(random, next);
-        if (setup.contains(PhantomCapability.class)) next = new PhantomPhase(random, next);
-        if (setup.contains(RussianPromosTrapCapability.class)) next = new RussianPromosTrapPhase(random, next);
-        next = actionPhase = new ActionPhase(random, next);
-        if (setup.contains(MageAndWitchCapability.class)) next =  new MageAndWitchPhase(random, next);
-        if (setup.contains(GoldminesCapability.class)) next =  new GoldPiecePhase(random, next);
-        next = tilePhase = new TilePhase(random, next);
+        if (setup.contains(RussianPromosTrapCapability.class)) next = new RussianPromosTrapPhase(randomGenerator, next);
+        if (setup.contains(TunnelCapability.class)) next = new TunnelPhase(randomGenerator, next);
+        if (setup.contains(PhantomCapability.class)) next = new PhantomPhase(randomGenerator, next);
+        if (setup.contains(RussianPromosTrapCapability.class)) next = new RussianPromosTrapPhase(randomGenerator, next);
+        next = actionPhase = new ActionPhase(randomGenerator, next);
+        if (setup.contains(MageAndWitchCapability.class)) next =  new MageAndWitchPhase(randomGenerator, next);
+        if (setup.contains(GoldminesCapability.class)) next =  new GoldPiecePhase(randomGenerator, next);
+        next = tilePhase = new TilePhase(randomGenerator, next);
         if (setup.contains(AbbeyCapability.class)) {
             // if abbey is passed, commit commit action phase follows to change salt by following Commit message
-            next = new CommitAbbeyPassPhase(random, next);
-            next = abbeyPhase = new AbbeyPhase(random, next);
+            next = new CommitAbbeyPassPhase(randomGenerator, next);
+            next = abbeyPhase = new AbbeyPhase(randomGenerator, next);
         }
-        if (setup.contains(FairyCapability.class)) next = new FairyPhase(random, next);
+        if (setup.contains(FairyCapability.class)) next = new FairyPhase(randomGenerator, next);
 
         cleanUpTurnPhase.setDefaultNext(next); //after last phase, the first is default
         cleanUpTurnPhase.setAbbeyEndGamePhase(abbeyEndGamePhase);
@@ -151,7 +148,7 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
         return firstPhase;
     }
 
-    public RandomGenerator getRandom() {
-        return random;
+    public RandomGenerator getRandomGanerator() {
+        return randomGenerator;
     }
 }

@@ -217,7 +217,7 @@ public abstract class AbstractActionPhase extends Phase {
         FlyingMachine flyingMachine = (FlyingMachine) state.getFeature(msg.getPointer());
         Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
 
-        int distance = getRandom().nextInt(3) + 1;
+        int distance = getRandom().getInt(3) + 1;
         state = state.addFlag(Flag.FLYING_MACHINE_USED);  // flying machine can't be used again by phantom
         state = state.appendEvent(new FlierRollEvent(
             PlayEventMeta.createWithActivePlayer(state), placedTile.getPosition(), distance)

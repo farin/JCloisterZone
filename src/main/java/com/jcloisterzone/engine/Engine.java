@@ -17,21 +17,17 @@ import com.jcloisterzone.io.MessageParser;
 import com.jcloisterzone.io.message.*;
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
-import io.vavr.Predicates;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Predicate;
 import java.util.jar.Manifest;
 
 public class Engine implements  Runnable {
@@ -51,7 +47,7 @@ public class Engine implements  Runnable {
     private MessageParser parser = new MessageParser();
 
     private Game game;
-    private long initialSeed;
+    private double initialRandom;
 
     private boolean bulk;
 
@@ -212,12 +208,12 @@ public class Engine implements  Runnable {
         }
 
         GameSetupMessage setupMsg = (GameSetupMessage) parser.fromJson(line);
-        initialSeed = Long.valueOf(setupMsg.getInitialSeed());
+        initialRandom = setupMsg.getInitialRandom();
 
         GameSetup gameSetup = createSetupFromMessage(setupMsg);
         game = new Game(gameSetup);
 
-        GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialSeed);
+        GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialRandom);
         GameStateBuilder builder = new GameStateBuilder(tileDefinitions, gameSetup, setupMsg.getPlayers());
 
         if (setupMsg.getGameAnnotations() != null) {
@@ -258,16 +254,16 @@ public class Engine implements  Runnable {
             Player oldActivePlayer = state.getActivePlayer();
 
             if (msg instanceof ReplayableMessage) {
-                if (msg instanceof SaltMessage) {
-                    SaltMessage saltedMsg = (SaltMessage) msg;
-                    if (saltedMsg.getSalt() != null) {
-                        phaseReducer.getRandom().setSalt(Long.valueOf(saltedMsg.getSalt()));
+                if (msg instanceof RandomChangingMessage) {
+                    RandomChangingMessage rndChangeMsg = (RandomChangingMessage) msg;
+                    if (rndChangeMsg.getRandom() != null) {
+                        phaseReducer.getRandomGanerator().setRandom(rndChangeMsg.getRandom());
                     }
                 }
                 state = phaseReducer.apply(state, msg);
 
                 Player newActivePlayer = state.getActivePlayer();
-                boolean undoAllowed = (!(msg instanceof SaltMessage) || ((SaltMessage) msg).getSalt() == null)
+                boolean undoAllowed = (!(msg instanceof RandomChangingMessage) || ((RandomChangingMessage) msg).getRandom() == null)
                         && newActivePlayer != null
                         && newActivePlayer.equals(oldActivePlayer)
                         && !(msg instanceof DeployMeepleMessage && ((DeployMeepleMessage)msg).getMeepleId().contains("shepherd"))

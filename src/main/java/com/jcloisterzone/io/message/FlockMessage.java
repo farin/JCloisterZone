@@ -3,13 +3,13 @@ package com.jcloisterzone.io.message;
 import com.jcloisterzone.io.MessageCommand;
 
 @MessageCommand("FLOCK_EXPAND_OR_SCORE")
-public class FlockMessage extends AbstractMessage implements ReplayableMessage, SaltMessage {
+public class FlockMessage extends AbstractMessage implements ReplayableMessage, RandomChangingMessage {
 
 	public enum FlockOption { EXPAND, SCORE }
 
     private FlockOption value;
 
-    private String salt;
+    private Double random;
 
     public FlockMessage() {
 	}
@@ -27,14 +27,12 @@ public class FlockMessage extends AbstractMessage implements ReplayableMessage, 
 	}
 
     @Override
-    public String getSalt() {
-        return salt;
+    public Double getRandom() {
+        return random;
     }
 
     @Override
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setRandom(Double random) {
+        this.random = random;
     }
-
-
 }
