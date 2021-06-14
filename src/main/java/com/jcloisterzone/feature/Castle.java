@@ -15,7 +15,7 @@ public class Castle extends TileFeature implements Scoreable {
 
     public Castle(List<FeaturePointer> places) {
         super(places);
-        assert places.size() == 2;
+        assert places.size() == 2 && places.get(0).getFeature().equals(Castle.class);
     }
 
     public Edge getEdge() {

@@ -8,7 +8,6 @@ import com.jcloisterzone.event.CastleCreated;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.game.capability.CastleCapability;
 import com.jcloisterzone.game.capability.CastleCapability.CastleToken;
@@ -20,7 +19,6 @@ import com.jcloisterzone.random.RandomGenerator;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
-import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
 public class CastlePhase extends Phase {
@@ -79,14 +77,17 @@ public class CastlePhase extends Phase {
         }
         Player player = state.getActivePlayer();
         City city = (City) state.getFeature((FeaturePointer) msg.getPointer());
-        Castle castle = new Castle(city.getPlaces());
-
-        Map<FeaturePointer, Feature> update = city.getPlaces().toMap(ptr -> new Tuple2<>(ptr, castle));
+        Castle castle = new Castle(city.getPlaces().map(fp -> fp.setFeature(Castle.class)));
 
         state = state.mapPlayers(ps ->
            ps.addTokenCount(player.getIndex(), CastleToken.CASTLE, -1)
         );
-        state = state.mapFeatureMap(m -> update.merge(m));
+        state = state.mapFeatureMap(m -> {
+            for (var fp : city.getPlaces()) {
+                m = m.remove(fp).put(fp.setFeature(Castle.class), castle);
+            }
+            return m;
+        });
         state = state.appendEvent(new CastleCreated(
            PlayEventMeta.createWithPlayer(player),
            castle
