@@ -147,6 +147,8 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"yaga", YagaCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"russian-trap", RussianPromosTrapCapability.class);
 
+        capabilities = addCapabilities(capabilities, setupMsg,"bards-lute", BardsLuteCapability.class);
+        
         Map<Rule, Object> rules = HashMap.empty();
         if (setupMsg.getElements().containsKey("farmers")) {
             rules = rules.put(Rule.FARMERS,true);
@@ -178,6 +180,7 @@ public class Engine implements  Runnable {
             case "%bulk":
                 bulk = "on".equals(value);
                 if (!bulk) {
+                	System.out.println(gson.toJson(game));
                     out.println(gson.toJson(game));
                 }
                 break;
@@ -231,6 +234,7 @@ public class Engine implements  Runnable {
         game.replaceState(state);
 
         if (!bulk) {
+        	System.out.println(gson.toJson(game));
             out.println(gson.toJson(game));
         }
 
@@ -291,6 +295,7 @@ public class Engine implements  Runnable {
             gameIsOver = game.getState().getPhase() instanceof GameOverPhase;
 
             if (!bulk || gameIsOver) {
+            	System.out.println(gson.toJson(game));
                 out.println(gson.toJson(game));
             }
         }

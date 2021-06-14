@@ -149,6 +149,20 @@ public class ScoringPhase extends Phase {
             }
         }
 
+        if (state.getCapabilities().contains(BardsLuteCapability.class)) {
+            GameState _state = state;
+            List<Feature> tunnelModified = state.getCurrentTurnEvents()
+                .filter(Predicates.instanceOf(TokenPlacedEvent.class))
+                .map(ev -> (TokenPlacedEvent) ev)
+                .filter(ev -> ev.getToken() instanceof Tunnel)
+                .map(ev -> _state.getFeature((FeaturePointer) ev.getPointer()));
+            assert tunnelModified.size() <= 1;
+
+            for (Feature road : tunnelModified) {
+                state = scoreCompleted(state, (Completable) road);
+            }
+        }
+
         Set<Position> neighbourPositions = state.getAdjacentAndDiagonalTiles2(pos)
             .map(pt -> pt._2.getPosition()).toSet();
 
@@ -162,6 +176,13 @@ public class ScoringPhase extends Phase {
         // return all meeples when all is scored, important for scoring darmstadt churchs
         for (Completable completable : completedMutable.keySet()) {
             state = (new UndeployMeeples(completable, false)).apply(state);
+        }
+        
+        // return bardlute tokens
+        if (state.getCapabilities().contains(BardsLuteCapability.class)) {
+        	for (Completable completable : completedMutable.keySet()) {
+        		state = state.getCapabilities().get(BardsLuteCapability.class).removePlacedToken(state, completable.getPlaces());
+        	}
         }
 
         CastleCapability castleCap = state.getCapabilities().get(CastleCapability.class);

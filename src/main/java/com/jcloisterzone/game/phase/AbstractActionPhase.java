@@ -13,6 +13,7 @@ import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.BardsLuteCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.state.ActionsState;
@@ -44,7 +45,7 @@ public abstract class AbstractActionPhase extends Phase {
     private Stream<Tuple2<FeaturePointer, Structure>> getAvailableStructures(GameState state, Stream<PlacedTile> tiles, Set<Position> allowCompletedOn) {
         return tiles.flatMap(tile -> {
             Position pos = tile.getPosition();
-            //boolean isCurrentTile = pos.equals(currentTilePos);
+            boolean isCurrentTile = pos.equals(state.getLastPlaced().getPosition());
 
             if (!isMeepleDeploymentAllowedByCapabilities(state, pos)) {
                 return Stream.empty();
@@ -54,6 +55,14 @@ public abstract class AbstractActionPhase extends Phase {
 
             places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik));
 
+            if (isCurrentTile && tile.getTile().hasModifier(BardsLuteCapability.BARDS_LUTE)) {
+            	Location placedTokenLocation = state.getCapabilityModel(BardsLuteCapability.class)
+                		.filter(t -> t._1.getPosition().equals(tile.getPosition()) && t._2)
+                		.map(t -> t._1)
+                        .get(0).getLocation();
+            	places = places.filter(t -> !(t._1.getLocation().equals(placedTokenLocation)));
+            }
+            
             if (!state.getBooleanRule(Rule.FARMERS)) {
                 places = places.filter(t -> !(t._2 instanceof Field));
             }

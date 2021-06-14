@@ -13,6 +13,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.game.capability.*;
+import com.jcloisterzone.game.capability.BardsLuteCapability.BardsLuteToken;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
@@ -69,6 +70,7 @@ public class StateGsonBuilder {
         builder.registerTypeAdapter(GoldPieceAction.class, new GoldPieceActionSerializer());
         builder.registerTypeAdapter(RemoveMageOrWitchAction.class, new ActionSerializer("RemoveMageOrWitch"));
         builder.registerTypeAdapter(LittleBuildingAction.class, new LittleBuildingActionSerializer());
+        builder.registerTypeAdapter(BardsLuteAction.class, new BardsLuteActionSerializer());
         return builder.create();
     }
 
@@ -332,6 +334,13 @@ public class StateGsonBuilder {
             if (tower.size() > 0) {
                 tokens.add(LittleBuilding.LB_TOWER.name(), tower);
             }
+        }
+        
+        HashMap<FeaturePointer, Boolean> bardsNotes = root.getCapabilityModel(BardsLuteCapability.class);
+        if (bardsNotes != null) {
+            JsonArray places = new JsonArray();
+            bardsNotes.filter(t -> t._2).map(t -> t._1).forEach(fp -> places.add(context.serialize(fp)));
+        	tokens.add(BardsLuteToken.BARDS_NOTE.name(), places);
         }
 
         return tokens;
@@ -886,6 +895,21 @@ public class StateGsonBuilder {
             });
             json.add("options", options);
             json.add("position", context.serialize(action.getPosition()));
+            return json;
+        }
+    }
+
+    private class BardsLuteActionSerializer implements JsonSerializer<BardsLuteAction> {
+        @Override
+        public JsonElement serialize(BardsLuteAction action, Type type, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("type", "BardsLute");
+            json.addProperty("token", action.getToken().name());
+            JsonArray options = new JsonArray();
+            action.getOptions().forEach(fp -> {
+                options.add(context.serialize(fp));
+            });
+            json.add("options", options);
             return json;
         }
     }
