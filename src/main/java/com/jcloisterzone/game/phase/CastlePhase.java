@@ -84,7 +84,8 @@ public class CastlePhase extends Phase {
         );
         state = state.mapFeatureMap(m -> {
             for (var fp : city.getPlaces()) {
-                m = m.remove(fp).put(fp.setFeature(Castle.class), castle);
+                Position pos = fp.getPosition();
+                m = m.put(pos, m.get(pos).get().remove(fp).put(fp.setFeature(Castle.class), castle));
             }
             return m;
         });

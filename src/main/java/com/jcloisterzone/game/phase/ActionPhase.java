@@ -154,10 +154,13 @@ public class ActionPhase extends AbstractActionPhase {
 
     private StepResult handlePlaceTower(GameState state, PlaceTokenMessage msg) {
         FeaturePointer ptr = (FeaturePointer) msg.getPointer();
-        Tower tower = (Tower) state.getFeatureMap().get(ptr).getOrElseThrow(() -> new IllegalArgumentException("No tower"));
+        Tower tower = (Tower) state.getFeature(ptr);
+        if (tower == null) {
+            new IllegalArgumentException("No tower");
+        }
         tower = tower.increaseHeight();
 
-        state = state.setFeatureMap(state.getFeatureMap().put(ptr, tower));
+        state = state.putFeature(ptr, tower);
         state = state.appendEvent(new TokenPlacedEvent(
             PlayEventMeta.createWithActivePlayer(state), TowerToken.TOWER_PIECE, ptr)
         );

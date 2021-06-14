@@ -2,7 +2,6 @@ package com.jcloisterzone.game.state.mixins;
 
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Structure;
@@ -10,6 +9,7 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Map;
 import io.vavr.collection.Stream;
@@ -22,9 +22,30 @@ public interface BoardMixin {
     LinkedHashMap<Position, PlacedTile> getPlacedTiles();
     GameState setPlacedTiles(LinkedHashMap<Position, PlacedTile> placedTiles);
 
-    Map<FeaturePointer, Feature> getFeatureMap();
-    GameState setFeatureMap(Map<FeaturePointer, Feature> featureMap);
-    GameState mapFeatureMap(Function<Map<FeaturePointer, Feature>, Map<FeaturePointer, Feature>> fn);
+    Map<Position, Map<FeaturePointer, Feature>> getFeatureMap();
+    GameState setFeatureMap(Map<Position, Map<FeaturePointer, Feature>> featureMap);
+
+    default GameState mapFeatureMap(Function<Map<Position, Map<FeaturePointer, Feature>>, Map<Position, Map<FeaturePointer, Feature>>> fn) {
+        return setFeatureMap(fn.apply(getFeatureMap()));
+    }
+
+    default GameState updateFeatureMap(Map<FeaturePointer, Feature> fpUpdate) {
+        return this.mapFeatureMap(m -> {
+            for (var t : fpUpdate) {
+                FeaturePointer fp = t._1;
+                Position pos = fp.getPosition();
+                m = m.put(pos, m.get(pos).getOrElse(HashMap.empty()).put(fp, t._2));
+            }
+            return m;
+        });
+    };
+
+    default GameState putFeature(FeaturePointer fp, Feature feature) {
+        return this.mapFeatureMap(m -> {
+            Position pos = fp.getPosition();
+            return m.put(pos, m.get(pos).getOrElse(HashMap.empty()).put(fp, feature));
+        });
+    }
 
     // Tiles
 
@@ -76,33 +97,19 @@ public interface BoardMixin {
     }
 
     // Features
-
     default Stream<Feature> getFeatures() {
-        return Stream.ofAll(getFeatureMap().values())
-            .distinct();
+        return Stream.ofAll(getFeatureMap().values()).flatMap(m -> m.values()).distinct();
     }
 
-    @SuppressWarnings("unchecked")
     default <T extends Feature> Stream<T> getFeatures(Class<T> cls) {
-        return Stream.ofAll(getFeatureMap().values())
-            .filter(Predicates.instanceOf(cls))
-            .distinct()
-            .map(f -> (T) f);
+        return getFeatures()
+                .filter(Predicates.instanceOf(cls))
+                .distinct()
+                .map(f -> (T) f);
     }
 
     default Stream<Tuple2<FeaturePointer, Feature>> getTileFeatures2(Position pos) {
-        PlacedTile placedTile = getPlacedTile(pos);
-        if (placedTile == null) {
-            return Stream.empty();
-        }
-        Rotation rot = placedTile.getRotation();
-        Map<FeaturePointer, Feature> allFeatures = getFeatureMap();
-        return Stream.ofAll(placedTile.getTile().getInitialFeatures()).map(t -> {
-            FeaturePointer fp = t._1;
-            fp = new FeaturePointer(pos, fp.getFeature(), fp.getLocation().rotateCW(rot));
-            Feature feature = allFeatures.get(fp).get();
-            return new Tuple2<>(fp, feature);
-        });
+        return getFeatureMap().get(pos).getOrElse(HashMap.empty()).toStream();
     }
 
     @SuppressWarnings("unchecked")
@@ -114,7 +121,8 @@ public interface BoardMixin {
 
     default Feature getFeature(FeaturePointer fp) {
         if (fp.getLocation() == Location.AS_ABBOT) fp = fp.setLocation(Location.I);
-        return getFeatureMap().get(fp).getOrNull();
+        var tileMap = getFeatureMap().get(fp.getPosition()).getOrNull();
+        return tileMap == null ? null : tileMap.get(fp).getOrNull();
     }
 
     default Structure getStructure(FeaturePointer fp) {
@@ -125,22 +133,23 @@ public interface BoardMixin {
     default Feature getFeaturePartOf(Position pos, Location loc) {
         if (loc == Location.AS_ABBOT) loc = Location.I;
         var t = getPlacedTile(pos).getInitialFeaturePartOf(loc);
-        return getFeatureMap().get(t._1.setPosition(pos)).getOrNull();
+        return getFeatureMap().get(pos).getOrElse(HashMap.empty()).get(t._1.setPosition(pos)).getOrNull();
     }
 
     default Tuple2<FeaturePointer, Feature> getFeaturePartOf2(Position pos, Location loc) {
         if (loc == Location.AS_ABBOT) loc = Location.I;
         var t = getPlacedTile(pos).getInitialFeaturePartOf(loc);
-        var feature =  getFeatureMap().get(t._1.setPosition(pos)).getOrNull();
+        var feature =   getFeatureMap().get(pos).getOrElse(HashMap.empty()).get(t._1.setPosition(pos)).getOrNull();
         return feature == null ? null : new Tuple2<>(t._1.setPosition(pos), feature);
     }
 
     default Feature getFeaturePartOf(FeaturePointer fp) {
         FeaturePointer normFp = fp.getLocation() == Location.AS_ABBOT ? fp.setLocation(Location.I) : fp;
         return getFeatureMap()
-            .find(t -> normFp.isPartOf(t._1))
-            .map(Tuple2::_2)
-            .getOrNull();
+                .get(fp.getPosition()).getOrElse(HashMap.empty())
+                .find(t -> normFp.isPartOf(t._1))
+                .map(Tuple2::_2)
+                .getOrNull();
     }
 
     default Structure getStructurePartOf(FeaturePointer fp) {
@@ -153,7 +162,8 @@ public interface BoardMixin {
     default Tuple2<FeaturePointer, Feature> getFeaturePartOf2(FeaturePointer fp) {
         FeaturePointer normFp = fp.getLocation() == Location.AS_ABBOT ? fp.setLocation(Location.I) : fp;
         return getFeatureMap()
-            .find(t -> normFp.isPartOf(t._1))
-            .getOrNull();
+                .get(fp.getPosition()).getOrElse(HashMap.empty())
+                .find(t -> normFp.isPartOf(t._1))
+                .getOrNull();
     }
 }

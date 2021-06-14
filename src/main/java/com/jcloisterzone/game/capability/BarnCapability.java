@@ -6,6 +6,7 @@ import com.jcloisterzone.board.Corner;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Field;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.game.Capability;
@@ -54,7 +55,7 @@ public final class BarnCapability extends Capability<FeaturePointer> {
                 if ("occupied".equals(state.getStringRule(Rule.BARN_PLACEMENT))) {
                     return true;
                 }
-                return t._2.getSpecialMeeples(state)
+                return ((Field) t._2).getSpecialMeeples(state)
                     .find(Predicates.instanceOf(Barn.class))
                     .isEmpty();
             })
@@ -73,26 +74,19 @@ public final class BarnCapability extends Capability<FeaturePointer> {
         return setModel(state, null);
     }
 
-    private Tuple2<FeaturePointer, Field> getFieldLocationPartOf(GameState state, FeaturePointer fp) {
-        return state.getFeatureMap()
-            .find(t -> fp.isPartOf(t._1))
-            .map(t -> t.map2(f -> (Field) f))
-            .getOrNull();
-    }
-
-    private boolean containsCorner(Tuple2<FeaturePointer, Field> t, Corner c) {
+    private boolean containsCorner(Tuple2<FeaturePointer, Feature> t, Corner c) {
         return t != null && t._1.getLocation().getCorners().contains(c);
     }
 
-    private Tuple2<FeaturePointer, Field> getCornerFeature(GameState state, Position pos) {
-        Tuple2<FeaturePointer, Field> t;
-        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y - 1), Field.class, Location.SL));
+    private Tuple2<FeaturePointer, Feature> getCornerFeature(GameState state, Position pos) {
+        Tuple2<FeaturePointer, Feature> t;
+        t = state.getFeaturePartOf2(new FeaturePointer(new Position(pos.x - 1, pos.y - 1), Field.class, Location.SL));
         if (!containsCorner(t, Corner.SE)) return null;
-        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x, pos.y - 1), Field.class, Location.WL));
+        t = state.getFeaturePartOf2(new FeaturePointer(new Position(pos.x, pos.y - 1), Field.class, Location.WL));
         if (!containsCorner(t, Corner.SW)) return null;
-        t = getFieldLocationPartOf(state, new FeaturePointer(new Position(pos.x - 1, pos.y), Field.class, Location.EL));
+        t = state.getFeaturePartOf2(new FeaturePointer(new Position(pos.x - 1, pos.y), Field.class, Location.EL));
         if (!containsCorner(t, Corner.NE)) return null;
-        t = getFieldLocationPartOf(state, new FeaturePointer(pos, Field.class, Location.NL));
+        t = state.getFeaturePartOf2(new FeaturePointer(pos, Field.class, Location.NL));
         if (!containsCorner(t, Corner.NW)) return null;
         return t;
     }

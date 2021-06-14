@@ -11,11 +11,6 @@ import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.game.capability.AbbeyCapability;
-import com.jcloisterzone.game.capability.CountCapability;
-import com.jcloisterzone.game.phase.AbbeyEndGamePhase;
-import com.jcloisterzone.game.phase.CocFinalScoringPhase;
-import com.jcloisterzone.game.phase.GameOverPhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.state.mixins.*;
 import io.vavr.collection.*;
@@ -41,7 +36,7 @@ public class GameState implements ActionsMixin, BoardMixin,
 
     private final LinkedHashMap<Position, PlacedTile> placedTiles;
     private final List<Tile> discardedTiles;
-    private final Map<FeaturePointer, Feature> featureMap;
+    private final Map<Position, Map<FeaturePointer, Feature>> featureMap;
 
     private final NeutralFiguresState neutralFigures;
     private final LinkedHashMap<Meeple, FeaturePointer> deployedMeeples;
@@ -94,7 +89,7 @@ public class GameState implements ActionsMixin, BoardMixin,
             PlayersState players,
             TilePack tilePack, Tile drawnTile,
             LinkedHashMap<Position, PlacedTile> placedTiles,
-            List<Tile> discardedTiles, Map<FeaturePointer, Feature> featureMap,
+            List<Tile> discardedTiles, Map<Position, Map<FeaturePointer, Feature>> featureMap,
             NeutralFiguresState neutralFigures,
             LinkedHashMap<Meeple, FeaturePointer> deployedMeeples,
             ActionsState playerActions,
@@ -192,7 +187,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     }
 
     @Override
-    public GameState setFeatureMap(Map<FeaturePointer, Feature> featureMap) {
+    public GameState setFeatureMap(Map<Position, Map<FeaturePointer, Feature>> featureMap) {
         if (featureMap == this.featureMap) return this;
         return new GameState(
             rules, elements, capabilities, players,
@@ -202,11 +197,6 @@ public class GameState implements ActionsMixin, BoardMixin,
             flags, events,
             phase, turnNumber, commited, passed
         );
-    }
-
-    @Override
-    public GameState mapFeatureMap(Function<Map<FeaturePointer, Feature>, Map<FeaturePointer, Feature>> fn) {
-        return setFeatureMap(fn.apply(featureMap));
     }
 
     public GameState setDiscardedTiles(List<Tile> discardedTiles) {
@@ -377,7 +367,7 @@ public class GameState implements ActionsMixin, BoardMixin,
     }
 
     @Override
-    public Map<FeaturePointer, Feature> getFeatureMap() {
+    public Map<Position, Map<FeaturePointer, Feature>> getFeatureMap() {
         return featureMap;
     }
 

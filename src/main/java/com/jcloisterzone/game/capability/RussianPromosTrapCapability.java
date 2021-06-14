@@ -98,9 +98,9 @@ public class RussianPromosTrapCapability extends Capability<Void> {
         for (Feature feature : state.getFeatures()) {
             if (feature instanceof SoloveiRazboynik) {
                 Position pos = feature.getPlaces().get().getPosition();
-                Road road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Road.class, Location.WE)).getOrNull();
+                Road road = (Road) state.getFeature(new FeaturePointer(pos, Road.class, Location.WE));
                 if (road == null) {
-                    road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Road.class, Location.NS)).getOrNull();
+                    road = (Road) state.getFeature(new FeaturePointer(pos, Road.class, Location.NS));
                 }
                 FeaturePointer trap = new FeaturePointer(pos, SoloveiRazboynik.class, Location.I);
                 for (Tuple2<Follower, FeaturePointer> t : road.getFollowers2(state)) {

@@ -1,8 +1,5 @@
 package com.jcloisterzone.figure;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
@@ -11,6 +8,9 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.state.GameState;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 @Immutable
 public abstract class Figure<T extends BoardPointer> implements Serializable {
@@ -36,7 +36,7 @@ public abstract class Figure<T extends BoardPointer> implements Serializable {
         if (fp == null) {
             return null;
         }
-        return state.getFeatureMap().get(fp).getOrNull();
+        return state.getFeature(fp);
     }
 
     public Location getLocation(GameState state) {
