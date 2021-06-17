@@ -82,6 +82,10 @@ public class CastlePhase extends Phase {
         state = state.mapPlayers(ps ->
            ps.addTokenCount(player.getIndex(), CastleToken.CASTLE, -1)
         );
+        for (var t : city.getFollowers2(state)) {
+            var meeples = state.getDeployedMeeples();
+            state = state.setDeployedMeeples(meeples.put(t._1, t._2.setFeature(Castle.class)));
+        }
         state = state.mapFeatureMap(m -> {
             for (var fp : city.getPlaces()) {
                 Position pos = fp.getPosition();

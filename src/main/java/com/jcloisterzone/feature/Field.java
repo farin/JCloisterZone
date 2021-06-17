@@ -123,11 +123,12 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
         int cityCount = 0;
         int besiegedCount = 0;
 
-        Set<Feature> features = adjoiningCities.map(fp -> state.getFeature(fp));
+        // can't use simple getFeature because pointer can refere non-existent city now converted to a castle
+        Set<Feature> features = adjoiningCities.map(fp -> state.getFeaturePartOf(fp.getPosition(), fp.getLocation()));
         for (Feature feature : features) {
             if (feature instanceof Castle) {
                 castleCount++;
-            } else {
+            } else if (feature instanceof City) {
                 City city = (City) feature;
                 if (city.isCompleted(state)) {
                     cityCount++;
@@ -135,6 +136,8 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
                         besiegedCount++;
                     }
                 }
+            } else {
+                System.err.println("# unknow or null feature");
             }
         }
 

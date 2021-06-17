@@ -46,7 +46,7 @@ public class FinalScoring implements Reducer {
         for (Completable completable : getOccupiedScoreables(state, Completable.class)) {
             state = (new ScoreCompletable(completable, true)).apply(state);
         }
-
+        
         for (Castle castle : getOccupiedScoreables(state, Castle.class)) {
             // no points for castles at the end
             state = (new ScoreCastle(castle, new PointsExpression("castle.incomplete", List.empty()), true)).apply(state);

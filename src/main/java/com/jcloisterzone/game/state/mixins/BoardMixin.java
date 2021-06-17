@@ -3,6 +3,8 @@ package com.jcloisterzone.game.state.mixins;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Castle;
+import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.state.GameState;
@@ -133,7 +135,13 @@ public interface BoardMixin {
     default Feature getFeaturePartOf(Position pos, Location loc) {
         if (loc == Location.AS_ABBOT) loc = Location.I;
         var t = getPlacedTile(pos).getInitialFeaturePartOf(loc);
-        return getFeatureMap().get(pos).getOrElse(HashMap.empty()).get(t._1.setPosition(pos)).getOrNull();
+        FeaturePointer fp = t._1.setPosition(pos);
+        var tileMap = getFeatureMap().get(pos).getOrElse(HashMap.empty());
+        Feature f = tileMap.get(fp).getOrNull();
+        if (f == null && fp.getFeature().equals(City.class)) {
+            f = tileMap.get(fp.setFeature(Castle.class)).getOrNull();
+        }
+        return f;
     }
 
     default Tuple2<FeaturePointer, Feature> getFeaturePartOf2(Position pos, Location loc) {
