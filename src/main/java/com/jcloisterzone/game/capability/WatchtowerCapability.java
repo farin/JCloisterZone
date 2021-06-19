@@ -70,9 +70,9 @@ public class WatchtowerCapability  extends Capability<Void> {
             int count = 0;
             String exprName = null;
 
+            GameState _state = state;
             switch (watchtower.subject) {
                 case "coat-of-arms":
-                    GameState _state = state;
                     count = getNeigbouringFeatures(state, pos).map(f -> {
                         if (f instanceof City) {
                             return ((City)f).getModifier(_state, City.PENNANTS, 0);
@@ -86,11 +86,11 @@ public class WatchtowerCapability  extends Capability<Void> {
                     exprName = "monasteries";
                     break;
                 case "city":
-                    count = getNeigbouring(state, pos).filter(pt -> !pt.getTile().getInitialFeatures().values().filter(Predicates.instanceOf(City.class)).isEmpty()).length();
+                    count = getNeigbouring(state, pos).filter(pt -> _state.getFeatureMap().get(pt.getPosition()).get().keySet().find(fp -> fp.getFeature().equals(City.class)).isDefined()).length();
                     exprName = "cities";
                     break;
                 case "road":
-                    count = getNeigbouring(state, pos).filter(pt -> !pt.getTile().getInitialFeatures().values().filter(Predicates.instanceOf(Road.class)).isEmpty()).length();
+                    count = getNeigbouring(state, pos).filter(pt -> _state.getFeatureMap().get(pt.getPosition()).get().keySet().find(fp -> fp.getFeature().equals(Road.class)).isDefined()).length();
                     exprName = "roads";
                     break;
                 case "meeple":
@@ -118,6 +118,6 @@ public class WatchtowerCapability  extends Capability<Void> {
     }
 
     private Stream<Feature> getNeigbouringFeatures(GameState state, Position pos) {
-        return getNeigbouring(state, pos).flatMap(pt -> pt.getTile().getInitialFeatures().values());
+        return getNeigbouring(state, pos).flatMap(pt -> state.getFeatureMap().get(pt.getPosition()).get().values());
     }
 }
