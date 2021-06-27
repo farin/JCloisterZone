@@ -191,8 +191,7 @@ public class TileBuilder {
     }
 
     private void processRoadElement(Element e, boolean isTunnelActive) {
-        //List<Location> sides = List.ofAll(contentAsLocations(e))
-        Stream<Location> sides = contentAsLocations(e);
+        Stream<Location> sides = contentAsLocations(e).flatMap(loc -> loc.splitToSides());
         //using tunnel argument for two cases, tunnel entrance and tunnel underpass - sides.length distinguish it
         if (sides.size() > 1 && isTunnelActive && attributeBoolValue(e, "tunnel")) {
             sides.forEach(loc -> processRoadElement(Stream.of(loc), e, true));
@@ -214,7 +213,7 @@ public class TileBuilder {
     }
 
     private void processCityElement(Element e) {
-        Stream<Location> sides = contentAsLocations(e);
+        Stream<Location> sides = contentAsLocations(e).flatMap(loc -> loc.splitToSides());
         FeaturePointer fp = initFeaturePointer(sides, City.class);
         Set<Edge> openEdges = initOpenEdges(sides);
 
