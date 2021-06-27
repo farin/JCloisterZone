@@ -158,8 +158,4 @@ public class Monastery extends TileFeature implements Monastic, ModifiedFeature<
     public static String name() {
         return "Monastery";
     }
-
-    protected Set<FeaturePointer> placeOnBoardNeighboring(Position pos, Rotation rot) {
-        return neighboring.map(fp -> fp.rotateCW(rot).translate(pos));
-    }
 }

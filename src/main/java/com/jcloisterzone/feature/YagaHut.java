@@ -64,8 +64,4 @@ public class YagaHut extends TileFeature implements Completable, Monastic {
     public static String name() {
         return "Yaga's Hut";
     }
-
-    protected Set<FeaturePointer> placeOnBoardNeighboring(Position pos, Rotation rot) {
-        return neighboring.map(fp -> fp.rotateCW(rot).translate(pos));
-    }
 }

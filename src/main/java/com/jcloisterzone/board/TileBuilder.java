@@ -109,6 +109,12 @@ public class TileBuilder {
                 case "watchtower":
                     tileModifiers = tileModifiers.add(new WatchtowerCapability.WatchtowerModifier(el.getAttribute("bonus")));
                     break;
+                case "city-gate":
+                    Stream<Location> sides = contentAsLocations(el);
+                    assert sides.length() == 1;
+                    FeaturePointer fp = initFeaturePointer(sides, CityGate.class);
+                    initFeature(el, new CityGate(List.of(fp)), fp);
+                    break;
             }
         }
 
@@ -135,7 +141,7 @@ public class TileBuilder {
         for (var _fps : neighbouring.values()) {
             var fps = List.ofAll(_fps);
             for (FeaturePointer fp : fps) {
-                Completable feature = (Completable) features.get(fp);
+                NeighbouringFeature feature = (NeighbouringFeature) features.get(fp);
                 feature = feature.setNeighboring(feature.getNeighboring().addAll(fps.remove(fp)));
                 features.put(fp, feature);
             }
@@ -191,7 +197,7 @@ public class TileBuilder {
     }
 
     private void processRoadElement(Element e, boolean isTunnelActive) {
-        Stream<Location> sides = contentAsLocations(e).flatMap(loc -> loc.splitToSides());
+        Stream<Location> sides = contentAsLocations(e).flatMap(loc -> loc.isInner() ? List.of(loc) : loc.splitToSides());
         //using tunnel argument for two cases, tunnel entrance and tunnel underpass - sides.length distinguish it
         if (sides.size() > 1 && isTunnelActive && attributeBoolValue(e, "tunnel")) {
             sides.forEach(loc -> processRoadElement(Stream.of(loc), e, true));
@@ -213,7 +219,7 @@ public class TileBuilder {
     }
 
     private void processCityElement(Element e) {
-        Stream<Location> sides = contentAsLocations(e).flatMap(loc -> loc.splitToSides());
+        Stream<Location> sides = contentAsLocations(e).flatMap(loc -> loc.isInner() ? List.of(loc) : loc.splitToSides());
         FeaturePointer fp = initFeaturePointer(sides, City.class);
         Set<Edge> openEdges = initOpenEdges(sides);
 
@@ -250,7 +256,7 @@ public class TileBuilder {
                 for(Entry<FeaturePointer, Feature> entry : features.entrySet()) {
                     if (entry.getValue() instanceof City) {
                         Location loc = entry.getKey().getLocation();
-                        if (partial.isPartOf(loc)) {
+                        if (partial.equals(loc) || partial.isPartOf(loc)) {
                             return loc;
                         }
                     }

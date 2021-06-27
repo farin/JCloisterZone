@@ -9,6 +9,7 @@ public enum EdgeType {
     CITY(0b0010, 'C'),
     FIELD(0b0100, 'F'),
     RIVER(0b1000, 'I'),
+    CITY_GATE(0b0101, 'G'),
     UNKNOWN(0b1111, '?');
 
     private int mask;

@@ -224,5 +224,4 @@ public class PlaceTile implements Reducer {
             fpUpdate.put(fp, f);
         }
     }
-
 }

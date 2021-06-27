@@ -27,6 +27,11 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
 
     public abstract T mergeAbbeyEdge(Edge edge);
     public abstract T setOpenEdges(Set<Edge> openEdges);
+
+    @Override
+    public Set<FeaturePointer> getNeighboring() {
+        return neighboring;
+    }
     @Override
     public abstract T setNeighboring(Set<FeaturePointer> neighboring);
 
@@ -37,11 +42,6 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
 
     public Set<Edge> getOpenEdges() {
         return openEdges;
-    }
-
-    @Override
-    public Set<FeaturePointer> getNeighboring() {
-        return neighboring;
     }
 
     // helpers
@@ -71,9 +71,5 @@ public abstract class CompletableFeature<T extends CompletableFeature<?>> extend
 
     protected Set<Edge> placeOnBoardEdges(Position pos, Rotation rot) {
         return openEdges.map(edge -> edge.rotateCW(Position.ZERO, rot).translate(pos));
-    }
-
-    protected Set<FeaturePointer> placeOnBoardNeighboring(Position pos, Rotation rot) {
-        return neighboring.map(fp -> fp.rotateCW(rot).translate(pos));
     }
 }
