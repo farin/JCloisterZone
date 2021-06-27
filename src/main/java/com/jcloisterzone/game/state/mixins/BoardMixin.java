@@ -134,7 +134,10 @@ public interface BoardMixin {
 
     default Feature getFeaturePartOf(Position pos, Location loc) {
         if (loc == Location.AS_ABBOT) loc = Location.I;
-        var t = getPlacedTile(pos).getInitialFeaturePartOf(loc);
+        var placedTile = getPlacedTile(pos);
+        if (placedTile == null) return null;
+        var t = placedTile.getInitialFeaturePartOf(loc);
+        if (t == null) return null;
         FeaturePointer fp = t._1.setPosition(pos);
         var tileMap = getFeatureMap().get(pos).getOrElse(HashMap.empty());
         Feature f = tileMap.get(fp).getOrNull();
@@ -146,7 +149,10 @@ public interface BoardMixin {
 
     default Tuple2<FeaturePointer, Feature> getFeaturePartOf2(Position pos, Location loc) {
         if (loc == Location.AS_ABBOT) loc = Location.I;
-        var t = getPlacedTile(pos).getInitialFeaturePartOf(loc);
+        var placedTile = getPlacedTile(pos);
+        if (placedTile == null) return null;
+        var t = placedTile.getInitialFeaturePartOf(loc);
+        if (t == null) return null;
         var feature =   getFeatureMap().get(pos).getOrElse(HashMap.empty()).get(t._1.setPosition(pos)).getOrNull();
         return feature == null ? null : new Tuple2<>(t._1.setPosition(pos), feature);
     }
