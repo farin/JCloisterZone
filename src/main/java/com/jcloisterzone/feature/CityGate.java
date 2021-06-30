@@ -1,5 +1,6 @@
 package com.jcloisterzone.feature;
 
+import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -7,7 +8,7 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
-public class CityGate extends TileFeature implements NeighbouringFeature {
+public class CityGate extends TileFeature implements NeighbouringFeature, EdgeFeature<CityGate> {
 
     protected final Set<FeaturePointer> neighboring; //for wagon move
 
@@ -18,6 +19,16 @@ public class CityGate extends TileFeature implements NeighbouringFeature {
     public CityGate(List<FeaturePointer> places, Set<FeaturePointer> neighboring) {
         super(places);
         this.neighboring = neighboring;
+    }
+
+    @Override
+    public boolean isMergeableWith(EdgeFeature<?> other) {
+        return false;
+    }
+
+    @Override
+    public CityGate closeEdge(Edge edge) {
+        return this;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import io.vavr.collection.Set;
 
+/** neigbouring for C1 Wagon move purpose */
 public interface NeighbouringFeature extends Feature {
 
     NeighbouringFeature setNeighboring(Set<FeaturePointer> neighboring);

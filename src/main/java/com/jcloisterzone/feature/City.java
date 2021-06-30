@@ -68,7 +68,7 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
     }
 
     @Override
-    public City mergeAbbeyEdge(Edge edge) {
+    public City closeEdge(Edge edge) {
         return new City(
             places,
             openEdges.remove(edge),

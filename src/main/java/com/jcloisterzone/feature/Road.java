@@ -4,26 +4,21 @@ import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.engine.Engine;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.feature.modifier.BooleanAnyModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
-import com.jcloisterzone.feature.modifier.IntegerAddModifier;
 import com.jcloisterzone.game.Rule;
-import com.jcloisterzone.game.capability.*;
+import com.jcloisterzone.game.capability.FerriesCapability;
+import com.jcloisterzone.game.capability.FerriesCapabilityModel;
+import com.jcloisterzone.game.capability.TunnelCapability;
 import com.jcloisterzone.game.setup.GameElementQuery;
 import com.jcloisterzone.game.setup.RuleQuery;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTunnelToken;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Value;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -77,6 +72,11 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
     }
 
     @Override
+    public boolean isMergeableWith(EdgeFeature<?> other) {
+        return other instanceof Road; // this handles Bridges
+    }
+
+    @Override
     public Road merge(Road road) {
         assert road != this;
         return new Road(
@@ -89,7 +89,7 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
     }
 
     @Override
-    public Road mergeAbbeyEdge(Edge edge) {
+    public Road closeEdge(Edge edge) {
         return new Road(
             places,
             openEdges.remove(edge),

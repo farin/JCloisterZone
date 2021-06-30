@@ -1,6 +1,7 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -54,6 +55,11 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
             adjoiningCityOfCarcassonne || field.adjoiningCityOfCarcassonne,
             mergeModifiers(field)
         );
+    }
+
+    @Override
+    public Field closeEdge(Edge edge) {
+        return this;
     }
 
     @Override
