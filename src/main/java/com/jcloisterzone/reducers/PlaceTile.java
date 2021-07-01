@@ -56,7 +56,7 @@ public class PlaceTile implements Reducer {
     private EdgeFeature closeEdge(Edge edge, EdgeFeature f, FeaturePointer fp, EdgeFeature adj, FeaturePointer adjFp) {
         f = f.closeEdge(edge);
 
-        if (adj.getProxyTarget() != null) {
+        if (adj != null && adj.getProxyTarget() != null) {
             adjFp = adj.getProxyTarget();
             adj = (EdgeFeature) getFeature(adjFp);
         }
