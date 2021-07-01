@@ -53,11 +53,18 @@ public class PlaceTile implements Reducer {
         });
     }
 
-    private EdgeFeature closeEdge(Edge edge, EdgeFeature f, FeaturePointer neigbouring) {
+    private EdgeFeature closeEdge(Edge edge, EdgeFeature f, EdgeFeature adj, FeaturePointer adjFp) {
         f = f.closeEdge(edge);
-        if (neigbouring != null) {
+
+        if (adj.getProxyTarget() != null) {
+            adjFp = adj.getProxyTarget();
+            adj = (EdgeFeature) getRecent(_state.getFeature(adjFp));
+        }
+
+        boolean neigbouring = f instanceof NeighbouringFeature && adj instanceof NeighbouringFeature;
+        if (neigbouring) {
             NeighbouringFeature _f = (NeighbouringFeature) f;
-            f = (EdgeFeature) _f.setNeighboring(_f.getNeighboring().add(neigbouring));
+            f = (EdgeFeature) _f.setNeighboring(_f.getNeighboring().add(adjFp));
         }
         return f;
     }
@@ -130,17 +137,19 @@ public class PlaceTile implements Reducer {
 
                     for (var t : edgesToClose) {
                         Edge edge = t._1;
-                        EdgeFeature other = t._2;
+                        EdgeFeature adj = t._2;
                         FeaturePointer adjFp = t._3;
-                        boolean neigbouring = feature instanceof NeighbouringFeature && other instanceof NeighbouringFeature;
+                        FeaturePointer otherFp = adjFp;
 
-                        feature = closeEdge(edge, (EdgeFeature) feature, neigbouring ? adjFp : null);
-                        if (other != null) {
-                            other = (EdgeFeature) getRecent(other);
+                        if (adj != null) adj = (EdgeFeature) getRecent(adj);
+
+                        feature = closeEdge(edge, (EdgeFeature) feature, adj, adjFp);
+
+                        if (adj != null) {
                             // TODO test against bridge
                             FeaturePointer fp = new FeaturePointer(adjFp.getPosition().add(adjFp.getLocation()), feature.getClass(), adjFp.getLocation().rev());
-                            other = closeEdge(edge, other, neigbouring ? fp : null);
-                            updateRefs(other);
+                            adj = closeEdge(edge, adj, (EdgeFeature) feature, fp);
+                            updateRefs(adj);
                         }
                     }
                 }

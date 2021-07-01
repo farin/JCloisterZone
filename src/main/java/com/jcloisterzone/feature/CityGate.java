@@ -30,7 +30,8 @@ public class CityGate extends TileFeature implements EdgeFeature<CityGate> {
         return new CityGate(placeOnBoardPlaces(pos, rot), adjoiningCity.rotateCW(rot).translate(pos));
     }
 
-    public FeaturePointer getAdjoiningCity() {
+    @Override
+    public FeaturePointer getProxyTarget() {
         return adjoiningCity;
     }
 }
