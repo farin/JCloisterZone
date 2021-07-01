@@ -27,7 +27,7 @@ public class PlaceTile implements Reducer {
     private GameState _state;
     private java.util.Map<FeaturePointer, Feature> fpUpdate;
     private java.util.Set<FeaturePointer> newTunnels;
-    private java.util.List<Tuple3<FeaturePointer, FeaturePointer, ShortEdge>> multiEdgePairsToMerge;
+    private java.util.List<Tuple3<City, City, ShortEdge>> multiEdgePairsToMerge;
 
     // used for each feature merge
     private java.util.Set<Feature> alreadyMerged;
@@ -42,29 +42,15 @@ public class PlaceTile implements Reducer {
     }
 
     private void findMultiEdges(City city) {
-        Set<Edge> openEdges = city.getOpenEdges();
         // if multi-edge reference is no longer between open edges, another city was just merged this edge
         // and we need to merge third city there
-        Set<Tuple2<ShortEdge, FeaturePointer>> mutliEdgeToMerge = city.getMultiEdges()
-                .filter(e -> mergedEdges.contains(e._1.toEdge()));
-
-        if (mutliEdgeToMerge.nonEmpty()) {
-            for (Tuple2<ShortEdge, FeaturePointer> multiEdge : mutliEdgeToMerge) {
-                FeaturePointer fullFp = multiEdge._2;
-                City adj = (City) _state.getFeature(fullFp);
-
-                // finding feature pointer on pos is technically not necessary, any place can be used, but let it clear
-                multiEdgePairsToMerge.add(new Tuple3<FeaturePointer, FeaturePointer, ShortEdge>(
-                        fullFp,
-                        city.getPlaces().find(fp -> fp.getPosition().equals(pos)).get(),
-                        multiEdge._1
-                ));
-                // if is not updated yet put it there anyway to make bellow statement fpUpdate.get(t._1) works in any case
-                if (!fpUpdate.containsKey(fullFp)) {
-                    fpUpdate.put(fullFp, adj);
-                }
-            }
-        }
+        city.getMultiEdges()
+        .filter(e -> mergedEdges.contains(e._1.toEdge()))
+        .forEach(multiEdge -> {
+            FeaturePointer fullFp = multiEdge._2;
+            City adj = (City) _state.getFeature(fullFp);
+            multiEdgePairsToMerge.add(new Tuple3<>(adj, city, multiEdge._1));
+        });
     }
 
     private EdgeFeature closeEdge(Edge edge, EdgeFeature f, FeaturePointer neigbouring) {
@@ -163,16 +149,15 @@ public class PlaceTile implements Reducer {
             });
 
         // merge hills and sheep multi edge after all normal merges are processed
-        for (Tuple3<FeaturePointer, FeaturePointer, ShortEdge> t: multiEdgePairsToMerge) {
-            City c1 = (City) fpUpdate.get(t._1);
-            City c2 = (City) fpUpdate.get(t._2);
+        for (Tuple3<City, City, ShortEdge> t: multiEdgePairsToMerge) {
+            City c1 = (City) getRecent(t._1);
+            City c2 = (City) getRecent(t._2);
             City c = c1 == c2 ? c1 : c1.merge(c2);
-
             c = c.setOpenEdges(c.getOpenEdges().remove(t._3));
             updateRefs(c);
         }
 
-        // TODO replace with code above
+        // TODO replace with edges to close above
         if (abbeyPlacement) {
             // Abbey is always just placed tile
             // it's not possible to be adjacent to placed tile because it abbey can be placed only to existing hole.

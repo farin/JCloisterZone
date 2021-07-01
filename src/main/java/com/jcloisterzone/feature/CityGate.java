@@ -4,21 +4,15 @@ import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
-import io.vavr.collection.Set;
 
-public class CityGate extends TileFeature implements NeighbouringFeature, EdgeFeature<CityGate> {
+public class CityGate extends TileFeature implements EdgeFeature<CityGate> {
 
-    protected final Set<FeaturePointer> neighboring; //for wagon move
+    private FeaturePointer adjoiningCity;
 
-    public CityGate(List<FeaturePointer> places) {
-        this(places, HashSet.empty());
-    }
-
-    public CityGate(List<FeaturePointer> places, Set<FeaturePointer> neighboring) {
+    public CityGate(List<FeaturePointer> places, FeaturePointer adjoiningCity) {
         super(places);
-        this.neighboring = neighboring;
+        this.adjoiningCity = adjoiningCity;
     }
 
     @Override
@@ -33,17 +27,10 @@ public class CityGate extends TileFeature implements NeighbouringFeature, EdgeFe
 
     @Override
     public Feature placeOnBoard(Position pos, Rotation rot) {
-        return new CityGate(placeOnBoardPlaces(pos, rot), placeOnBoardNeighboring(pos, rot));
+        return new CityGate(placeOnBoardPlaces(pos, rot), adjoiningCity.rotateCW(rot).translate(pos));
     }
 
-    @Override
-    public CityGate setNeighboring(Set<FeaturePointer> neighboring) {
-        if (this.neighboring == neighboring) return this;
-        return new CityGate(places, neighboring);
-    }
-
-    @Override
-    public Set<FeaturePointer> getNeighboring() {
-        return neighboring;
+    public FeaturePointer getAdjoiningCity() {
+        return adjoiningCity;
     }
 }
