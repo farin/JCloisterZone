@@ -56,7 +56,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
                 Position adj = pos.add(offset);
                 PlacedTile  adjTile = getPlacedTile(adj);
                 if (adjTile == null) {
-                    return new Tuple2<>(loc, EdgeType.UNKNOWN);
+                    return new Tuple2<>(loc, EdgeType.ANY);
                 } else {
                     EdgeType edge = adjTile.getEdgePattern().at(loc.rev());
                     return new Tuple2<>(loc, edge);

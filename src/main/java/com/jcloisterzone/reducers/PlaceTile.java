@@ -48,17 +48,17 @@ public class PlaceTile implements Reducer {
         .filter(e -> mergedEdges.contains(e._1.toEdge()))
         .forEach(multiEdge -> {
             FeaturePointer fullFp = multiEdge._2;
-            City adj = (City) _state.getFeature(fullFp);
+            City adj = (City) getFeature(fullFp);
             multiEdgePairsToMerge.add(new Tuple3<>(adj, city, multiEdge._1));
         });
     }
 
-    private EdgeFeature closeEdge(Edge edge, EdgeFeature f, EdgeFeature adj, FeaturePointer adjFp) {
+    private EdgeFeature closeEdge(Edge edge, EdgeFeature f, FeaturePointer fp, EdgeFeature adj, FeaturePointer adjFp) {
         f = f.closeEdge(edge);
 
         if (adj.getProxyTarget() != null) {
             adjFp = adj.getProxyTarget();
-            adj = (EdgeFeature) getRecent(_state.getFeature(adjFp));
+            adj = (EdgeFeature) getFeature(adjFp);
         }
 
         boolean neigbouring = f instanceof NeighbouringFeature && adj instanceof NeighbouringFeature;
@@ -66,6 +66,26 @@ public class PlaceTile implements Reducer {
             NeighbouringFeature _f = (NeighbouringFeature) f;
             f = (EdgeFeature) _f.setNeighboring(_f.getNeighboring().add(adjFp));
         }
+
+        if (f instanceof City) {
+            ShortEdge shortEdge = new ShortEdge(fp.getPosition(), fp.getLocation());
+            City city = (City) f;
+            FeaturePointer multiEdgeFp = city.getMultiEdges().find(me -> me._1.equals(shortEdge)).map(t -> t._2).getOrNull();
+            if (multiEdgeFp != null) {
+                City city2 = (City) getFeature(multiEdgeFp);
+                boolean sameCity = city2 == city;
+                if (sameCity) {
+                    f = city.setOpenEdges(city2.getOpenEdges().remove(shortEdge));
+                } else {
+                    city2 = city2.setOpenEdges(city2.getOpenEdges().remove(shortEdge));
+                    if (adj instanceof NeighbouringFeature) {
+                        city2 = city2.setNeighboring(city2.getNeighboring().add(adjFp));
+                    }
+                    updateRefs(city2);
+                }
+            }
+        }
+
         return f;
     }
 
@@ -143,12 +163,12 @@ public class PlaceTile implements Reducer {
 
                         if (adj != null) adj = (EdgeFeature) getRecent(adj);
 
-                        feature = closeEdge(edge, (EdgeFeature) feature, adj, adjFp);
+                        FeaturePointer fp = new FeaturePointer(adjFp.getPosition().add(adjFp.getLocation()), feature.getClass(), adjFp.getLocation().rev());
+                        feature = closeEdge(edge, (EdgeFeature) feature, fp, adj, adjFp);
 
                         if (adj != null) {
                             // TODO test against bridge
-                            FeaturePointer fp = new FeaturePointer(adjFp.getPosition().add(adjFp.getLocation()), feature.getClass(), adjFp.getLocation().rev());
-                            adj = closeEdge(edge, adj, (EdgeFeature) feature, fp);
+                            adj = closeEdge(edge, adj, adjFp, (EdgeFeature) feature, fp);
                             updateRefs(adj);
                         }
                     }
@@ -166,62 +186,6 @@ public class PlaceTile implements Reducer {
             updateRefs(c);
         }
 
-        // TODO replace with edges to close above
-        if (abbeyPlacement) {
-            // Abbey is always just placed tile
-            // it's not possible to be adjacent to placed tile because it abbey can be placed only to existing hole.
-            java.util.Map<CompletableFeature<?>, CompletableFeature<?>> featureReplacement = new java.util.HashMap<>();
-            FeaturePointer abbeyFp = new FeaturePointer(pos, Monastery.class, Location.I);
-            Set<FeaturePointer> abbeyNeighboring = HashSet.empty();
-            for (Location side : Location.SIDES) {
-                var t = state.getFeaturePartOf2(pos.add(side), side.rev());
-                if (t == null) {
-                    // field (or empty tile - which can happen only in debug when non-hole placement is enabled)
-                    continue;
-                }
-                FeaturePointer adjPartOfPtr = t._1;
-                CompletableFeature<?> originalAdj = (CompletableFeature<?>) t._2;
-
-                // when same feature is merged on multiple abbey sides, then use update feature objects
-                // to not lost partial changes
-                CompletableFeature<?> adj = featureReplacement.getOrDefault(originalAdj, originalAdj);
-                FeaturePointer adjPtr = adj.getPlaces().find(fp -> adjPartOfPtr.isPartOf(fp)).get();
-
-                adj = adj.closeEdge(new Edge(pos, side));
-                adj = adj.setNeighboring(adj.getNeighboring().add(abbeyFp));
-
-                if (adj instanceof City) {
-                    ShortEdge edge = new ShortEdge(pos, side);
-                    City city = (City) adj;
-                    Tuple2<ShortEdge, FeaturePointer> multiEdge = city.getMultiEdges().find(me -> me._1.equals(edge)).getOrNull();
-                    if (multiEdge != null) {
-                        FeaturePointer multiEdgeFp = multiEdge._2;
-                        City originalCity2 = (City) state.getFeaturePartOf(multiEdgeFp);
-                        City city2 = (City) featureReplacement.getOrDefault(originalCity2, originalCity2);
-
-                        if (originalAdj == originalCity2) {
-                            adj = adj.setOpenEdges(adj.getOpenEdges().remove(multiEdge._1));
-                        } else {
-                            city2 = city2.setOpenEdges(city2.getOpenEdges().remove(multiEdge._1));
-                            city2 = city2.setNeighboring(city2.getNeighboring().add(abbeyFp));
-
-                            featureReplacement.put(originalCity2, city2);
-                            updateRefs(city2);
-                            abbeyNeighboring = abbeyNeighboring.add(multiEdgeFp);
-                        }
-                    }
-                }
-
-                featureReplacement.put(originalAdj, adj);
-                updateRefs(adj);
-                abbeyNeighboring = abbeyNeighboring.add(adjPtr);
-            }
-            if (!abbeyNeighboring.isEmpty()) {
-                Monastery abbey = (Monastery) fpUpdate.get(abbeyFp);
-                fpUpdate.put(abbeyFp, abbey.setNeighboring(abbeyNeighboring));
-            }
-        }
-
         if (!newTunnels.isEmpty()) {
             state = state.mapCapabilityModel(TunnelCapability.class, model -> {
                 Map<FeaturePointer, PlacedTunnelToken> newTunnelsMap = HashSet.ofAll(newTunnels).toMap(fp -> new Tuple2<>(fp, null));
@@ -237,6 +201,11 @@ public class PlaceTile implements Reducer {
             state = cap.onTilePlaced(state, placedTile);
         }
         return state;
+    }
+
+    private Feature getFeature(FeaturePointer fp) {
+        Feature f = fpUpdate.get(fp);
+        return f == null ? _state.getFeature(fp) : f;
     }
 
     private Feature getRecent(Feature f) {

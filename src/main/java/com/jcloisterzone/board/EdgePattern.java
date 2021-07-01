@@ -157,7 +157,7 @@ public class EdgePattern implements Serializable {
      */
     public int wildcardSize() {
         return (int) Stream.of(getEdges())
-            .filter(edge -> edge == EdgeType.UNKNOWN)
+            .filter(edge -> edge == EdgeType.ANY)
             .count();
     }
 
@@ -239,7 +239,7 @@ public class EdgePattern implements Serializable {
     private EdgeType getBridgeReplacement(Location side) {
         switch (at(side)) {
         case FIELD: return EdgeType.ROAD;
-        case UNKNOWN: return EdgeType.UNKNOWN;
+        case ANY: return EdgeType.ANY;
         default: throw new IllegalArgumentException();
         }
     }
