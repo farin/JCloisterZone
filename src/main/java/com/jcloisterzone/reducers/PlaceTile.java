@@ -27,7 +27,7 @@ public class PlaceTile implements Reducer {
     private GameState _state;
     private java.util.Map<FeaturePointer, Feature> fpUpdate;
     private java.util.Set<FeaturePointer> newTunnels;
-    private java.util.List<Tuple3<City, City, ShortEdge>> multiEdgePairsToMerge;
+    private java.util.List<Tuple3<FeaturePointer, FeaturePointer, ShortEdge>> multiEdgePairsToMerge;
 
     // used for each feature merge
     private java.util.Set<Feature> alreadyMerged;
@@ -47,9 +47,9 @@ public class PlaceTile implements Reducer {
         city.getMultiEdges()
         .filter(e -> mergedEdges.contains(e._1.toEdge()))
         .forEach(multiEdge -> {
-            FeaturePointer fullFp = multiEdge._2;
-            City adj = (City) getFeature(fullFp);
-            multiEdgePairsToMerge.add(new Tuple3<>(adj, city, multiEdge._1));
+            FeaturePointer adjFp = multiEdge._2;
+            FeaturePointer cityFp = city.getPlaces().find(fp -> fp.getPosition().equals(pos)).get();
+            multiEdgePairsToMerge.add(new Tuple3<>(adjFp, cityFp, multiEdge._1));
         });
     }
 
@@ -178,9 +178,9 @@ public class PlaceTile implements Reducer {
             });
 
         // merge hills and sheep multi edge after all normal merges are processed
-        for (Tuple3<City, City, ShortEdge> t: multiEdgePairsToMerge) {
-            City c1 = (City) getRecent(t._1);
-            City c2 = (City) getRecent(t._2);
+        for (var t: multiEdgePairsToMerge) {
+            City c1 = (City) getFeature(t._1);
+            City c2 = (City) getFeature(t._2);
             City c = c1 == c2 ? c1 : c1.merge(c2);
             c = c.setOpenEdges(c.getOpenEdges().remove(t._3));
             updateRefs(c);
