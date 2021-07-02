@@ -32,7 +32,7 @@ public class PlaceTile implements Reducer {
     // used for each feature merge
     private java.util.Set<Feature> alreadyMerged;
     private java.util.Set<Edge> mergedEdges;
-    private java.util.List<Tuple3<Edge, EdgeFeature, FeaturePointer>> edgesToClose;
+    private java.util.List<Tuple3<Edge, FeaturePointer, FeaturePointer>> edgesToClose;
 
 
     public PlaceTile(Tile tile, Position pos, Rotation rot) {
@@ -55,16 +55,18 @@ public class PlaceTile implements Reducer {
 
     private EdgeFeature closeEdge(Edge edge, EdgeFeature f, FeaturePointer fp, EdgeFeature adj, FeaturePointer adjFp) {
         f = f.closeEdge(edge);
+        Feature neiTarget = adj; // EdgeFeature is not necessary, proxy can be eg. inner monastery
+        FeaturePointer neiFp = adjFp;
 
         if (adj != null && adj.getProxyTarget() != null) {
-            adjFp = adj.getProxyTarget();
-            adj = (EdgeFeature) getFeature(adjFp);
+            neiFp = adj.getProxyTarget();
+            neiTarget = getFeature(neiFp);
         }
 
-        boolean neigbouring = f instanceof NeighbouringFeature && adj instanceof NeighbouringFeature;
+        boolean neigbouring = f instanceof NeighbouringFeature && neiTarget instanceof NeighbouringFeature;
         if (neigbouring) {
             NeighbouringFeature _f = (NeighbouringFeature) f;
-            f = (EdgeFeature) _f.setNeighboring(_f.getNeighboring().add(adjFp));
+            f = (EdgeFeature) _f.setNeighboring(_f.getNeighboring().add(neiFp));
         }
 
         if (f instanceof City) {
@@ -72,11 +74,11 @@ public class PlaceTile implements Reducer {
             City city = (City) f;
             FeaturePointer multiEdgeFp = city.getMultiEdges().find(me -> me._1.equals(shortEdge)).map(t -> t._2).getOrNull();
             if (multiEdgeFp != null) {
-                City city2 = (City) getFeature(multiEdgeFp);
-                boolean sameCity = city2 == city;
+                boolean sameCity = city.getPlaces().contains(multiEdgeFp); // don't compare directly, feature is updated and not yet reflectred in state
                 if (sameCity) {
-                    f = city.setOpenEdges(city2.getOpenEdges().remove(shortEdge));
+                    f = city.setOpenEdges(city.getOpenEdges().remove(shortEdge));
                 } else {
+                    City city2 = (City) getFeature(multiEdgeFp);
                     city2 = city2.setOpenEdges(city2.getOpenEdges().remove(shortEdge));
                     if (adj instanceof NeighbouringFeature) {
                         city2 = city2.setNeighboring(city2.getNeighboring().add(adjFp));
@@ -85,7 +87,6 @@ public class PlaceTile implements Reducer {
                 }
             }
         }
-
         return f;
     }
 
@@ -105,6 +106,7 @@ public class PlaceTile implements Reducer {
         fpUpdate = new java.util.HashMap<>();
         newTunnels = new java.util.HashSet<>();
         multiEdgePairsToMerge = new ArrayList<>();
+        edgesToClose = new ArrayList<>();
 
         Stream.ofAll(tile.getInitialFeatures().values())
             .map(f -> f.placeOnBoard(pos, rot))
@@ -119,7 +121,7 @@ public class PlaceTile implements Reducer {
                 if (feature instanceof EdgeFeature) {
                     alreadyMerged = new java.util.HashSet<>();
                     mergedEdges = new java.util.HashSet<>();
-                    edgesToClose = new ArrayList<>();
+
 
                     Stream<FeaturePointer> adjacent = feature.getPlaces().get().getAdjacent();
                     feature = adjacent.foldLeft((EdgeFeature) feature,  (f, adjFp) -> {
@@ -145,7 +147,21 @@ public class PlaceTile implements Reducer {
                             }
                         } else {
                             Edge edge = new Edge(pos, adjFp.getPosition());
-                            edgesToClose.add(new Tuple3<>(edge, adj, adjFp));
+                            FeaturePointer _fp = new FeaturePointer(adjFp.getPosition().add(adjFp.getLocation()), f.getClass(), adjFp.getLocation().rev());
+                            FeaturePointer fp = f.getPlaces().find(p -> _fp.isPartOf(p)).get();
+
+                            if (adj != null) {
+                                adj = (EdgeFeature) getRecent(adj);
+                                FeaturePointer _adjFp = adjFp.setFeature(adj.getClass());
+                                adjFp = adj.getPlaces().find(p -> _adjFp.isPartOf(p)).get(); // convert side fp to fullFp
+                            }
+
+                            f = closeEdge(edge, (EdgeFeature) f, fp, adj, adjFp);
+
+                            if (adj != null) {
+                                // from other side, close it after all feature on current tile is processed (then fpUpdate contains all references to it)
+                                edgesToClose.add(new Tuple3<>(edge, adjFp, fp));
+                            }
                         }
                         return f;
                     });
@@ -154,28 +170,17 @@ public class PlaceTile implements Reducer {
                     if (feature instanceof City) {
                         this.findMultiEdges((City) feature);
                     }
-
-                    for (var t : edgesToClose) {
-                        Edge edge = t._1;
-                        EdgeFeature adj = t._2;
-                        FeaturePointer adjFp = t._3;
-                        FeaturePointer otherFp = adjFp;
-
-                        if (adj != null) adj = (EdgeFeature) getRecent(adj);
-
-                        FeaturePointer fp = new FeaturePointer(adjFp.getPosition().add(adjFp.getLocation()), feature.getClass(), adjFp.getLocation().rev());
-                        feature = closeEdge(edge, (EdgeFeature) feature, fp, adj, adjFp);
-
-                        if (adj != null) {
-                            // TODO test against bridge
-                            adj = closeEdge(edge, adj, adjFp, (EdgeFeature) feature, fp);
-                            updateRefs(adj);
-                        }
-                    }
                 }
 
                 updateRefs(feature);
             });
+
+        for (var t : edgesToClose) {
+            EdgeFeature f1 = (EdgeFeature) getFeature(t._2);
+            EdgeFeature f2 = (EdgeFeature) getFeature(t._3);
+            f1 = closeEdge(t._1, f1, t._2, f2, t._3);
+            updateRefs(f1);
+        }
 
         // merge hills and sheep multi edge after all normal merges are processed
         for (var t: multiEdgePairsToMerge) {

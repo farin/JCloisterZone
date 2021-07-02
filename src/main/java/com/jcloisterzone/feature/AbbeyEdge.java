@@ -30,6 +30,6 @@ public class AbbeyEdge extends TileFeature implements EdgeFeature<AbbeyEdge> {
 
     @Override
     public FeaturePointer getProxyTarget() {
-        return places.get().setLocation(Location.I);
+        return new FeaturePointer(places.get().getPosition(), Monastery.class, Location.I);
     }
 }
