@@ -188,7 +188,11 @@ public abstract class AbstractActionPhase extends Phase {
         Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
         PlacedTile placedTile = state.getLastPlaced();
 
-        //TODO validate placement against players actions
+        MeepleAction action = (MeepleAction) state.getPlayerActions().getActions().find(a -> a instanceof MeepleAction && ((MeepleAction) a).getMeepleType().equals(meeple.getClass())).get();
+        if (action.getOptions().find(p -> fp.equals(p)).isEmpty()) {
+            throw new IllegalArgumentException("Invalid placement");
+        }
+        
         if (!fp.getFeature().equals(Tower.class)
             && placedTile.getTile().hasModifier(PortalCapability.MAGIC_PORTAL)
             && !fp.getPosition().equals(placedTile.getPosition())

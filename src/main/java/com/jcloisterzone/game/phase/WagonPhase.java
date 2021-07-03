@@ -169,7 +169,11 @@ public class WagonPhase extends Phase {
         if (!(m instanceof Wagon)) {
             throw new IllegalArgumentException("Invalid follower");
         }
-        //TODO validate against players actions
+
+        MeepleAction action = (MeepleAction) state.getPlayerActions().getActions().find(a -> a instanceof MeepleAction && ((MeepleAction) a).getMeepleType().equals(Wagon.class)).get();
+        if (action.getOptions().find(p -> fp.equals(p)).isEmpty()) {
+            throw new IllegalArgumentException("Invalid placement");
+        }
 
         state = (new DeployMeeple(m, fp)).apply(state);
 
