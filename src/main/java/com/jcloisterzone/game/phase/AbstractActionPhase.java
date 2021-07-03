@@ -192,7 +192,7 @@ public abstract class AbstractActionPhase extends Phase {
         if (action.getOptions().find(p -> fp.equals(p)).isEmpty()) {
             throw new IllegalArgumentException("Invalid placement");
         }
-        
+
         if (!fp.getFeature().equals(Tower.class)
             && placedTile.getTile().hasModifier(PortalCapability.MAGIC_PORTAL)
             && !fp.getPosition().equals(placedTile.getPosition())
