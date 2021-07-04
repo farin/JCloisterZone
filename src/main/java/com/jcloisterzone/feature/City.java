@@ -10,6 +10,7 @@ import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.feature.modifier.BooleanAnyModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.feature.modifier.IntegerAddModifier;
+import com.jcloisterzone.feature.modifier.IntegerNonMergingModifier;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.setup.GameElementQuery;
 import com.jcloisterzone.game.state.GameState;
@@ -22,11 +23,12 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
 
     private static final long serialVersionUID = 1L;
 
-    public static IntegerAddModifier PENNANTS = new IntegerAddModifier("city[pennants]", null);
-    public static BooleanAnyModifier DARMSTADTIUM = new BooleanAnyModifier("city[darmstadtium]", null);
+    public static final IntegerAddModifier PENNANTS = new IntegerAddModifier("city[pennants]", null);
+    public static final BooleanAnyModifier DARMSTADTIUM = new BooleanAnyModifier("city[darmstadtium]", null);
     public static final BooleanAnyModifier BESIEGED = new BooleanAnyModifier("city[besieged]", new GameElementQuery("siege"));
     public static final BooleanAnyModifier CATHEDRAL = new BooleanAnyModifier("city[cathedral]", new GameElementQuery("cathedral"));
     public static final BooleanAnyModifier PRINCESS = new BooleanAnyModifier("city[princess]", new GameElementQuery("princess"));
+    public static final IntegerNonMergingModifier POINTS_MODIFIER = new IntegerNonMergingModifier("city[points]", null);
 
     private final Set<Tuple2<ShortEdge, FeaturePointer>> multiEdges; // HS.CC!.v abstraction, multiple cities can connect to same edge
     private final Map<FeatureModifier<?>, Object> modifiers;
@@ -111,32 +113,40 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
 
     @Override
     public PointsExpression getStructurePoints(GameState state, boolean completed) {
-        int tileCount = getTilePositions().size();
-        int pennants = getModifier(state, PENNANTS, 0);
-        boolean cathedral = hasModifier(state, CATHEDRAL);
-
-        if (cathedral && !completed) {
-            return new PointsExpression("city.incomplete", new ExprItem("cathedral", 0));
-        }
-
-        boolean tinyCity = completed && tileCount == 2 && "2".equals(state.getStringRule(Rule.TINY_CITY_SCORING));
-        boolean besieged = hasModifier(state, BESIEGED);
+        Integer points = getModifier(state, POINTS_MODIFIER, null);
+        boolean tinyCity = false;
         var exprItems = new ArrayList<ExprItem>();
-        exprItems.add(new ExprItem(tileCount, "tiles", tileCount * (completed && !tinyCity ? 2 : 1)));
-        if (pennants > 0)  {
-            exprItems.add(new ExprItem(pennants, "pennants", completed && !tinyCity ? 2 * pennants : pennants));
-        }
-        if (besieged) {
-            exprItems.add(new ExprItem("besieged", -tileCount));
-        }
-        if (cathedral) {
-            exprItems.add(new ExprItem("cathedral", tileCount));
-        }
-        if (completed && hasModifier(state, DARMSTADTIUM)) {
-            exprItems.add(new ExprItem("darmstadtium", 3));
-        }
 
-        scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", tileCount, "completed", completed));
+        if (points != null) {
+            exprItems.add(new ExprItem(1, "tiles", points));
+        } else {
+            int tileCount = getTilePositions().size();
+            int pennants = getModifier(state, PENNANTS, 0);
+            boolean cathedral = hasModifier(state, CATHEDRAL);
+
+            if (cathedral && !completed) {
+                return new PointsExpression("city.incomplete", new ExprItem("cathedral", 0));
+            }
+
+            tinyCity = completed && tileCount == 2 && "2".equals(state.getStringRule(Rule.TINY_CITY_SCORING));
+            boolean besieged = hasModifier(state, BESIEGED);
+
+            exprItems.add(new ExprItem(tileCount, "tiles", tileCount * (completed && !tinyCity ? 2 : 1)));
+            if (pennants > 0) {
+                exprItems.add(new ExprItem(pennants, "pennants", completed && !tinyCity ? 2 * pennants : pennants));
+            }
+            if (besieged) {
+                exprItems.add(new ExprItem("besieged", -tileCount));
+            }
+            if (cathedral) {
+                exprItems.add(new ExprItem("cathedral", tileCount));
+            }
+            if (completed && hasModifier(state, DARMSTADTIUM)) {
+                exprItems.add(new ExprItem("darmstadtium", 3));
+            }
+
+            scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", tileCount, "completed", completed));
+        }
 
         String name = "city";
         if (tinyCity) {
