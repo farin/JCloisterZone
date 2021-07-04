@@ -2,6 +2,7 @@ package com.jcloisterzone.game.state.mixins;
 
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.CityGate;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.BridgeCapability;
@@ -56,7 +57,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
                 Position adj = pos.add(offset);
                 PlacedTile  adjTile = getPlacedTile(adj);
                 if (adjTile == null) {
-                    return new Tuple2<>(loc, EdgeType.UNKNOWN);
+                    return new Tuple2<>(loc, EdgeType.ANY);
                 } else {
                     EdgeType edge = adjTile.getEdgePattern().at(loc.rev());
                     return new Tuple2<>(loc, edge);
@@ -133,14 +134,14 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
         Location loc = bridgePtr.getLocation();
 
         // for valid placement there must be adjacent place with empty
-        // space on the other side
-        boolean adjExists = loc.splitToSides()
-                .map(l -> getPlacedTile(pos.add(l)))
-                .find(Predicates.isNotNull())
-                .isDefined();
-
-        if (adjExists) {
-            return false;
+        // space or city gate on the other side
+        for (var l: loc.splitToSides()) {
+            var p = pos.add(l);
+            if (getPlacedTile(p) == null) continue;
+            var f = getFeaturePartOf(p, l.rev());
+            if (!(f instanceof CityGate)) {
+                return false;
+            }
         }
 
         // also no bridge must be already placed on adjacent tile

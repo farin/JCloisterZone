@@ -1,20 +1,19 @@
 package com.jcloisterzone.board;
 
+import com.jcloisterzone.Immutable;
+import io.vavr.collection.Map;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Stream;
-
-import com.jcloisterzone.Immutable;
-
-import io.vavr.collection.Map;
 
 @Immutable
 public class EdgePattern implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /** bit mask, concatenated edges W,S,E,N */
+    /** bit mask, concatenated edges N,E,S,W */
     int mask;
 
     /**
@@ -158,7 +157,7 @@ public class EdgePattern implements Serializable {
      */
     public int wildcardSize() {
         return (int) Stream.of(getEdges())
-            .filter(edge -> edge == EdgeType.UNKNOWN)
+            .filter(edge -> edge == EdgeType.ANY)
             .count();
     }
 
@@ -240,7 +239,7 @@ public class EdgePattern implements Serializable {
     private EdgeType getBridgeReplacement(Location side) {
         switch (at(side)) {
         case FIELD: return EdgeType.ROAD;
-        case UNKNOWN: return EdgeType.UNKNOWN;
+        case ANY: return EdgeType.ANY;
         default: throw new IllegalArgumentException();
         }
     }

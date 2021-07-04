@@ -69,7 +69,7 @@ public class ScoringPhase extends Phase {
         }
     }
 
-    private void collectCompletedNearAbbey(GameState state, Position pos) {
+    private void collectCompletedOnAdjacentEdges(GameState state, Position pos) {
         for (Tuple2<Location, PlacedTile> t : state.getAdjacentTiles2(pos)) {
             PlacedTile pt = t._2;
             var adj = state.getFeaturePartOf2(pt.getPosition(), t._1.rev());
@@ -102,9 +102,7 @@ public class ScoringPhase extends Phase {
         Map<Wagon, FeaturePointer> deployedWagonsBefore = getDeployedWagons(state);
 
         collectCompletedOnTile(state, lastPlaced);
-        if (AbbeyCapability.isAbbey(lastPlaced.getTile())) {
-            collectCompletedNearAbbey(state, pos);
-        }
+        collectCompletedOnAdjacentEdges(state, pos); // closed by abbey, city gates ... etc
 
         if (state.getCapabilities().contains(FerriesCapability.class)) {
             collectClosedByFerries(state);

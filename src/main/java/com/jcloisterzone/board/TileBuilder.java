@@ -27,7 +27,7 @@ public class TileBuilder {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final FeatureModifier[] MONASTERY_MODIFIERS = new FeatureModifier[] { Monastery.SPECIAL_MONASTERY, Monastery.SHRINE, Monastery.CHURCH };
-    private static final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.CATHEDRAL, City.PRINCESS, City.BESIEGED, City.DARMSTADTIUM };
+    private static final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.CATHEDRAL, City.PRINCESS, City.BESIEGED, City.DARMSTADTIUM, City.POINTS_MODIFIER };
     private static final FeatureModifier[] ROAD_MODIFIERS = new FeatureModifier[] { Road.INN, Road.LABYRINTH };
 
     private java.util.List<FeatureModifier> externalModifiers;
@@ -109,12 +109,6 @@ public class TileBuilder {
                 case "watchtower":
                     tileModifiers = tileModifiers.add(new WatchtowerCapability.WatchtowerModifier(el.getAttribute("bonus")));
                     break;
-                case "city-gate":
-                    Stream<Location> sides = contentAsLocations(el);
-                    assert sides.length() == 1;
-                    FeaturePointer fp = initFeaturePointer(sides, CityGate.class);
-                    initFeature(el, new CityGate(List.of(fp)), fp);
-                    break;
             }
         }
 
@@ -166,14 +160,16 @@ public class TileBuilder {
         }
         features.put(fp, feature);
 
-        String wagonMove = xml.getAttribute("wagon-move");
-        if (wagonMove.length() > 0) {
-            var connectedFeatures = neighbouring.get(wagonMove);
-            if (connectedFeatures == null) {
-                connectedFeatures = new ArrayList<>();
-                neighbouring.put(wagonMove, connectedFeatures);
+        if (feature instanceof  NeighbouringFeature) {
+            String wagonMove = xml.getAttribute("wagon-move");
+            if (wagonMove.length() > 0) {
+                var connectedFeatures = neighbouring.get(wagonMove);
+                if (connectedFeatures == null) {
+                    connectedFeatures = new ArrayList<>();
+                    neighbouring.put(wagonMove, connectedFeatures);
+                }
+                connectedFeatures.add(fp);
             }
-            connectedFeatures.add(fp);
         }
     }
 
@@ -236,6 +232,14 @@ public class TileBuilder {
         Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("city", e);
         City city = new City(List.of(fp), openEdges, modifiers);
         initFeature(e, city, fp);
+
+        if (e.hasAttribute("city-gate")) {
+            attrAsLocations(e, "city-gate").forEach(loc -> {
+                assert loc.isEdge();
+                FeaturePointer gateFp = new FeaturePointer(Position.ZERO, CityGate.class, loc);
+                initFeature(null, new CityGate(List.of(gateFp), fp), gateFp);
+            });
+        }
     }
 
     private void processRiverElement(Element e) {

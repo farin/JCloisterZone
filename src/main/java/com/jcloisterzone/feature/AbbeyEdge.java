@@ -1,18 +1,16 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.board.Edge;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import io.vavr.collection.List;
 
-public class CityGate extends TileFeature implements EdgeFeature<CityGate> {
+public class AbbeyEdge extends TileFeature implements EdgeFeature<AbbeyEdge> {
 
-    private FeaturePointer adjoiningCity;
-
-    public CityGate(List<FeaturePointer> places, FeaturePointer adjoiningCity) {
+    public AbbeyEdge(List<FeaturePointer> places) {
         super(places);
-        this.adjoiningCity = adjoiningCity;
     }
 
     @Override
@@ -21,17 +19,17 @@ public class CityGate extends TileFeature implements EdgeFeature<CityGate> {
     }
 
     @Override
-    public CityGate closeEdge(Edge edge) {
+    public AbbeyEdge closeEdge(Edge edge) {
         return this;
     }
 
     @Override
     public Feature placeOnBoard(Position pos, Rotation rot) {
-        return new CityGate(placeOnBoardPlaces(pos, rot), adjoiningCity.rotateCW(rot).translate(pos));
+        return new AbbeyEdge(placeOnBoardPlaces(pos, rot));
     }
 
     @Override
     public FeaturePointer getProxyTarget() {
-        return adjoiningCity;
+        return new FeaturePointer(places.get().getPosition(), Monastery.class, Location.I);
     }
 }
