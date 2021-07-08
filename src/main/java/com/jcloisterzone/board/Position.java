@@ -101,8 +101,17 @@ public class Position implements BoardPointer, Comparable<Position> {
         if (Location.W.isPartOf(loc)) x--;
         if (Location.E.isPartOf(loc)) x++;
 
-
         return new Position(x,y);
+    }
+
+    public Location locationDiff(Position pos) {
+        int x = this.x;
+        int y = this.y;
+        if (x == pos.x && y - 1 == pos.y) return Location.N;
+        if (x == pos.x && y + 1 == pos.y) return Location.S;
+        if (x + 1 == pos.x && y == pos.y) return Location.E;
+        if (x - 1 == pos.x && y == pos.y) return Location.W;
+        return null;
     }
 
     public int squareDistance(Position p) {

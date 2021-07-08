@@ -70,7 +70,7 @@ public class PlaceTile implements Reducer {
         }
 
         if (f instanceof City) {
-            ShortEdge shortEdge = new ShortEdge(fp.getPosition(), fp.getLocation());
+            ShortEdge shortEdge = new ShortEdge(edge);
             City city = (City) f;
             FeaturePointer multiEdgeFp = city.getMultiEdges().find(me -> me._1.equals(shortEdge)).map(t -> t._2).getOrNull();
             if (multiEdgeFp != null) {
