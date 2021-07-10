@@ -38,7 +38,7 @@ public class FinalScoring implements Reducer {
             int size = getContinuousRowSize(state, pos, loc);
             items = items.append(new ExprItem(size, "tiles." + loc.toString(), size));
         }
-        return new PointsExpression("spacial-monastery", items).appendAll(monastery.getLittleBuildingPoints(state));
+        return new PointsExpression("special-monastery", items).appendAll(monastery.getLittleBuildingPoints(state));
     }
 
     @Override
