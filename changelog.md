@@ -1,5 +1,14 @@
 # Version history
 
+## 5.7.1
+* The Watchtowers expansion
+* addons support - expansions / artworks are possible
+* The City Gates and The Wells as  "official" referential addons
+* new points breakdown ui
+* show download progress when downloading classic artwork
+* fix: zoom with keyboard
+* breaking changes: addons brings internal changes which implies backward saved games incompatibility
+
 ## 5.6.1
 *2021-05-13*
 * adjusted transparency for active player colored background
