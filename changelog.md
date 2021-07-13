@@ -3,10 +3,10 @@
 ## 5.7.1
 * The Watchtowers expansion
 * addons support - expansions / artworks are possible
-* The City Gates and The Wells as  "official" referential addons
+* The City Gates and The Wells as referential addons (thx to Fancarpedia)
 * new points breakdown ui
 * show download progress when downloading classic artwork
-* tiles dialog show also count of tiles hidden under hills 
+* tiles dialog show also count of tiles hidden under hills
 * fix: zoom with keyboard
 * fix: tiles dialog crash for loaded games
 * breaking changes: addons brings internal changes which implies backward saved games incompatibility
