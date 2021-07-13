@@ -6,7 +6,9 @@
 * The City Gates and The Wells as  "official" referential addons
 * new points breakdown ui
 * show download progress when downloading classic artwork
+* tiles dialog show also count of tiles hidden under hills 
 * fix: zoom with keyboard
+* fix: tiles dialog crash for loaded games
 * breaking changes: addons brings internal changes which implies backward saved games incompatibility
 
 ## 5.6.1

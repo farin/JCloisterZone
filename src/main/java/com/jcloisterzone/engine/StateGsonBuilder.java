@@ -601,6 +601,7 @@ public class StateGsonBuilder {
         public JsonElement serialize(TilePack state, Type type, JsonSerializationContext jsonSerializationContext) {
             JsonObject json = new JsonObject();
             json.addProperty("size", state.totalSize());
+            json.addProperty("underHills", state.getHiddenUnderHills());
             return json;
         }
     }
