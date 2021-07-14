@@ -1,12 +1,12 @@
 # Version history
 
 ## 5.7.1
-*2021-07-14*
+*2021-07-15*
 * The Watchtowers expansion
 * addons support - expansions / artworks are possible
 * The City Gates and The Wells as referential addons (thx to Fancarpedia)
 * new points breakdown ui
-* show download progress when downloading classic artwork
+* show download progress when downloading classic artwork, show warning when it fails
 * tiles dialog show also count of tiles hidden under hills
 * tiles dialog add option to show available remaining tiles only
 * fix: zoom with keyboard
