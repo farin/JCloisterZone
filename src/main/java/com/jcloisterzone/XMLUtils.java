@@ -87,7 +87,11 @@ public class XMLUtils {
     public static boolean attributeBoolValue(Element e, String attr) {
         if (!e.hasAttribute(attr)) return false;
         String val = e.getAttribute(attr);
-        return val.equals("yes") || val.equals("true") || val.equals("1");
+        if (val.equals("true")) return true;
+        if (!val.equals("false")) {
+            throw new IllegalArgumentException("only true/false value is allowed for boolean attribute");
+        }
+        return false;
     }
 
     public static Integer attributeIntValue(Element e, String attr) {
