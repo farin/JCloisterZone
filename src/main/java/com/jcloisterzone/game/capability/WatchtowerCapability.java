@@ -118,6 +118,7 @@ public class WatchtowerCapability  extends Capability<Void> {
     }
 
     private Stream<Feature> getNeigbouringFeatures(GameState state, Position pos) {
-        return getNeigbouring(state, pos).flatMap(pt -> state.getFeatureMap().get(pt.getPosition()).get().values());
+        //return getNeigbouring(state, pos).flatMap(pt -> pt.getTile().getInitialFeatures())
+        return getNeigbouring(state, pos).flatMap(pt -> pt.getTile().getInitialFeatures().values());
     }
 }
