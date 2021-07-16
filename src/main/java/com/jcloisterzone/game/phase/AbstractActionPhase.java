@@ -13,6 +13,7 @@ import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BarnCapability;
+import com.jcloisterzone.game.capability.MonasteriesCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
@@ -65,7 +66,7 @@ public abstract class AbstractActionPhase extends Phase {
             // Placing as abbot is implemented through virtual MONASTERY location.
             places = places.flatMap(t -> {
                 Structure struct = t._2;
-                if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(state)) {
+                if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(state) && state.hasCapability(MonasteriesCapability.class)) {
                     return List.of(t, new Tuple2<>(t._1.setLocation(Location.AS_ABBOT), struct));
                 }
                 return List.of(t);

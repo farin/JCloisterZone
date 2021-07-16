@@ -14,6 +14,7 @@ import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.MonasteriesCapability;
 import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.state.ActionsState;
@@ -96,7 +97,7 @@ public class WagonPhase extends Phase {
                         })
                         .flatMap(t -> {
                             Structure struct = t._2;
-                            if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(_state)) {
+                            if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(_state) && _state.hasCapability(MonasteriesCapability.class)) {
                                 return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Monastery.class, Location.AS_ABBOT), struct));
                             }
                             return List.of(t);

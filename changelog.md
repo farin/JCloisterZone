@@ -1,7 +1,7 @@
 # Version history
 
-## 5.7.1
-*2021-07-15*
+## 5.7.2
+*2021-07-16*
 * The Watchtowers expansion
 * addons support - expansions / artworks are possible
 * The City Gates and The Wells as referential addons (thx to Fancarpedia)
