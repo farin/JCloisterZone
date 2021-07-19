@@ -24,7 +24,10 @@ public class FamiliesCapability extends Capability<PlacedTile> {
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
         if (feature instanceof City) {
         	if (attributeIntValue(xml, "pennants", 0) > 0 ) {
-        		String family = attributeStringValue(xml, "family", "blue");
+        		String family = "blue";
+        		if (xml.hasAttribute("family")) {
+        			family = xml.getAttribute("family");
+        		}
         		feature = ((City) feature).putModifier(FAMILY, family);
         	}
         }
@@ -36,9 +39,6 @@ public class FamiliesCapability extends Capability<PlacedTile> {
         Position pos = placement.getPosition();
         Rotation rot = placement.getRotation();
 
-        System.out.println("\n");
-        System.out.println(pos);
-        System.out.println(rot);
         state = (new PlaceTile(tile, pos, rot)).apply(state);
 
         List<City> cities = state.getTileFeatures2(pos, Structure.class)
