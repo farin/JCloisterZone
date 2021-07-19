@@ -4,7 +4,7 @@ import com.jcloisterzone.board.*;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Structure;
-import com.jcloisterzone.feature.modifier.StringNonMergingNomEmptyModifier;
+import com.jcloisterzone.feature.modifier.StringNonMergingNonEmptyModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 
 public class FamiliesCapability extends Capability<PlacedTile> {
 
-	public static final StringNonMergingNomEmptyModifier FAMILY = new StringNonMergingNomEmptyModifier("family", null);
+	public static final StringNonMergingNonEmptyModifier FAMILY = new StringNonMergingNonEmptyModifier("family", null);
 
 	@Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
@@ -53,7 +53,7 @@ public class FamiliesCapability extends Capability<PlacedTile> {
         
         for(City city : cities) {
         	if (city.getModifier(state, City.PENNANTS, 0) > 0) {
-        		if (city.getModifier(state, FAMILY, null)==null) {
+        		if (city.getModifier(state, FAMILY, null).equals("")) {
         			// Family is null, not allowed placement, because families joined due to StringNonMergingModifier = null
         			return false;
         		}
