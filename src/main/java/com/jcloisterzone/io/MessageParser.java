@@ -12,7 +12,6 @@ import com.jcloisterzone.io.message.ReplayableMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.lang.reflect.Type;
 
 public final class MessageParser {
@@ -50,7 +49,7 @@ public final class MessageParser {
                 Location loc = context.deserialize(obj.get("location"), Location.class);
                 String featureType = obj.get("feature").getAsString();
                 Class<? extends Feature> feature = null;
-                // TOOD use annotation
+                // TOOD use annotation ?
                 switch (featureType) {
                     case "City": feature = City.class; break;
                     case "Road": feature = Road.class; break;
