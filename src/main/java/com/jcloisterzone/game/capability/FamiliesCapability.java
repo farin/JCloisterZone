@@ -4,7 +4,7 @@ import com.jcloisterzone.board.*;
 import com.jcloisterzone.feature.City;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Structure;
-import com.jcloisterzone.feature.modifier.StringNonMergingModifier;
+import com.jcloisterzone.feature.modifier.StringNonMergingNomEmptyModifier;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 
 public class FamiliesCapability extends Capability<PlacedTile> {
 
-	public static final StringNonMergingModifier FAMILY = new StringNonMergingModifier("family", null);
+	public static final StringNonMergingNomEmptyModifier FAMILY = new StringNonMergingNomEmptyModifier("family", null);
 
 	@Override
     public Feature initFeature(GameState state, String tileId, Feature feature, Element xml) {
@@ -36,6 +36,9 @@ public class FamiliesCapability extends Capability<PlacedTile> {
         Position pos = placement.getPosition();
         Rotation rot = placement.getRotation();
 
+        System.out.println("\n");
+        System.out.println(pos);
+        System.out.println(rot);
         state = (new PlaceTile(tile, pos, rot)).apply(state);
 
         List<City> cities = state.getTileFeatures2(pos, Structure.class)
