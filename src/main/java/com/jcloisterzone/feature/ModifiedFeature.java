@@ -1,13 +1,11 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.event.ExprItem;
-import com.jcloisterzone.feature.modifier.BooleanAnyModifier;
 import com.jcloisterzone.feature.modifier.BooleanModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
-import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import org.graalvm.polyglot.Context;
@@ -73,7 +71,7 @@ public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
             try (Context context = Context.create("js")) {
                 Value bindings = context.getBindings("js");
                 members.forEach((key, value) -> {
-                    bindings.putMember("key", value);
+                    bindings.putMember(key, value);
                 });
 
                 getModifiers().forEach((mod, value) -> {
