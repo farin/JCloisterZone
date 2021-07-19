@@ -10,16 +10,12 @@ public class StringNonMergingNonEmptyModifier extends FeatureModifier<String> {
 
     @Override
     public String mergeValues(String a, String b) {
-    	System.out.println(a);
-    	System.out.println(a == null ? "true" : "false");
-    	System.out.println(b);
-    	System.out.println(b == null ? "true" : "false");
-    	if (a == null || b == null) {
-        	System.out.println("null");
+    	if (a == null) {
+    		return b;
+    	} else if (b == null) {
     		return null;
     	} else {
-        	System.out.println(a.equals(b) ? a : "null");
-    		return (a.equals(b) ? a : null);
+    		return (a.equals(b) ? a : "");
     	}
     }
 
