@@ -1,5 +1,9 @@
 # Version history
 
+## 5.7.3
+*2021-07-19*
+* hot fix for broken Ferries and Flying Machine (embarrassing bug, unfortunately not covered by automated tests)
+
 ## 5.7.2
 *2021-07-16*
 * The Watchtowers expansion
