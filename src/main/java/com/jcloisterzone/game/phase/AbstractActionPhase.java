@@ -115,9 +115,11 @@ public abstract class AbstractActionPhase extends Phase {
                 if (struct instanceof Road) {
                     Road road = (Road) struct;
                     if (road.isLabyrinth(state)) {
-                        // current tile musn't be labyrinth center - apply regular ocuupation rule to it
                         Road initial = (Road) state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())._2;
-                        if (!initial.isLabyrinth(state)) {
+                        if (initial.isLabyrinth(state)) {
+                            // current tile is the labyrinth center - check only if center is already occupied
+                            return Stream.ofAll(state.getDeployedMeeples()).find(x -> t._1.equals(x._2)).isEmpty();
+                        } else {
                             // find if there is empty labyrinth segment
                             Set<FeaturePointer> segment = road.findSegmentBorderedBy(state, t._1,
                                     fp -> {
