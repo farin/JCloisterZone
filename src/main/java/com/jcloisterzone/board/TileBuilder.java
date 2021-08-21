@@ -161,14 +161,16 @@ public class TileBuilder {
         features.put(fp, feature);
 
         if (feature instanceof  NeighbouringFeature) {
-            String wagonMove = xml.getAttribute("wagon-move");
-            if (wagonMove.length() > 0) {
-                var connectedFeatures = neighbouring.get(wagonMove);
-                if (connectedFeatures == null) {
-                    connectedFeatures = new ArrayList<>();
-                    neighbouring.put(wagonMove, connectedFeatures);
+            String[] wagonMoves = xml.getAttribute("wagon-move").split("\\s");
+            for (String wagonMove : wagonMoves) {
+                if (wagonMove.length() > 0) {
+                    var connectedFeatures = neighbouring.get(wagonMove);
+                    if (connectedFeatures == null) {
+                        connectedFeatures = new ArrayList<>();
+                        neighbouring.put(wagonMove, connectedFeatures);
+                    }
+                    connectedFeatures.add(fp);
                 }
-                connectedFeatures.add(fp);
             }
         }
     }
