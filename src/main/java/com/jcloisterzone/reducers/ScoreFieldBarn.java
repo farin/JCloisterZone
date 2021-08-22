@@ -39,11 +39,18 @@ public class ScoreFieldBarn implements ScoreFeatureReducer {
 
         PointsExpression expr = field.getBarnPoints(state);
         List<ReceivedPoints> receivedPoints = List.empty();
+        java.util.Set<Player> scoredPlayers = new java.util.HashSet<>();
 
         for (Tuple2<Special, FeaturePointer> t : barns) {
             Barn barn = (Barn) t._1;
-            playerPoints = playerPoints.put(barn.getPlayer(), expr);
-            receivedPoints = receivedPoints.append(new ReceivedPoints(expr, barn.getPlayer(), t._2));
+            Player player = barn.getPlayer();
+            if (scoredPlayers.contains(player)) {
+                // player has multiple barns on same field, score only once (special meeples doesn't stack)
+                continue;
+            }
+            playerPoints = playerPoints.put(player, expr);
+            receivedPoints = receivedPoints.append(new ReceivedPoints(expr, player, t._2));
+            scoredPlayers.add(player);
         }
 
         return (new AddPoints(receivedPoints, true, isFinal)).apply(state);
