@@ -16,7 +16,7 @@ import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
-import com.jcloisterzone.game.capability.SheepCapability.SheepToken;
+import com.jcloisterzone.game.capability.SheepToken;
 import com.jcloisterzone.game.phase.DragonMovePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.RussianPromosTrapPhase;
@@ -124,7 +124,7 @@ public class StateGsonBuilder {
 
             SheepCapability sheepCap = state.getCapabilities().get(SheepCapability.class);
             if (sheepCap != null) {
-                Map<FeaturePointer, List<SheepToken>> sheepModel = sheepCap.getModel(state);
+                Map<FeaturePointer, List<SheepToken>> sheepModel = sheepCap.getModel(state).getPlacedTokens();
                 JsonObject jsonItem = new JsonObject();
                 JsonArray jsonFlocks = new JsonArray();
                 sheepModel.forEach((fp, tokens) -> {

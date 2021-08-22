@@ -36,7 +36,7 @@ public class UndeployMeeple extends AbstractUndeploy {
         }
 
         if (meeple instanceof Shepherd) {
-        	state = state.mapCapabilityModel(SheepCapability.class, tokens -> tokens.remove(source));
+        	state = state.mapCapabilityModel(SheepCapability.class, model -> model.setPlacedTokens(model.getPlacedTokens().remove(source)));
         }
 
         NeutralFiguresState nfState = state.getNeutralFigures();
