@@ -189,8 +189,7 @@ public class ScoringPhase extends Phase {
 
             Queue<Tuple2<Wagon, FeaturePointer>> model = state.getPlayers()
                 .getPlayersBeginWith(state.getTurnPlayer())
-                .map(p -> returnedVagons.find(w -> w.getPlayer().equals(p)).getOrNull())
-                .filter(Predicates.isNotNull())
+                .flatMap(p -> returnedVagons.filter(w -> w.getPlayer().equals(p)))
                 .map(w -> new Tuple2<>(w, deployedWagonsBefore.get(w).get()))
                 .toQueue();
             state = state.setCapabilityModel(WagonCapability.class, model);
