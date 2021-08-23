@@ -1,5 +1,13 @@
 # Version history
 
+## 5.7.4
+*2021-08-23*
+* game can be played with multiple meeples of same type
+* fan expansions from addons can provide description and links (eg. point to rules, boardgamegeek.com page etc.)
+* fix: deployment on labyrinth for advanced variant - deployment wans't allowed in all valid cases)
+* fix: C1 wagon move was broken for several tiles
+
+
 ## 5.7.3
 *2021-07-19*
 * hot fix for broken Ferries and Flying Machine (embarrassing bug, unfortunately not covered by automated tests)
