@@ -41,6 +41,12 @@ public abstract class FeatureModifier<T> {
         return name;
     }
 
+    // is modifier requiried on both merge features
+    // if not, modifieries is simply copied when exists only on one side. Stripped if is exclusive.
+    public boolean isExclusive(T a) {
+        return false;
+    }
+
     public abstract T mergeValues(T a, T b);
     public abstract T valueOf(String attr);
 }

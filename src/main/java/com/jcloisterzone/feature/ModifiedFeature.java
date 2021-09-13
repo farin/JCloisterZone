@@ -47,20 +47,26 @@ public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
 
         ArrayList<Tuple2<FeatureModifier<?>, Object>> entries = new ArrayList();
         for (Tuple2<FeatureModifier<?>, Object> t: modifiers) {
+            var modifier = ((FeatureModifier<Object>)t._1);
             var otherValue = otherModifiers.get(t._1).getOrNull();
             if (otherValue == null) {
-                entries.add(t);
+                if (!modifier.isExclusive(t._2)) {
+                    entries.add(t);
+                }
             } else {
-                Object val = ((FeatureModifier<Object>)t._1).mergeValues(t._2, otherValue);
+                Object val = modifier.mergeValues(t._2, otherValue);
                 if (val != null) {
                     entries.add(t.update2(val));
                 }
             }
         }
 
-        for (FeatureModifier<?> mod : missingOtherKeys) {
+        for (FeatureModifier<?> _mod : missingOtherKeys) {
+            var mod = (FeatureModifier<Object>) _mod;
             Object val = otherModifiers.get(mod).get();
-            entries.add(new Tuple2<>(mod, val));
+            if (!mod.isExclusive(val)) {
+                entries.add(new Tuple2<>(mod, val));
+            }
         }
         return HashMap.ofEntries(entries);
     }
