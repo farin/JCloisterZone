@@ -4,7 +4,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.LittleBuildingAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.event.ExprItem;
-import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
@@ -57,19 +56,27 @@ public class LittleBuildingsCapability extends Capability<Map<Position, LittleBu
     }
 
     public static List<ExprItem> getBuildingsPoints(RulesMixin rules, Seq<LittleBuilding> buildings) {
+        List<ExprItem> result = List.empty();
         if ("3/2/1".equals(rules.getStringRule(Rule.LITTLE_BUILDINGS_SCORING))) {
             Map<LittleBuilding, Integer> counts = buildings.groupBy(t -> t).mapValues(l -> l.size());
             int shedCount = counts.getOrElse(LittleBuilding.LB_SHED, 0);
+            if (shedCount > 0) {
+                result = result.append(new ExprItem(shedCount, "little-buildings." + LittleBuilding.LB_SHED.name(), 1 * shedCount));
+            }
             int houseCount = counts.getOrElse(LittleBuilding.LB_HOUSE, 0);
+            if (houseCount > 0) {
+                result = result.append(new ExprItem(houseCount, "little-buildings." + LittleBuilding.LB_HOUSE.name(), 2 * houseCount));
+            }
             int towerCount = counts.getOrElse(LittleBuilding.LB_TOWER, 0);
-            return List.of(
-                    new ExprItem(shedCount, "little-buildings." + LittleBuilding.LB_SHED.name(), 1 * shedCount),
-                    new ExprItem(houseCount, "little-buildings." + LittleBuilding.LB_HOUSE.name(), 2 * houseCount),
-                    new ExprItem(towerCount, "little-buildings." + LittleBuilding.LB_TOWER.name(), 3 * towerCount)
-            );
+            if (towerCount > 0) {
+                result = result.append(new ExprItem(towerCount, "little-buildings." + LittleBuilding.LB_TOWER.name(), 3 * towerCount));
+            }
         } else {
             int count = buildings.size();
-            return List.of(new ExprItem(count, "little-buildings", count));
+            if (count > 0) {
+                result = result.append(new ExprItem(count, "little-buildings", count));
+            }
         }
+        return result;
     }
 }
