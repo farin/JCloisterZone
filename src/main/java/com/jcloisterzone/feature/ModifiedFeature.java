@@ -33,8 +33,10 @@ public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
         return (T) getModifiers().get((FeatureModifier<?>) modifier).getOrElse(defaultValue);
     }
 
-    default Set<FeatureModifier<?>> getScriptedModifiers() {
-        return getModifiers().keySet().filter(mod -> mod.getScoringScript() != null);
+    default Set<FeatureModifier<?>> getScriptedModifiers(GameState state) {
+        return getModifiers().keySet().filter(mod ->
+            mod.getScoringScript() != null && (mod.getEnabledBy() == null || mod.getEnabledBy().apply(state))
+        );
     }
 
     default Map<FeatureModifier<?>, Object> mergeModifiers(ModifiedFeature<C> other) {
@@ -71,8 +73,8 @@ public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
         return HashMap.ofEntries(entries);
     }
 
-    default void scoreScriptedModifiers(java.util.List<ExprItem> exprItems, java.util.Map<String, Object> members) {
-        Set<FeatureModifier<?>> scriptedModifiers = getScriptedModifiers();
+    default void scoreScriptedModifiers(GameState state, java.util.List<ExprItem> exprItems, java.util.Map<String, Object> members) {
+        Set<FeatureModifier<?>> scriptedModifiers = getScriptedModifiers(state);
         if (!scriptedModifiers.isEmpty()) {
             try (Context context = Context.create("js")) {
                 Value bindings = context.getBindings("js");

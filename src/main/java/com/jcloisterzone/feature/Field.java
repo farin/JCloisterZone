@@ -176,7 +176,7 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
             }
         }
 
-        scoreScriptedModifiers(exprItems, java.util.Map.of("cities", cityCount, "castles", castleCount));
+        scoreScriptedModifiers(state, exprItems, java.util.Map.of("cities", cityCount, "castles", castleCount));
         return new PointsExpression(exprName, List.ofAll(exprItems));
     }
 

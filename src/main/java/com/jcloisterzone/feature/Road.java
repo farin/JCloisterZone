@@ -173,7 +173,7 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
             exprItems.add(new ExprItem(meeplesCount, "meeples", 2 * meeplesCount));
         }
 
-        scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", tileCount, "completed", completed));
+        scoreScriptedModifiers(state, exprItems, java.util.Map.of("tiles", tileCount, "completed", completed));
         return new PointsExpression(completed ? "road" : "road.incomplete", List.ofAll(exprItems));
     }
 
