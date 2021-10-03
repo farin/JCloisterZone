@@ -103,4 +103,15 @@ public class XMLUtils {
         }
         return Integer.parseInt(e.getAttribute(attr));
     }
+
+    public static String attributeStringValue(Element e, String attr) {
+        return attributeStringValue(e, attr, null);
+    }
+
+    public static String attributeStringValue(Element e, String attr, String defaultValue) {
+        if (!e.hasAttribute(attr)) {
+            return defaultValue;
+        }
+        return e.getAttribute(attr);
+    }
 }
