@@ -1,12 +1,25 @@
 # Version history
 
+
+## 5.8.0
+*2021-10-04*
+* "play online" - public play server - players can be behing NAT, keeps persistent games even if no player is online...
+* saving game setup redesigned - added favorite setups section
+* add basic final game statistics (to be improved in next versions)
+* timer - make countdown more smooth and accurate
+* make action panel more repsponsive - show smaller icons when window is small and too much actions are displayed
+* fix: portal is now enabled by default for princess & dragon expansion
+* engine fix: castle phase - do not offer castle actions improperly
+* engine fix: coat of arms + siege and cathedral scoring
+* engine fix: do not score disabled features from addons when addon is not active
+* improved error dialog, doesn't block app window
+
 ## 5.7.4
 *2021-08-23*
 * game can be played with multiple meeples of same type
 * fan expansions from addons can provide description and links (eg. point to rules, boardgamegeek.com page etc.)
 * fix: deployment on labyrinth for advanced variant - deployment wans't allowed in all valid cases)
 * fix: C1 wagon move was broken for several tiles
-
 
 ## 5.7.3
 *2021-07-19*
