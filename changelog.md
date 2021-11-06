@@ -1,5 +1,14 @@
 # Version history
 
+## upcoming
+
+* fix bazaar - all tiles in auction are now random and choosen independently
+* fix field score in final game statistics
+* fix tile distribution dialog for connected clients when "hide remaining tiles cheat sheet" is enabled
+* fix: Count of Carcassonne expansion can be added only once to game
+* fix no feedback from "Load Setup From File" button (now switch to Tiles tab same as load on favorite setup)
+* artworks - shape difinition allows extended shape transformations and deriving shapes from others
+* use webkit native websockets instead of ws library
 
 ## 5.8.0
 *2021-10-04*

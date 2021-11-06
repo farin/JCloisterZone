@@ -1,22 +1,16 @@
 package com.jcloisterzone.board;
 
-import java.io.Serializable;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
+import com.jcloisterzone.Immutable;
+import com.jcloisterzone.random.RandomGenerator;
+import io.vavr.Tuple2;
+import io.vavr.collection.*;
+import io.vavr.control.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcloisterzone.Immutable;
-import com.jcloisterzone.random.RandomGenerator;
-
-import io.vavr.Tuple2;
-import io.vavr.collection.HashMap;
-import io.vavr.collection.LinkedHashMap;
-import io.vavr.collection.Map;
-import io.vavr.collection.Stream;
-import io.vavr.collection.Vector;
-import io.vavr.control.Option;
+import java.io.Serializable;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Represents a stack of tiles that can be drawn. It handles active/unactivated tiles and only draws from active ones.
@@ -204,7 +198,7 @@ public class TilePack implements Serializable {
      * @throws IllegalArgumentException if {@code index} is not strictly less than the size of the pack
      */
     public Tuple2<Tile, TilePack> drawTile(RandomGenerator random) {
-        int index = random.getInt(getInternalSize());
+        int index = random.getNextInt(getInternalSize());
         for (TileGroup group : getActiveGroups()) {
             if (index < group.size()) {
                 Vector<Tile> tiles = group.getTiles();
