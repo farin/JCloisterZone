@@ -169,7 +169,7 @@ public class Engine implements  Runnable {
     private void parseDirective(String line) {
         String[] s = line.split("\\s+", 2);
         var directive = s[0];
-        var value = s[1];
+        var value = s.length > 1 ? s[1] : null;
         switch (directive) {
             case "%bulk":
                 bulk = "on".equals(value);
@@ -185,6 +185,9 @@ public class Engine implements  Runnable {
                 break;
             case "%load":
                 tileDefinitions.add(value);
+                break;
+            case "%state":
+                out.println(gson.toJson(game));
                 break;
             default:
                 err.println("#unknown directive " + line);
