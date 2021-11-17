@@ -7,6 +7,7 @@ import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.*;
+import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
@@ -94,7 +95,8 @@ public class WatchtowerCapability  extends Capability<Void> {
                     exprName = "roads";
                     break;
                 case "meeple":
-                    count = state.getDeployedMeeples().values().filter(fp -> {
+                    count = state.getDeployedMeeples().filter((m, fp) -> {
+                        if (!(m instanceof Follower)) return false;
                         Position mpos = fp.getPosition();
                         return Math.abs(pos.x - mpos.x) <= 1 && Math.abs(pos.y - mpos.y) <= 1;
                     }).length();
