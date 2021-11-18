@@ -4,7 +4,7 @@
 
 * responsive final stats
 * improved tunnel tokens positions, artwork addon can defines tunnel shape and position
-* fix bazaar - all tiles in auction are now random and choosen independently
+* fix bazaar - all tiles in auction are now random and chosen independently
 * fix field score in final game statistics
 * fix tile distribution dialog for connected clients when "hide remaining tiles cheat sheet" is enabled
 * fix: Count of Carcassonne expansion can be added only once to game
@@ -12,7 +12,7 @@
 * fix: Watchtowers meeple bonus is not count from special meeples
 * fix: in some cases prisoners can have wrong color in sidebar
 * classic artwork, several glitches and wrong shapes corrected
-* artworks - shape difinition allows extended shape transformations and deriving shapes from others
+* artworks - shape definition allows extended shape transformations and deriving shapes from others
 * use webkit native websockets instead of ws library
 
 ## 5.8.0
