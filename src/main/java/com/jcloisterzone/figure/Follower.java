@@ -2,8 +2,11 @@ package com.jcloisterzone.figure;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Castle;
+import com.jcloisterzone.feature.Circus;
 import com.jcloisterzone.feature.Scoreable;
+import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.GameState;
 
@@ -38,4 +41,13 @@ public abstract class Follower extends Meeple {
     public boolean isInSupply(GameState state) {
         return super.isInSupply(state) && !isCaptured(state);
     }
+    
+    @Override
+    public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Structure feature) {
+        if (feature instanceof Circus) {
+            return new DeploymentCheckResult("Cannot place any follower on the circus.");
+        }
+        return super.isDeploymentAllowed(state, fp, feature);
+    }
+
 }

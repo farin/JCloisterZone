@@ -24,6 +24,8 @@ import com.jcloisterzone.io.message.PayRansomMessage;
 import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.reducers.PayRansom;
+
+import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
 
@@ -145,7 +147,7 @@ public abstract class AbstractActionPhase extends Phase {
             .map(t -> t._1)
             .toSet();
     }
-
+ 
     protected Vector<PlayerAction<?>> prepareMeepleActions(GameState state, Vector<Class<? extends Meeple>> meepleTypes) {
         Player player = state.getTurnPlayer();
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
@@ -155,13 +157,16 @@ public abstract class AbstractActionPhase extends Phase {
         Stream<PlacedTile> tiles;
         Stream<Tuple2<FeaturePointer, Structure>> specialMeepleStructures;
         Stream<Tuple2<FeaturePointer, Structure>> regularMeepleStructures;
+        
+        Stream<PlacedTile> neighbourTiles = state.getAdjacentAndDiagonalTiles(currentTilePos)
+        		.append(state.getPlacedTile(currentTilePos));
 
         if (lastPlaced.getTile().hasModifier(PortalCapability.MAGIC_PORTAL) && !state.getFlags().contains(Flag.PORTAL_USED)) {
             Stream<PlacedTile> allTiles = Stream.ofAll(state.getPlacedTiles().values());
             regularMeepleStructures = getAvailableStructures(state, allTiles, HashSet.of(currentTilePos));
             specialMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
         } else {
-            regularMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
+        	regularMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
             specialMeepleStructures = regularMeepleStructures;
         }
 

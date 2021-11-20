@@ -2,6 +2,7 @@ package com.jcloisterzone.game.state.mixins;
 
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Acrobats;
 import com.jcloisterzone.feature.CityGate;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
@@ -83,6 +84,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
                         return new PlacementOption(pos, rot, null);
                     }
                     if (playerHasBridge) {
+
                         // check bridges on tile
                         for (Tuple2<EdgePattern, Location> t : baseBridgePatterns) {
                             EdgePattern tileWithBridgePattern = t._1.rotate(rot);
@@ -91,6 +93,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
                                 return new PlacementOption(pos, rot, new FeaturePointer(pos, Road.class, bridgeLocation));
                             }
                         }
+
                         // check bridges on adjacent tiles
                         for (Location side : Location.SIDES) {
                             Position adjPos = pos.add(side);
@@ -150,8 +153,14 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
             return false;
         }
 
-        //and bridge must be legal on tile
         PlacedTile placedTile = getPlacedTile(pos);
+        
+        // Bridge cannot be placed over Acrobats space with any Acrobat TODO
+        if (placedTile.getTile().getInitialFeatures().filter(t -> t._2 instanceof Acrobats).length()>0) {
+        	return false;
+        }
+        
+        //and bridge must be legal on tile
         return placedTile.getEdgePattern().isBridgeAllowed(loc);
     }
 

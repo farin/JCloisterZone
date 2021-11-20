@@ -96,6 +96,7 @@ public class Engine implements  Runnable {
         meeples = addMeeples(meeples, setupMsg, "wagon", Wagon.class);
         meeples = addMeeples(meeples, setupMsg, "mayor", Mayor.class);
         meeples = addMeeples(meeples, setupMsg, "shepherd", Shepherd.class);
+        meeples = addMeeples(meeples, setupMsg, "ringmaster", Ringmaster.class);
 
         Set<Class<? extends Capability<?>>> capabilities = HashSet.empty();
         capabilities = addCapabilities(capabilities, setupMsg,"abbot", AbbotCapability.class);
@@ -104,6 +105,7 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"phantom", PhantomCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"shepherd", SheepCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"wagon", WagonCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"ringmaster", RingmasterCapability.class);
 
         capabilities = addCapabilities(capabilities, setupMsg,"dragon", DragonCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"fairy", FairyCapability.class);
@@ -132,6 +134,8 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"vineyard", VineyardCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"shrine", ShrineCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"festival", FestivalCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"bigtop", BigTopCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"acrobats", AcrobatsCapability.class);
 
         capabilities = addCapabilities(capabilities, setupMsg,"river", RiverCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"corn-circle", CornCircleCapability.class);

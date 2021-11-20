@@ -69,6 +69,7 @@ public class StateGsonBuilder {
         builder.registerTypeAdapter(GoldPieceAction.class, new GoldPieceActionSerializer());
         builder.registerTypeAdapter(RemoveMageOrWitchAction.class, new ActionSerializer("RemoveMageOrWitch"));
         builder.registerTypeAdapter(LittleBuildingAction.class, new LittleBuildingActionSerializer());
+        builder.registerTypeAdapter(AcrobatsScoreAction.class, new SelectFeatureActionSerializer());
         return builder.create();
     }
 
@@ -280,6 +281,12 @@ public class StateGsonBuilder {
             JsonObject data = new JsonObject();
             data.add("placement", context.serialize(fp));
             neutral.add("count", data);
+        }
+        fp = state.getBigTopDeployment();
+        if (fp != null) {
+            JsonObject data = new JsonObject();
+            data.add("placement", context.serialize(fp));
+            neutral.add("bigtop", data);
         }
         return neutral;
     }
