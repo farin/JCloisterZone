@@ -70,4 +70,9 @@ public class MeepleAction implements SelectFeatureAction {
         return new MeepleAction(meepleType, options, origin);
     }
 
+    public MeepleAction excludeOptions(Set<FeaturePointer> fps) {
+        Map<String, Set<FeaturePointer>> options = this.options;
+        options = options.map((i,f) -> new Tuple2(i, f.removeAll(fps)));
+        return new MeepleAction(meepleType, options, origin);
+    }
 }
