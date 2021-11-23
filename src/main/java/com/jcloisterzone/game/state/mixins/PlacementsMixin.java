@@ -155,9 +155,17 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
 
         PlacedTile placedTile = getPlacedTile(pos);
         
-        // Bridge cannot be placed over Acrobats space with any Acrobat TODO
-        if (placedTile.getTile().getInitialFeatures().filter(t -> t._2 instanceof Acrobats).length()>0) {
-        	return false;
+        // Bridge ca nnot be placed over Acrobats space with any placed Acrobat
+        GameState state = (GameState) this;
+        Acrobats acrobats = state.getFeatures(Acrobats.class).filter(a -> a.getTilePositions().contains(pos)).getOrNull();
+        if (acrobats != null) {
+            int count = state.getDeployedMeeples().filter((m, fp) -> {
+            	return (acrobats.getPlaces().contains(fp));
+            }).length();
+
+            if (count > 0) {
+            	return false;
+            }
         }
         
         //and bridge must be legal on tile

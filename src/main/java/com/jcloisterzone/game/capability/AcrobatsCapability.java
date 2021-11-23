@@ -4,6 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.AcrobatsScoreAction;
+import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
@@ -51,7 +52,8 @@ public class AcrobatsCapability extends Capability<Void> {
             return tile;
         }
         if (acrobatsEl.size() == 1) {
-            Acrobats acrobats = new Acrobats();
+            Location direction = Location.valueOf(acrobatsEl.get().getAttribute("direction"));
+            Acrobats acrobats = new Acrobats(Acrobats.INITIAL_PLACE, direction);
             return tile.setInitialFeatures(tile.getInitialFeatures().put(acrobats.getPlace(), acrobats));
         }
         throw new IllegalStateException("multiple <acrobats> elements");
