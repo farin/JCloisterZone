@@ -24,6 +24,7 @@ import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.io.message.AcrobatsScoreMessage;
 import com.jcloisterzone.reducers.AddPoints;
 import com.jcloisterzone.reducers.UndeployMeeples;
+import com.oracle.truffle.js.nodes.control.ReturnException;
 
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
@@ -32,6 +33,7 @@ import io.vavr.collection.HashSet;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
+import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import io.vavr.collection.Vector;
 
@@ -68,15 +70,13 @@ public class AcrobatsCapability extends Capability<Void> {
         PlacedTile lastPlaced = state.getLastPlaced();
         Position currentTilePos = lastPlaced.getPosition();
         
-        GameState _state = state;
         Stream<Acrobats> acrobats = state.getFeatures(Acrobats.class);
-//        	
-//        })
-//                .filter((pos, pt) -> pt.getTile().getTileModifiers().filter(Predicates.instanceOf(Acrobats.class)))
-//                .flatMap(pt -> _state.getFeatures().filter(f -> f instanceof Acrobats));
         Vector<Meeple> availMeeples = active.getMeeplesFromSupply(state, Vector.of(SmallFollower.class));
 
-        for(Acrobats acrobat : acrobats) {
+        // Not allow to place Acrobat on tile with Bridge
+        Set<Position> placedBridgesPositions = state.getCapabilityModel(BridgeCapability.class).map(fp -> fp.getPosition());
+
+		for(Acrobats acrobat : acrobats) {
             int count = state.getDeployedMeeples().filter((m, fp) -> {
             	return (acrobat.getPlaces().contains(fp));
             }).length();
@@ -86,7 +86,7 @@ public class AcrobatsCapability extends Capability<Void> {
               for(Meeple meeple : availMeeples) {
             	  List<FeaturePointer> _places = acrobat.getPlaces().filter(fp -> {
             		Position apos = fp.getPosition();
-      	            return Math.abs(currentTilePos.x - apos.x) <= 1 && Math.abs(currentTilePos.y - apos.y) <= 1;
+      	            return !placedBridgesPositions.contains(apos) && Math.abs(currentTilePos.x - apos.x) <= 1 && Math.abs(currentTilePos.y - apos.y) <= 1;
             	  });
             	  if (_places.length()>0) {
             		  actions = actions.appendAction(new MeepleAction(meeple, _places.toSet())).mergeMeepleActions();
