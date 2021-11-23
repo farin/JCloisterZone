@@ -74,9 +74,12 @@ public class AcrobatsCapability extends Capability<Void> {
         Vector<Meeple> availMeeples = active.getMeeplesFromSupply(state, Vector.of(SmallFollower.class));
 
         // Not allow to place Acrobat on tile with Bridge
-        Set<Position> placedBridgesPositions = state.getCapabilityModel(BridgeCapability.class).map(fp -> fp.getPosition());
+        Set<Position> placedBridgesPositions = (state.hasCapability(VineyardCapability.class) ? state.getCapabilityModel(BridgeCapability.class).map(fp -> fp.getPosition()) : HashSet.empty());
+        
+        // When Magic Portal, allow place also to all Acrobats Space
+        Boolean isMagicPortal = state.hasCapability(PortalCapability.class) && lastPlaced.getTile().hasModifier(PortalCapability.MAGIC_PORTAL);
 
-		for(Acrobats acrobat : acrobats) {
+        for(Acrobats acrobat : acrobats) {
             int count = state.getDeployedMeeples().filter((m, fp) -> {
             	return (acrobat.getPlaces().contains(fp));
             }).length();
@@ -86,7 +89,7 @@ public class AcrobatsCapability extends Capability<Void> {
               for(Meeple meeple : availMeeples) {
             	  List<FeaturePointer> _places = acrobat.getPlaces().filter(fp -> {
             		Position apos = fp.getPosition();
-      	            return !placedBridgesPositions.contains(apos) && Math.abs(currentTilePos.x - apos.x) <= 1 && Math.abs(currentTilePos.y - apos.y) <= 1;
+      	            return !placedBridgesPositions.contains(apos) && (isMagicPortal || Math.abs(currentTilePos.x - apos.x) <= 1 && Math.abs(currentTilePos.y - apos.y) <= 1);
             	  });
             	  if (_places.length()>0) {
             		  actions = actions.appendAction(new MeepleAction(meeple, _places.toSet())).mergeMeepleActions();
