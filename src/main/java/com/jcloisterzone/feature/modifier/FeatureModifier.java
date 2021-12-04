@@ -12,7 +12,7 @@ public abstract class FeatureModifier<T> {
 
     public FeatureModifier(String selector, SetupQuery enabledBy) {
         this.selector = selector;
-        this.name = selector.replaceAll("\\w+\\[(\\w+)\\]", "$1");
+        this.name = selector.replaceAll("\\w+\\[([-\\w]+)\\]", "$1");
         this.enabledBy = enabledBy;
     }
 

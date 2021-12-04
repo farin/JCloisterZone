@@ -111,13 +111,14 @@ public class ActionPhase extends AbstractActionPhase {
 
         switch (msg.getSource()) {
             case PRINCESS:
+            case ROBBERS_SON:
                 ReturnMeepleAction princessAction = (ReturnMeepleAction) state.getPlayerActions()
-                    .getActions().find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.PRINCESS)
+                    .getActions().find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == msg.getSource())
                     .getOrElseThrow(() -> new IllegalArgumentException("Return meeple is not allowed"));
                 if (princessAction.getOptions().contains(ptr)) {
-                    state = state.addFlag(Flag.PRINCESS_USED);
+                    state = state.addFlag(Flag.NO_PHANTOM);
                 } else {
-                    throw new IllegalArgumentException("Pointer doesn't match princess action");
+                    throw new IllegalArgumentException("Pointer doesn't match return action");
                 }
                 break;
             case FESTIVAL:
