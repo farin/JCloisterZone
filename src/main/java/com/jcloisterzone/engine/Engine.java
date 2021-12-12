@@ -54,7 +54,7 @@ public class Engine implements  Runnable {
     private ArrayList<String> tileDefinitions = new ArrayList<>();
 
     public Engine(InputStream in, PrintStream out, PrintStream err, PrintStream log) {
-        this.in = new Scanner(in);
+        this.in = new Scanner(in, "UTF-8");
         this.out = out;
         this.err = err;
         this.log = log;
