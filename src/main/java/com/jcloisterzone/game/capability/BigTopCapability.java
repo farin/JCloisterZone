@@ -1,8 +1,6 @@
 package com.jcloisterzone.game.capability;
 
-import com.jcloisterzone.XMLUtils;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
@@ -16,18 +14,11 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.AddPoints;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
-
-import io.vavr.collection.HashMap;
-import io.vavr.collection.LinkedHashMap;
-import io.vavr.collection.Map;
-import io.vavr.collection.TreeMap;
-import io.vavr.collection.Vector;
 import io.vavr.Tuple2;
+import io.vavr.collection.*;
 
-import java.util.function.Function;
 import java.util.Random;
-
-import org.w3c.dom.Element;
+import java.util.function.Function;
 
 /**
  * @model BigTopCapabilityModel> - all placed BigTop tokens and if showed value
@@ -46,19 +37,6 @@ public class BigTopCapability extends Capability<BigTopCapabilityModel> {
 		BigTopToken.BIGTOP_6, 2,
 		BigTopToken.BIGTOP_7, 1
 	);
-
-	@Override
-    public Tile initTile(GameState state, Tile tile, Element tileElement) {
-        Vector<Element> circusEl = XMLUtils.getElementStreamByTagName(tileElement, "circus").toVector();
-        if (circusEl.size() == 0) {
-            return tile;
-        }
-        if (circusEl.size() == 1) {
-            Circus circus = new Circus();
-            return tile.setInitialFeatures(tile.getInitialFeatures().put(circus.getPlace(), circus));
-        }
-        throw new IllegalStateException("multiple <circus> elements");
-    }
 
 	@Override
     public GameState onStartGame(GameState state) {

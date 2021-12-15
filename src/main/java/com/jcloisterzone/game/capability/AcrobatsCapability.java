@@ -1,13 +1,10 @@
 package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Player;
-import com.jcloisterzone.XMLUtils;
+import com.jcloisterzone.action.AcrobatsScoreAction;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.AcrobatsScoreAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
@@ -21,39 +18,14 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.AddPoints;
 import com.jcloisterzone.reducers.UndeployMeeples;
-
 import io.vavr.Tuple2;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.LinkedHashMap;
-import io.vavr.collection.List;
-import io.vavr.collection.Map;
-import io.vavr.collection.Set;
-import io.vavr.collection.Stream;
-import io.vavr.collection.Vector;
-
-import java.util.Random;
-
-import org.w3c.dom.Element;
+import io.vavr.collection.*;
 
 public class AcrobatsCapability extends Capability<Void> {
 
 	private static final long serialVersionUID = 1L;
 
 	private static final int ACROBATS_COUNT = 3;
-	
-    @Override
-    public Tile initTile(GameState state, Tile tile, Element tileElement) {
-        Vector<Element> acrobatsEl = XMLUtils.getElementStreamByTagName(tileElement, "acrobats").toVector();
-        if (acrobatsEl.size() == 0) {
-            return tile;
-        }
-        if (acrobatsEl.size() == 1) {
-            Location direction = Location.valueOf(acrobatsEl.get().getAttribute("direction"));
-            Acrobats acrobats = new Acrobats(Acrobats.INITIAL_PLACE, direction);
-            return tile.setInitialFeatures(tile.getInitialFeatures().put(acrobats.getPlace(), acrobats));
-        }
-        throw new IllegalStateException("multiple <acrobats> elements");
-    }
 
     @Override
     public GameState onActionPhaseEntered(GameState state) {

@@ -134,7 +134,7 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"vineyard", VineyardCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"shrine", ShrineCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"festival", FestivalCapability.class);
-        capabilities = addCapabilities(capabilities, setupMsg,"bigtop", BigTopCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"big-top", BigTopCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"acrobats", AcrobatsCapability.class);
 
         capabilities = addCapabilities(capabilities, setupMsg,"river", RiverCapability.class);

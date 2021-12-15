@@ -11,20 +11,17 @@ public class Acrobats extends TileFeature implements Structure {
 
     public static final List<FeaturePointer> INITIAL_PLACE = List.of(new FeaturePointer(Position.ZERO, Acrobats.class, Location.I));
 
-    private Location direction;
+    public Acrobats() {
+        super(INITIAL_PLACE);
+    }
 
-    public Acrobats(List<FeaturePointer> places, Location direction) {
+    public Acrobats(List<FeaturePointer> places) {
         super(places);
-    	this.direction = direction;
     }
 
     @Override
     public Feature placeOnBoard(Position pos, Rotation rot) {
-        return new Acrobats(placeOnBoardPlaces(pos, rot), direction);
-    }
-
-    public Location getDirection() {
-        return direction;
+        return new Acrobats(placeOnBoardPlaces(pos, rot));
     }
     
     public static String name() {

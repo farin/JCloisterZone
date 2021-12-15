@@ -16,7 +16,6 @@ public enum Rule {
     BARN_PLACEMENT("barn-placement", String.class, new Object[] { "not-occupied", "occupied" }),
     BAZAAR_NO_AUCTION("bazaar-no-auction", Boolean.class, null),
     HILL_TIEBREAKER("hill-tiebreaker", String.class, new Object[] { "at-least-one-follower", "number-of-followers" }),
-    RINGMASTER_VARIANT("ringmaster-variant", String.class, new Object[] { "basic-features", "all-features" }),
     ESCAPE_VARIANT("espace-variant", String.class, new Object[] { "any-tile", "siege-tile" }),
     GQ11_PIG_HERD("gq11-pig-herd", String.class, new Object[] { "pig", "nothing" }),
     TUNNELIZE_OTHER_EXPANSIONS("tunnelize-other-expansions", Boolean.class, null),
