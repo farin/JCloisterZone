@@ -80,8 +80,6 @@ public class GameState implements ActionsMixin, BoardMixin,
         );
     }
 
-
-
     public GameState(
             Map<Rule, Object> rules,
             Map<String, Object> elements,

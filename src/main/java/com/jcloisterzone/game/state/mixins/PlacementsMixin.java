@@ -2,6 +2,7 @@ package com.jcloisterzone.game.state.mixins;
 
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Acrobats;
 import com.jcloisterzone.feature.CityGate;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
@@ -83,6 +84,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
                         return new PlacementOption(pos, rot, null);
                     }
                     if (playerHasBridge) {
+
                         // check bridges on tile
                         for (Tuple2<EdgePattern, Location> t : baseBridgePatterns) {
                             EdgePattern tileWithBridgePattern = t._1.rotate(rot);
@@ -91,6 +93,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
                                 return new PlacementOption(pos, rot, new FeaturePointer(pos, Road.class, bridgeLocation));
                             }
                         }
+
                         // check bridges on adjacent tiles
                         for (Location side : Location.SIDES) {
                             Position adjPos = pos.add(side);
@@ -150,6 +153,12 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
             return false;
         }
 
+        // bridge cannot be placed over Acrobats space with already placed meeple
+        Acrobats acrobats = this.getFeatures(Acrobats.class).filter(a -> a.getPlace().getPosition().equals(pos)).getOrNull();
+        if (acrobats != null && acrobats.isOccupied((GameState) this)) {
+            return false;
+        }
+        
         //and bridge must be legal on tile
         PlacedTile placedTile = getPlacedTile(pos);
         return placedTile.getEdgePattern().isBridgeAllowed(loc);
@@ -157,7 +166,6 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
 
 
     // Helper methods
-
     class _This {
         private static Vector<Tuple2<EdgePattern, Location>> getBridgePatterns(EdgePattern basePattern) {
             Vector<Tuple2<EdgePattern, Location>> patterns = Vector.empty();

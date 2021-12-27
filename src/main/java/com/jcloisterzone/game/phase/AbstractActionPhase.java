@@ -53,7 +53,8 @@ public abstract class AbstractActionPhase extends Phase {
 
             Stream<Tuple2<FeaturePointer, Structure>> places = state.getTileFeatures2(pos, Structure.class);
 
-            places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik));
+            // TODO use interface instead
+            places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik) && !(t._2 instanceof Acrobats) && !(t._2 instanceof Circus));
 
             if (!state.getBooleanRule(Rule.FARMERS)) {
                 places = places.filter(t -> !(t._2 instanceof Field));
@@ -145,7 +146,7 @@ public abstract class AbstractActionPhase extends Phase {
             .map(t -> t._1)
             .toSet();
     }
-
+ 
     protected Vector<PlayerAction<?>> prepareMeepleActions(GameState state, Vector<Class<? extends Meeple>> meepleTypes) {
         Player player = state.getTurnPlayer();
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);

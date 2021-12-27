@@ -9,7 +9,7 @@ public class RandomGenerator {
 
     /* usually only one integer is needed
     except situations like drawing bazaar tiles
-    the use linear congruential generator approach and derive multiple random number from [0,1] seed
+    then use linear congruential generator approach and derive multiple random number from [0,1] seed
     */
 
     private double random;
