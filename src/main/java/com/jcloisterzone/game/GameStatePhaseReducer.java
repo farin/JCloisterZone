@@ -50,7 +50,7 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
             next = new DragonPhase(randomGenerator, next);
         }
         if (setup.contains(CountCapability.class)) next = new CocFollowerPhase(randomGenerator, next);
-        if (setup.contains(BigTopCapability.class)) next = new BigTopMovePhase(randomGenerator, next);
+        if (setup.contains(BigTopCapability.class)) next = new BigTopPhase(randomGenerator, next);
         if (setup.contains(WagonCapability.class)) next = new WagonPhase(randomGenerator, next);
         next = new ScoringPhase(randomGenerator, next);
         if (setup.contains(CountCapability.class)) next = new CocScoringPhase(randomGenerator, next);

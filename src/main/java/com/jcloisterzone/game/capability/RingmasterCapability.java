@@ -29,11 +29,15 @@ public class RingmasterCapability extends Capability<Void> {
             List<Feature> features = getNeigbouringFeatures(state, fp.getPosition());
             int circusCount = features.filter(f -> f instanceof Circus).length();
             int acrobatsCount = features.filter(f -> f instanceof Acrobats).length();
-            if (circusCount > 0 || acrobatsCount > 0) {
-                PointsExpression expr = new PointsExpression("ringmaster",
-                    new ExprItem(circusCount, "circus", circusCount * RINGMASTER_BONUS),
-                    new ExprItem(acrobatsCount, "ringmaster", acrobatsCount * RINGMASTER_BONUS)
-                );
+            List<ExprItem> exprItems = List.empty();
+            if (circusCount > 0) {
+                exprItems = exprItems.append(new ExprItem(circusCount, "circus", circusCount * RINGMASTER_BONUS));
+            }
+            if (acrobatsCount > 0) {
+                exprItems = exprItems.append(new ExprItem(acrobatsCount, "acrobats", acrobatsCount * RINGMASTER_BONUS));
+            }
+            if (!exprItems.isEmpty()) {
+                PointsExpression expr = new PointsExpression("ringmaster", exprItems);
                 bonusPoints = bonusPoints.append(new ReceivedPoints(expr, meeple.getPlayer(), fp));
             }
         }

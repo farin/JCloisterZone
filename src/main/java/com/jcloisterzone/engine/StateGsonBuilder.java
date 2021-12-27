@@ -282,10 +282,10 @@ public class StateGsonBuilder {
             data.add("placement", context.serialize(fp));
             neutral.add("count", data);
         }
-        fp = state.getBigTopDeployment();
-        if (fp != null) {
+        pos = state.getBigTopDeployment();
+        if (pos != null) {
             JsonObject data = new JsonObject();
-            data.add("placement", context.serialize(fp));
+            data.add("placement", context.serialize(pos));
             neutral.add("bigtop", data);
         }
         return neutral;

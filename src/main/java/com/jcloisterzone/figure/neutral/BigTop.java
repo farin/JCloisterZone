@@ -1,10 +1,10 @@
 package com.jcloisterzone.figure.neutral;
 
 import com.jcloisterzone.Immutable;
-import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.Position;
 
 @Immutable
-public class BigTop extends NeutralFigure<FeaturePointer> {
+public class BigTop extends NeutralFigure<Position> {
 
     private static final long serialVersionUID = 1L;
 

@@ -126,8 +126,8 @@ public class NeutralFiguresState implements Serializable {
         return bigtop;
     }
 
-    public FeaturePointer getBigTopDeployment() {
-        return (FeaturePointer) deployedNeutralFigures.get(bigtop).getOrNull();
+    public Position getBigTopDeployment() {
+        return (Position) deployedNeutralFigures.get(bigtop).getOrNull();
     }
 
     public LinkedHashMap<NeutralFigure<?>, BoardPointer> getDeployedNeutralFigures() {

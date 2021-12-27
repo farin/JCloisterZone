@@ -11,7 +11,7 @@ public class ScoreEvent extends PlayEvent  {
     private static final long serialVersionUID = 1L;
 
     private final List<ReceivedPoints> points;
-    private final boolean landscapeSource;
+    private final boolean landscapeSource; // only landscape sources trigger Count (when adds points to opponent)
     private final boolean isFinal;
 
     public ScoreEvent(List<ReceivedPoints> points, boolean landscapeSource, boolean isFinal) {

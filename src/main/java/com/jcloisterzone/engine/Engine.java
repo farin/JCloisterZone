@@ -76,12 +76,12 @@ public class Engine implements  Runnable {
     }
 
     private Set<Class<? extends Capability<?>>> addCapabilities(
-            Set<Class<? extends Capability<?>>> capabilties, GameSetupMessage setupMsg, String key, Class<? extends Capability<?>> cls) {
+            Set<Class<? extends Capability<?>>> capabilities, GameSetupMessage setupMsg, String key, Class<? extends Capability<?>> cls) {
         Object value = setupMsg.getElements().get(key);
         if (value == null) {
-            return capabilties;
+            return capabilities;
         }
-        return capabilties.add(cls);
+        return capabilities.add(cls);
     }
 
     private GameSetup createSetupFromMessage(GameSetupMessage setupMsg) {
