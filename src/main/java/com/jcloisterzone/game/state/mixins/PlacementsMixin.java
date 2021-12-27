@@ -153,28 +153,19 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
             return false;
         }
 
-        PlacedTile placedTile = getPlacedTile(pos);
-        
-        // Bridge ca nnot be placed over Acrobats space with any placed Acrobat
-        GameState state = (GameState) this;
-        Acrobats acrobats = state.getFeatures(Acrobats.class).filter(a -> a.getTilePositions().contains(pos)).getOrNull();
-        if (acrobats != null) {
-            int count = state.getDeployedMeeples().filter((m, fp) -> {
-            	return (acrobats.getPlaces().contains(fp));
-            }).length();
-
-            if (count > 0) {
-            	return false;
-            }
+        // bridge cannot be placed over Acrobats space with already placed meeple
+        Acrobats acrobats = this.getFeatures(Acrobats.class).filter(a -> a.getPlace().getPosition().equals(pos)).getOrNull();
+        if (acrobats != null && acrobats.isOccupied((GameState) this)) {
+            return false;
         }
         
         //and bridge must be legal on tile
+        PlacedTile placedTile = getPlacedTile(pos);
         return placedTile.getEdgePattern().isBridgeAllowed(loc);
     }
 
 
     // Helper methods
-
     class _This {
         private static Vector<Tuple2<EdgePattern, Location>> getBridgePatterns(EdgePattern basePattern) {
             Vector<Tuple2<EdgePattern, Location>> patterns = Vector.empty();

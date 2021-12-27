@@ -40,8 +40,8 @@ public class BigTopCapability extends Capability<Integer> {
         Position pos = bigtop.getPosition(state);
         if (pos != null) {
             var tokens = getUnusedTokens(state);
-            // TODO get random token
-            return scoreBigTop(state, pos, tokens.get(0), true);
+            int idx = state.getPhase().getRandom().getNextInt(tokens.size());
+            return scoreBigTop(state, pos, tokens.get(idx), true);
         }
         return state;
     }

@@ -27,7 +27,8 @@ public class CommandRegistry {
             .put(t(BazaarBuyOrSellMessage.class))
             .put(t(CornCircleRemoveOrDeployMessage.class))
             .put(t(FlockMessage.class))
-            .put(t(AcrobatsScoreMessage.class));
+            .put(t(ScoreAcrobatsMessage.class));
+
     }
 
     private static Tuple2<String, Class<? extends Message>> t(Class<? extends Message> msgType) {

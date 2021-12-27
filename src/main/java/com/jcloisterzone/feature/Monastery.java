@@ -73,9 +73,6 @@ public class Monastery extends TileFeature implements Monastic, ModifiedFeature<
         return new Monastery(placeOnBoardPlaces(pos, rot), placeOnBoardNeighboring(pos, rot), modifiers);
     }
 
-    public boolean isMonastery(GameState state) {
-    	return !isShrine(state) && !isSpecialMonastery(state) && !isChurch(state);
-    }
     public boolean isShrine(GameState state) {
         return hasModifier(state, SHRINE);
     }

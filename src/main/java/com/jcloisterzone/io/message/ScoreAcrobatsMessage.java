@@ -3,15 +3,15 @@ package com.jcloisterzone.io.message;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.io.MessageCommand;
 
-@MessageCommand("ACROBATS_SCORE")
-public class AcrobatsScoreMessage extends AbstractMessage implements ReplayableMessage {
+@MessageCommand("SCORE_ACROBATS")
+public class ScoreAcrobatsMessage extends AbstractMessage implements ReplayableMessage {
 
     private FeaturePointer pointer;
 
-    public AcrobatsScoreMessage() {
+    public ScoreAcrobatsMessage() {
     }
 
-    public AcrobatsScoreMessage(FeaturePointer pointer) {
+    public ScoreAcrobatsMessage(FeaturePointer pointer) {
         this.pointer = pointer;
     }
 

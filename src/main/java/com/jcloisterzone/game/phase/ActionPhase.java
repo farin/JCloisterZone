@@ -2,7 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
-import com.jcloisterzone.action.AcrobatsScoreAction;
+import com.jcloisterzone.action.ScoreAcrobatsAction;
 import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
@@ -26,13 +26,12 @@ import com.jcloisterzone.game.capability.AcrobatsCapability;
 import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.PrincessCapability;
-import com.jcloisterzone.game.capability.SheepCapability;
 import com.jcloisterzone.game.capability.TowerCapability.TowerToken;
 import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.io.message.AcrobatsScoreMessage;
+import com.jcloisterzone.io.message.ScoreAcrobatsMessage;
 import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import com.jcloisterzone.io.message.PlaceTokenMessage;
 import com.jcloisterzone.io.message.ReturnMeepleMessage;
@@ -159,17 +158,15 @@ public class ActionPhase extends AbstractActionPhase {
     }
 
     @PhaseMessageHandler
-    public StepResult handleAcrobatsScoreMessage(GameState state, AcrobatsScoreMessage msg) {
+    public StepResult handleScoreAcrobatsMessage(GameState state, ScoreAcrobatsMessage msg) {
     	FeaturePointer fp = msg.getPointer();
 
-    	AcrobatsScoreAction acrobatsScoreAction = (AcrobatsScoreAction) state.getPlayerActions()
-              .getActions().find(a -> a instanceof AcrobatsScoreAction && ((AcrobatsScoreAction) a).getOptions().contains(fp))
-              .getOrElseThrow(() -> new IllegalArgumentException("Acrobats score is not allowed"));
+    	state.getPlayerActions()
+              .getActions().find(a -> a instanceof ScoreAcrobatsAction && ((ScoreAcrobatsAction) a).getOptions().contains(fp))
+              .getOrElseThrow(() -> new IllegalArgumentException("Invalid SCORE_ACROBATS"));
 
-    	
     	AcrobatsCapability acrobatsCap = state.getCapabilities().get(AcrobatsCapability.class);
-    	state = acrobatsCap.scoreAcrobats(state, (Acrobats) state.getFeaturePartOf(fp.getPosition(), fp.getLocation()), true);
-
+    	state = acrobatsCap.scoreAcrobats(state, (Acrobats) state.getFeature(fp), true);
         state = clearActions(state);
 
         return next(state);
