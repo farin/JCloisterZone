@@ -2,6 +2,20 @@
 
 ## upcoming
 
+* Under The Big Top support
+
+## 5.9.1
+*2021-12-12*
+* fixes engine run when user profile path includes non-ascii characters
+* engine support for Robber's son fan expansion (community addon)
+* game setup tlle preview shows again C1/C2 tile variant (depending on Abbot figure disabled/enabled)
+* fixes score overlay (feature highlight on score mouseover) for garden tiles
+* addons can provide link type ('download' and 'wiki' are handled with apropriate icon now)
+* dev: Theme inspector improvements - fixed header, remembers last setting on page reload / app restart
+
+
+## 5.9.0
+*2021-11-18*
 * responsive final stats
 * improved tunnel tokens positions, artwork addon can defines tunnel shape and position
 * fix bazaar - all tiles in auction are now random and chosen independently
