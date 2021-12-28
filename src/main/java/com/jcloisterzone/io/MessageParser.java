@@ -163,7 +163,7 @@ public final class MessageParser {
             JsonObject obj = new JsonObject();
             obj.add("position", context.serialize(fp.getPosition()));
             obj.add("location", context.serialize(fp.getLocation()));
-            obj.addProperty("feature", fp.getFeature().getSimpleName());
+            obj.addProperty("feature", fp.getFeature() != null ? fp.getFeature().getSimpleName() : null);
             return obj;
         }
     }
