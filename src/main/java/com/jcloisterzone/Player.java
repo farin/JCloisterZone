@@ -60,7 +60,7 @@ public class Player implements Serializable {
      * @return the next player
      */
     public Player getNextPlayer(GameState state) {
-        int nextPlayerIndex = (index + 1) % state.getPlayers().length();
+        int nextPlayerIndex = (index + state.getNextPlayerIncrement() + state.getPlayers().length()) % state.getPlayers().length();
         return state.getPlayers().getPlayer(nextPlayerIndex);
     }
 
