@@ -73,9 +73,9 @@ public class CarouselCapability extends Capability<PlacedTile> {
         
         state = setModel(state, pt);
         
-        if (!((rotation.equals("reverse") && (currentRotation == null || currentRotation.equals("regular")))
-        	|| (rotation.equals("regular") && currentRotation.equals("reverse"))
-        )) {
+        if ((currentRotation == null && rotation.equals("regular"))
+        	|| (currentRotation != null && rotation.equals(currentRotation))
+        ) {
             // No change of rotation
         	return state;
         }
