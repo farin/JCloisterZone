@@ -35,6 +35,9 @@ public class AcrobatsCapability extends Capability<Void> {
         
         Stream<Acrobats> acrobats = state.getFeatures(Acrobats.class);
         SmallFollower meeple = (SmallFollower) active.getMeeplesFromSupply(state, Vector.of(SmallFollower.class)).getOrNull();
+        if (meeple == null) {
+            return state;
+        }
 
         // Not allow to place Acrobat on tile with Bridge
         Set<Position> placedBridges = state.hasCapability(BridgeCapability.class) ? state.getCapabilityModel(BridgeCapability.class).map(fp -> fp.getPosition()) : HashSet.empty();
