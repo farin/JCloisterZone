@@ -3,24 +3,25 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.CastleAction;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.CastleCreated;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.City;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.game.capability.CastleCapability;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.CastleCapability.CastleToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.io.message.PlaceTokenMessage;
+import com.jcloisterzone.random.RandomGenerator;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
-import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
 public class CastlePhase extends Phase {
@@ -79,14 +80,36 @@ public class CastlePhase extends Phase {
         }
         Player player = state.getActivePlayer();
         City city = (City) state.getFeature((FeaturePointer) msg.getPointer());
-        Castle castle = new Castle(city.getPlaces());
+        Castle castle = new Castle(city.getPlaces().map(fp -> fp.setFeature(Castle.class)));
 
-        Map<FeaturePointer, Feature> update = city.getPlaces().toMap(ptr -> new Tuple2<>(ptr, castle));
+        BoardPointer fairyPtr = state.getNeutralFigures().getFairyDeployment();
+        MeeplePointer fairyMeeplePtr = null;
+        if (fairyPtr instanceof MeeplePointer) {
+            fairyMeeplePtr = (MeeplePointer) fairyPtr;
+        }
 
         state = state.mapPlayers(ps ->
            ps.addTokenCount(player.getIndex(), CastleToken.CASTLE, -1)
         );
-        state = state.mapFeatureMap(m -> update.merge(m));
+        for (var t : city.getFollowers2(state)) {
+            if (fairyMeeplePtr != null && fairyMeeplePtr.asFeaturePointer().equals(t._2)) {
+                MeeplePointer _fairyMeeplePtr = fairyMeeplePtr;
+                state = state.mapNeutralFigures(nf -> {
+                    Fairy fairy = nf.getFairy();
+                    MeeplePointer newValue = _fairyMeeplePtr.setFeaturePointer(t._2.setFeature(Castle.class));
+                    return nf.setDeployedNeutralFigures(nf.getDeployedNeutralFigures().put(fairy, newValue));
+                });
+            }
+            var meeples = state.getDeployedMeeples();
+            state = state.setDeployedMeeples(meeples.put(t._1, t._2.setFeature(Castle.class)));
+        }
+        state = state.mapFeatureMap(m -> {
+            for (var fp : city.getPlaces()) {
+                Position pos = fp.getPosition();
+                m = m.put(pos, m.get(pos).get().remove(fp).put(fp.setFeature(Castle.class), castle));
+            }
+            return m;
+        });
         state = state.appendEvent(new CastleCreated(
            PlayEventMeta.createWithPlayer(player),
            castle

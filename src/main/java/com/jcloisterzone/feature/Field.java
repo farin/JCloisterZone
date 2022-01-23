@@ -1,6 +1,7 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.Edge;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Rotation;
@@ -54,6 +55,11 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
             adjoiningCityOfCarcassonne || field.adjoiningCityOfCarcassonne,
             mergeModifiers(field)
         );
+    }
+
+    @Override
+    public Field closeEdge(Edge edge) {
+        return this;
     }
 
     @Override
@@ -123,11 +129,12 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
         int cityCount = 0;
         int besiegedCount = 0;
 
-        Set<Feature> features = adjoiningCities.map(fp -> state.getFeature(fp));
+        // can't use simple getFeature because pointer can refere non-existent city now converted to a castle
+        Set<Feature> features = adjoiningCities.map(fp -> state.getFeaturePartOf(fp.getPosition(), fp.getLocation()));
         for (Feature feature : features) {
             if (feature instanceof Castle) {
                 castleCount++;
-            } else {
+            } else if (feature instanceof City) {
                 City city = (City) feature;
                 if (city.isCompleted(state)) {
                     cityCount++;
@@ -135,6 +142,8 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
                         besiegedCount++;
                     }
                 }
+            } else {
+                System.err.println("# unknow or null feature");
             }
         }
 
@@ -156,18 +165,18 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
 
         // besieged is already part of cityCount
         var scoredObjects = cityCount + castleCount + (adjoiningCityOfCarcassonne ? 1 : 0);
-        if ( scorePigsForPlayer != null && scoredObjects > 0) {
+        if (scorePigsForPlayer != null && scoredObjects > 0) {
             int pigCount = getPigCount(state, scorePigsForPlayer);
             int pigHerds = getModifier(state, PIG_HERD, 0);
             if (pigCount > 0) {
-                exprItems.add(pigCount, new ExprItem(pigCount, "pigs", pigCount * scoredObjects));
+                exprItems.add(new ExprItem("pigs", scoredObjects)); // do not stack
             }
             if (pigHerds > 0) {
-                exprItems.add(pigCount, new ExprItem(pigHerds, "pigHerds", pigHerds * scoredObjects));
+                exprItems.add(new ExprItem("pigHerds", scoredObjects)); // do not stack
             }
         }
 
-        scoreScriptedModifiers(exprItems, java.util.Map.of("cities", cityCount, "castles", castleCount));
+        scoreScriptedModifiers(state, exprItems, java.util.Map.of("cities", cityCount, "castles", castleCount));
         return new PointsExpression(exprName, List.ofAll(exprItems));
     }
 

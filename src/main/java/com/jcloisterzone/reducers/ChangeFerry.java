@@ -1,8 +1,8 @@
 package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.board.Edge;
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
@@ -89,16 +89,15 @@ public class ChangeFerry implements Reducer {
         // in such case, nothing changes for the road
         if (parts.get(0).getPlaces().size() != merged.getPlaces().size()) {
             for (Road part : parts) {
-                state = state.mapFeatureMap(m ->
-                    part.getPlaces()
-                        .toMap(fp -> new Tuple2<FeaturePointer, Feature>(fp, part))
-                        .merge(m)
-                );
+                state = state.mapFeatureMap(m -> {
+                    for (var fp : part.getPlaces()) {
+                        Position pos = fp.getPosition();
+                        m = m.put(pos, m.get(pos).get().put(fp, part));
+                    }
+                    return m;
+                });
             }
         }
-
         return state;
     }
-
-
 }

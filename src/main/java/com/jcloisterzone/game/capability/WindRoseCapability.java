@@ -7,7 +7,6 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TileModifier;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
@@ -15,7 +14,6 @@ import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.reducers.AddPoints;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
-import io.vavr.collection.Vector;
 import org.w3c.dom.Element;
 
 /** model contains placement of last placed rose */
@@ -63,21 +61,17 @@ public class WindRoseCapability extends Capability<PlacedTile> {
         rose = rose.rotateCW(ptRose.getRotation());
         if (isInProperQuadrant(rose, pt.getPosition(), ptRose.getPosition())) {
             Player p = state.getTurnPlayer();
-            state = (new AddPoints(p, WIND_ROSE_POINTS)).apply(state);
             PointsExpression expr = new PointsExpression("wind-rose", new ExprItem("wind-rose", WIND_ROSE_POINTS));
-            ScoreEvent scoreEvent = new ScoreEvent(new ReceivedPoints(expr, p, pt.getPosition()), false, false);
-            state = state.appendEvent(scoreEvent);
+            state = (new AddPoints(new ReceivedPoints(expr, p, pt.getPosition()), false)).apply(state);
         }
         return state;
     }
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        for (Element el : tileElements) {
-            if (el.hasAttribute("wind-rose")) {
-                Location loc = Location.valueOf(el.getAttribute("wind-rose"));
-                tile = tile.addTileModifier(ROSES.get(loc).getOrElseThrow(IllegalArgumentException::new));
-            }
+    public Tile initTile(GameState state, Tile tile, Element el) {
+        if (el.hasAttribute("wind-rose")) {
+            Location loc = Location.valueOf(el.getAttribute("wind-rose"));
+            tile = tile.addTileModifier(ROSES.get(loc).getOrElseThrow(IllegalArgumentException::new));
         }
         return tile;
     }

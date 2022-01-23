@@ -1,6 +1,5 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.reducers.FinalScoring;

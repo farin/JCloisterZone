@@ -8,16 +8,16 @@ import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.TileDiscardedEvent;
 import com.jcloisterzone.event.TokenPlacedEvent;
 import com.jcloisterzone.figure.Builder;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.PlaceBridge;
-import com.jcloisterzone.reducers.PlaceTile;
 import com.jcloisterzone.io.message.PassMessage;
 import com.jcloisterzone.io.message.PlaceTileMessage;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.PlaceBridge;
+import com.jcloisterzone.reducers.PlaceTile;
 import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
 import io.vavr.collection.Set;
@@ -178,10 +178,12 @@ public class TilePhase extends Phase {
         }
 
         if (state.hasCapability(BuilderCapability.class)) {
-            FeaturePointer builderFp = state.getDeployedMeeples().filter((m, fp) -> m instanceof Builder && m.getPlayer().equals(player)).values().getOrNull();
-            if (builderFp != null && !builderFp.getPosition().equals(pos)) {
-                if (state.getFeature(builderFp).getTilePositions().contains(pos)) {
-                    state = state.getCapabilities().get(BuilderCapability.class).useBuilder(state);
+            for (FeaturePointer builderFp : state.getDeployedMeeples().filter((m, fp) -> m instanceof Builder && m.getPlayer().equals(player)).values()) {
+                if (builderFp != null && !builderFp.getPosition().equals(pos)) {
+                    if (state.getFeature(builderFp).getTilePositions().contains(pos)) {
+                        state = state.getCapabilities().get(BuilderCapability.class).useBuilder(state);
+                        break;
+                    }
                 }
             }
         }

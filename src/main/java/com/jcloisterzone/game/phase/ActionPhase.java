@@ -2,6 +2,7 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.action.ScoreAcrobatsAction;
 import com.jcloisterzone.action.ReturnMeepleAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
@@ -9,19 +10,19 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.TokenPlacedEvent;
+import com.jcloisterzone.feature.Acrobats;
 import com.jcloisterzone.feature.Monastic;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.figure.neutral.Fairy;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
+import com.jcloisterzone.game.capability.AcrobatsCapability;
 import com.jcloisterzone.game.capability.FestivalCapability;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.PrincessCapability;
@@ -30,11 +31,13 @@ import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.*;
+import com.jcloisterzone.io.message.ScoreAcrobatsMessage;
 import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import com.jcloisterzone.io.message.PlaceTokenMessage;
 import com.jcloisterzone.io.message.ReturnMeepleMessage;
 import com.jcloisterzone.io.message.ReturnMeepleMessage.ReturnMeepleSource;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.*;
 import io.vavr.collection.Vector;
 
 
@@ -53,7 +56,8 @@ public class ActionPhase extends AbstractActionPhase {
 
         Vector<Class<? extends Meeple>> meepleTypes = Vector.of(
             SmallFollower.class, BigFollower.class, Phantom.class, Abbot.class,
-            Wagon.class, Mayor.class, Builder.class, Pig.class, Shepherd.class
+            Wagon.class, Mayor.class, Builder.class, Pig.class, Shepherd.class,
+            Ringmaster.class
         );
 
         Vector<PlayerAction<?>> actions = prepareMeepleActions(state, meepleTypes);
@@ -112,13 +116,14 @@ public class ActionPhase extends AbstractActionPhase {
 
         switch (msg.getSource()) {
             case PRINCESS:
+            case ROBBERS_SON:
                 ReturnMeepleAction princessAction = (ReturnMeepleAction) state.getPlayerActions()
-                    .getActions().find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == ReturnMeepleSource.PRINCESS)
+                    .getActions().find(a -> a instanceof ReturnMeepleAction && ((ReturnMeepleAction) a).getSource() == msg.getSource())
                     .getOrElseThrow(() -> new IllegalArgumentException("Return meeple is not allowed"));
                 if (princessAction.getOptions().contains(ptr)) {
-                    state = state.addFlag(Flag.PRINCESS_USED);
+                    state = state.addFlag(Flag.NO_PHANTOM);
                 } else {
-                    throw new IllegalArgumentException("Pointer doesn't match princess action");
+                    throw new IllegalArgumentException("Pointer doesn't match return action");
                 }
                 break;
             case FESTIVAL:
@@ -147,19 +152,36 @@ public class ActionPhase extends AbstractActionPhase {
         if (assignAbbotScore != null) {
             PointsExpression points = assignAbbotScore.getStructurePoints(state, false);
             ReceivedPoints rp = new ReceivedPoints(points, meeple.getPlayer(), ptr.asFeaturePointer());
-            state = (new AddPoints(meeple.getPlayer(), points.getPoints())).apply(state);
-            state = state.appendEvent(new ScoreEvent(rp, false, false));
+            state = (new AddPoints(rp, false)).apply(state);
         }
+
+        return next(state);
+    }
+
+    @PhaseMessageHandler
+    public StepResult handleScoreAcrobatsMessage(GameState state, ScoreAcrobatsMessage msg) {
+    	FeaturePointer fp = msg.getPointer();
+
+    	state.getPlayerActions()
+              .getActions().find(a -> a instanceof ScoreAcrobatsAction && ((ScoreAcrobatsAction) a).getOptions().contains(fp))
+              .getOrElseThrow(() -> new IllegalArgumentException("Invalid SCORE_ACROBATS"));
+
+    	AcrobatsCapability acrobatsCap = state.getCapabilities().get(AcrobatsCapability.class);
+    	state = acrobatsCap.scoreAcrobats(state, (Acrobats) state.getFeature(fp), true);
+        state = clearActions(state);
 
         return next(state);
     }
 
     private StepResult handlePlaceTower(GameState state, PlaceTokenMessage msg) {
         FeaturePointer ptr = (FeaturePointer) msg.getPointer();
-        Tower tower = (Tower) state.getFeatureMap().get(ptr).getOrElseThrow(() -> new IllegalArgumentException("No tower"));
+        Tower tower = (Tower) state.getFeature(ptr);
+        if (tower == null) {
+            new IllegalArgumentException("No tower");
+        }
         tower = tower.increaseHeight();
 
-        state = state.setFeatureMap(state.getFeatureMap().put(ptr, tower));
+        state = state.putFeature(ptr, tower);
         state = state.appendEvent(new TokenPlacedEvent(
             PlayEventMeta.createWithActivePlayer(state), TowerToken.TOWER_PIECE, ptr)
         );

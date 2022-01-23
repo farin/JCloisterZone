@@ -9,13 +9,13 @@ import com.jcloisterzone.event.MeepleDeployed;
 import com.jcloisterzone.feature.Quarter;
 import com.jcloisterzone.figure.neutral.Count;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.MoveNeutralFigure;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 

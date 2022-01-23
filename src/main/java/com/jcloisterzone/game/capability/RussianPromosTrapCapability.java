@@ -12,7 +12,6 @@ import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.feature.*;
-import com.jcloisterzone.figure.Abbot;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.Capability;
@@ -21,24 +20,21 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.ReturnMeepleMessage;
 import com.jcloisterzone.reducers.AddPoints;
 import com.jcloisterzone.reducers.DeployMeeple;
-import io.vavr.Predicates;
-import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.List;
-import io.vavr.collection.Vector;
 import org.w3c.dom.Element;
 
 public class RussianPromosTrapCapability extends Capability<Void> {
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "razboynik").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "razboynik").isEmpty()) {
             SoloveiRazboynik razboynik = new SoloveiRazboynik();
             tile = tile.setInitialFeatures(tile.getInitialFeatures().put(razboynik.getPlace(), razboynik));
         }
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "vodyanoy").isEmpty()) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "vodyanoy").isEmpty()) {
             Vodyanoy vodyanoy = new Vodyanoy();
             tile = tile.setInitialFeatures(tile.getInitialFeatures().put(vodyanoy.getPlace(), vodyanoy));
         }
@@ -47,7 +43,7 @@ public class RussianPromosTrapCapability extends Capability<Void> {
 
     @Override
     public boolean isMeepleDeploymentAllowed(GameState state, Position pos) {
-        return !state.getPlacedTile(pos).getTile().getInitialFeatures().keySet().filter(fp -> fp.getFeature().equals(Vodyanoy.class)).isEmpty();
+        return state.getPlacedTile(pos).getTile().getInitialFeatures().keySet().filter(fp -> fp.getFeature().equals(Vodyanoy.class)).isEmpty();
     }
 
     @Override
@@ -55,11 +51,12 @@ public class RussianPromosTrapCapability extends Capability<Void> {
         ActionsState actions = state.getPlayerActions();
         HashSet places = HashSet.empty();
         Player active = state.getActivePlayer();
+        Position placeTilePos = state.getLastPlaced().getPosition();
         for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
             Meeple meeple = t._1;
             FeaturePointer fp = t._2;
             Feature feature = state.getFeature(fp);
-            if (meeple.getPlayer().equals(active) && (feature instanceof SoloveiRazboynik || feature instanceof Vodyanoy)) {
+            if (meeple.getPlayer().equals(active) && !fp.getPosition().equals(placeTilePos) && (feature instanceof SoloveiRazboynik || feature instanceof Vodyanoy)) {
                 places = places.add(new MeeplePointer(fp, meeple.getId()));
             }
         }
@@ -85,12 +82,11 @@ public class RussianPromosTrapCapability extends Capability<Void> {
                 Player player = t._1;
                 int followersCount = t._2;
                 PointsExpression expr = new PointsExpression( "vodyanoy", new ExprItem(followersCount, "meeples", -2 * followersCount));
-                state = (new AddPoints(player, expr.getPoints())).apply(state);
                 receivedPoints = receivedPoints.append(new ScoreEvent.ReceivedPoints(expr, player, vodyanoy.getSampleFollower2(state, player)._2));
             }
 
             if (!receivedPoints.isEmpty()) {
-                state = state.appendEvent(new ScoreEvent(receivedPoints, true, true));
+                state = (new AddPoints(receivedPoints, true, true)).apply(state);
             }
         }
         return state;
@@ -103,9 +99,9 @@ public class RussianPromosTrapCapability extends Capability<Void> {
         for (Feature feature : state.getFeatures()) {
             if (feature instanceof SoloveiRazboynik) {
                 Position pos = feature.getPlaces().get().getPosition();
-                Road road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Road.class, Location.WE)).getOrNull();
+                Road road = (Road) state.getFeature(new FeaturePointer(pos, Road.class, Location.WE));
                 if (road == null) {
-                    road = (Road) state.getFeatureMap().get(new FeaturePointer(pos, Road.class, Location.NS)).getOrNull();
+                    road = (Road) state.getFeature(new FeaturePointer(pos, Road.class, Location.NS));
                 }
                 FeaturePointer trap = new FeaturePointer(pos, SoloveiRazboynik.class, Location.I);
                 for (Tuple2<Follower, FeaturePointer> t : road.getFollowers2(state)) {

@@ -26,8 +26,8 @@ public class MageAndWitchCapability extends Capability<Void> {
     }
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "mage").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "mage").isEmpty()) {
            tile = tile.addTileModifier(MAGE_TRIGGER);
         }
         return tile;

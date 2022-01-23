@@ -118,10 +118,11 @@ public class PlacedTile implements Serializable {
      * @return the features of the tile at the given location
      */
     public Tuple2<FeaturePointer, Feature> getInitialFeaturePartOf(Location loc) {
-        Location initialLoc = loc.rotateCCW(getRotation());
+        Location initialLoc = loc.rotateCCW(rotation);
         return tile
             .getInitialFeatures()
             .find(t -> initialLoc.isPartOf(t._1.getLocation()))
+            .map(t -> t.map1(l -> l.rotateCW(rotation)))
             .getOrNull();
     }
 

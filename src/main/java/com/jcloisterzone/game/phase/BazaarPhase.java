@@ -9,7 +9,6 @@ import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.TileAuctionedEvent;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
@@ -17,11 +16,12 @@ import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
-import com.jcloisterzone.reducers.AddPoints;
 import com.jcloisterzone.io.message.BazaarBidMessage;
 import com.jcloisterzone.io.message.BazaarBuyOrSellMessage;
 import com.jcloisterzone.io.message.BazaarBuyOrSellMessage.BuyOrSellOption;
 import com.jcloisterzone.io.message.PassMessage;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.AddPointsSilently;
 import io.vavr.Tuple2;
 import io.vavr.collection.Queue;
 
@@ -231,9 +231,9 @@ public class BazaarPhase extends Phase {
         assert !pSelecting.equals(pBidding) || option == BuyOrSellOption.BUY; //if same, buy flag is expected
         if (option == BuyOrSellOption.SELL) points *= -1;
 
-        state = (new AddPoints(pSelecting, -points)).apply(state);
+        state = (new AddPointsSilently(pSelecting, -points)).apply(state);
         if (!pSelecting.equals(pBidding)) {
-            state = (new AddPoints(pBidding, points)).apply(state);
+            state = (new AddPointsSilently(pBidding, points)).apply(state);
         }
 
         bi = bi.setOwner(option == BuyOrSellOption.BUY ? pSelecting : pBidding);

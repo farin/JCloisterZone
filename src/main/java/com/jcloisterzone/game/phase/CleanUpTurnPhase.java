@@ -2,12 +2,12 @@ package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.board.TilePack;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.AbbeyCapability;
 import com.jcloisterzone.game.capability.BazaarCapability;
 import com.jcloisterzone.game.capability.BazaarCapabilityModel;
 import com.jcloisterzone.game.capability.BazaarItem;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.reducers.SetNextPlayer;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Queue;

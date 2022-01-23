@@ -4,7 +4,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.TokenReceivedEvent;
 import com.jcloisterzone.feature.City;
@@ -21,7 +20,6 @@ import com.jcloisterzone.reducers.AddPoints;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
-import org.apache.commons.math3.analysis.function.Exp;
 
 public final class KingCapability extends Capability<Void> {
 
@@ -44,9 +42,8 @@ public final class KingCapability extends Capability<Void> {
         if (state.getStringRule(Rule.KING_AND_ROBBER_SCORING).equals("continuously") && completedCitiesThisTurn > 0) {
             Player currentHolder = state.getPlayers().getPlayerWithToken(BiggestFeatureAward.KING);
             if (currentHolder != null) {
-                state = (new AddPoints(currentHolder, completedCitiesThisTurn)).apply(state);
                 ReceivedPoints rp = new ReceivedPoints(new PointsExpression("king", new ExprItem(completedCitiesThisTurn, "cities", completedCitiesThisTurn)), currentHolder, null);
-                state = state.appendEvent(new ScoreEvent(rp, false, false));
+                state = (new AddPoints(rp, false)).apply(state);
             }
         }
 
@@ -97,9 +94,9 @@ public final class KingCapability extends Capability<Void> {
             points = countCompletedCities(state);
             count = points;
         }
-        state = (new AddPoints(player, points)).apply(state);
+
         ReceivedPoints rp = new ReceivedPoints(new PointsExpression(exprName, new ExprItem(count, itemName, points)), player, null);
-        state = state.appendEvent(new ScoreEvent(rp, false, true));
+        state = (new AddPoints(rp, false, true)).apply(state);
         return state;
     }
 

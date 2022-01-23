@@ -7,8 +7,6 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import io.vavr.collection.List;
 import io.vavr.collection.Set;
 
-import java.lang.reflect.Method;
-
 public interface Feature {
 
     List<FeaturePointer> getPlaces();
@@ -16,14 +14,5 @@ public interface Feature {
 
     default Set<Position> getTilePositions() {
         return getPlaces().map(fp -> fp.getPosition()).toSet();
-    }
-
-    static String getLocalizedNamefor(Class<? extends Feature> feature) {
-        try {
-            Method m = feature.getMethod("name");
-            return (String) m.invoke(null);
-        } catch (Exception e) {
-            return feature.getSimpleName();
-        }
     }
 }

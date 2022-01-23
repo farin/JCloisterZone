@@ -2,7 +2,6 @@ package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.engine.Game;
 import com.jcloisterzone.event.MeepleReturned;
 import com.jcloisterzone.event.PlayEvent;
 import com.jcloisterzone.feature.Structure;

@@ -28,11 +28,11 @@ public class DragonCapability extends Capability<Vector<Position>> {
     public static final String TILE_GROUP_DRAGON = "dragon";
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "volcano").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "volcano").isEmpty()) {
             tile = tile.addTileModifier(VOLCANO);
         }
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "dragon").isEmpty()) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "dragon").isEmpty()) {
             tile = tile.addTileModifier(DRAGON_TRIGGER);
         }
         return tile;

@@ -15,8 +15,8 @@ public class VineyardCapability extends Capability<Void> {
 	public static final TileModifier VINEYARD = new TileModifier("Vineyard");
 
 	@Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "vineyard").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "vineyard").isEmpty()) {
             tile = tile.addTileModifier(VINEYARD);
         }
         return tile;

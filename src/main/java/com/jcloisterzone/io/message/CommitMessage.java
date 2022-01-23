@@ -3,21 +3,20 @@ package com.jcloisterzone.io.message;
 import com.jcloisterzone.io.MessageCommand;
 
 @MessageCommand("COMMIT")
-public class CommitMessage extends AbstractMessage implements ReplayableMessage, SaltMessage {
+public class CommitMessage extends AbstractMessage implements ReplayableMessage, RandomChangingMessage {
 
-    private String salt;
-
+    private Double random;
 
     public CommitMessage() {
     }
 
     @Override
-    public String getSalt() {
-        return salt;
+    public Double getRandom() {
+        return random;
     }
 
     @Override
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setRandom(Double random) {
+        this.random = random;
     }
 }

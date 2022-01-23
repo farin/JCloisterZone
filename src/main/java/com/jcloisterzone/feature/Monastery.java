@@ -88,7 +88,7 @@ public class Monastery extends TileFeature implements Monastic, ModifiedFeature<
     public Stream<Tuple2<Meeple, FeaturePointer>> getMeeplesIncludingSpecialMonastery2(GameState state) {
         if (isSpecialMonastery(state)) {
             FeaturePointer place = places.get();
-            Set<FeaturePointer> fps = HashSet.of(place, new FeaturePointer(place.getPosition(), Monastery.class, Location.MONASTERY_AS_ABBOT));
+            Set<FeaturePointer> fps = HashSet.of(place, new FeaturePointer(place.getPosition(), Monastery.class, Location.AS_ABBOT));
             return Stream.ofAll(state.getDeployedMeeples()).filter(t -> fps.contains(t._2));
         }
         return getMeeples2(state);
@@ -102,7 +102,7 @@ public class Monastery extends TileFeature implements Monastic, ModifiedFeature<
     }
 
     public Stream<Tuple2<Follower, FeaturePointer>> getMonasteryFollowers2(GameState state) {
-        FeaturePointer place = getPlace().setLocation(Location.MONASTERY_AS_ABBOT);
+        FeaturePointer place = getPlace().setLocation(Location.AS_ABBOT);
         return Stream.ofAll(state.getDeployedMeeples()).filter(t -> t._1 instanceof Follower && t._2.equals(place)).map(t -> t.map1(f -> (Follower) f));
     }
 
@@ -151,15 +151,11 @@ public class Monastery extends TileFeature implements Monastic, ModifiedFeature<
         }
         String baseName = isShrine(state) ? "shrine" : "monastery";
 
-        scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", adjacent + 1, "completed", completed));
+        scoreScriptedModifiers(state, exprItems, java.util.Map.of("tiles", adjacent + 1, "completed", completed));
         return new PointsExpression(completed ? baseName : baseName + ".incomplete",  List.ofAll(exprItems));
     }
 
     public static String name() {
         return "Monastery";
-    }
-
-    protected Set<FeaturePointer> placeOnBoardNeighboring(Position pos, Rotation rot) {
-        return neighboring.map(fp -> fp.rotateCW(rot).translate(pos));
     }
 }

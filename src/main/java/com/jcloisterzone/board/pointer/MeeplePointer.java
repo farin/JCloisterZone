@@ -48,6 +48,10 @@ public class MeeplePointer implements BoardPointer {
         return meepleId;
     }
 
+    public MeeplePointer setFeaturePointer(FeaturePointer fp) {
+        return new MeeplePointer(fp, meepleId);
+    }
+
     public boolean match(Meeple meeple) {
         if (meeple == null) return false;
         if (meepleId == null) return false;

@@ -22,6 +22,9 @@ public class Pig extends Special {
         if (!feature.isOccupiedBy(state, getPlayer())) {
             return new DeploymentCheckResult("Field is not occupied by follower.");
         }
+        if (feature.getSpecialMeeples(state).find(m -> m instanceof Pig && m.getPlayer().equals(getPlayer())).isDefined()) {
+            return new DeploymentCheckResult("Player's second pig is not allowed");
+        }
         return super.isDeploymentAllowed(state, fp, feature);
     }
 }

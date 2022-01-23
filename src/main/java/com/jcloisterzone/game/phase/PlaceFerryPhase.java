@@ -7,7 +7,6 @@ import com.jcloisterzone.board.Rotation;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Road;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
@@ -15,9 +14,9 @@ import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.reducers.PlaceFerry;
 import com.jcloisterzone.io.message.PlaceTokenMessage;
-import io.vavr.Tuple2;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.PlaceFerry;
 import io.vavr.collection.Set;
 
 public class PlaceFerryPhase extends Phase {

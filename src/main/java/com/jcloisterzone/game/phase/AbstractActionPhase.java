@@ -11,19 +11,20 @@ import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.capability.BardsLuteCapability;
 import com.jcloisterzone.game.capability.BarnCapability;
+import com.jcloisterzone.game.capability.MonasteriesCapability;
 import com.jcloisterzone.game.capability.PortalCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
-import com.jcloisterzone.reducers.DeployMeeple;
-import com.jcloisterzone.reducers.PayRansom;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
 import com.jcloisterzone.io.message.PayRansomMessage;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.DeployMeeple;
+import com.jcloisterzone.reducers.PayRansom;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
 
@@ -53,7 +54,8 @@ public abstract class AbstractActionPhase extends Phase {
 
             Stream<Tuple2<FeaturePointer, Structure>> places = state.getTileFeatures2(pos, Structure.class);
 
-            places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik));
+            // TODO use interface instead
+            places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik) && !(t._2 instanceof Acrobats) && !(t._2 instanceof Circus));
 
             if (isCurrentTile && tile.getTile().hasModifier(BardsLuteCapability.BARDS_LUTE)) {
             	Location placedTokenLocation = state.getCapabilityModel(BardsLuteCapability.class)
@@ -74,8 +76,8 @@ public abstract class AbstractActionPhase extends Phase {
             // Placing as abbot is implemented through virtual MONASTERY location.
             places = places.flatMap(t -> {
                 Structure struct = t._2;
-                if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(state)) {
-                    return List.of(t, new Tuple2<>(t._1.setLocation(Location.MONASTERY_AS_ABBOT), struct));
+                if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(state) && state.hasCapability(MonasteriesCapability.class)) {
+                    return List.of(t, new Tuple2<>(t._1.setLocation(Location.AS_ABBOT), struct));
                 }
                 return List.of(t);
             });
@@ -85,7 +87,7 @@ public abstract class AbstractActionPhase extends Phase {
             if (!allowCompleted) {
                 //exclude completed
                 places = places.filter(t -> {
-                    if (t._1.getLocation() == Location.MONASTERY_AS_ABBOT) {
+                    if (t._1.getLocation() == Location.AS_ABBOT) {
                         // monastery is never completed
                         return true;
                     }
@@ -123,9 +125,11 @@ public abstract class AbstractActionPhase extends Phase {
                 if (struct instanceof Road) {
                     Road road = (Road) struct;
                     if (road.isLabyrinth(state)) {
-                        // current tile musn't be labyrinth center - apply regular ocuupation rule to it
                         Road initial = (Road) state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())._2;
-                        if (!initial.isLabyrinth(state)) {
+                        if (initial.isLabyrinth(state)) {
+                            // current tile is the labyrinth center - check only if center is already occupied
+                            return Stream.ofAll(state.getDeployedMeeples()).find(x -> t._1.equals(x._2)).isEmpty();
+                        } else {
                             // find if there is empty labyrinth segment
                             Set<FeaturePointer> segment = road.findSegmentBorderedBy(state, t._1,
                                     fp -> {
@@ -151,7 +155,7 @@ public abstract class AbstractActionPhase extends Phase {
             .map(t -> t._1)
             .toSet();
     }
-
+ 
     protected Vector<PlayerAction<?>> prepareMeepleActions(GameState state, Vector<Class<? extends Meeple>> meepleTypes) {
         Player player = state.getTurnPlayer();
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
@@ -195,13 +199,17 @@ public abstract class AbstractActionPhase extends Phase {
         FeaturePointer fp = msg.getPointer();
 
         if (fp.getFeature().equals(FlyingMachine.class)) {
-            throw new IllegalArgumentException("Use DEPLOY_FLIER message instead");
+            return handleDeployFlier(state, msg);
         }
-
+        
         Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
         PlacedTile placedTile = state.getLastPlaced();
 
-        //TODO validate placement against players actions
+        MeepleAction action = (MeepleAction) state.getPlayerActions().getActions().find(a -> a instanceof MeepleAction && ((MeepleAction) a).getMeepleType().equals(meeple.getClass())).get();
+        if (action.getOptions().find(p -> fp.equals(p)).isEmpty()) {
+            throw new IllegalArgumentException("Invalid placement");
+        }
+
         if (!fp.getFeature().equals(Tower.class)
             && placedTile.getTile().hasModifier(PortalCapability.MAGIC_PORTAL)
             && !fp.getPosition().equals(placedTile.getPosition())
@@ -230,7 +238,7 @@ public abstract class AbstractActionPhase extends Phase {
         FlyingMachine flyingMachine = (FlyingMachine) state.getFeature(msg.getPointer());
         Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
 
-        int distance = getRandom().nextInt(3) + 1;
+        int distance = getRandom().getNextInt(3) + 1;
         state = state.addFlag(Flag.FLYING_MACHINE_USED);  // flying machine can't be used again by phantom
         state = state.appendEvent(new FlierRollEvent(
             PlayEventMeta.createWithActivePlayer(state), placedTile.getPosition(), distance)

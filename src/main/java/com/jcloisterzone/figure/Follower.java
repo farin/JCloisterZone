@@ -6,7 +6,6 @@ import com.jcloisterzone.feature.Castle;
 import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.state.GameState;
-
 import io.vavr.collection.Array;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;

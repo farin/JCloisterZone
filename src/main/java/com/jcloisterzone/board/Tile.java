@@ -4,7 +4,6 @@ import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.*;
 import io.vavr.Tuple2;
-import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
@@ -25,16 +24,6 @@ public class Tile implements Serializable {
 
     private final Map<FeaturePointer, Feature> initialFeatures; // position for feature pointers are set to Position.ZERO
     private final Set<TileModifier> modifiers;
-
-    /**
-     * Instantiates a new {@code TileDefinition}
-     *
-     * @param id              the identifier of the tile
-     * @param initialFeatures the {@link Feature}s of the tile
-     */
-    public Tile(String id, Map<FeaturePointer, Feature> initialFeatures) {
-        this(id, initialFeatures, HashSet.empty());
-    }
 
     /**
      * Instantiates a new {@code TileDefinition}.
@@ -150,6 +139,8 @@ public class Tile implements Serializable {
         if (tuple._2 instanceof Road) return EdgeType.ROAD;
         if (tuple._2 instanceof City) return EdgeType.CITY;
         if (tuple._2 instanceof River) return EdgeType.RIVER;
+        if (tuple._2 instanceof CityGate) return EdgeType.CITY_GATE;
+        if (tuple._2 instanceof AbbeyEdge) return EdgeType.ANY;
 
         throw new IllegalArgumentException();
     }

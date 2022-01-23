@@ -17,7 +17,7 @@ public class GameSetupMessage extends AbstractMessage implements Message {
     private int players;
     private ArrayList<PlacedTileItem> start;
     private Map<String, Object> gameAnnotations;
-    private String initialSeed;
+    private double initialRandom;
 
     public Map<String, Integer> getSets() {
         return sets;
@@ -47,10 +47,9 @@ public class GameSetupMessage extends AbstractMessage implements Message {
         return gameAnnotations;
     }
 
-    public String getInitialSeed() {
-        return initialSeed;
+    public double getInitialRandom() {
+        return initialRandom;
     }
-
 
     public static class PlacedTileItem {
         private String tile;

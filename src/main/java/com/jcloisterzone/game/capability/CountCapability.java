@@ -39,7 +39,7 @@ public class CountCapability extends Capability<CountCapabilityModel> {
     }
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) throws RemoveTileException {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) throws RemoveTileException {
         if (QUARTER_ACTION_TILE_ID.equals(tile.getId())) {
             Map<FeaturePointer, Feature> features = tile.getInitialFeatures();
             features = features.merge(Location.QUARTERS.toMap(loc -> {

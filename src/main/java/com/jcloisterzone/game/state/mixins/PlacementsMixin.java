@@ -2,6 +2,8 @@ package com.jcloisterzone.game.state.mixins;
 
 import com.jcloisterzone.board.*;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.Acrobats;
+import com.jcloisterzone.feature.CityGate;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.BridgeCapability;
@@ -56,7 +58,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
                 Position adj = pos.add(offset);
                 PlacedTile  adjTile = getPlacedTile(adj);
                 if (adjTile == null) {
-                    return new Tuple2<>(loc, EdgeType.UNKNOWN);
+                    return new Tuple2<>(loc, EdgeType.ANY);
                 } else {
                     EdgeType edge = adjTile.getEdgePattern().at(loc.rev());
                     return new Tuple2<>(loc, edge);
@@ -82,6 +84,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
                         return new PlacementOption(pos, rot, null);
                     }
                     if (playerHasBridge) {
+
                         // check bridges on tile
                         for (Tuple2<EdgePattern, Location> t : baseBridgePatterns) {
                             EdgePattern tileWithBridgePattern = t._1.rotate(rot);
@@ -90,6 +93,7 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
                                 return new PlacementOption(pos, rot, new FeaturePointer(pos, Road.class, bridgeLocation));
                             }
                         }
+
                         // check bridges on adjacent tiles
                         for (Location side : Location.SIDES) {
                             Position adjPos = pos.add(side);
@@ -133,14 +137,14 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
         Location loc = bridgePtr.getLocation();
 
         // for valid placement there must be adjacent place with empty
-        // space on the other side
-        boolean adjExists = loc.splitToSides()
-                .map(l -> getPlacedTile(pos.add(l)))
-                .find(Predicates.isNotNull())
-                .isDefined();
-
-        if (adjExists) {
-            return false;
+        // space or city gate on the other side
+        for (var l: loc.splitToSides()) {
+            var p = pos.add(l);
+            if (getPlacedTile(p) == null) continue;
+            var f = getFeaturePartOf(p, l.rev());
+            if (!(f instanceof CityGate)) {
+                return false;
+            }
         }
 
         // also no bridge must be already placed on adjacent tile
@@ -149,6 +153,12 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
             return false;
         }
 
+        // bridge cannot be placed over Acrobats space with already placed meeple
+        Acrobats acrobats = this.getFeatures(Acrobats.class).filter(a -> a.getPlace().getPosition().equals(pos)).getOrNull();
+        if (acrobats != null && acrobats.isOccupied((GameState) this)) {
+            return false;
+        }
+        
         //and bridge must be legal on tile
         PlacedTile placedTile = getPlacedTile(pos);
         return placedTile.getEdgePattern().isBridgeAllowed(loc);
@@ -156,7 +166,6 @@ public interface PlacementsMixin extends BoardMixin, PlayersMixin, CapabilitiesM
 
 
     // Helper methods
-
     class _This {
         private static Vector<Tuple2<EdgePattern, Location>> getBridgePatterns(EdgePattern basePattern) {
             Vector<Tuple2<EdgePattern, Location>> patterns = Vector.empty();

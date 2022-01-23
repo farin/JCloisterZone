@@ -13,16 +13,17 @@ import com.jcloisterzone.figure.DeploymentCheckResult;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Wagon;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Rule;
+import com.jcloisterzone.game.capability.MonasteriesCapability;
 import com.jcloisterzone.game.capability.RussianPromosTrapCapability;
 import com.jcloisterzone.game.capability.WagonCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.CommitMessage;
-import com.jcloisterzone.reducers.DeployMeeple;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
 import com.jcloisterzone.io.message.PassMessage;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.DeployMeeple;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.collection.Queue;
@@ -96,8 +97,8 @@ public class WagonPhase extends Phase {
                         })
                         .flatMap(t -> {
                             Structure struct = t._2;
-                            if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(_state)) {
-                                return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Monastery.class, Location.MONASTERY_AS_ABBOT), struct));
+                            if (struct instanceof Monastery && ((Monastery)struct).isSpecialMonastery(_state) && _state.hasCapability(MonasteriesCapability.class)) {
+                                return List.of(t, new Tuple2<>(new FeaturePointer(t._1.getPosition(), Monastery.class, Location.AS_ABBOT), struct));
                             }
                             return List.of(t);
                         })
@@ -169,7 +170,11 @@ public class WagonPhase extends Phase {
         if (!(m instanceof Wagon)) {
             throw new IllegalArgumentException("Invalid follower");
         }
-        //TODO validate against players actions
+
+        MeepleAction action = (MeepleAction) state.getPlayerActions().getActions().find(a -> a instanceof MeepleAction && ((MeepleAction) a).getMeepleType().equals(Wagon.class)).get();
+        if (action.getOptions().find(p -> fp.equals(p)).isEmpty()) {
+            throw new IllegalArgumentException("Invalid placement");
+        }
 
         state = (new DeployMeeple(m, fp)).apply(state);
 

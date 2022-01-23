@@ -15,8 +15,8 @@ public class HillCapability extends Capability<Void> {
 	public static final TileModifier HILL = new TileModifier("Hill");
 
 	@Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "hill").isEmpty()) {
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "hill").isEmpty()) {
             tile = tile.addTileModifier(HILL);
         }
         return tile;

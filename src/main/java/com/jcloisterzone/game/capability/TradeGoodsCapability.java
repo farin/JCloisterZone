@@ -4,7 +4,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.TokenReceivedEvent;
 import com.jcloisterzone.feature.City;
@@ -99,12 +98,11 @@ public class TradeGoodsCapability extends Capability<Void> {
             }
             List<ReceivedPoints> pts = List.empty();
             for (Player player: hiPlayers) {
-                state = (new AddPoints(player, RESOURCE_POINTS)).apply(state);
                 PointsExpression expr = new PointsExpression("trade-goods", new ExprItem("trade-goods." + tr.name(), RESOURCE_POINTS));
                 pts = pts.append(new ReceivedPoints(expr, player, null));
             }
             if (!pts.isEmpty()) {
-                state = state.appendEvent(new ScoreEvent(pts, false, true));
+                state = (new AddPoints(pts, false, true)).apply(state);
             }
         }
         return state;
@@ -113,7 +111,7 @@ public class TradeGoodsCapability extends Capability<Void> {
     public static class TradeGoodsModifier extends FeatureModifier<Map<TradeGoods, Integer>> {
 
         public TradeGoodsModifier() {
-            super("city[resource]", new GameElementQuery("trade-goods"));
+            super("city[resource]", new GameElementQuery("traders"));
         }
 
         @Override

@@ -4,12 +4,15 @@ import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.feature.AbbeyEdge;
 import com.jcloisterzone.feature.Monastery;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.HashMap;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.List;
 
 
 /**
@@ -32,9 +35,13 @@ public class AbbeyCapability extends Capability<Integer> {
         HashMap<FeaturePointer, Feature> features = io.vavr.collection.HashMap.of(
             new FeaturePointer(Position.ZERO, Monastery.class, Location.I), new Monastery(HashMap.empty())
         );
-        ABBEY_TILE = new Tile(ABBEY_TILE_ID, features);
-    }
+        for (Location side : Location.SIDES) {
+            FeaturePointer fp = new FeaturePointer(Position.ZERO, AbbeyEdge.class, side);
+            features = features.put(fp, new AbbeyEdge(List.of(fp)));
+        }
 
+        ABBEY_TILE = new Tile(ABBEY_TILE_ID, features, HashSet.empty());
+    }
 
     @Override
     public GameState onStartGame(GameState state) {

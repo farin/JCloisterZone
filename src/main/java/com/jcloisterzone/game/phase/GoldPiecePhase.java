@@ -4,7 +4,6 @@ import com.jcloisterzone.action.GoldPieceAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.TokenPlacedEvent;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.GoldminesCapability;
 import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
@@ -12,6 +11,7 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.io.message.PlaceTokenMessage;
+import com.jcloisterzone.random.RandomGenerator;
 import io.vavr.collection.Set;
 
 public class GoldPiecePhase extends Phase {

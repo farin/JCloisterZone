@@ -21,7 +21,7 @@ public enum Rule {
     TUNNELIZE_OTHER_EXPANSIONS("tunnelize-other-expansions", Boolean.class, null),
     MORE_TUNNEL_TOKENS("more-tunnel-tokens", String.class, new Object[] { "3/2", "2/1", "1/1" }),
     FESTIVAL_RETURN("festival-return", String.class, new Object[] { "meeple", "follower" }),
-    KEEP_MONASTERIES("keep-monasteries", String.class, new Object[] { "replace", "merge" }),
+    KEEP_MONASTERIES("keep-monasteries", String.class, new Object[] { "replace", "keep" }),
     LABYRINTH_VARIANT("labyrinth-variant", String.class, new Object[] { "basic", "advanced" }),
     LITTLE_BUILDINGS_SCORING("little-buildings-scoring", String.class, new Object[] { "1/1/1", "3/2/1" }),
     KING_AND_ROBBER_SCORING("king-and-robber-scoring", String.class, new Object[] { "default", "10/20", "15/40", "continuously" }),

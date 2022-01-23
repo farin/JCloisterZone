@@ -92,7 +92,7 @@ public final class ShrineCapability extends Capability<Void> {
     private Monastery getMonastery(Tile tile) {
         return (Monastery) tile.getInitialFeatures()
             .map(Tuple2::_2)
-            .filter(Predicates.instanceOf(Monastery.class)) // filter out Yaga hut
+            .filter(Predicates.instanceOf(Monastery.class)) // filter out Yaga hut and null values
             .getOrNull();
     }
 
@@ -102,6 +102,7 @@ public final class ShrineCapability extends Capability<Void> {
             .map(pt -> state.getFeature(
                 new FeaturePointer(pt.getPosition(), Monastery.class, Location.I)
             ))
+            .filter(Predicates.instanceOf(Monastery.class)) // filter out Yaga hut and null values
             .map(f -> (Monastery) f)
             .toArray();
     }

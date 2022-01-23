@@ -4,19 +4,19 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.io.MessageCommand;
 
 @MessageCommand("DEPLOY_MEEPLE")
-public class DeployMeepleMessage extends AbstractMessage implements ReplayableMessage, SaltMessage {
+public class DeployMeepleMessage extends AbstractMessage implements ReplayableMessage, RandomChangingMessage {
 
     private FeaturePointer pointer;
     private String meepleId;
-    private String salt; // salted only for FLYING_MACHINE
+    private Double random; // set only for FLYING_MACHINE
 
     public DeployMeepleMessage() {
     }
 
-    public DeployMeepleMessage(FeaturePointer pointer, String meepleId, String salt) {
+    public DeployMeepleMessage(FeaturePointer pointer, String meepleId, Double random) {
         this.pointer = pointer;
         this.meepleId = meepleId;
-        this.salt = salt;
+        this.random = random;
     }
 
     public DeployMeepleMessage(FeaturePointer pointer, String meepleId) {
@@ -40,12 +40,12 @@ public class DeployMeepleMessage extends AbstractMessage implements ReplayableMe
     }
 
     @Override
-    public String getSalt() {
-        return salt;
+    public Double getRandom() {
+        return random;
     }
 
     @Override
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setRandom(Double random) {
+        this.random = random;
     }
 }

@@ -36,8 +36,8 @@ public class CornCircleCapability extends Capability<CornCircleOption> {
 	private static final CornCircleModifier CORN_CIRCLE_FIELD = new CornCircleModifier(Field.class);
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        Vector<Element> circleEl = XMLUtils.getElementStreamByTagName(tileElements, "corn-circle").toVector();
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        Vector<Element> circleEl = XMLUtils.getElementStreamByTagName(tileElement, "corn-circle").toVector();
 		if (circleEl.size() == 0) {
 			return tile;
 		}

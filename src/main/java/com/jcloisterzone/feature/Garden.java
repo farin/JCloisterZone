@@ -26,14 +26,14 @@ public class Garden extends TileFeature implements Monastic {
     }
 
     @Override
-    public Garden setNeighboring(Set<FeaturePointer> neighboring) {
-        if (this.neighboring == neighboring) return this;
-        return new Garden(places, neighboring);
+    public Set<FeaturePointer> getNeighboring() {
+        return neighboring;
     }
 
     @Override
-    public Set<FeaturePointer> getNeighboring() {
-        return neighboring;
+    public Garden setNeighboring(Set<FeaturePointer> neighboring) {
+        if (this.neighboring == neighboring) return this;
+        return new Garden(places, neighboring);
     }
 
     @Override
@@ -51,9 +51,5 @@ public class Garden extends TileFeature implements Monastic {
 
     public static String name() {
         return "Garden";
-    }
-
-    protected Set<FeaturePointer> placeOnBoardNeighboring(Position pos, Rotation rot) {
-        return neighboring.map(fp -> fp.rotateCW(rot).translate(pos));
     }
 }

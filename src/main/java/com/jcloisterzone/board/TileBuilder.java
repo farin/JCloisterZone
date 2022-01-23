@@ -4,6 +4,7 @@ import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.capability.WatchtowerCapability;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
@@ -26,14 +27,15 @@ public class TileBuilder {
     protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final FeatureModifier[] MONASTERY_MODIFIERS = new FeatureModifier[] { Monastery.SPECIAL_MONASTERY, Monastery.SHRINE, Monastery.CHURCH };
-    private static final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.CATHEDRAL, City.PRINCESS, City.BESIEGED, City.DARMSTADTIUM };
-    private static final FeatureModifier[] ROAD_MODIFIERS = new FeatureModifier[] { Road.INN, Road.LABYRINTH };
+    private static final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.CATHEDRAL, City.PRINCESS, City.BESIEGED, City.DARMSTADTIUM, City.POINTS_MODIFIER };
+    private static final FeatureModifier[] ROAD_MODIFIERS = new FeatureModifier[] { Road.INN, Road.LABYRINTH, Road.ROBBERS_SON };
 
     private java.util.List<FeatureModifier> externalModifiers;
     private java.util.Map<String, java.util.List<FeatureModifier>> modifiersByType;
 
     private java.util.Map<FeaturePointer, Feature> features;
     private java.util.List<Tuple3<ShortEdge, Location, FeaturePointer>> multiEdges; //Edge, edge location, target feature (which is declared without edge)
+    private java.util.Map<String, java.util.List<FeaturePointer>> neighbouring;
     private String tileId;
 
     private GameState state;
@@ -67,39 +69,54 @@ public class TileBuilder {
         return externalModifiers;
     }
 
-    public Tile createTile(String tileId, Vector<Element> tileElements, boolean isTunnelActive) {
+    public Tile createTile(String tileId, Element tileElement, boolean isTunnelActive) {
 
         features = new java.util.HashMap<>();
         multiEdges = new java.util.ArrayList<>();
+        neighbouring = new java.util.HashMap<>();
+        Set<TileModifier> tileModifiers = HashSet.empty();
         this.tileId = tileId;
 
         logger.debug("Creating " + tileId);
 
-        for (Element xml : tileElements) {
-            NodeList nl;
-            nl = xml.getElementsByTagName("monastery");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processMonasteryElement((Element) nl.item(i));
-            }
-            nl = xml.getElementsByTagName("road");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processRoadElement((Element) nl.item(i), isTunnelActive);
-            }
-            nl = xml.getElementsByTagName("city");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processCityElement((Element) nl.item(i));
-            }
-            nl = xml.getElementsByTagName("field");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processFieldElement((Element) nl.item(i));
-            }
-            nl = xml.getElementsByTagName("tower");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processTowerElement((Element) nl.item(i));
-            }
-            nl = xml.getElementsByTagName("river");
-            for (int i = 0; i < nl.getLength(); i++) {
-                processRiverElement((Element) nl.item(i));
+
+        NodeList nl = tileElement.getChildNodes();
+        for (int i = 0; i < nl.getLength(); i++) {
+            if (!(nl.item(i) instanceof Element)) continue;
+            Element el = (Element) nl.item(i);
+            switch (el.getTagName()) {
+                case "monastery":
+                    processMonasteryElement(el);
+                    break;
+                case "road":
+                    processRoadElement(el, isTunnelActive);
+                    break;
+                case "city":
+                    processCityElement(el);
+                    break;
+                case "field":
+                    processFieldElement(el);
+                    break;
+                case "river":
+                    processRiverElement(el);
+                    break;
+                case "tower":
+                    initFeature(el, new Tower());
+                    break;
+                case "yaga-hut":
+                    initFeature(el, new YagaHut());
+                    break;
+                case "watchtower":
+                    tileModifiers = tileModifiers.add(new WatchtowerCapability.WatchtowerModifier(el.getAttribute("bonus")));
+                    break;
+                case "circus":
+                    // init feature even if capability is not enabled, because of ringmaster scoring
+                    initFeature(el, new Circus());
+                    break;
+                case "acrobats":
+                    // init feature even if capability is not enabled, because of ringmaster scoring
+                    initFeature(el, new Acrobats());
+                    break;
             }
         }
 
@@ -123,8 +140,17 @@ public class TileBuilder {
         	features.put(matched.getKey(), target);
         }
 
+        for (var _fps : neighbouring.values()) {
+            var fps = List.ofAll(_fps);
+            for (FeaturePointer fp : fps) {
+                NeighbouringFeature feature = (NeighbouringFeature) features.get(fp);
+                feature = feature.setNeighboring(feature.getNeighboring().addAll(fps.remove(fp)));
+                features.put(fp, feature);
+            }
+        }
+
         io.vavr.collection.HashMap<FeaturePointer, Feature> _features = io.vavr.collection.HashMap.ofAll(features);
-        Tile tileDef = new Tile(tileId, _features);
+        Tile tileDef = new Tile(tileId, _features, tileModifiers);
 
         features = null;
         this.tileId = null;
@@ -132,7 +158,7 @@ public class TileBuilder {
         return tileDef;
     }
 
-    public Feature initFeature(String tileId, Feature feature, Element xml) {
+    public void initFeature(Element xml, Feature feature) {
         if (feature instanceof Field && tileId.startsWith("CO/")) {
             //this is not part of Count capability because it is integral behaviour valid also when capability is off
             feature = ((Field) feature).setAdjoiningCityOfCarcassonne(true);
@@ -140,7 +166,23 @@ public class TileBuilder {
         for (Capability<?> cap: state.getCapabilities().toSeq()) {
             feature = cap.initFeature(state, tileId, feature, xml);
         }
-        return feature;
+
+        FeaturePointer fp = feature.getPlaces().get();
+        features.put(fp, feature);
+
+        if (feature instanceof  NeighbouringFeature) {
+            String[] wagonMoves = xml.getAttribute("wagon-move").split("\\s");
+            for (String wagonMove : wagonMoves) {
+                if (wagonMove.length() > 0) {
+                    var connectedFeatures = neighbouring.get(wagonMove);
+                    if (connectedFeatures == null) {
+                        connectedFeatures = new ArrayList<>();
+                        neighbouring.put(wagonMove, connectedFeatures);
+                    }
+                    connectedFeatures.add(fp);
+                }
+            }
+        }
     }
 
     private Map<FeatureModifier<?>, Object> getFeatureModifiers(String featureType, Element el) {
@@ -159,20 +201,11 @@ public class TileBuilder {
     private void processMonasteryElement(Element e) {
         Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("monastery", e);
         Monastery monastery = new Monastery(modifiers);
-        monastery = (Monastery) initFeature(tileId, monastery, e);
-        features.put(new FeaturePointer(Position.ZERO, Monastery.class, Location.I), monastery);
-
-    }
-
-    private void processTowerElement(Element e) {
-        Tower tower = new Tower();
-        tower = (Tower) initFeature(tileId, tower, e);
-        features.put(new FeaturePointer(Position.ZERO, Tower.class, Location.I), tower);
+        initFeature(e, monastery);
     }
 
     private void processRoadElement(Element e, boolean isTunnelActive) {
-        //List<Location> sides = List.ofAll(contentAsLocations(e))
-        Stream<Location> sides = contentAsLocations(e);
+        Stream<Location> sides = contentAsLocations(e).flatMap(loc -> loc.isInner() ? List.of(loc) : loc.splitToSides());
         //using tunnel argument for two cases, tunnel entrance and tunnel underpass - sides.length distinguish it
         if (sides.size() > 1 && isTunnelActive && attributeBoolValue(e, "tunnel")) {
             sides.forEach(loc -> processRoadElement(Stream.of(loc), e, true));
@@ -190,14 +223,12 @@ public class TileBuilder {
         if (isTunnelActive && attributeBoolValue(e, "tunnel")) {
             road = road.setOpenTunnelEnds(HashSet.of(fp));
         }
-
-        road = (Road) initFeature(tileId, road, e);
-        features.put(fp, road);
+        initFeature(e, road);
     }
 
     private void processCityElement(Element e) {
-        Stream<Location> sides = contentAsLocations(e);
-        FeaturePointer place = initFeaturePointer(sides, City.class);
+        Stream<Location> sides = contentAsLocations(e).flatMap(loc -> loc.isInner() ? List.of(loc) : loc.splitToSides());
+        FeaturePointer fp = initFeaturePointer(sides, City.class);
         Set<Edge> openEdges = initOpenEdges(sides);
 
         if (e.hasAttribute("multi-edge")) {
@@ -206,35 +237,32 @@ public class TileBuilder {
         		throw new IllegalArgumentException("Multi edge must be side location");
         	}
         	ShortEdge multiEdge = new ShortEdge(Position.ZERO, multiEdgeLoc);
-        	multiEdges.add(new Tuple3<ShortEdge, Location, FeaturePointer>(multiEdge, multiEdgeLoc, place));
+        	multiEdges.add(new Tuple3<ShortEdge, Location, FeaturePointer>(multiEdge, multiEdgeLoc, fp));
         	openEdges = openEdges.add(multiEdge);
         }
 
         Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("city", e);
-        City city = new City(
-            List.of(place),
-            openEdges, modifiers
-        );
+        City city = new City(List.of(fp), openEdges, modifiers);
+        initFeature(e, city);
 
-        city = (City) initFeature(tileId, city, e);
-        features.put(place, city);
+        if (e.hasAttribute("city-gate")) {
+            attrAsLocations(e, "city-gate").forEach(loc -> {
+                assert loc.isEdge();
+                FeaturePointer gateFp = new FeaturePointer(Position.ZERO, CityGate.class, loc);
+                initFeature(null, new CityGate(List.of(gateFp), fp));
+            });
+        }
     }
 
     private void processRiverElement(Element e) {
         Stream<Location> sides = contentAsLocations(e);
-        FeaturePointer place = initFeaturePointer(sides, River.class);
-
-        River river = new River(
-            List.of(place)
-        );
-
-        river = (River) initFeature(tileId, river, e);
-        features.put(place, river);
+        FeaturePointer fp = initFeaturePointer(sides, River.class);
+        initFeature(e, new River(List.of(fp)));
     }
 
     private void processFieldElement(Element e) {
         Stream<Location> sides = contentAsLocations(e);
-        FeaturePointer place = initFeaturePointer(sides, Field.class);
+        FeaturePointer fp = initFeaturePointer(sides, Field.class);
         Set<FeaturePointer> adjoiningCities;
 
         if (e.hasAttribute("city")) {
@@ -244,7 +272,7 @@ public class TileBuilder {
                 for(Entry<FeaturePointer, Feature> entry : features.entrySet()) {
                     if (entry.getValue() instanceof City) {
                         Location loc = entry.getKey().getLocation();
-                        if (partial.isPartOf(loc)) {
+                        if (partial.equals(loc) || partial.isPartOf(loc)) {
                             return loc;
                         }
                     }
@@ -259,10 +287,8 @@ public class TileBuilder {
         }
 
         Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("field", e);
-        Field field = new Field(List.of(place),  adjoiningCities,  false, modifiers);
-
-        field = (Field) initFeature(tileId, field, e);
-        features.put(place, field);
+        Field field = new Field(List.of(fp),  adjoiningCities,  false, modifiers);
+        initFeature(e, field);
     }
 
     private FeaturePointer initFeaturePointer(Stream<Location> sides, Class<? extends Feature> clazz) {

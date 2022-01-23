@@ -12,7 +12,7 @@ public abstract class FeatureModifier<T> {
 
     public FeatureModifier(String selector, SetupQuery enabledBy) {
         this.selector = selector;
-        this.name = selector.replaceAll("\\w+\\[(\\w+)\\]", "$1");
+        this.name = selector.replaceAll("\\w+\\[([-\\w]+)\\]", "$1");
         this.enabledBy = enabledBy;
     }
 
@@ -39,6 +39,12 @@ public abstract class FeatureModifier<T> {
     @Override
     public String toString() {
         return name;
+    }
+
+    // is modifier requiried on both merge features
+    // if not, modifieries is simply copied when exists only on one side. Stripped if is exclusive.
+    public boolean isExclusive(T a) {
+        return false;
     }
 
     public abstract T mergeValues(T a, T b);

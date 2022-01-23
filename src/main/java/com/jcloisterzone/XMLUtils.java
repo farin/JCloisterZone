@@ -1,25 +1,21 @@
 package com.jcloisterzone;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.jcloisterzone.board.Location;
+import io.vavr.Predicates;
+import io.vavr.collection.Stream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.jcloisterzone.board.Location;
-
-import io.vavr.Predicates;
-import io.vavr.collection.Stream;
-import io.vavr.collection.Vector;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class XMLUtils {
@@ -51,12 +47,12 @@ public class XMLUtils {
         return nodeStream(nl).filter(Predicates.instanceOf(Element.class)).map(node -> (Element) node);
     }
 
-    public static io.vavr.collection.Stream<Element> getChildElementStream(Vector<Element> tileElements) {
-        return Stream.concat(tileElements.map(el -> XMLUtils.elementStream(el.getChildNodes())));
+    public static io.vavr.collection.Stream<Element> getChildElementStream(Element tileElement) {
+        return XMLUtils.elementStream(tileElement.getChildNodes());
     }
 
-    public static io.vavr.collection.Stream<Element> getElementStreamByTagName(Vector<Element> tileElements, String tagName) {
-        return getChildElementStream(tileElements).filter(el -> el.getNodeName().equals(tagName));
+    public static io.vavr.collection.Stream<Element> getElementStreamByTagName(Element tileElement, String tagName) {
+        return getChildElementStream(tileElement).filter(el -> el.getNodeName().equals(tagName));
     }
 
     public static Element getElementByTagName(Element parent, String childName) {
@@ -87,7 +83,11 @@ public class XMLUtils {
     public static boolean attributeBoolValue(Element e, String attr) {
         if (!e.hasAttribute(attr)) return false;
         String val = e.getAttribute(attr);
-        return val.equals("yes") || val.equals("true") || val.equals("1");
+        if (val.equals("true")) return true;
+        if (!val.equals("false")) {
+            throw new IllegalArgumentException("only true/false value is allowed for boolean attribute");
+        }
+        return false;
     }
 
     public static Integer attributeIntValue(Element e, String attr) {

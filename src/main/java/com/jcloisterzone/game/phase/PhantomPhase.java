@@ -5,7 +5,6 @@ import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.figure.Phantom;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.capability.TowerCapability;
 import com.jcloisterzone.game.capability.TunnelCapability;
@@ -13,6 +12,7 @@ import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.PlaceTokenMessage;
+import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.reducers.PlaceTunnel;
 import io.vavr.Predicates;
 import io.vavr.collection.Vector;
@@ -25,7 +25,7 @@ public class PhantomPhase extends AbstractActionPhase {
 
     @Override
     public StepResult enter(GameState state) {
-        if (state.getFlags().contains(Flag.PRINCESS_USED) || state.isPassed()) {
+        if (state.getFlags().contains(Flag.NO_PHANTOM) || state.isPassed()) {
             // The placement of a princess tile with removal of a knight from the city cannot be used as a first
             // "follower move" and be followed by placement of the phantom (e.g. into the now-vacated city).
             // As per the rules for the princess, "if a knight is removed from the city, the player may not deploy or

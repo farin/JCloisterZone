@@ -9,6 +9,11 @@ public class BooleanAllModifier extends BooleanModifier {
     }
 
     @Override
+    public boolean isExclusive(Boolean a) {
+        return true;
+    }
+
+    @Override
     public Boolean mergeValues(Boolean a, Boolean b) {
         return a && b ? true : null; // strip modifier if is not set
     }

@@ -17,21 +17,17 @@ import com.jcloisterzone.io.MessageParser;
 import com.jcloisterzone.io.message.*;
 import com.sampullara.cli.Args;
 import com.sampullara.cli.Argument;
-import io.vavr.Predicates;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Predicate;
 import java.util.jar.Manifest;
 
 public class Engine implements  Runnable {
@@ -51,14 +47,14 @@ public class Engine implements  Runnable {
     private MessageParser parser = new MessageParser();
 
     private Game game;
-    private long initialSeed;
+    private double initialRandom;
 
     private boolean bulk;
 
     private ArrayList<String> tileDefinitions = new ArrayList<>();
 
     public Engine(InputStream in, PrintStream out, PrintStream err, PrintStream log) {
-        this.in = new Scanner(in);
+        this.in = new Scanner(in, "UTF-8");
         this.out = out;
         this.err = err;
         this.log = log;
@@ -80,12 +76,12 @@ public class Engine implements  Runnable {
     }
 
     private Set<Class<? extends Capability<?>>> addCapabilities(
-            Set<Class<? extends Capability<?>>> capabilties, GameSetupMessage setupMsg, String key, Class<? extends Capability<?>> cls) {
+            Set<Class<? extends Capability<?>>> capabilities, GameSetupMessage setupMsg, String key, Class<? extends Capability<?>> cls) {
         Object value = setupMsg.getElements().get(key);
         if (value == null) {
-            return capabilties;
+            return capabilities;
         }
-        return capabilties.add(cls);
+        return capabilities.add(cls);
     }
 
     private GameSetup createSetupFromMessage(GameSetupMessage setupMsg) {
@@ -100,6 +96,7 @@ public class Engine implements  Runnable {
         meeples = addMeeples(meeples, setupMsg, "wagon", Wagon.class);
         meeples = addMeeples(meeples, setupMsg, "mayor", Mayor.class);
         meeples = addMeeples(meeples, setupMsg, "shepherd", Shepherd.class);
+        meeples = addMeeples(meeples, setupMsg, "ringmaster", Ringmaster.class);
 
         Set<Class<? extends Capability<?>>> capabilities = HashSet.empty();
         capabilities = addCapabilities(capabilities, setupMsg,"abbot", AbbotCapability.class);
@@ -108,6 +105,7 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"phantom", PhantomCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"shepherd", SheepCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"wagon", WagonCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"ringmaster", RingmasterCapability.class);
 
         capabilities = addCapabilities(capabilities, setupMsg,"dragon", DragonCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"fairy", FairyCapability.class);
@@ -136,6 +134,8 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"vineyard", VineyardCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"shrine", ShrineCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"festival", FestivalCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"big-top", BigTopCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"acrobats", AcrobatsCapability.class);
 
         capabilities = addCapabilities(capabilities, setupMsg,"river", RiverCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"corn-circle", CornCircleCapability.class);
@@ -144,8 +144,10 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"church", ChurchCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"wind-rose", WindRoseCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"monastery", MonasteriesCapability.class);
-        capabilities = addCapabilities(capabilities, setupMsg,"yaga", YagaCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"russian-trap", RussianPromosTrapCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"watchtower", WatchtowerCapability.class);
+
+        capabilities = addCapabilities(capabilities, setupMsg,"robbers-son", RobbersSonCapability.class);
 
         capabilities = addCapabilities(capabilities, setupMsg,"bards-lute", BardsLuteCapability.class);
         
@@ -175,7 +177,7 @@ public class Engine implements  Runnable {
     private void parseDirective(String line) {
         String[] s = line.split("\\s+", 2);
         var directive = s[0];
-        var value = s[1];
+        var value = s.length > 1 ? s[1] : null;
         switch (directive) {
             case "%bulk":
                 bulk = "on".equals(value);
@@ -192,6 +194,9 @@ public class Engine implements  Runnable {
                 break;
             case "%load":
                 tileDefinitions.add(value);
+                break;
+            case "%state":
+                out.println(gson.toJson(game));
                 break;
             default:
                 err.println("#unknown directive " + line);
@@ -215,12 +220,12 @@ public class Engine implements  Runnable {
         }
 
         GameSetupMessage setupMsg = (GameSetupMessage) parser.fromJson(line);
-        initialSeed = Long.valueOf(setupMsg.getInitialSeed());
+        initialRandom = setupMsg.getInitialRandom();
 
         GameSetup gameSetup = createSetupFromMessage(setupMsg);
         game = new Game(gameSetup);
 
-        GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialSeed);
+        GameStatePhaseReducer phaseReducer = new GameStatePhaseReducer(gameSetup, initialRandom);
         GameStateBuilder builder = new GameStateBuilder(tileDefinitions, gameSetup, setupMsg.getPlayers());
 
         if (setupMsg.getGameAnnotations() != null) {
@@ -262,16 +267,16 @@ public class Engine implements  Runnable {
             Player oldActivePlayer = state.getActivePlayer();
 
             if (msg instanceof ReplayableMessage) {
-                if (msg instanceof SaltMessage) {
-                    SaltMessage saltedMsg = (SaltMessage) msg;
-                    if (saltedMsg.getSalt() != null) {
-                        phaseReducer.getRandom().setSalt(Long.valueOf(saltedMsg.getSalt()));
+                if (msg instanceof RandomChangingMessage) {
+                    RandomChangingMessage rndChangeMsg = (RandomChangingMessage) msg;
+                    if (rndChangeMsg.getRandom() != null) {
+                        phaseReducer.getRandomGanerator().setRandom(rndChangeMsg.getRandom());
                     }
                 }
                 state = phaseReducer.apply(state, msg);
 
                 Player newActivePlayer = state.getActivePlayer();
-                boolean undoAllowed = (!(msg instanceof SaltMessage) || ((SaltMessage) msg).getSalt() == null)
+                boolean undoAllowed = (!(msg instanceof RandomChangingMessage) || ((RandomChangingMessage) msg).getRandom() == null)
                         && newActivePlayer != null
                         && newActivePlayer.equals(oldActivePlayer)
                         && !(msg instanceof DeployMeepleMessage && ((DeployMeepleMessage)msg).getMeepleId().contains("shepherd"))

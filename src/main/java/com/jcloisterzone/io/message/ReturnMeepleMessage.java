@@ -7,7 +7,7 @@ import com.jcloisterzone.io.MessageCommand;
 public class ReturnMeepleMessage extends AbstractMessage implements ReplayableMessage {
 
     public enum ReturnMeepleSource {
-        PRINCESS, SIEGE_ESCAPE, FESTIVAL, CORN_CIRCLE, ABBOT_RETURN, TRAP
+        PRINCESS, SIEGE_ESCAPE, FESTIVAL, CORN_CIRCLE, ABBOT_RETURN, TRAP, ROBBERS_SON
     }
 
     private MeeplePointer pointer;

@@ -1,14 +1,13 @@
 package com.jcloisterzone.reducers;
 
+import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.TokenPlacedEvent;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.game.capability.FerriesCapability;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.state.GameState;
-import io.vavr.Tuple2;
 import io.vavr.collection.List;
 
 public class PlaceFerry implements Reducer {
@@ -31,11 +30,13 @@ public class PlaceFerry implements Reducer {
         Road r2 = ends.get(1);
         if (r1 != r2) {
             Road merged = r1.merge(r2);
-            state = state.mapFeatureMap(m ->
-                merged.getPlaces()
-                    .toMap(fp -> new Tuple2<FeaturePointer, Feature>(fp, merged))
-                    .merge(m)
-            );
+            state = state.mapFeatureMap(m -> {
+                for (var fp : merged.getPlaces()) {
+                    Position pos = fp.getPosition();
+                    m = m.put(pos, m.get(pos).get().put(fp, merged));
+                }
+                return m;
+            });
         }
 
         state = state.appendEvent(

@@ -12,14 +12,17 @@ import com.jcloisterzone.feature.Road;
 import com.jcloisterzone.figure.neutral.Mage;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.figure.neutral.Witch;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.MageAndWitchCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.NeutralFiguresState;
-import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
-import io.vavr.collection.*;
+import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.reducers.MoveNeutralFigure;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Set;
+import io.vavr.collection.Stream;
+import io.vavr.collection.Vector;
 
 public class MageAndWitchPhase extends Phase {
 

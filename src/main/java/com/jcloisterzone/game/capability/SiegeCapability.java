@@ -18,8 +18,8 @@ public final class SiegeCapability extends Capability<Void> {
 	public static final TileModifier SIEGE_ESCAPE_TILE = new TileModifier("SiegeEscapeTile");
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        if (!XMLUtils.getElementStreamByTagName(tileElements, "city")
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (!XMLUtils.getElementStreamByTagName(tileElement, "city")
                 .filter(cityEl -> attributeBoolValue(cityEl, "besieged"))
                 .isEmpty()) {
             tile = tile.addTileModifier(SIEGE_ESCAPE_TILE);

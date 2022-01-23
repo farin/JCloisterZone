@@ -12,7 +12,6 @@ import com.jcloisterzone.io.message.ReplayableMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.lang.reflect.Type;
 
 public final class MessageParser {
@@ -50,7 +49,7 @@ public final class MessageParser {
                 Location loc = context.deserialize(obj.get("location"), Location.class);
                 String featureType = obj.get("feature").getAsString();
                 Class<? extends Feature> feature = null;
-                // TOOD use annotation
+                // TOOD use annotation ?
                 switch (featureType) {
                     case "City": feature = City.class; break;
                     case "Road": feature = Road.class; break;
@@ -64,6 +63,7 @@ public final class MessageParser {
                     case "SoloveiRazboynik": feature = SoloveiRazboynik.class; break;
                     case "FlyingMachine": feature = FlyingMachine.class; break;
                     case "Castle": feature = Castle.class; break;
+                    case "Acrobats": feature = Acrobats.class; break;
                 }
                 return new FeaturePointer(pos, feature, loc);
             }
@@ -163,7 +163,7 @@ public final class MessageParser {
             JsonObject obj = new JsonObject();
             obj.add("position", context.serialize(fp.getPosition()));
             obj.add("location", context.serialize(fp.getLocation()));
-            obj.addProperty("feature", fp.getFeature().getSimpleName());
+            obj.addProperty("feature", fp.getFeature() != null ? fp.getFeature().getSimpleName() : null);
             return obj;
         }
     }

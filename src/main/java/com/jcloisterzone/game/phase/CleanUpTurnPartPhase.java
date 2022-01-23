@@ -3,11 +3,11 @@ package com.jcloisterzone.game.phase;
 import com.jcloisterzone.event.DoubleTurnEvent;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.game.capability.BuilderCapability;
 import com.jcloisterzone.game.capability.BuilderState;
 import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.random.RandomGenerator;
 
 /**
  *  End of turn part. For builder double repeat turn otherwise proceed to real end of turn.
@@ -36,7 +36,7 @@ public class CleanUpTurnPartPhase extends Phase {
         if (!state.getFlags().isEmpty()) {
             state = state.setFlags(state.getFlags()
                 .remove(Flag.PORTAL_USED)
-                .remove(Flag.PRINCESS_USED)
+                .remove(Flag.NO_PHANTOM)
                 .remove(Flag.FLYING_MACHINE_USED)
             );
         }

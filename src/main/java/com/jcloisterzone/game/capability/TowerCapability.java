@@ -4,9 +4,7 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
 import com.jcloisterzone.action.TowerPieceAction;
-import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.pointer.FeaturePointer;
-import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.*;
 import com.jcloisterzone.game.Capability;
@@ -14,7 +12,10 @@ import com.jcloisterzone.game.Token;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
-import io.vavr.collection.*;
+import io.vavr.collection.Array;
+import io.vavr.collection.List;
+import io.vavr.collection.Set;
+import io.vavr.collection.Vector;
 
 /**
  * @model Array<List<String>> - list of captured meeples for each players
@@ -59,16 +60,9 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
             .map(Tuple2::_2)
             .toSet();
 
-        Stream<Tuple2<FeaturePointer, Feature>> openTowersStream = Stream.ofAll(state.getFeatureMap())
-            .filter(t -> (t._2 instanceof Tower))
-            .filter(t -> !occupiedTowers.contains(t._1));
-
-        Set<FeaturePointer> openTowersForPiece = openTowersStream
-            .map(Tuple2::_1).toSet();
-
-        Set<FeaturePointer> openTowersForFollower = openTowersStream
-            .filter(t -> ((Tower)t._2).getHeight() > 0)
-            .map(Tuple2::_1).toSet();
+        Set<Tower> openTowers = state.getFeatures(Tower.class).filter(tower -> tower.getPlaces().toSet().intersect(occupiedTowers).isEmpty()).toSet();
+        Set<FeaturePointer> openTowersForPiece = openTowers.map(Tower::getPlace);
+        Set<FeaturePointer> openTowersForFollower = openTowers.filter(t -> t.getHeight() > 0).map(Tower::getPlace);
 
         ActionsState as = state.getPlayerActions();
 

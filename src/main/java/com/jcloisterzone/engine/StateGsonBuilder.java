@@ -17,7 +17,7 @@ import com.jcloisterzone.game.capability.BardsLuteCapability.BardsLuteToken;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
-import com.jcloisterzone.game.capability.SheepCapability.SheepToken;
+import com.jcloisterzone.game.capability.SheepToken;
 import com.jcloisterzone.game.phase.DragonMovePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.RussianPromosTrapPhase;
@@ -70,6 +70,7 @@ public class StateGsonBuilder {
         builder.registerTypeAdapter(GoldPieceAction.class, new GoldPieceActionSerializer());
         builder.registerTypeAdapter(RemoveMageOrWitchAction.class, new ActionSerializer("RemoveMageOrWitch"));
         builder.registerTypeAdapter(LittleBuildingAction.class, new LittleBuildingActionSerializer());
+        builder.registerTypeAdapter(ScoreAcrobatsAction.class, new SelectFeatureActionSerializer());
         builder.registerTypeAdapter(BardsLuteAction.class, new BardsLuteActionSerializer());
         return builder.create();
     }
@@ -126,7 +127,7 @@ public class StateGsonBuilder {
 
             SheepCapability sheepCap = state.getCapabilities().get(SheepCapability.class);
             if (sheepCap != null) {
-                Map<FeaturePointer, List<SheepToken>> sheepModel = sheepCap.getModel(state);
+                Map<FeaturePointer, List<SheepToken>> sheepModel = sheepCap.getModel(state).getPlacedTokens();
                 JsonObject jsonItem = new JsonObject();
                 JsonArray jsonFlocks = new JsonArray();
                 sheepModel.forEach((fp, tokens) -> {
@@ -282,6 +283,12 @@ public class StateGsonBuilder {
             JsonObject data = new JsonObject();
             data.add("placement", context.serialize(fp));
             neutral.add("count", data);
+        }
+        pos = state.getBigTopDeployment();
+        if (pos != null) {
+            JsonObject data = new JsonObject();
+            data.add("placement", context.serialize(pos));
+            neutral.add("bigtop", data);
         }
         return neutral;
     }
@@ -610,6 +617,7 @@ public class StateGsonBuilder {
         public JsonElement serialize(TilePack state, Type type, JsonSerializationContext jsonSerializationContext) {
             JsonObject json = new JsonObject();
             json.addProperty("size", state.totalSize());
+            json.addProperty("underHills", state.getHiddenUnderHills());
             return json;
         }
     }

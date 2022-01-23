@@ -17,7 +17,7 @@ public class PrincessCapability extends Capability<Void> {
 
     @Override
     public GameState onActionPhaseEntered(GameState state) {
-        if (state.getFlags().contains(Flag.PRINCESS_USED)) {
+        if (state.getFlags().contains(Flag.NO_PHANTOM)) {
             return state;
         }
 

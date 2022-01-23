@@ -1,3 +1,4 @@
+
 # JCloisterZone
 
 JCloisterZone is implementation of a popular board game [Carcassonne](http://www.boardgamegeek.com/boardgame/822/carcassonne).
@@ -18,3 +19,9 @@ JCloisterZone Client app can be found in [farin/JCloisterZone-Client](https://gi
 
 List of supported expansions can found [here](https://github.com/farin/JCloisterZone/tree/master/src/main/resources/tile-definitions).
 
+## Development recipes
+
+Dump features map
+`
+    System.err.println("# features: " + state.getFeatureMap().mapValues(m -> m.toJavaMap()).toJavaMap());
+`

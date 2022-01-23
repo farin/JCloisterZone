@@ -16,8 +16,8 @@ public class FlierCapability extends Capability<Void> {
 	private static final long serialVersionUID = 1L;
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-        Vector<Element> flyingMachineEl = XMLUtils.getElementStreamByTagName(tileElements, "flying-machine").toVector();
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        Vector<Element> flyingMachineEl = XMLUtils.getElementStreamByTagName(tileElement, "flying-machine").toVector();
         if (flyingMachineEl.size() == 0) {
             return tile;
         }

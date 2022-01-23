@@ -4,7 +4,6 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.event.PointsExpression;
-import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.event.TokenReceivedEvent;
 import com.jcloisterzone.feature.Completable;
@@ -43,9 +42,8 @@ public final class RobberCapability extends Capability<Void> {
         if (state.getStringRule(Rule.KING_AND_ROBBER_SCORING).equals("continuously") && completedRoadsThisTurn > 0) {
             Player currentHolder = state.getPlayers().getPlayerWithToken(BiggestFeatureAward.ROBBER);
             if (currentHolder != null) {
-                state = (new AddPoints(currentHolder, completedRoadsThisTurn)).apply(state);
                 ReceivedPoints rp = new ReceivedPoints(new PointsExpression("robber", new ExprItem(completedRoadsThisTurn, "roads", completedRoadsThisTurn)), currentHolder, null);
-                state = state.appendEvent(new ScoreEvent(rp, false, false));
+                state = (new AddPoints(rp, false)).apply(state);
             }
         }
 
@@ -94,9 +92,8 @@ public final class RobberCapability extends Capability<Void> {
             points = countCompletedRoads(state);
             count = points;
         }
-        state = (new AddPoints(player, points)).apply(state);
         ReceivedPoints rp = new ReceivedPoints(new PointsExpression("robber", new ExprItem(count, itemName, points)), player, null);
-        state = state.appendEvent(new ScoreEvent(rp, false, true));
+        state = (new AddPoints(rp, false, true)).apply(state);
         return state;
     }
 
