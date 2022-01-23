@@ -122,20 +122,6 @@ public class ScoringPhase extends Phase {
             }
         }
 
-        if (state.getCapabilities().contains(BardsLuteCapability.class)) {
-            GameState _state = state;
-            List<Feature> tunnelModified = state.getCurrentTurnEvents()
-                .filter(Predicates.instanceOf(TokenPlacedEvent.class))
-                .map(ev -> (TokenPlacedEvent) ev)
-                .filter(ev -> ev.getToken() instanceof Tunnel)
-                .map(ev -> _state.getFeature((FeaturePointer) ev.getPointer()));
-            assert tunnelModified.size() <= 1;
-
-            for (Feature road : tunnelModified) {
-                state = scoreCompleted(state, (Completable) road);
-            }
-        }
-
         Set<Position> neighbourPositions = state.getAdjacentAndDiagonalTiles2(pos)
             .map(pt -> pt._2.getPosition()).toSet();
 

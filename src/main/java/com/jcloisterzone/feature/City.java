@@ -11,7 +11,6 @@ import com.jcloisterzone.feature.modifier.BooleanAnyModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.feature.modifier.IntegerAddModifier;
 import com.jcloisterzone.feature.modifier.IntegerNonMergingModifier;
-import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.BardsLuteCapability;
 import com.jcloisterzone.game.Rule;
 import com.jcloisterzone.game.setup.GameElementQuery;
@@ -119,17 +118,6 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
         boolean tinyCity = false;
         var exprItems = new ArrayList<ExprItem>();
 
-        if (completed) {
-            int bardsNotesCount = 0;
-            BardsLuteCapability bardsLute = state.getCapabilities().get(BardsLuteCapability.class);
-            if (bardsLute != null) {
-                bardsNotesCount = bardsLute.getPlacedTokensCount(state, places);
-                if (bardsNotesCount>0) {
-                    exprItems.add(new ExprItem("bardsnotes", tileCount * bardsNotesCount));
-                }
-	        }
-        }
-
         if (points != null) {
             exprItems.add(new ExprItem(1, "tiles", points));
         } else {
@@ -156,6 +144,17 @@ public class City extends CompletableFeature<City> implements ModifiedFeature<Ci
             }
             if (completed && hasModifier(state, DARMSTADTIUM)) {
                 exprItems.add(new ExprItem("darmstadtium", 3));
+            }
+
+            if (completed) {
+                int bardsNotesCount = 0;
+                BardsLuteCapability bardsLute = state.getCapabilities().get(BardsLuteCapability.class);
+                if (bardsLute != null) {
+                    bardsNotesCount = bardsLute.getPlacedTokensCount(state, places);
+                    if (bardsNotesCount>0) {
+                        exprItems.add(new ExprItem(bardsNotesCount, "bardsnotes", tileCount * bardsNotesCount));
+                    }
+    	        }
             }
 
             scoreScriptedModifiers(state, exprItems, java.util.Map.of("tiles", tileCount, "completed", completed));

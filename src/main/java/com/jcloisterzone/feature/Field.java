@@ -11,6 +11,7 @@ import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.feature.modifier.IntegerAddModifier;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.game.capability.BardsLuteCapability;
 import com.jcloisterzone.game.setup.GameElementQuery;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.*;
@@ -173,6 +174,15 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
             }
             if (pigHerds > 0) {
                 exprItems.add(new ExprItem("pigHerds", scoredObjects)); // do not stack
+            }
+        }
+
+        int bardsNotesCount = 0;
+        BardsLuteCapability bardsLute = state.getCapabilities().get(BardsLuteCapability.class);
+        if (bardsLute != null && scoredObjects > 0) {
+            bardsNotesCount = bardsLute.getPlacedTokensCount(state, places);
+            if (bardsNotesCount>0) {
+                exprItems.add(new ExprItem(bardsNotesCount, "bardsnotes", scoredObjects * bardsNotesCount));
             }
         }
 

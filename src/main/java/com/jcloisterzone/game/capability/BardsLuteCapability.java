@@ -41,12 +41,9 @@ public class BardsLuteCapability extends Capability<HashMap<FeaturePointer,Boole
     }
 
     @Override
-    public Tile initTile(GameState state, Tile tile, Vector<Element> tileElements) {
-
-    	for (Element el : tileElements) {
-            if (el.hasAttribute("bards-lute")) {
-                tile = tile.addTileModifier(BARDS_LUTE);
-            }
+    public Tile initTile(GameState state, Tile tile, Element tileElement) {
+        if (tileElement.hasAttribute("bards-lute")) {
+            tile = tile.addTileModifier(BARDS_LUTE);
         }
 
         return tile;

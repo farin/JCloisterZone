@@ -69,7 +69,7 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
         if (setup.contains(PhantomCapability.class)) next = new PhantomPhase(randomGenerator, next);
         if (setup.contains(RussianPromosTrapCapability.class)) next = new RussianPromosTrapPhase(randomGenerator, next);
         next = actionPhase = new ActionPhase(randomGenerator, next);
-        if (setup.contains(BardsLuteCapability.class)) next =  new BardsLutePhase(random, next);
+        if (setup.contains(BardsLuteCapability.class)) next =  new BardsLutePhase(randomGenerator, next);
         if (setup.contains(MageAndWitchCapability.class)) next =  new MageAndWitchPhase(randomGenerator, next);
         if (setup.contains(GoldminesCapability.class)) next =  new GoldPiecePhase(randomGenerator, next);
         next = tilePhase = new TilePhase(randomGenerator, next);
