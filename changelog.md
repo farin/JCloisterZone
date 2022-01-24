@@ -1,8 +1,15 @@
 # Version history
 
-## upcoming
-
-* Under The Big Top support
+## 5.10.0
+*2022-01-24*
+* Under The Big Top support (uses "simplified" artwork as no C1 tiles exist)
+* allow Shepherd / Band even Farmers rule is off
+* fix Follower move from Quarter to Field at end of game
+* fix Fairy on Tile variant
+* Vodaynoy/Razboynik return can be performed from next turn (not immediately)
+* fix mouse map dragging glitches - sometimes map dragging wasn't stopped when mouse button is released
+* active player colored background in right sidebar works again
+* fix possible crash by mouse over on some scoring events in history
 
 ## 5.9.1
 *2021-12-12*
