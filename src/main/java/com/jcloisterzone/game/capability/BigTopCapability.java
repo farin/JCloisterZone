@@ -9,6 +9,7 @@ import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.BigTop;
 import com.jcloisterzone.game.Capability;
+import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.AddPoints;
 import io.vavr.collection.*;
@@ -59,7 +60,7 @@ public class BigTopCapability extends Capability<Integer> {
 
         for (var t : adjacentMeepleCount) {
             int followers = t._2.size();
-            ExprItem expr = new ExprItem(followers, "meeples", token.points * followers);
+            ExprItem expr = new ExprItem(followers, "bigtop." + token.name(), token.points * followers);
             points = points.append(new ScoreEvent.ReceivedPoints(new PointsExpression("bigtop", expr), t._1, pos));
         }
 
