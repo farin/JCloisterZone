@@ -49,9 +49,9 @@ public class AcrobatsCapability extends Capability<Void> {
             FeaturePointer fp = feature.getPlace();
             if (placedBridges.contains(fp.getPosition())) continue;
 
-            if (meeplesCount == FULL_ACROBATS) {
+            if (meeplesCount >= FULL_ACROBATS) {
                 acrobatsToScore = acrobatsToScore.add(fp);
-            } else {
+            } else if (meeple != null) {
                 Position pos = fp.getPosition();
                 boolean canPlace = hasMagicPortal || Math.abs(currentTilePos.x - pos.x) <= 1 && Math.abs(currentTilePos.y - pos.y) <= 1;
                 if (canPlace) {
