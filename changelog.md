@@ -2,7 +2,7 @@
 
 ## 5.10.1
 * fix: unable to score Acrobats if player has no meeple in supply
-* fix: Ringmaster - allow on top of tower, allows move to City of C.
+* fix: Ringmaster - allow on top of tower, allows move to City of C., interact with Corn Circles
 
 ## 5.10.0
 *2022-01-24*
