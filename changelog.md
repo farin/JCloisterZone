@@ -2,7 +2,7 @@
 
 ## 5.10.1
 * fix: unable to score Acrobats if player has no meeple in supply
-* fix: allow Ringmaster on top of tower
+* fix: Ringmaster - allow on top of tower, allows move to City of C.
 
 ## 5.10.0
 *2022-01-24*
