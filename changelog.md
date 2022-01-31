@@ -1,10 +1,11 @@
 # Version history
 
 ## 5.10.1
+*2022-01-31*
 * fix: unable to score Acrobats if player has no meeple in supply
 * fix: Ringmaster - allow on top of tower, allows move to City of C., interact with Corn Circles
 * fix: two tiles from Watchtowers expansion missing Field-City reference (one city may be not counted in field's points)
-* expansion from addons can enable game element by default ("implies" directive in addon manifest)  
+* expansion from addons can enable game element by default ("implies" directive in addon manifest)
 
 ## 5.10.0
 *2022-01-24*
