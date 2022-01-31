@@ -1,5 +1,8 @@
 # Version history
 
+???
+rules: spacial handling for fairy and acrobats pyramid. It is assigned to all meeples in acrobat pyramid.
+
 ## 5.10.1
 * fix: unable to score Acrobats if player has no meeple in supply
 * fix: Ringmaster - allow on top of tower, allows move to City of C., interact with Corn Circles
