@@ -1,5 +1,8 @@
 # Version history
 
+## 5.10.1
+* fix: unable to score Acrobats if player has no meeple in supply  
+
 ## 5.10.0
 *2022-01-24*
 * Under The Big Top support (uses "simplified" artwork as no C1 tiles exist)

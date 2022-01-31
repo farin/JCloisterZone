@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.jar.Manifest;
 
-public class Engine implements  Runnable {
+public class Engine implements Runnable {
 
     @Argument(alias = "p", description = "Use socket connection on given port instead of stdin stdout")
     private static Integer port;
