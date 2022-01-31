@@ -75,7 +75,7 @@ public final class TowerCapability extends Capability<Array<List<Follower>>> {
         if (!openTowersForFollower.isEmpty()) {
             Vector<Meeple> availMeeples = player.getMeeplesFromSupply(
                 state,
-                Vector.of(SmallFollower.class, BigFollower.class, Phantom.class)
+                Vector.of(SmallFollower.class, BigFollower.class, Phantom.class, Ringmaster.class)
             );
             Vector<PlayerAction<?>> actions = availMeeples.map(meeple ->
                 new MeepleAction(meeple, openTowersForFollower)

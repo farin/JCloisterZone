@@ -1,7 +1,8 @@
 # Version history
 
 ## 5.10.1
-* fix: unable to score Acrobats if player has no meeple in supply  
+* fix: unable to score Acrobats if player has no meeple in supply
+* fix: allow Ringmaster on top of tower
 
 ## 5.10.0
 *2022-01-24*
