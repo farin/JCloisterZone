@@ -59,6 +59,9 @@ public abstract class AbstractActionPhase extends Phase {
             if (!state.getBooleanRule(Rule.FARMERS)) {
                 places = places.filter(t -> !(t._2 instanceof Field));
             }
+            if (!state.getBooleanRule(Rule.FISHERMEN)) {
+                places = places.filter(t -> !(t._2 instanceof River));
+            }
 
             // towers are handled by Tower capability separately (needs collect towers on all tiles)
             // (and flier or magic portal use is also not allowed to be placed on tower

@@ -64,6 +64,7 @@ public final class MessageParser {
                     case "FlyingMachine": feature = FlyingMachine.class; break;
                     case "Castle": feature = Castle.class; break;
                     case "Acrobats": feature = Acrobats.class; break;
+                    case "River": feature = River.class; break;
                 }
                 return new FeaturePointer(pos, feature, loc);
             }

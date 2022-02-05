@@ -52,7 +52,7 @@ public class CocCountPhase extends Phase {
         }
 
         List<Location> quarters = Location.QUARTERS.filter(loc -> loc != countFp.getLocation());
-        if (!state.getBooleanRule(Rule.FARMERS)) {
+        if (!state.getBooleanRule(Rule.FARMERS) && !state.getBooleanRule(Rule.FISHERMEN)) {
             quarters = quarters.remove(Location.QUARTER_MARKET);
         }
         Set<FeaturePointer> options = quarters.map(loc -> new FeaturePointer(quarterPos, Quarter.class, loc)).toSet();
