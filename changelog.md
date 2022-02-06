@@ -1,8 +1,22 @@
 # Version history
 
-## upcoming
+## 5.10.1
+*2022-01-31*
+* fix: unable to score Acrobats if player has no meeple in supply
+* fix: Ringmaster - allow on top of tower, allows move to City of C., interact with Corn Circles
+* fix: two tiles from Watchtowers expansion missing Field-City reference (one city may be not counted in field's points)
+* expansion from addons can enable game element by default ("implies" directive in addon manifest)
 
-* Under The Big Top support
+## 5.10.0
+*2022-01-24*
+* Under The Big Top support (uses "simplified" artwork as no C1 tiles exist)
+* allow Shepherd / Band even Farmers rule is off
+* fix Follower move from Quarter to Field at end of game
+* fix Fairy on Tile variant
+* Vodaynoy/Razboynik return can be performed from next turn (not immediately)
+* fix mouse map dragging glitches - sometimes map dragging wasn't stopped when mouse button is released
+* active player colored background in right sidebar works again
+* fix possible crash by mouse over on some scoring events in history
 
 ## 5.9.1
 *2021-12-12*
