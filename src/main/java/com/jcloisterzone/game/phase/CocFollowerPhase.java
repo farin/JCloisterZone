@@ -64,7 +64,7 @@ public class CocFollowerPhase extends Phase {
 
         Vector<Class<? extends Meeple>> meepleTypes = Vector.of(
             SmallFollower.class, BigFollower.class, Phantom.class,
-            Wagon.class, Mayor.class
+            Wagon.class, Mayor.class, Ringmaster.class
         );
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
         boolean marketAllowed = state.getBooleanRule(Rule.FARMERS);

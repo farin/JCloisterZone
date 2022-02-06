@@ -56,10 +56,6 @@ public abstract class AbstractActionPhase extends Phase {
             // TODO use interface instead
             places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik) && !(t._2 instanceof Acrobats) && !(t._2 instanceof Circus));
 
-            if (!state.getBooleanRule(Rule.FARMERS)) {
-                places = places.filter(t -> !(t._2 instanceof Field));
-            }
-
             // towers are handled by Tower capability separately (needs collect towers on all tiles)
             // (and flier or magic portal use is also not allowed to be placed on tower
             places = places.filter(t -> !(t._2 instanceof Tower));
@@ -155,15 +151,22 @@ public abstract class AbstractActionPhase extends Phase {
         Position currentTilePos = lastPlaced.getPosition();
         Stream<PlacedTile> tiles;
         Stream<Tuple2<FeaturePointer, Structure>> specialMeepleStructures;
+        Stream<Tuple2<FeaturePointer, Structure>> allRegularMeepleStructures;
         Stream<Tuple2<FeaturePointer, Structure>> regularMeepleStructures;
 
         if (lastPlaced.getTile().hasModifier(PortalCapability.MAGIC_PORTAL) && !state.getFlags().contains(Flag.PORTAL_USED)) {
             Stream<PlacedTile> allTiles = Stream.ofAll(state.getPlacedTiles().values());
-            regularMeepleStructures = getAvailableStructures(state, allTiles, HashSet.of(currentTilePos));
+            allRegularMeepleStructures = getAvailableStructures(state, allTiles, HashSet.of(currentTilePos));
             specialMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
         } else {
-            regularMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
-            specialMeepleStructures = regularMeepleStructures;
+            allRegularMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
+            specialMeepleStructures = allRegularMeepleStructures;
+        }
+
+        if (!state.getBooleanRule(Rule.FARMERS)) {
+            regularMeepleStructures = allRegularMeepleStructures.filter(t -> !(t._2 instanceof Field));
+        } else {
+            regularMeepleStructures = allRegularMeepleStructures;
         }
 
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {

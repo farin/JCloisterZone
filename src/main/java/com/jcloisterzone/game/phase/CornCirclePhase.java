@@ -96,7 +96,7 @@ public class CornCirclePhase extends Phase {
 
         switch (option) {
         case DEPLOY:
-            Vector<Class<? extends Meeple>> meepleTypes = Vector.of(SmallFollower.class, BigFollower.class, Phantom.class);
+            Vector<Class<? extends Meeple>> meepleTypes = Vector.of(SmallFollower.class, BigFollower.class, Phantom.class, Ringmaster.class);
             if (!cornType.equals(Field.class)) {
                 meepleTypes = meepleTypes.append(Wagon.class);
             }
