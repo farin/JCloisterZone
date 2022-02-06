@@ -1,9 +1,6 @@
 package com.jcloisterzone.game.capability;
 
-import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.game.Capability;
-import com.jcloisterzone.game.Token;
-import com.jcloisterzone.game.capability.SheepCapability.SheepToken;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.collection.*;
 
@@ -12,22 +9,7 @@ import java.util.function.Function;
 /**
  * @model Map<Position, List<SheepToken>> - list of placed sheep tokens
  */
-public class SheepCapability extends Capability<Map<FeaturePointer, List<SheepToken>>> {
-
-	public enum SheepToken implements Token {
-	    SHEEP_1X,
-	    SHEEP_2X,
-	    SHEEP_3X,
-	    SHEEP_4X,
-	    WOLF;
-
-	    public int sheepCount() {
-	    	if (this == WOLF) {
-	    		throw new IllegalStateException();
-	    	}
-	    	return this.ordinal() + 1;
-	    }
-	}
+public class SheepCapability extends Capability<SheepCapabilityModel> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,11 +26,11 @@ public class SheepCapability extends Capability<Map<FeaturePointer, List<SheepTo
 
 	@Override
     public GameState onStartGame(GameState state) {
-        return setModel(state, HashMap.empty());
+		return setModel(state, new SheepCapabilityModel(HashMap.empty(), List.empty()));
     }
 
 	public Vector<SheepToken> getBagConent(GameState state) {
-		Map<SheepToken, Integer> bagCount = getModel(state)
+		Map<SheepToken, Integer> bagCount = getModel(state).getPlacedTokens()
 			.values()
 			.flatMap(Function.identity())
 			.foldLeft(SHEEP_TOKEN_COUNT, (tokenCount, token) -> {

@@ -1,5 +1,72 @@
 # Version history
 
+## 5.10.1
+*2022-01-31*
+* fix: unable to score Acrobats if player has no meeple in supply
+* fix: Ringmaster - allow on top of tower, allows move to City of C., interact with Corn Circles
+* fix: two tiles from Watchtowers expansion missing Field-City reference (one city may be not counted in field's points)
+* expansion from addons can enable game element by default ("implies" directive in addon manifest)
+
+## 5.10.0
+*2022-01-24*
+* Under The Big Top support (uses "simplified" artwork as no C1 tiles exist)
+* allow Shepherd / Band even Farmers rule is off
+* fix Follower move from Quarter to Field at end of game
+* fix Fairy on Tile variant
+* Vodaynoy/Razboynik return can be performed from next turn (not immediately)
+* fix mouse map dragging glitches - sometimes map dragging wasn't stopped when mouse button is released
+* active player colored background in right sidebar works again
+* fix possible crash by mouse over on some scoring events in history
+
+## 5.9.1
+*2021-12-12*
+* fixes engine run when user profile path includes non-ascii characters
+* engine support for Robber's son fan expansion (community addon)
+* game setup tlle preview shows again C1/C2 tile variant (depending on Abbot figure disabled/enabled)
+* fixes score overlay (feature highlight on score mouseover) for garden tiles
+* addons can provide link type ('download' and 'wiki' are handled with apropriate icon now)
+* dev: Theme inspector improvements - fixed header, remembers last setting on page reload / app restart
+
+
+## 5.9.0
+*2021-11-18*
+* responsive final stats
+* improved tunnel tokens positions, artwork addon can defines tunnel shape and position
+* fix bazaar - all tiles in auction are now random and chosen independently
+* fix field score in final game statistics
+* fix tile distribution dialog for connected clients when "hide remaining tiles cheat sheet" is enabled
+* fix: Count of Carcassonne expansion can be added only once to game
+* fix no feedback from "Load Setup From File" button (now switch to Tiles tab same as load on favorite setup)
+* fix: Watchtowers meeple bonus is not count from special meeples
+* fix: in some cases prisoners can have wrong color in sidebar
+* classic artwork, several glitches and wrong shapes corrected
+* artworks - shape definition allows extended shape transformations and deriving shapes from others
+* use webkit native websockets instead of ws library
+
+## 5.8.0
+*2021-10-04*
+* "play online" - public play server - players can be behing NAT, keeps persistent games even if no player is online...
+* saving game setup redesigned - added favorite setups section
+* add basic final game statistics (to be improved in next versions)
+* timer - make countdown more smooth and accurate
+* make action panel more repsponsive - show smaller icons when window is small and too much actions are displayed
+* fix: portal is now enabled by default for princess & dragon expansion
+* engine fix: castle phase - do not offer castle actions improperly
+* engine fix: coat of arms + siege and cathedral scoring
+* engine fix: do not score disabled features from addons when addon is not active
+* improved error dialog, doesn't block app window
+
+## 5.7.4
+*2021-08-23*
+* game can be played with multiple meeples of same type
+* fan expansions from addons can provide description and links (eg. point to rules, boardgamegeek.com page etc.)
+* fix: deployment on labyrinth for advanced variant - deployment wans't allowed in all valid cases)
+* fix: C1 wagon move was broken for several tiles
+
+## 5.7.3
+*2021-07-19*
+* hot fix for broken Ferries and Flying Machine (embarrassing bug, unfortunately not covered by automated tests)
+
 ## 5.7.2
 *2021-07-16*
 * The Watchtowers expansion

@@ -169,14 +169,14 @@ public class Field extends TileFeature implements Scoreable, MultiTileFeature<Fi
             int pigCount = getPigCount(state, scorePigsForPlayer);
             int pigHerds = getModifier(state, PIG_HERD, 0);
             if (pigCount > 0) {
-                exprItems.add(pigCount, new ExprItem(pigCount, "pigs", pigCount * scoredObjects));
+                exprItems.add(new ExprItem("pigs", scoredObjects)); // do not stack
             }
             if (pigHerds > 0) {
-                exprItems.add(pigCount, new ExprItem(pigHerds, "pigHerds", pigHerds * scoredObjects));
+                exprItems.add(new ExprItem("pigHerds", scoredObjects)); // do not stack
             }
         }
 
-        scoreScriptedModifiers(exprItems, java.util.Map.of("cities", cityCount, "castles", castleCount));
+        scoreScriptedModifiers(state, exprItems, java.util.Map.of("cities", cityCount, "castles", castleCount));
         return new PointsExpression(exprName, List.ofAll(exprItems));
     }
 

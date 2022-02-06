@@ -178,10 +178,12 @@ public class TilePhase extends Phase {
         }
 
         if (state.hasCapability(BuilderCapability.class)) {
-            FeaturePointer builderFp = state.getDeployedMeeples().filter((m, fp) -> m instanceof Builder && m.getPlayer().equals(player)).values().getOrNull();
-            if (builderFp != null && !builderFp.getPosition().equals(pos)) {
-                if (state.getFeature(builderFp).getTilePositions().contains(pos)) {
-                    state = state.getCapabilities().get(BuilderCapability.class).useBuilder(state);
+            for (FeaturePointer builderFp : state.getDeployedMeeples().filter((m, fp) -> m instanceof Builder && m.getPlayer().equals(player)).values()) {
+                if (builderFp != null && !builderFp.getPosition().equals(pos)) {
+                    if (state.getFeature(builderFp).getTilePositions().contains(pos)) {
+                        state = state.getCapabilities().get(BuilderCapability.class).useBuilder(state);
+                        break;
+                    }
                 }
             }
         }

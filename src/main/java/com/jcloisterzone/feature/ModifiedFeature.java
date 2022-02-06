@@ -1,13 +1,11 @@
 package com.jcloisterzone.feature;
 
 import com.jcloisterzone.event.ExprItem;
-import com.jcloisterzone.feature.modifier.BooleanAnyModifier;
 import com.jcloisterzone.feature.modifier.BooleanModifier;
 import com.jcloisterzone.feature.modifier.FeatureModifier;
 import com.jcloisterzone.game.state.GameState;
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
-import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import org.graalvm.polyglot.Context;
@@ -35,8 +33,10 @@ public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
         return (T) getModifiers().get((FeatureModifier<?>) modifier).getOrElse(defaultValue);
     }
 
-    default Set<FeatureModifier<?>> getScriptedModifiers() {
-        return getModifiers().keySet().filter(mod -> mod.getScoringScript() != null);
+    default Set<FeatureModifier<?>> getScriptedModifiers(GameState state) {
+        return getModifiers().keySet().filter(mod ->
+            mod.getScoringScript() != null && (mod.getEnabledBy() == null || mod.getEnabledBy().apply(state))
+        );
     }
 
     default Map<FeatureModifier<?>, Object> mergeModifiers(ModifiedFeature<C> other) {
@@ -49,31 +49,37 @@ public interface ModifiedFeature<C extends ModifiedFeature> extends Feature {
 
         ArrayList<Tuple2<FeatureModifier<?>, Object>> entries = new ArrayList();
         for (Tuple2<FeatureModifier<?>, Object> t: modifiers) {
+            var modifier = ((FeatureModifier<Object>)t._1);
             var otherValue = otherModifiers.get(t._1).getOrNull();
             if (otherValue == null) {
-                entries.add(t);
+                if (!modifier.isExclusive(t._2)) {
+                    entries.add(t);
+                }
             } else {
-                Object val = ((FeatureModifier<Object>)t._1).mergeValues(t._2, otherValue);
+                Object val = modifier.mergeValues(t._2, otherValue);
                 if (val != null) {
                     entries.add(t.update2(val));
                 }
             }
         }
 
-        for (FeatureModifier<?> mod : missingOtherKeys) {
+        for (FeatureModifier<?> _mod : missingOtherKeys) {
+            var mod = (FeatureModifier<Object>) _mod;
             Object val = otherModifiers.get(mod).get();
-            entries.add(new Tuple2<>(mod, val));
+            if (!mod.isExclusive(val)) {
+                entries.add(new Tuple2<>(mod, val));
+            }
         }
         return HashMap.ofEntries(entries);
     }
 
-    default void scoreScriptedModifiers(java.util.List<ExprItem> exprItems, java.util.Map<String, Object> members) {
-        Set<FeatureModifier<?>> scriptedModifiers = getScriptedModifiers();
+    default void scoreScriptedModifiers(GameState state, java.util.List<ExprItem> exprItems, java.util.Map<String, Object> members) {
+        Set<FeatureModifier<?>> scriptedModifiers = getScriptedModifiers(state);
         if (!scriptedModifiers.isEmpty()) {
             try (Context context = Context.create("js")) {
                 Value bindings = context.getBindings("js");
                 members.forEach((key, value) -> {
-                    bindings.putMember("key", value);
+                    bindings.putMember(key, value);
                 });
 
                 getModifiers().forEach((mod, value) -> {

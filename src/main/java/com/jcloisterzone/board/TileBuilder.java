@@ -28,7 +28,7 @@ public class TileBuilder {
 
     private static final FeatureModifier[] MONASTERY_MODIFIERS = new FeatureModifier[] { Monastery.SPECIAL_MONASTERY, Monastery.SHRINE, Monastery.CHURCH };
     private static final FeatureModifier[] CITY_MODIFIERS = new FeatureModifier[] { City.PENNANTS, City.CATHEDRAL, City.PRINCESS, City.BESIEGED, City.DARMSTADTIUM, City.POINTS_MODIFIER };
-    private static final FeatureModifier[] ROAD_MODIFIERS = new FeatureModifier[] { Road.INN, Road.LABYRINTH };
+    private static final FeatureModifier[] ROAD_MODIFIERS = new FeatureModifier[] { Road.INN, Road.LABYRINTH, Road.ROBBERS_SON };
 
     private java.util.List<FeatureModifier> externalModifiers;
     private java.util.Map<String, java.util.List<FeatureModifier>> modifiersByType;
@@ -101,13 +101,21 @@ public class TileBuilder {
                     processRiverElement(el);
                     break;
                 case "tower":
-                    initFeature(el, new Tower(), new FeaturePointer(Position.ZERO, Tower.class, Location.I));
+                    initFeature(el, new Tower());
                     break;
                 case "yaga-hut":
-                    initFeature(el, new YagaHut(), new FeaturePointer(Position.ZERO, YagaHut.class, Location.I));
+                    initFeature(el, new YagaHut());
                     break;
                 case "watchtower":
                     tileModifiers = tileModifiers.add(new WatchtowerCapability.WatchtowerModifier(el.getAttribute("bonus")));
+                    break;
+                case "circus":
+                    // init feature even if capability is not enabled, because of ringmaster scoring
+                    initFeature(el, new Circus());
+                    break;
+                case "acrobats":
+                    // init feature even if capability is not enabled, because of ringmaster scoring
+                    initFeature(el, new Acrobats());
                     break;
             }
         }
@@ -150,7 +158,7 @@ public class TileBuilder {
         return tileDef;
     }
 
-    public void initFeature(Element xml, Feature feature, FeaturePointer fp) {
+    public void initFeature(Element xml, Feature feature) {
         if (feature instanceof Field && tileId.startsWith("CO/")) {
             //this is not part of Count capability because it is integral behaviour valid also when capability is off
             feature = ((Field) feature).setAdjoiningCityOfCarcassonne(true);
@@ -158,17 +166,21 @@ public class TileBuilder {
         for (Capability<?> cap: state.getCapabilities().toSeq()) {
             feature = cap.initFeature(state, tileId, feature, xml);
         }
+
+        FeaturePointer fp = feature.getPlaces().get();
         features.put(fp, feature);
 
         if (feature instanceof  NeighbouringFeature) {
-            String wagonMove = xml.getAttribute("wagon-move");
-            if (wagonMove.length() > 0) {
-                var connectedFeatures = neighbouring.get(wagonMove);
-                if (connectedFeatures == null) {
-                    connectedFeatures = new ArrayList<>();
-                    neighbouring.put(wagonMove, connectedFeatures);
+            String[] wagonMoves = xml.getAttribute("wagon-move").split("\\s");
+            for (String wagonMove : wagonMoves) {
+                if (wagonMove.length() > 0) {
+                    var connectedFeatures = neighbouring.get(wagonMove);
+                    if (connectedFeatures == null) {
+                        connectedFeatures = new ArrayList<>();
+                        neighbouring.put(wagonMove, connectedFeatures);
+                    }
+                    connectedFeatures.add(fp);
                 }
-                connectedFeatures.add(fp);
             }
         }
     }
@@ -189,7 +201,7 @@ public class TileBuilder {
     private void processMonasteryElement(Element e) {
         Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("monastery", e);
         Monastery monastery = new Monastery(modifiers);
-        initFeature(e, monastery, new FeaturePointer(Position.ZERO, Monastery.class, Location.I));
+        initFeature(e, monastery);
     }
 
     private void processRoadElement(Element e, boolean isTunnelActive) {
@@ -211,7 +223,7 @@ public class TileBuilder {
         if (isTunnelActive && attributeBoolValue(e, "tunnel")) {
             road = road.setOpenTunnelEnds(HashSet.of(fp));
         }
-        initFeature(e, road, fp);
+        initFeature(e, road);
     }
 
     private void processCityElement(Element e) {
@@ -231,13 +243,13 @@ public class TileBuilder {
 
         Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("city", e);
         City city = new City(List.of(fp), openEdges, modifiers);
-        initFeature(e, city, fp);
+        initFeature(e, city);
 
         if (e.hasAttribute("city-gate")) {
             attrAsLocations(e, "city-gate").forEach(loc -> {
                 assert loc.isEdge();
                 FeaturePointer gateFp = new FeaturePointer(Position.ZERO, CityGate.class, loc);
-                initFeature(null, new CityGate(List.of(gateFp), fp), gateFp);
+                initFeature(null, new CityGate(List.of(gateFp), fp));
             });
         }
     }
@@ -245,7 +257,7 @@ public class TileBuilder {
     private void processRiverElement(Element e) {
         Stream<Location> sides = contentAsLocations(e);
         FeaturePointer fp = initFeaturePointer(sides, River.class);
-        initFeature(e, new River(List.of(fp)), fp);
+        initFeature(e, new River(List.of(fp)));
     }
 
     private void processFieldElement(Element e) {
@@ -276,7 +288,7 @@ public class TileBuilder {
 
         Map<FeatureModifier<?>, Object> modifiers = getFeatureModifiers("field", e);
         Field field = new Field(List.of(fp),  adjoiningCities,  false, modifiers);
-        initFeature(e, field, fp);
+        initFeature(e, field);
     }
 
     private FeaturePointer initFeaturePointer(Stream<Location> sides, Class<? extends Feature> clazz) {

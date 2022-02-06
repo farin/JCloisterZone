@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.jar.Manifest;
 
-public class Engine implements  Runnable {
+public class Engine implements Runnable {
 
     @Argument(alias = "p", description = "Use socket connection on given port instead of stdin stdout")
     private static Integer port;
@@ -54,7 +54,7 @@ public class Engine implements  Runnable {
     private ArrayList<String> tileDefinitions = new ArrayList<>();
 
     public Engine(InputStream in, PrintStream out, PrintStream err, PrintStream log) {
-        this.in = new Scanner(in);
+        this.in = new Scanner(in, "UTF-8");
         this.out = out;
         this.err = err;
         this.log = log;
@@ -76,12 +76,12 @@ public class Engine implements  Runnable {
     }
 
     private Set<Class<? extends Capability<?>>> addCapabilities(
-            Set<Class<? extends Capability<?>>> capabilties, GameSetupMessage setupMsg, String key, Class<? extends Capability<?>> cls) {
+            Set<Class<? extends Capability<?>>> capabilities, GameSetupMessage setupMsg, String key, Class<? extends Capability<?>> cls) {
         Object value = setupMsg.getElements().get(key);
         if (value == null) {
-            return capabilties;
+            return capabilities;
         }
-        return capabilties.add(cls);
+        return capabilities.add(cls);
     }
 
     private GameSetup createSetupFromMessage(GameSetupMessage setupMsg) {
@@ -96,6 +96,7 @@ public class Engine implements  Runnable {
         meeples = addMeeples(meeples, setupMsg, "wagon", Wagon.class);
         meeples = addMeeples(meeples, setupMsg, "mayor", Mayor.class);
         meeples = addMeeples(meeples, setupMsg, "shepherd", Shepherd.class);
+        meeples = addMeeples(meeples, setupMsg, "ringmaster", Ringmaster.class);
 
         Set<Class<? extends Capability<?>>> capabilities = HashSet.empty();
         capabilities = addCapabilities(capabilities, setupMsg,"abbot", AbbotCapability.class);
@@ -104,6 +105,7 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"phantom", PhantomCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"shepherd", SheepCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"wagon", WagonCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"ringmaster", RingmasterCapability.class);
 
         capabilities = addCapabilities(capabilities, setupMsg,"dragon", DragonCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"fairy", FairyCapability.class);
@@ -132,6 +134,8 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"vineyard", VineyardCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"shrine", ShrineCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"festival", FestivalCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"big-top", BigTopCapability.class);
+        capabilities = addCapabilities(capabilities, setupMsg,"acrobats", AcrobatsCapability.class);
 
         capabilities = addCapabilities(capabilities, setupMsg,"river", RiverCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"corn-circle", CornCircleCapability.class);
@@ -143,6 +147,7 @@ public class Engine implements  Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"russian-trap", RussianPromosTrapCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"watchtower", WatchtowerCapability.class);
 
+        capabilities = addCapabilities(capabilities, setupMsg,"robbers-son", RobbersSonCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"families", FamiliesCapability.class);
 
         Map<Rule, Object> rules = HashMap.empty();
@@ -171,7 +176,7 @@ public class Engine implements  Runnable {
     private void parseDirective(String line) {
         String[] s = line.split("\\s+", 2);
         var directive = s[0];
-        var value = s[1];
+        var value = s.length > 1 ? s[1] : null;
         switch (directive) {
             case "%bulk":
                 bulk = "on".equals(value);
@@ -187,6 +192,9 @@ public class Engine implements  Runnable {
                 break;
             case "%load":
                 tileDefinitions.add(value);
+                break;
+            case "%state":
+                out.println(gson.toJson(game));
                 break;
             default:
                 err.println("#unknown directive " + line);

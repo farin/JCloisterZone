@@ -151,7 +151,7 @@ public class Monastery extends TileFeature implements Monastic, ModifiedFeature<
         }
         String baseName = isShrine(state) ? "shrine" : "monastery";
 
-        scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", adjacent + 1, "completed", completed));
+        scoreScriptedModifiers(state, exprItems, java.util.Map.of("tiles", adjacent + 1, "completed", completed));
         return new PointsExpression(completed ? baseName : baseName + ".incomplete",  List.ofAll(exprItems));
     }
 

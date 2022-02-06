@@ -69,5 +69,4 @@ public class MeepleAction implements SelectFeatureAction {
         }
         return new MeepleAction(meepleType, options, origin);
     }
-
 }

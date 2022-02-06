@@ -51,11 +51,12 @@ public class RussianPromosTrapCapability extends Capability<Void> {
         ActionsState actions = state.getPlayerActions();
         HashSet places = HashSet.empty();
         Player active = state.getActivePlayer();
+        Position placeTilePos = state.getLastPlaced().getPosition();
         for (Tuple2<Meeple, FeaturePointer> t : state.getDeployedMeeples()) {
             Meeple meeple = t._1;
             FeaturePointer fp = t._2;
             Feature feature = state.getFeature(fp);
-            if (meeple.getPlayer().equals(active) && (feature instanceof SoloveiRazboynik || feature instanceof Vodyanoy)) {
+            if (meeple.getPlayer().equals(active) && !fp.getPosition().equals(placeTilePos) && (feature instanceof SoloveiRazboynik || feature instanceof Vodyanoy)) {
                 places = places.add(new MeeplePointer(fp, meeple.getId()));
             }
         }

@@ -53,11 +53,8 @@ public abstract class AbstractActionPhase extends Phase {
 
             Stream<Tuple2<FeaturePointer, Structure>> places = state.getTileFeatures2(pos, Structure.class);
 
-            places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik));
-
-            if (!state.getBooleanRule(Rule.FARMERS)) {
-                places = places.filter(t -> !(t._2 instanceof Field));
-            }
+            // TODO use interface instead
+            places = places.filter(t -> !(t._2 instanceof Castle) && !(t._2 instanceof SoloveiRazboynik) && !(t._2 instanceof Acrobats) && !(t._2 instanceof Circus));
 
             // towers are handled by Tower capability separately (needs collect towers on all tiles)
             // (and flier or magic portal use is also not allowed to be placed on tower
@@ -115,9 +112,11 @@ public abstract class AbstractActionPhase extends Phase {
                 if (struct instanceof Road) {
                     Road road = (Road) struct;
                     if (road.isLabyrinth(state)) {
-                        // current tile musn't be labyrinth center - apply regular ocuupation rule to it
                         Road initial = (Road) state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())._2;
-                        if (!initial.isLabyrinth(state)) {
+                        if (initial.isLabyrinth(state)) {
+                            // current tile is the labyrinth center - check only if center is already occupied
+                            return Stream.ofAll(state.getDeployedMeeples()).find(x -> t._1.equals(x._2)).isEmpty();
+                        } else {
                             // find if there is empty labyrinth segment
                             Set<FeaturePointer> segment = road.findSegmentBorderedBy(state, t._1,
                                     fp -> {
@@ -143,7 +142,7 @@ public abstract class AbstractActionPhase extends Phase {
             .map(t -> t._1)
             .toSet();
     }
-
+ 
     protected Vector<PlayerAction<?>> prepareMeepleActions(GameState state, Vector<Class<? extends Meeple>> meepleTypes) {
         Player player = state.getTurnPlayer();
         Vector<Meeple> availMeeples = player.getMeeplesFromSupply(state, meepleTypes);
@@ -152,15 +151,22 @@ public abstract class AbstractActionPhase extends Phase {
         Position currentTilePos = lastPlaced.getPosition();
         Stream<PlacedTile> tiles;
         Stream<Tuple2<FeaturePointer, Structure>> specialMeepleStructures;
+        Stream<Tuple2<FeaturePointer, Structure>> allRegularMeepleStructures;
         Stream<Tuple2<FeaturePointer, Structure>> regularMeepleStructures;
 
         if (lastPlaced.getTile().hasModifier(PortalCapability.MAGIC_PORTAL) && !state.getFlags().contains(Flag.PORTAL_USED)) {
             Stream<PlacedTile> allTiles = Stream.ofAll(state.getPlacedTiles().values());
-            regularMeepleStructures = getAvailableStructures(state, allTiles, HashSet.of(currentTilePos));
+            allRegularMeepleStructures = getAvailableStructures(state, allTiles, HashSet.of(currentTilePos));
             specialMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
         } else {
-            regularMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
-            specialMeepleStructures = regularMeepleStructures;
+            allRegularMeepleStructures = getAvailableStructures(state, Stream.of(lastPlaced), HashSet.of(currentTilePos));
+            specialMeepleStructures = allRegularMeepleStructures;
+        }
+
+        if (!state.getBooleanRule(Rule.FARMERS)) {
+            regularMeepleStructures = allRegularMeepleStructures.filter(t -> !(t._2 instanceof Field));
+        } else {
+            regularMeepleStructures = allRegularMeepleStructures;
         }
 
         Vector<PlayerAction<?>> actions = availMeeples.map(meeple -> {
@@ -185,6 +191,10 @@ public abstract class AbstractActionPhase extends Phase {
     @PhaseMessageHandler
     public StepResult handleDeployMeeple(GameState state, DeployMeepleMessage msg) {
         FeaturePointer fp = msg.getPointer();
+
+        if (fp.getFeature().equals(FlyingMachine.class)) {
+            return handleDeployFlier(state, msg);
+        }
         
         Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
         PlacedTile placedTile = state.getLastPlaced();
@@ -222,7 +232,7 @@ public abstract class AbstractActionPhase extends Phase {
         FlyingMachine flyingMachine = (FlyingMachine) state.getFeature(msg.getPointer());
         Meeple meeple = state.getActivePlayer().getMeepleFromSupply(state, msg.getMeepleId());
 
-        int distance = getRandom().getInt(3) + 1;
+        int distance = getRandom().getNextInt(3) + 1;
         state = state.addFlag(Flag.FLYING_MACHINE_USED);  // flying machine can't be used again by phantom
         state = state.appendEvent(new FlierRollEvent(
             PlayEventMeta.createWithActivePlayer(state), placedTile.getPosition(), distance)

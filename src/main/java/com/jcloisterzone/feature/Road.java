@@ -28,9 +28,9 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
 
     private static final long serialVersionUID = 1L;
 
-    // public static IntegerAddModifier WELLS = new IntegerAddModifier("road[wells]", new GameElementQuery("well"));
-    public static BooleanAnyModifier INN = new BooleanAnyModifier("road[inn]", new GameElementQuery("inn"));
-    public static BooleanAnyModifier LABYRINTH = new BooleanAnyModifier("road[labyrinth]", new RuleQuery(Rule.LABYRINTH_VARIANT, "advanced"));
+    public static final BooleanAnyModifier INN = new BooleanAnyModifier("road[inn]", new GameElementQuery("inn"));
+    public static final BooleanAnyModifier LABYRINTH = new BooleanAnyModifier("road[labyrinth]", new RuleQuery(Rule.LABYRINTH_VARIANT, "advanced"));
+    public static final BooleanAnyModifier ROBBERS_SON = new BooleanAnyModifier("road[robbers-son]", new GameElementQuery("robbers-son"));
 
     private final Map<FeatureModifier<?>, Object> modifiers;
     private final Set<FeaturePointer> openTunnelEnds;
@@ -173,7 +173,7 @@ public class Road extends CompletableFeature<Road> implements ModifiedFeature<Ro
             exprItems.add(new ExprItem(meeplesCount, "meeples", 2 * meeplesCount));
         }
 
-        scoreScriptedModifiers(exprItems, java.util.Map.of("tiles", tileCount, "completed", completed));
+        scoreScriptedModifiers(state, exprItems, java.util.Map.of("tiles", tileCount, "completed", completed));
         return new PointsExpression(completed ? "road" : "road.incomplete", List.ofAll(exprItems));
     }
 

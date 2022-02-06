@@ -18,7 +18,6 @@ public class PointsExpression {
         this(name, List.of(items));
     }
 
-
     public int getPoints() {
         return items.map(exp -> exp.getPoints()).sum().intValue();
     }

@@ -19,15 +19,16 @@ public class NeutralFiguresState implements Serializable {
     private final Mage mage;
     private final Witch witch;
     private final Count count;
+    private final BigTop bigtop;
 
     private final LinkedHashMap<NeutralFigure<?>, BoardPointer> deployedNeutralFigures;
 
     public NeutralFiguresState() {
-        this(null, null, null, null, null, LinkedHashMap.empty());
+        this(null, null, null, null, null, null, LinkedHashMap.empty());
     }
 
     public NeutralFiguresState(
-        Dragon dragon, Fairy fairy, Mage mage, Witch witch, Count count,
+        Dragon dragon, Fairy fairy, Mage mage, Witch witch, Count count, BigTop bigtop,
         LinkedHashMap<NeutralFigure<?>, BoardPointer> deployedNeutralFigures
     ) {
         this.dragon = dragon;
@@ -35,31 +36,36 @@ public class NeutralFiguresState implements Serializable {
         this.mage = mage;
         this.witch = witch;
         this.count = count;
+        this.bigtop = bigtop;
         this.deployedNeutralFigures = deployedNeutralFigures;
     }
 
     public NeutralFiguresState setDragon(Dragon dragon) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setFairy(Fairy fairy) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setMage(Mage mage) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setWitch(Witch witch) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setCount(Count count) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
+    }
+
+    public NeutralFiguresState setBigTop(BigTop bigtop) {
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setDeployedNeutralFigures(LinkedHashMap<NeutralFigure<?>, BoardPointer> deployedNeutralFigures) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
     }
 
     public NeutralFigure<?> getById(String figureId) {
@@ -68,6 +74,7 @@ public class NeutralFiguresState implements Serializable {
         if (mage != null && figureId.equals(mage.getId())) return mage;
         if (witch != null && figureId.equals(witch.getId())) return witch;
         if (count != null && figureId.equals(count.getId())) return count;
+        if (bigtop != null && figureId.equals(bigtop.getId())) return bigtop;
         return null;
     }
 
@@ -76,7 +83,11 @@ public class NeutralFiguresState implements Serializable {
     }
 
     public Position getDragonDeployment() {
-        return (Position) deployedNeutralFigures.get(dragon).getOrNull();
+        var bp = deployedNeutralFigures.get(dragon).getOrNull();
+        if (bp != null) {
+        	return bp.getPosition();
+        }
+        return null;
     }
 
     public Fairy getFairy() {
@@ -109,6 +120,14 @@ public class NeutralFiguresState implements Serializable {
 
     public FeaturePointer getCountDeployment() {
         return (FeaturePointer) deployedNeutralFigures.get(count).getOrNull();
+    }
+
+    public BigTop getBigTop() {
+        return bigtop;
+    }
+
+    public Position getBigTopDeployment() {
+        return (Position) deployedNeutralFigures.get(bigtop).getOrNull();
     }
 
     public LinkedHashMap<NeutralFigure<?>, BoardPointer> getDeployedNeutralFigures() {
