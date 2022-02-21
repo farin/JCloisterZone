@@ -7,6 +7,7 @@ import com.jcloisterzone.board.pointer.MeeplePointer;
 import com.jcloisterzone.event.ExprItem;
 import com.jcloisterzone.event.PointsExpression;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
+import com.jcloisterzone.feature.Acrobats;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.game.capability.FairyCapability;
 import com.jcloisterzone.game.state.GameState;
@@ -36,14 +37,16 @@ public class FairyPhase extends Phase {
             if (!m.getPlayer().equals(state.getTurnPlayer())) continue;
             if (onTileRule) {
                 if (!t._2.getPosition().equals(fairyFp.getPosition())) continue;
-            } else {
+            } else if (!(m.getFeature(state) instanceof Acrobats)) {
                 if (!t._2.equals(fairyFp)) continue;
-                if (!((MeeplePointer) ptr).match(m)) continue;
+               	if (!((MeeplePointer) ptr).match(m)) continue;
             }
 
             PointsExpression expr = new PointsExpression("fairy.turn", new ExprItem("fairy", FairyCapability.FAIRY_POINTS_BEGINNING_OF_TURN));
             state = (new AddPoints(new ReceivedPoints(expr, m.getPlayer(), fairyFp), false)).apply(state);
-            break;
+            if (!(m.getFeature(state) instanceof Acrobats)) {
+                break;
+            }
         }
 
         return next(state);
