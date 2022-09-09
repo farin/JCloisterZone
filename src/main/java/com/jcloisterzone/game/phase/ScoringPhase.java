@@ -13,9 +13,11 @@ import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.ScoreFeatureReducer;
 import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.TunnelCapability.Tunnel;
+import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.random.RandomGenerator;
+import com.jcloisterzone.Player;
 import com.jcloisterzone.reducers.ScoreCompletable;
 import com.jcloisterzone.reducers.ScoreField;
 import com.jcloisterzone.reducers.ScoreFieldWhenBarnIsConnected;
@@ -24,13 +26,15 @@ import io.vavr.Predicates;
 import io.vavr.Tuple2;
 import io.vavr.collection.*;
 
-
 public class ScoringPhase extends Phase {
 
     private java.util.Map<Completable, ScoreCompletable> completedMutable = new java.util.HashMap<>();
 
+    private BlackDragonMovePhase blackdragonMovePhase;
+
     public ScoringPhase(RandomGenerator random, Phase defaultNext) {
         super(random, defaultNext);
+        blackdragonMovePhase = new BlackDragonMovePhase(random, this);
     }
 
     private void collectCompletedOnTile(GameState state, PlacedTile tile) {
@@ -99,8 +103,6 @@ public class ScoringPhase extends Phase {
         PlacedTile lastPlaced = state.getLastPlaced();
         Position pos = lastPlaced.getPosition();
 
-        Map<Wagon, FeaturePointer> deployedWagonsBefore = getDeployedWagons(state);
-
         collectCompletedOnTile(state, lastPlaced);
         collectCompletedOnAdjacentEdges(state, pos); // closed by abbey, city gates ... etc
 
@@ -132,6 +134,16 @@ public class ScoringPhase extends Phase {
             }
         }
 
+        BlackDragonCapability blackdragonCap = state.getCapabilities().get(BlackDragonCapability.class);
+        
+        Array<Integer> scoreOnStart = state.getPlayers().getScore();
+
+        if (blackdragonCap != null && completedMutable.keySet().size()>0 && !state.hasFlag(Flag.BLACK_DRAGON_MOVED)) {
+            state = blackdragonCap.setModel(state, new Tuple2<>(Vector.empty(),completedMutable.keySet().size()));
+            return next(state, blackdragonMovePhase);
+        }
+
+        Map<Wagon, FeaturePointer> deployedWagonsBefore = getDeployedWagons(state);
 
         for (Capability<?> cap : state.getCapabilities().toSeq()) {
             state = cap.beforeCompletableScore(state, completedMutable.keySet());
@@ -181,6 +193,17 @@ public class ScoringPhase extends Phase {
 
         for (Capability<?> cap : state.getCapabilities().toSeq()) {
             state = cap.onTurnScoring(state, scored);
+        }
+        
+        if (blackdragonCap != null) {
+	        for(Player player : state.getPlayers().getPlayers() ) {
+	        	Integer scoreBefore = scoreOnStart.get(player.getIndex());
+	        	Integer scoreCurrent = state.getPlayers().getScore().get(player.getIndex());
+	        	Integer diff = scoreCurrent - scoreBefore;
+	        	if (diff>0 && ((scoreBefore % 50) + diff > 50)) {
+	        		state = blackdragonCap.moveBlackDragon(state, state.getLastPlaced().getPosition());
+	        	}
+	        }
         }
 
         if (!deployedWagonsBefore.isEmpty()) {

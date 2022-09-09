@@ -11,12 +11,14 @@ import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.BlackDragon;
 import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.SheepToken;
+import com.jcloisterzone.game.phase.BlackDragonMovePhase;
 import com.jcloisterzone.game.phase.DragonMovePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.RussianPromosTrapPhase;
@@ -70,6 +72,7 @@ public class StateGsonBuilder {
         builder.registerTypeAdapter(RemoveMageOrWitchAction.class, new ActionSerializer("RemoveMageOrWitch"));
         builder.registerTypeAdapter(LittleBuildingAction.class, new LittleBuildingActionSerializer());
         builder.registerTypeAdapter(ScoreAcrobatsAction.class, new SelectFeatureActionSerializer());
+        builder.registerTypeAdapter(MoveBlackDragonAction.class, new MoveBlackDragonActionSerializer());
         return builder.create();
     }
 
@@ -287,6 +290,19 @@ public class StateGsonBuilder {
             JsonObject data = new JsonObject();
             data.add("placement", context.serialize(pos));
             neutral.add("bigtop", data);
+        }
+        pos = state.getBlackDragonDeployment();
+        if (pos != null) {
+            Tuple2<Vector<Position>,Integer> blackdragonmoves =  root.getCapabilityModel(BlackDragonCapability.class);
+            JsonObject data = new JsonObject();
+            data.add("position", context.serialize(pos));
+            if (root.getPhase() instanceof BlackDragonMovePhase) {
+                JsonArray visitedData = new JsonArray();
+                blackdragonmoves._1.forEach(p -> visitedData.add(context.serialize(p)));
+                data.add("visited", visitedData);
+                data.addProperty("remaining", blackdragonmoves._2 - blackdragonmoves._1.length());
+            }
+            neutral.add("blackdragon", data);
         }
         return neutral;
     }
@@ -897,4 +913,20 @@ public class StateGsonBuilder {
             return json;
         }
     }
+
+    private class MoveBlackDragonActionSerializer implements JsonSerializer<MoveBlackDragonAction> {
+        @Override
+        public JsonElement serialize(MoveBlackDragonAction action, Type type, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("type", "MoveDragon");
+            json.addProperty("figureId", action.getFigureId());
+            JsonArray options = new JsonArray();
+            action.getOptions().forEach(pos -> {
+                options.add(context.serialize(pos));
+            });
+            json.add("options", options);
+            return json;
+        }
+    }
+
 }
