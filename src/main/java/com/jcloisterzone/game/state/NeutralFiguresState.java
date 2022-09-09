@@ -20,15 +20,16 @@ public class NeutralFiguresState implements Serializable {
     private final Witch witch;
     private final Count count;
     private final BigTop bigtop;
+    private final BlackDragon blackdragon;
 
     private final LinkedHashMap<NeutralFigure<?>, BoardPointer> deployedNeutralFigures;
 
     public NeutralFiguresState() {
-        this(null, null, null, null, null, null, LinkedHashMap.empty());
+        this(null, null, null, null, null, null, null,LinkedHashMap.empty());
     }
 
     public NeutralFiguresState(
-        Dragon dragon, Fairy fairy, Mage mage, Witch witch, Count count, BigTop bigtop,
+        Dragon dragon, Fairy fairy, Mage mage, Witch witch, Count count, BigTop bigtop, BlackDragon blackdragon,
         LinkedHashMap<NeutralFigure<?>, BoardPointer> deployedNeutralFigures
     ) {
         this.dragon = dragon;
@@ -37,35 +38,40 @@ public class NeutralFiguresState implements Serializable {
         this.witch = witch;
         this.count = count;
         this.bigtop = bigtop;
+        this.blackdragon = blackdragon;
         this.deployedNeutralFigures = deployedNeutralFigures;
     }
 
     public NeutralFiguresState setDragon(Dragon dragon) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, blackdragon, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setFairy(Fairy fairy) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, blackdragon, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setMage(Mage mage) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, blackdragon, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setWitch(Witch witch) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, blackdragon, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setCount(Count count) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, blackdragon, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setBigTop(BigTop bigtop) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, blackdragon, deployedNeutralFigures);
+    }
+
+    public NeutralFiguresState setBlackDragon(BlackDragon blackdragon) {
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, blackdragon, deployedNeutralFigures);
     }
 
     public NeutralFiguresState setDeployedNeutralFigures(LinkedHashMap<NeutralFigure<?>, BoardPointer> deployedNeutralFigures) {
-        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, deployedNeutralFigures);
+        return new NeutralFiguresState(dragon, fairy, mage, witch, count, bigtop, blackdragon, deployedNeutralFigures);
     }
 
     public NeutralFigure<?> getById(String figureId) {
@@ -75,6 +81,7 @@ public class NeutralFiguresState implements Serializable {
         if (witch != null && figureId.equals(witch.getId())) return witch;
         if (count != null && figureId.equals(count.getId())) return count;
         if (bigtop != null && figureId.equals(bigtop.getId())) return bigtop;
+        if (blackdragon != null && figureId.equals(blackdragon.getId())) return blackdragon;
         return null;
     }
 
@@ -132,6 +139,18 @@ public class NeutralFiguresState implements Serializable {
 
     public LinkedHashMap<NeutralFigure<?>, BoardPointer> getDeployedNeutralFigures() {
         return deployedNeutralFigures;
+    }
+
+    public BlackDragon getBlackDragon() {
+        return blackdragon;
+    }
+
+    public Position getBlackDragonDeployment() {
+        var bp = deployedNeutralFigures.get(blackdragon).getOrNull();
+        if (bp != null) {
+        	return bp.getPosition();
+        }
+        return null;
     }
 
 }

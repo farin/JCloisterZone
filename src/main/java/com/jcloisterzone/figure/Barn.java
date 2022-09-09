@@ -20,6 +20,11 @@ public class Barn extends Special {
     }
 
     @Override
+    public boolean canBeEatenByBlackDragon(GameState state) {
+        return false;
+    }
+
+    @Override
     public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Structure feature) {
         if (!(feature instanceof Field)) {
             return new DeploymentCheckResult("The barn must be placed only on a field.");
