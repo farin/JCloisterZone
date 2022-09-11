@@ -24,6 +24,7 @@ import com.jcloisterzone.reducers.ScoreFieldWhenBarnIsConnected;
 import com.jcloisterzone.reducers.UndeployMeeples;
 import io.vavr.Predicates;
 import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import io.vavr.collection.*;
 
 public class ScoringPhase extends Phase {
@@ -139,7 +140,7 @@ public class ScoringPhase extends Phase {
         Array<Integer> scoreOnStart = state.getPlayers().getScore();
 
         if (blackdragonCap != null && completedMutable.keySet().size()>0 && !state.hasFlag(Flag.BLACK_DRAGON_MOVED)) {
-            state = blackdragonCap.setModel(state, new Tuple2<>(Vector.empty(),completedMutable.keySet().size()));
+            state = blackdragonCap.setModel(state, new Tuple3<>(blackdragonCap.EMPTY_VISITED,completedMutable.keySet().size(),blackdragonCap.getScore(state)));
             return next(state, blackdragonMovePhase);
         }
 
@@ -195,17 +196,6 @@ public class ScoringPhase extends Phase {
             state = cap.onTurnScoring(state, scored);
         }
         
-        if (blackdragonCap != null) {
-	        for(Player player : state.getPlayers().getPlayers() ) {
-	        	Integer scoreBefore = scoreOnStart.get(player.getIndex());
-	        	Integer scoreCurrent = state.getPlayers().getScore().get(player.getIndex());
-	        	Integer diff = scoreCurrent - scoreBefore;
-	        	if (diff>0 && ((scoreBefore % 50) + diff > 50)) {
-	        		state = blackdragonCap.moveBlackDragon(state, state.getLastPlaced().getPosition());
-	        	}
-	        }
-        }
-
         if (!deployedWagonsBefore.isEmpty()) {
             Set<Wagon> deployedWagonsAfter = getDeployedWagons(state).keySet();
             Set<Wagon> returnedVagons = deployedWagonsBefore.keySet().diff(deployedWagonsAfter);

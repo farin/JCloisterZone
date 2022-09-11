@@ -11,24 +11,25 @@ import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.reducers.UndeployMeeple;
 
+import io.vavr.collection.Array;
 import io.vavr.collection.Vector;
 import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 
 /**
- * @model Tuple2<Vector<Position>,Integer> : visited tiles, finished features
+ * @model Tuple3<Vector<Position>,Integer,Array<Integer> : visited tiles by black dragon, count of finished features, score on start of turn
  */
 @Immutable
-public class BlackDragonCapability extends Capability<Tuple2<Vector<Position>,Integer>> {
+public class BlackDragonCapability extends Capability<Tuple3<Vector<Position>,Integer,Array<Integer>>> {
 
     private static final long serialVersionUID = 1L;
 
+    public static final Vector<Position> EMPTY_VISITED = Vector.empty();
+
     @Override
     public GameState onStartGame(GameState state) {
-    	System.out.println("\n");
-    	System.out.println("BlackDragon is running");
-    	System.out.println("\n");
         state = state.mapNeutralFigures(nf -> nf.setBlackDragon(new BlackDragon("blackdragon.1")));
-        state = setModel(state, new Tuple2<>(Vector.empty(),0));
+        state = setInitialTurnState(state);
         return state;
     }
 
@@ -39,17 +40,34 @@ public class BlackDragonCapability extends Capability<Tuple2<Vector<Position>,In
 
     @Override
     public GameState beforeCompletableScore(GameState state, java.util.Set<Completable> features) {
-    	System.out.println("\n");
-    	System.out.println("BeforeCompletable");
-    	System.out.println(features.size());
-    	System.out.println("\n");
-        state = setModel(state, new Tuple2<>(Vector.empty(),features.size()));
-
-//        Position pos = state.getLastPlaced().getPosition();
-//        state = moveBlackDragon(state, pos);
+    	Tuple3<Vector<Position>,Integer,Array<Integer>> model = getModel(state);
+    	state = setModel(state, new Tuple3<>(EMPTY_VISITED,features.size(),model._3));
         return state;
     }
     
+    @Override
+    public GameState onTurnPartCleanUp(GameState state) {
+    	return setInitialTurnState(state);
+    }
+
+    public GameState setInitialTurnState(GameState state) {
+        return setModel(state, new Tuple3<>(EMPTY_VISITED,0,state.getPlayers().getScore()));
+    }
+
+    public Vector<Position> getVisitedPositions(GameState state) {
+        Vector<Position> visitedpositions = getModel(state)._1;
+        return visitedpositions == null ? BlackDragonCapability.EMPTY_VISITED : visitedpositions;
+    }
+
+    public Integer getMoves(GameState state) {
+    	Integer finishedfeatures = getModel(state)._2;
+        return finishedfeatures == null ? 0 : finishedfeatures;
+    }
+
+    public Array<Integer> getScore(GameState state) {
+    	return getModel(state)._3;
+    }
+
     public GameState moveBlackDragon(GameState state, Position pos) {
         state = (
 	        new MoveNeutralFigure<>(state.getNeutralFigures().getBlackDragon(), pos)
@@ -57,7 +75,6 @@ public class BlackDragonCapability extends Capability<Tuple2<Vector<Position>,In
 	
         state = blackDragonOnTile(state, pos);
 	    return state;
-    	
     }
     
     public GameState blackDragonOnTile(GameState state, Position pos) {
@@ -68,7 +85,6 @@ public class BlackDragonCapability extends Capability<Tuple2<Vector<Position>,In
 	            state = (new UndeployMeeple(m, true)).apply(state);
 	        }
 	    }
-	
 	    return state;
     }
 }

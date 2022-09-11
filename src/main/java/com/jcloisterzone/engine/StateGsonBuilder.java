@@ -25,6 +25,7 @@ import com.jcloisterzone.game.phase.RussianPromosTrapPhase;
 import com.jcloisterzone.game.state.*;
 import com.jcloisterzone.io.MessageParser;
 import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import io.vavr.collection.*;
 
 import java.lang.reflect.Type;
@@ -293,7 +294,7 @@ public class StateGsonBuilder {
         }
         pos = state.getBlackDragonDeployment();
         if (pos != null) {
-            Tuple2<Vector<Position>,Integer> blackdragonmoves =  root.getCapabilityModel(BlackDragonCapability.class);
+            Tuple3<Vector<Position>,Integer,Array<Integer>> blackdragonmoves =  root.getCapabilityModel(BlackDragonCapability.class);
             JsonObject data = new JsonObject();
             data.add("position", context.serialize(pos));
             if (root.getPhase() instanceof BlackDragonMovePhase) {
@@ -390,6 +391,7 @@ public class StateGsonBuilder {
         JsonObject item = null;
         JsonArray turnEvents = null;
         JsonArray dragonPath = null;
+        JsonArray blackdragonPath = null;
         for (PlayEvent ev : root.getEvents()) {
             if (ev instanceof PlayerTurnEvent) {
                 player = ((PlayerTurnEvent) ev).getPlayer();
@@ -403,6 +405,7 @@ public class StateGsonBuilder {
                 events.add(item);
                 // clean-up
                 dragonPath = null;
+                blackdragonPath = null;
                 continue;
             }
             if (item == null) {
@@ -544,6 +547,19 @@ public class StateGsonBuilder {
                         turnEvents.add(data);
                     } else {
                         dragonPath.add(context.serialize(nev.getTo()));
+                    }
+                } else if (nev.getNeutralFigure() instanceof BlackDragon) {
+                    if (blackdragonPath == null) {
+                        JsonObject data = new JsonObject();
+                        blackdragonPath = new JsonArray();
+                        blackdragonPath.add(context.serialize(nev.getFrom()));
+                        blackdragonPath.add(context.serialize(nev.getTo()));
+                        data.addProperty("type", "blackdragon-moved");
+                        data.addProperty("figure", nev.getNeutralFigure().getId());
+                        data.add("path", blackdragonPath);
+                        turnEvents.add(data);
+                    } else {
+                        blackdragonPath.add(context.serialize(nev.getTo()));
                     }
                 } else {
                     JsonObject data = new JsonObject();
