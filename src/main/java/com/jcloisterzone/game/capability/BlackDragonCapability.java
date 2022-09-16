@@ -2,14 +2,17 @@ package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.BlackDragon;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.reducers.UndeployMeeple;
+import com.jcloisterzone.reducers.UndeployNeutralFigure;
 
 import io.vavr.collection.Array;
 import io.vavr.collection.Vector;
@@ -83,6 +86,13 @@ public class BlackDragonCapability extends Capability<Tuple3<Vector<Position>,In
 	        FeaturePointer fp = t._2;
 	        if (pos.equals(fp.getPosition()) && m.canBeEatenByBlackDragon(state)) {
 	            state = (new UndeployMeeple(m, true)).apply(state);
+	        }
+	    }
+	    for (Tuple2<NeutralFigure<?>, BoardPointer> t: state.getNeutralFigures().getDeployedNeutralFigures().toSet()) {
+	        NeutralFigure<?> nf = t._1;
+	        BoardPointer bp = t._2;
+	        if (pos.equals(bp.getPosition()) && state.getNeutralFigures().getBlackDragon() != nf && nf.canBeEatenByBlackDragon(state)) {
+	            state = (new UndeployNeutralFigure(nf, true)).apply(state);
 	        }
 	    }
 	    return state;

@@ -571,6 +571,21 @@ public class StateGsonBuilder {
                 }
                 continue;
             }
+            if (ev instanceof NeutralFigureReturned) {
+                NeutralFigureReturned nfr = (NeutralFigureReturned) ev;
+                if (nfr.isForced()) {
+                    JsonObject data = new JsonObject();
+                    data.addProperty("type", "neutralfigure-returned");
+                    data.addProperty("neutralfigure", nfr.getNeutralFigure().getClass().getSimpleName().toLowerCase());
+                    Player nfrp = nfr.getPlayer();
+                    if (nfrp != null) {
+                    	data.addProperty("player", nfr.getPlayer().getIndex());
+                    }
+                    data.add("from", context.serialize(nfr.getFrom()));
+                    turnEvents.add(data);
+                }
+                continue;
+            }
             if (ev instanceof RansomPaidEvent) {
                 RansomPaidEvent rev = (RansomPaidEvent) ev;
                 JsonObject data = new JsonObject();

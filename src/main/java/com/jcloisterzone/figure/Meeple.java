@@ -41,10 +41,6 @@ public abstract class Meeple extends Figure<FeaturePointer> {
         return true;
     }
 
-    public boolean canBeEatenByBlackDragon(GameState state) {
-        return true;
-    }
-
     public DeploymentCheckResult isDeploymentAllowed(GameState state, FeaturePointer fp, Structure feature) {
         return DeploymentCheckResult.OK;
     }

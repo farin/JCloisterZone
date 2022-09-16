@@ -32,7 +32,7 @@ public class ReturnNeutralFigure implements Reducer {
         );
         state = state.setNeutralFigures(nfState);
         state = state.appendEvent(
-            new NeutralFigureReturned(PlayEventMeta.createWithPlayer(triggeringPlayer), figure, from)
+            new NeutralFigureReturned(PlayEventMeta.createWithPlayer(triggeringPlayer), figure, from, true, triggeringPlayer)
         );
         return state;
     }
