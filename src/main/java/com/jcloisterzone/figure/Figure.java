@@ -74,10 +74,6 @@ public abstract class Figure<T extends BoardPointer> implements Serializable {
         return !isDeployed(state);
     }
 
-    public boolean canBeEatenByBlackDragon(GameState state) {
-        return true;
-    }
-
     @Override
     public int hashCode() {
         return id.hashCode();

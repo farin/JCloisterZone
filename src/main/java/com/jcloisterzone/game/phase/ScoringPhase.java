@@ -135,15 +135,6 @@ public class ScoringPhase extends Phase {
             }
         }
 
-        BlackDragonCapability blackdragonCap = state.getCapabilities().get(BlackDragonCapability.class);
-        
-        Array<Integer> scoreOnStart = state.getPlayers().getScore();
-
-        if (blackdragonCap != null && completedMutable.keySet().size()>0 && !state.hasFlag(Flag.BLACK_DRAGON_MOVED)) {
-            state = blackdragonCap.setModel(state, new Tuple3<>(blackdragonCap.EMPTY_VISITED,completedMutable.keySet().size(),blackdragonCap.getScore(state)));
-            return next(state, blackdragonMovePhase);
-        }
-
         Map<Wagon, FeaturePointer> deployedWagonsBefore = getDeployedWagons(state);
 
         for (Capability<?> cap : state.getCapabilities().toSeq()) {

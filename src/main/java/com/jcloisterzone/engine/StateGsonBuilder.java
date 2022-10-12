@@ -73,7 +73,6 @@ public class StateGsonBuilder {
         builder.registerTypeAdapter(RemoveMageOrWitchAction.class, new ActionSerializer("RemoveMageOrWitch"));
         builder.registerTypeAdapter(LittleBuildingAction.class, new LittleBuildingActionSerializer());
         builder.registerTypeAdapter(ScoreAcrobatsAction.class, new SelectFeatureActionSerializer());
-        builder.registerTypeAdapter(MoveBlackDragonAction.class, new MoveBlackDragonActionSerializer());
         return builder.create();
     }
 
@@ -294,14 +293,14 @@ public class StateGsonBuilder {
         }
         pos = state.getBlackDragonDeployment();
         if (pos != null) {
-            Tuple3<Vector<Position>,Integer,Array<Integer>> blackdragonmoves =  root.getCapabilityModel(BlackDragonCapability.class);
+            BlackDragonCapabilityModel model =  root.getCapabilityModel(BlackDragonCapability.class);
             JsonObject data = new JsonObject();
             data.add("position", context.serialize(pos));
             if (root.getPhase() instanceof BlackDragonMovePhase) {
                 JsonArray visitedData = new JsonArray();
-                blackdragonmoves._1.forEach(p -> visitedData.add(context.serialize(p)));
+                model.getVisited().forEach(p -> visitedData.add(context.serialize(p)));
                 data.add("visited", visitedData);
-                data.addProperty("remaining", blackdragonmoves._2 - blackdragonmoves._1.length());
+                data.addProperty("remaining", model.getMoves() - model.getVisited().length());
             }
             neutral.add("blackdragon", data);
         }
@@ -567,21 +566,6 @@ public class StateGsonBuilder {
                     data.addProperty("figure", nev.getNeutralFigure().getId());
                     data.add("from", context.serialize(nev.getTo()));
                     data.add("to", context.serialize(nev.getTo()));
-                    turnEvents.add(data);
-                }
-                continue;
-            }
-            if (ev instanceof NeutralFigureReturned) {
-                NeutralFigureReturned nfr = (NeutralFigureReturned) ev;
-                if (nfr.isForced()) {
-                    JsonObject data = new JsonObject();
-                    data.addProperty("type", "neutralfigure-returned");
-                    data.addProperty("neutralfigure", nfr.getNeutralFigure().getClass().getSimpleName().toLowerCase());
-                    Player nfrp = nfr.getPlayer();
-                    if (nfrp != null) {
-                    	data.addProperty("player", nfr.getPlayer().getIndex());
-                    }
-                    data.add("from", context.serialize(nfr.getFrom()));
                     turnEvents.add(data);
                 }
                 continue;
@@ -944,20 +928,4 @@ public class StateGsonBuilder {
             return json;
         }
     }
-
-    private class MoveBlackDragonActionSerializer implements JsonSerializer<MoveBlackDragonAction> {
-        @Override
-        public JsonElement serialize(MoveBlackDragonAction action, Type type, JsonSerializationContext context) {
-            JsonObject json = new JsonObject();
-            json.addProperty("type", "MoveDragon");
-            json.addProperty("figureId", action.getFigureId());
-            JsonArray options = new JsonArray();
-            action.getOptions().forEach(pos -> {
-                options.add(context.serialize(pos));
-            });
-            json.add("options", options);
-            return json;
-        }
-    }
-
 }

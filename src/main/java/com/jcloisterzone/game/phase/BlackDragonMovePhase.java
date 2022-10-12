@@ -1,11 +1,11 @@
 package com.jcloisterzone.game.phase;
 
-import com.jcloisterzone.Player;
-import com.jcloisterzone.action.MoveBlackDragonAction;
+import com.jcloisterzone.action.MoveDragonAction;
 import com.jcloisterzone.board.Position;
 import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.figure.neutral.BlackDragon;
 import com.jcloisterzone.figure.neutral.NeutralFigure;
+import com.jcloisterzone.game.capability.BlackDragonCapabilityModel;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.capability.BlackDragonCapability;
 import com.jcloisterzone.game.state.ActionsState;
@@ -15,7 +15,6 @@ import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.io.message.MoveNeutralFigureMessage;
 import com.jcloisterzone.random.RandomGenerator;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
-import io.vavr.Tuple3;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 import io.vavr.collection.Vector;
@@ -28,27 +27,23 @@ public class BlackDragonMovePhase extends Phase {
 
     @Override
     public StepResult enter(GameState state) {
-        BlackDragonCapability blackdragonCap = state.getCapabilities().get(BlackDragonCapability.class);
-        Vector<Position> visited = blackdragonCap.getVisitedPositions(state);
-        Integer moves = blackdragonCap.getMoves(state);
-        if (visited.size() == moves) {
+        BlackDragonCapabilityModel model = state.getCapabilityModel(BlackDragonCapability.class);
+        if (model.getVisited().size() == model.getMoves()) {
             return next(endBlackDragonMove(state));
         }
-        Set<Position> availMoves =  getAvailBlackDragonMoves(state, visited);
+        Set<Position> availMoves =  getAvailBlackDragonMoves(state, model.getVisited());
         if (availMoves.isEmpty()) {
             return next(endBlackDragonMove(state));
         }
         BlackDragon blackdragon = state.getNeutralFigures().getBlackDragon();
         return promote(state.setPlayerActions(
-            new ActionsState(state.getTurnPlayer(), new MoveBlackDragonAction(blackdragon.getId(), availMoves), false)
+            new ActionsState(state.getTurnPlayer(), new MoveDragonAction(blackdragon.getId(), availMoves), false)
         ));
     }
 
     private GameState endBlackDragonMove(GameState state) {
     	state = state.addFlag(Flag.BLACK_DRAGON_MOVED);
-        state = state.mapCapabilityModel(BlackDragonCapability.class, blackdragon -> {
-        	return new Tuple3<>(BlackDragonCapability.EMPTY_VISITED,0,blackdragon._3);	
-        });
+        state = state.setCapabilityModel(BlackDragonCapability.class, new BlackDragonCapabilityModel(BlackDragonCapability.EMPTY_VISITED, 0));
         state = clearActions(state);
         return state;
     }
@@ -80,27 +75,26 @@ public class BlackDragonMovePhase extends Phase {
             throw new IllegalArgumentException("Illegal neutral figure move");
         }
 
-        BlackDragonCapability blackdragonCap = state.getCapabilities().get(BlackDragonCapability.class);
+        BlackDragonCapability cap = state.getCapabilities().get(BlackDragonCapability.class);
+        BlackDragonCapabilityModel model = state.getCapabilityModel(BlackDragonCapability.class);
 
-        Vector<Position> visited = blackdragonCap.getVisitedPositions(state);
+        Vector<Position> visited = model.getVisited();
         Set<Position> availMoves =  getAvailBlackDragonMoves(state, visited);
 
-        Position pos = ptr.getPosition();
+        final Position pos = ptr.getPosition();
         if (!availMoves.contains(pos)) {
             throw new IllegalArgumentException("Invalid black dragon move.");
         }
-
-        Position blackdragonPosition = state.getNeutralFigures().getBlackDragonDeployment();
 
         state = (
             new MoveNeutralFigure<>((BlackDragon) fig, pos, state.getActivePlayer())
         ).apply(state);
 
-        state = state.mapCapabilityModel(BlackDragonCapability.class, blackdragon -> {
-        	return new Tuple3<>(blackdragon._1.append(blackdragonPosition),blackdragon._2,blackdragon._3);	
+        state = state.mapCapabilityModel(BlackDragonCapability.class, m -> {
+            return m.setVisited(m.getVisited().append(pos));
         });
 
-        state = blackdragonCap.blackDragonOnTile(state, pos);
+        state = cap.clearTile(state, pos);
         return enter(state);
     }
 }

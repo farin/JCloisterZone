@@ -12,9 +12,4 @@ public class BigTop extends NeutralFigure<Position> {
     public BigTop(String id) {
         super(id);
     }
-
-    @Override
-    public boolean canBeEatenByBlackDragon(GameState state) {
-        return false;
-    }
 }

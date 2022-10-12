@@ -46,16 +46,4 @@ public abstract class AbstractUndeploy implements Reducer {
 
         return state;
     }
-
-    protected GameState undeploy(GameState state, PlayEvent.PlayEventMeta meta, NeutralFigure<?> figure, BoardPointer source, boolean forced, Player player) {
-        
-        NeutralFiguresState nfState = state.getNeutralFigures();
-        nfState = nfState.setDeployedNeutralFigures(nfState.getDeployedNeutralFigures().remove(figure));
-        state = state.setNeutralFigures(nfState);
-
-        state = state.appendEvent(
-            new NeutralFigureReturned(meta, figure, source, forced, player)
-        );
-        return state;
-    }
 }

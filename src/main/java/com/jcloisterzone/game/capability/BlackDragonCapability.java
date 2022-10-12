@@ -2,28 +2,21 @@ package com.jcloisterzone.game.capability;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Position;
-import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.Completable;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.neutral.BlackDragon;
-import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.reducers.MoveNeutralFigure;
 import com.jcloisterzone.reducers.UndeployMeeple;
-import com.jcloisterzone.reducers.UndeployNeutralFigure;
 
-import io.vavr.collection.Array;
 import io.vavr.collection.Vector;
 import io.vavr.Tuple2;
-import io.vavr.Tuple3;
 
-/**
- * @model Tuple3<Vector<Position>,Integer,Array<Integer> : visited tiles by black dragon, count of finished features, score on start of turn
- */
+
 @Immutable
-public class BlackDragonCapability extends Capability<Tuple3<Vector<Position>,Integer,Array<Integer>>> {
+public class BlackDragonCapability extends Capability<BlackDragonCapabilityModel> {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,7 +25,7 @@ public class BlackDragonCapability extends Capability<Tuple3<Vector<Position>,In
     @Override
     public GameState onStartGame(GameState state) {
         state = state.mapNeutralFigures(nf -> nf.setBlackDragon(new BlackDragon("blackdragon.1")));
-        state = setInitialTurnState(state);
+        state = setModel(state, new BlackDragonCapabilityModel(EMPTY_VISITED, 0));
         return state;
     }
 
@@ -43,32 +36,10 @@ public class BlackDragonCapability extends Capability<Tuple3<Vector<Position>,In
 
     @Override
     public GameState beforeCompletableScore(GameState state, java.util.Set<Completable> features) {
-    	Tuple3<Vector<Position>,Integer,Array<Integer>> model = getModel(state);
-    	state = setModel(state, new Tuple3<>(EMPTY_VISITED,features.size(),model._3));
+        if (features.size() > 0) {
+    	    state = setModel(state, new BlackDragonCapabilityModel(EMPTY_VISITED, features.size()));
+        }
         return state;
-    }
-    
-    @Override
-    public GameState onTurnPartCleanUp(GameState state) {
-    	return setInitialTurnState(state);
-    }
-
-    public GameState setInitialTurnState(GameState state) {
-        return setModel(state, new Tuple3<>(EMPTY_VISITED,0,state.getPlayers().getScore()));
-    }
-
-    public Vector<Position> getVisitedPositions(GameState state) {
-        Vector<Position> visitedpositions = getModel(state)._1;
-        return visitedpositions == null ? BlackDragonCapability.EMPTY_VISITED : visitedpositions;
-    }
-
-    public Integer getMoves(GameState state) {
-    	Integer finishedfeatures = getModel(state)._2;
-        return finishedfeatures == null ? 0 : finishedfeatures;
-    }
-
-    public Array<Integer> getScore(GameState state) {
-    	return getModel(state)._3;
     }
 
     public GameState moveBlackDragon(GameState state, Position pos) {
@@ -76,25 +47,19 @@ public class BlackDragonCapability extends Capability<Tuple3<Vector<Position>,In
 	        new MoveNeutralFigure<>(state.getNeutralFigures().getBlackDragon(), pos)
 	    ).apply(state);
 	
-        state = blackDragonOnTile(state, pos);
+        state = clearTile(state, pos);
 	    return state;
     }
     
-    public GameState blackDragonOnTile(GameState state, Position pos) {
+    public GameState clearTile(GameState state, Position pos) {
 	    for (Tuple2<Meeple, FeaturePointer> t: state.getDeployedMeeples()) {
 	        Meeple m = t._1;
 	        FeaturePointer fp = t._2;
-	        if (pos.equals(fp.getPosition()) && m.canBeEatenByBlackDragon(state)) {
+	        if (pos.equals(fp.getPosition()) && m.canBeEatenByDragon(state)) {
 	            state = (new UndeployMeeple(m, true)).apply(state);
 	        }
 	    }
-	    for (Tuple2<NeutralFigure<?>, BoardPointer> t: state.getNeutralFigures().getDeployedNeutralFigures().toSet()) {
-	        NeutralFigure<?> nf = t._1;
-	        BoardPointer bp = t._2;
-	        if (pos.equals(bp.getPosition()) && state.getNeutralFigures().getBlackDragon() != nf && nf.canBeEatenByBlackDragon(state)) {
-	            state = (new UndeployNeutralFigure(nf, true)).apply(state);
-	        }
-	    }
+
 	    return state;
     }
 }

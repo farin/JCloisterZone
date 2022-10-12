@@ -1,10 +1,14 @@
 package com.jcloisterzone.game.phase;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.event.ScoreEvent;
 import com.jcloisterzone.game.capability.BlackDragonCapability;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.random.RandomGenerator;
-import io.vavr.collection.Array;
+import io.vavr.Predicates;
+import io.vavr.collection.Stream;
+
+import java.util.HashMap;
 
 public class BlackDragonPlacePhase extends Phase {
 
@@ -14,17 +18,31 @@ public class BlackDragonPlacePhase extends Phase {
 
     @Override
     public StepResult enter(GameState state) {
-        Array<Integer> scoreOnStart = state.getCapabilityModel(BlackDragonCapability.class)._3;
-        BlackDragonCapability blackdragonCap = state.getCapabilities().get(BlackDragonCapability.class);
+        BlackDragonCapability cap = state.getCapabilities().get(BlackDragonCapability.class);
 
-        for(Player player : state.getPlayers().getPlayers() ) {
-        	Integer scoreBefore = scoreOnStart.get(player.getIndex());
-        	Integer scoreCurrent = state.getPlayers().getScore().get(player.getIndex());
-        	Integer diff = scoreCurrent - scoreBefore;
-        	if (diff>0 && ((scoreBefore % 50) + diff > 50)) {
-        		state = blackdragonCap.moveBlackDragon(state, state.getLastPlaced().getPosition());
-        		break;
-        	}
+        java.util.Map<Player, Integer> receivedScore = new HashMap<>();
+        for (Player player : state.getPlayers().getPlayers() ) {
+            receivedScore.put(player, 0);
+        }
+
+        Stream.ofAll(state.getCurrentTurnPartEvents())
+                .filter(Predicates.instanceOf(ScoreEvent.class))
+                .map(ev -> (ScoreEvent) ev)
+                .forEach(ev -> {
+                    for (ScoreEvent.ReceivedPoints rp : ev.getPoints()) {
+                        receivedScore.put(rp.getPlayer(), receivedScore.get(rp.getPlayer()) + rp.getPoints());
+                    }
+                });
+
+        for (Player player : state.getPlayers().getPlayers() ) {
+            int playerReceivedPoints = receivedScore.get(player);
+            if (playerReceivedPoints > 0) {
+                int scoreCurrent = state.getPlayers().getScore().get(player.getIndex());
+                if (scoreCurrent / 50 > (scoreCurrent - playerReceivedPoints) / 50) {
+                    state = cap.moveBlackDragon(state, state.getLastPlaced().getPosition());
+                    break;
+                }
+            }
         }
 
     	return next(state);

@@ -12,9 +12,4 @@ public class Count extends NeutralFigure<FeaturePointer> {
     public Count(String id) {
         super(id);
     }
-
-    @Override
-    public boolean canBeEatenByBlackDragon(GameState state) {
-        return false;
-    }
 }

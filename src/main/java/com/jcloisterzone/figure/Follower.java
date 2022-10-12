@@ -28,10 +28,6 @@ public abstract class Follower extends Meeple {
         return !(getFeature(state) instanceof Castle);
     }
 
-    @Override
-    public boolean canBeEatenByBlackDragon(GameState state) {
-        return !(getFeature(state) instanceof Castle);
-    }
     public boolean isCaptured(GameState state) {
         Array<List<Follower>> model = state.getCapabilityModel(TowerCapability.class);
         return model != null && Stream.concat(model).find(f -> f == this).isDefined();
