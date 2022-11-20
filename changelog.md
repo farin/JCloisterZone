@@ -1,5 +1,9 @@
 # Version history
 
+## 5.10.2
+*2022-11-20*
+* farm hints are back
+
 ## 5.10.1
 *2022-01-31*
 * fix: unable to score Acrobats if player has no meeple in supply
