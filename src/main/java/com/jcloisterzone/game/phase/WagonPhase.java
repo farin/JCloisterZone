@@ -53,8 +53,7 @@ public class WagonPhase extends Phase {
                         .filter(t -> {
                             Structure f = t._2;
                             if (f instanceof Castle) {
-                                Castle castle = (Castle) f;
-                                return !castle.isOccupied(_state);
+                            	return false;
                             }
                             if (f instanceof Completable) {
                                 Completable nei = (Completable) f;
