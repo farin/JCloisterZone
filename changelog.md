@@ -1,5 +1,9 @@
 # Version history
 
+## upcoming 
+* fix: player is now allowed to place Phantom after placing Tower piece and taking no prisoner (with explicit skip)
+* fix: in some cases points breakdown in top bar wasn't cleared after turn confirmation by space key   
+
 ## 5.10.2
 *2022-11-20*
 * farm hints are back
