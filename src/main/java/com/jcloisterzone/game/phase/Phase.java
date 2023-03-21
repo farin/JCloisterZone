@@ -55,7 +55,7 @@ public abstract class Phase {
         }
 
         state = clearActions(state);
-        if (!(state.getPhase() instanceof TowerCapturePhase)) {
+        if (!(state.getPhase() instanceof TowerCapturePhase) && !(state.getPhase() instanceof AbbeyPhase)) {
             state = state.addFlag(Flag.NO_PHANTOM);
         }
         return next(state);

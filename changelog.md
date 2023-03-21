@@ -1,5 +1,8 @@
 # Version history
 
+## upcoming 5.12
+* fix: second Phantom action is not available when Abbey And Mayor expansion is enabled  
+
 ## 5.11.1
 *2023-03-16*
 * localization (kudos to translators)
