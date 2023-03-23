@@ -2,7 +2,8 @@
 
 ## upcoming 5.12
 * rules: fairy on acrobats, all meeples in pyramid are awarded
-* fix: second Phantom action is not available when Abbey And Mayor expansion is enabled  
+* fix: second Phantom action is not available when Abbey And Mayor expansion is enabled
+* fix: Barn can be undeployed with Festival tile
 
 ## 5.11.1
 *2023-03-16*
