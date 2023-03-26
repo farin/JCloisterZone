@@ -1,5 +1,20 @@
 # Version history
 
+## upcoming 5.12
+* rules: fairy on acrobats, all meeples in pyramid are awarded
+* fix: second Phantom action is not available when Abbey And Mayor expansion is enabled
+* fix: Barn can be undeployed with Festival tile
+
+## 5.11.1
+*2023-03-16*
+* localization (kudos to translators)
+* fix: player is now allowed to place Phantom after placing Tower piece and taking no prisoner (with explicit skip)
+* fix: in some cases points breakdown in top bar wasn't cleared after turn confirmation by space key
+
+## 5.10.2
+*2022-11-20*
+* farm hints are back
+
 ## 5.10.1
 *2022-01-31*
 * fix: unable to score Acrobats if player has no meeple in supply
