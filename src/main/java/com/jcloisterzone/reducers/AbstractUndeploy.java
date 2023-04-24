@@ -1,15 +1,20 @@
 package com.jcloisterzone.reducers;
 
 import com.jcloisterzone.Player;
+import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.MeepleReturned;
+import com.jcloisterzone.event.NeutralFigureReturned;
 import com.jcloisterzone.event.PlayEvent;
 import com.jcloisterzone.feature.Structure;
 import com.jcloisterzone.figure.Builder;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
 import com.jcloisterzone.figure.Pig;
+import com.jcloisterzone.figure.neutral.NeutralFigure;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.NeutralFiguresState;
+
 import io.vavr.Tuple2;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Stream;
@@ -20,7 +25,7 @@ public abstract class AbstractUndeploy implements Reducer {
         LinkedHashMap<Meeple, FeaturePointer> deployedMeeples = state.getDeployedMeeples();
         state = state.setDeployedMeeples(deployedMeeples.remove(meeple));
         state = state.appendEvent(
-                new MeepleReturned(meta, meeple, source, forced)
+            new MeepleReturned(meta, meeple, source, forced)
         );
         return state;
     }

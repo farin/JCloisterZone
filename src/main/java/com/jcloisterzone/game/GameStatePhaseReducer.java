@@ -46,6 +46,7 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
         next = cleanUpTurnPartPhase = new CleanUpTurnPartPhase(randomGenerator, next);
         if (setup.contains(CornCircleCapability.class)) next = new CornCirclePhase(randomGenerator, next);
 
+        if (setup.contains(BlackDragonCapability.class)) next = new BlackDragonPlacePhase(randomGenerator, next);
         if (setup.contains(DragonCapability.class) && "after-scoring".equals(setup.getStringRule(Rule.DRAGON_MOVEMENT))) {
             next = new DragonPhase(randomGenerator, next);
         }

@@ -67,6 +67,7 @@ public class DragonMovePhase extends Phase {
         BoardPointer fairyPtr = state.getNeutralFigures().getFairyDeployment();
         Position fairyPosition = fairyPtr == null ? null : fairyPtr.getPosition();
         Position dragonPosition = state.getNeutralFigures().getDragonDeployment();
+        Position blackdragonPosition = state.getNeutralFigures().getBlackDragonDeployment();
 
         for (Position offset: Position.ADJACENT.values()) {
             Position pos = dragonPosition.add(offset);
@@ -75,6 +76,7 @@ public class DragonMovePhase extends Phase {
             if (pt == null || CountCapability.isTileForbidden(pt.getTile())) continue;
             if (visited.contains(pos)) continue;
             if (pos.equals(fairyPosition)) continue;
+            if (pos.equals(blackdragonPosition)) continue;
 
             result = result.add(pos);
         }

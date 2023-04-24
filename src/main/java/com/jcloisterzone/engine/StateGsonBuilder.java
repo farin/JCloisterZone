@@ -13,18 +13,21 @@ import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.neutral.BlackDragon;
 import com.jcloisterzone.figure.neutral.Dragon;
 import com.jcloisterzone.game.capability.*;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
 import com.jcloisterzone.game.capability.GoldminesCapability.GoldToken;
 import com.jcloisterzone.game.capability.LittleBuildingsCapability.LittleBuilding;
 import com.jcloisterzone.game.capability.SheepToken;
+import com.jcloisterzone.game.phase.BlackDragonMovePhase;
 import com.jcloisterzone.game.phase.DragonMovePhase;
 import com.jcloisterzone.game.phase.Phase;
 import com.jcloisterzone.game.phase.RussianPromosTrapPhase;
 import com.jcloisterzone.game.state.*;
 import com.jcloisterzone.io.MessageParser;
 import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import io.vavr.collection.*;
 
 import java.lang.reflect.Type;
@@ -290,6 +293,19 @@ public class StateGsonBuilder {
             data.add("placement", context.serialize(pos));
             neutral.add("bigtop", data);
         }
+        pos = state.getBlackDragonDeployment();
+        if (pos != null) {
+            BlackDragonCapabilityModel model =  root.getCapabilityModel(BlackDragonCapability.class);
+            JsonObject data = new JsonObject();
+            data.add("position", context.serialize(pos));
+            if (root.getPhase() instanceof BlackDragonMovePhase) {
+                JsonArray visitedData = new JsonArray();
+                model.getVisited().forEach(p -> visitedData.add(context.serialize(p)));
+                data.add("visited", visitedData);
+                data.addProperty("remaining", model.getMoves() - model.getVisited().length());
+            }
+            neutral.add("blackdragon", data);
+        }
         return neutral;
     }
 
@@ -390,6 +406,7 @@ public class StateGsonBuilder {
         JsonObject item = null;
         JsonArray turnEvents = null;
         JsonArray dragonPath = null;
+        JsonArray blackdragonPath = null;
         for (PlayEvent ev : root.getEvents()) {
             if (ev instanceof PlayerTurnEvent) {
                 player = ((PlayerTurnEvent) ev).getPlayer();
@@ -403,6 +420,7 @@ public class StateGsonBuilder {
                 events.add(item);
                 // clean-up
                 dragonPath = null;
+                blackdragonPath = null;
                 continue;
             }
             if (item == null) {
@@ -544,6 +562,19 @@ public class StateGsonBuilder {
                         turnEvents.add(data);
                     } else {
                         dragonPath.add(context.serialize(nev.getTo()));
+                    }
+                } else if (nev.getNeutralFigure() instanceof BlackDragon) {
+                    if (blackdragonPath == null) {
+                        JsonObject data = new JsonObject();
+                        blackdragonPath = new JsonArray();
+                        blackdragonPath.add(context.serialize(nev.getFrom()));
+                        blackdragonPath.add(context.serialize(nev.getTo()));
+                        data.addProperty("type", "blackdragon-moved");
+                        data.addProperty("figure", nev.getNeutralFigure().getId());
+                        data.add("path", blackdragonPath);
+                        turnEvents.add(data);
+                    } else {
+                        blackdragonPath.add(context.serialize(nev.getTo()));
                     }
                 } else {
                     JsonObject data = new JsonObject();
