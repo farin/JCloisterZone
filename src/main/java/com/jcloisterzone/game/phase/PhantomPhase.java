@@ -25,7 +25,7 @@ public class PhantomPhase extends AbstractActionPhase {
 
     @Override
     public StepResult enter(GameState state) {
-        if (state.getFlags().contains(Flag.NO_PHANTOM) || state.isPassed()) {
+        if (state.getFlags().contains(Flag.NO_PHANTOM)) {
             // The placement of a princess tile with removal of a knight from the city cannot be used as a first
             // "follower move" and be followed by placement of the phantom (e.g. into the now-vacated city).
             // As per the rules for the princess, "if a knight is removed from the city, the player may not deploy or

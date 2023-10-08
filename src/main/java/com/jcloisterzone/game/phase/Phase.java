@@ -1,5 +1,6 @@
 package com.jcloisterzone.game.phase;
 
+import com.jcloisterzone.game.state.Flag;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.io.message.PassMessage;
 import com.jcloisterzone.io.message.PayRansomMessage;
@@ -54,12 +55,10 @@ public abstract class Phase {
         }
 
         state = clearActions(state);
-        if (getDefaultNext() instanceof PhantomPhase) {
-            //skip PhantomPhase if user pass turn
-            return getDefaultNext().next(state);
-        } else {
-            return next(state);
+        if (!(state.getPhase() instanceof TowerCapturePhase) && !(state.getPhase() instanceof AbbeyPhase)) {
+            state = state.addFlag(Flag.NO_PHANTOM);
         }
+        return next(state);
     }
 
     @PhaseMessageHandler
