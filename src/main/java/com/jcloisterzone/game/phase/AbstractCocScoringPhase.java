@@ -4,12 +4,15 @@ import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.board.Location;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.board.Tile;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.feature.*;
 import com.jcloisterzone.figure.Follower;
+import com.jcloisterzone.game.Capability;
 import com.jcloisterzone.game.capability.CountCapability;
 import com.jcloisterzone.game.state.ActionsState;
 import com.jcloisterzone.game.state.GameState;
+import com.jcloisterzone.game.state.PlacedTile;
 import com.jcloisterzone.io.message.DeployMeepleMessage;
 import com.jcloisterzone.io.message.PassMessage;
 import com.jcloisterzone.random.RandomGenerator;
@@ -55,7 +58,13 @@ public abstract class AbstractCocScoringPhase extends Phase {
                 Set<FeaturePointer> options = state.getFeatures(getFeatureTypeForLocation(quarter))
                     .filter(filter::apply)
                     .flatMap(Feature::getPlaces)
-                    .toSet();
+                    .toSet()
+                    .filter(tp -> {
+                        for (Capability<?> cap : state.getCapabilities().toSeq()) {
+                            if (!cap.isMeepleDeploymentAllowed(state, tp.getPosition())) return false;
+                        }
+                        return true;
+                    });
 
                 if (options.isEmpty()) {
                     return List.empty();

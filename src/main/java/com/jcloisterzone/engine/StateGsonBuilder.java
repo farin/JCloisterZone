@@ -8,6 +8,8 @@ import com.jcloisterzone.board.pointer.BoardPointer;
 import com.jcloisterzone.board.pointer.FeaturePointer;
 import com.jcloisterzone.event.*;
 import com.jcloisterzone.event.ScoreEvent.ReceivedPoints;
+import com.jcloisterzone.feature.Field;
+import com.jcloisterzone.feature.Scoreable;
 import com.jcloisterzone.feature.Tower;
 import com.jcloisterzone.figure.Follower;
 import com.jcloisterzone.figure.Meeple;
@@ -361,6 +363,20 @@ public class StateGsonBuilder {
             if (f instanceof Tower) {
                 item.addProperty("height", ((Tower) f).getHeight());
             }
+            if (f instanceof Scoreable) {
+                JsonArray owners = new JsonArray();
+                ((Scoreable) f).getOwners(root).forEach(p -> owners.add(p.getIndex()));
+                item.add("owners", owners);
+            }
+            if (f instanceof Field) {
+                Field field = (Field) f;
+                int cities = field.getAdjoiningCities().size();
+                if (field.isAdjoiningCityOfCarcassonne()) {
+                    cities++;
+                }
+                item.addProperty("cities", cities);
+            }
+
             features.add(item);
         });
         return features;

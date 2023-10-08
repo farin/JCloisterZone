@@ -23,7 +23,7 @@ public class Castle extends TileFeature implements Scoreable {
     }
 
     public Set<Position> getTilePositions() {
-        return HashSet.ofAll(places.map(fp -> fp.getPosition()));
+        return HashSet.ofAll(places.map(FeaturePointer::getPosition));
     }
 
     public Set<Position> getVicinity() {
@@ -57,5 +57,4 @@ public class Castle extends TileFeature implements Scoreable {
     public Feature placeOnBoard(Position pos, Rotation rot) {
         throw new UnsupportedOperationException();
     }
-
 }
