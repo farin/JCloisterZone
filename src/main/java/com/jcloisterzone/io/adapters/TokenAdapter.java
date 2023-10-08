@@ -8,6 +8,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.jcloisterzone.game.Token;
+import com.jcloisterzone.game.capability.BardsLuteCapability.BardsLuteToken;
 import com.jcloisterzone.game.capability.BridgeCapability.BridgeToken;
 import com.jcloisterzone.game.capability.CastleCapability.CastleToken;
 import com.jcloisterzone.game.capability.FerriesCapability.FerryToken;
@@ -44,6 +45,7 @@ public class TokenAdapter extends TypeAdapter<Token> {
             case "TUNNEL_A": return Tunnel.TUNNEL_A;
             case "TUNNEL_B": return Tunnel.TUNNEL_B;
             case "TUNNEL_C": return Tunnel.TUNNEL_C;
+            case "BARDS_NOTE": return BardsLuteToken.BARDS_NOTE;
             }
             throw new IOException("Unknown token " + token);
         }

@@ -169,6 +169,13 @@ public class ScoringPhase extends Phase {
         for (Completable completable : completedMutable.keySet()) {
             state = (new UndeployMeeples(completable, false)).apply(state);
         }
+        
+        // return bardlute tokens
+        if (state.getCapabilities().contains(BardsLuteCapability.class)) {
+        	for (Completable completable : completedMutable.keySet()) {
+        		state = state.getCapabilities().get(BardsLuteCapability.class).removePlacedToken(state, completable.getPlaces());
+        	}
+        }
 
         CastleCapability castleCap = state.getCapabilities().get(CastleCapability.class);
         HashMap<Completable, ScoreFeatureReducer> completed = HashMap.ofAll(completedMutable);
