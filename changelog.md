@@ -1,7 +1,10 @@
 # Version history
 
-## upcoming 5.12
+## 5.12.0
+*2023-03-27*
 * rules: fairy on acrobats, all meeples in pyramid are awarded
+* rules: Wagon is now not allowed to move onto castle (empty castle is considered completed)
+* rules: move from CoC can't move to dragon tile
 * fix: second Phantom action is not available when Abbey And Mayor expansion is enabled
 * fix: Barn can be undeployed with Festival tile
 
