@@ -28,16 +28,4 @@ public class NeutralFigure<T extends BoardPointer> extends Figure<T> {
         FeaturePointer fp = ptr.asFeaturePointer();
         return feature.getPlaces().contains(fp);
     }
-
-
-//    @Override
-//    public void deploy(T at) {
-//        T origin = getDeployment();
-//        game.replaceState(state -> {
-//            LinkedHashMap<NeutralFigure<?>, BoardPointer> deployedNeutralFigures = state.getDeployedNeutralFigures();
-//            return state.setDeployedNeutralFigures(deployedNeutralFigures.put(this, at));
-//        });
-//        game.post(new NeutralFigureMoveEvent(game.getActivePlayer(), this, origin, at));
-//    }
-
 }

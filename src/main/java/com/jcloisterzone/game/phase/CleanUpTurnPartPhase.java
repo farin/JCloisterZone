@@ -38,6 +38,7 @@ public class CleanUpTurnPartPhase extends Phase {
                 .remove(Flag.PORTAL_USED)
                 .remove(Flag.NO_PHANTOM)
                 .remove(Flag.FLYING_MACHINE_USED)
+                .remove(Flag.BLACK_DRAGON_MOVED)
             );
         }
 

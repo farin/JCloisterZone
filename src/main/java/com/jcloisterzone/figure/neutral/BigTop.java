@@ -2,6 +2,7 @@ package com.jcloisterzone.figure.neutral;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.Position;
+import com.jcloisterzone.game.state.GameState;
 
 @Immutable
 public class BigTop extends NeutralFigure<Position> {
@@ -10,5 +11,10 @@ public class BigTop extends NeutralFigure<Position> {
 
     public BigTop(String id) {
         super(id);
+    }
+
+    @Override
+    public boolean canBeEatenByBlackDragon(GameState state) {
+        return false;
     }
 }

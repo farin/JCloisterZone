@@ -2,6 +2,7 @@ package com.jcloisterzone.figure.neutral;
 
 import com.jcloisterzone.Immutable;
 import com.jcloisterzone.board.pointer.FeaturePointer;
+import com.jcloisterzone.game.state.GameState;
 
 @Immutable
 public class Count extends NeutralFigure<FeaturePointer> {
@@ -10,5 +11,10 @@ public class Count extends NeutralFigure<FeaturePointer> {
 
     public Count(String id) {
         super(id);
+    }
+
+    @Override
+    public boolean canBeEatenByBlackDragon(GameState state) {
+        return false;
     }
 }
