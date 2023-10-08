@@ -98,6 +98,18 @@ public class Engine implements Runnable {
         meeples = addMeeples(meeples, setupMsg, "shepherd", Shepherd.class);
         meeples = addMeeples(meeples, setupMsg, "ringmaster", Ringmaster.class);
 
+        Map<Rule, Object> rules = HashMap.empty();
+        if (setupMsg.getElements().containsKey("farmers")) {
+            rules = rules.put(Rule.FARMERS,true);
+        }
+        if (setupMsg.getElements().containsKey("escape")) {
+            rules = rules.put(Rule.ESCAPE, true);
+        }
+
+        for (Entry<String, Object> entry : setupMsg.getRules().entrySet()) {
+            rules = rules.put(Rule.byKey(entry.getKey()), entry.getValue());
+        }
+
         Set<Class<? extends Capability<?>>> capabilities = HashSet.empty();
         capabilities = addCapabilities(capabilities, setupMsg,"abbot", AbbotCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"barn", BarnCapability.class);
@@ -137,7 +149,11 @@ public class Engine implements Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"big-top", BigTopCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"acrobats", AcrobatsCapability.class);
 
-        capabilities = addCapabilities(capabilities, setupMsg,"river", RiverCapability.class);
+        if (setupMsg.getElements().containsKey("fishermen")) {
+            rules = rules.put(Rule.FISHERMEN,true);
+        } else {
+        	capabilities = addCapabilities(capabilities, setupMsg,"river", RiverCapability.class);
+        }
         capabilities = addCapabilities(capabilities, setupMsg,"corn-circle", CornCircleCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"siege", SiegeCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"flier", FlierCapability.class);
@@ -147,19 +163,8 @@ public class Engine implements Runnable {
         capabilities = addCapabilities(capabilities, setupMsg,"russian-trap", RussianPromosTrapCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"watchtower", WatchtowerCapability.class);
 
+        capabilities = addCapabilities(capabilities, setupMsg,"carousel", CarouselCapability.class);
         capabilities = addCapabilities(capabilities, setupMsg,"robbers-son", RobbersSonCapability.class);
-
-        Map<Rule, Object> rules = HashMap.empty();
-        if (setupMsg.getElements().containsKey("farmers")) {
-            rules = rules.put(Rule.FARMERS,true);
-        }
-        if (setupMsg.getElements().containsKey("escape")) {
-            rules = rules.put(Rule.ESCAPE, true);
-        }
-
-        for (Entry<String, Object> entry : setupMsg.getRules().entrySet()) {
-            rules = rules.put(Rule.byKey(entry.getKey()), entry.getValue());
-        }
 
         GameSetup gameSetup = new GameSetup(
                 HashMap.ofAll(setupMsg.getSets()),

@@ -8,6 +8,7 @@ package com.jcloisterzone.game;
 public enum Rule {
     FARMERS(null, Boolean.class, null),
     ESCAPE(null, Boolean.class, null),
+    FISHERMEN("fishermen", Boolean.class, null),
 
     PRINCESS_ACTION("princess-action", String.class, new Object[] { "may", "must" }),
     FAIRY_PLACEMENT("fairy-placement", String.class, new Object[] { "next-follower", "on-tile" }),
