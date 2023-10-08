@@ -74,7 +74,7 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
         if (setup.contains(GoldminesCapability.class)) next =  new GoldPiecePhase(randomGenerator, next);
         next = tilePhase = new TilePhase(randomGenerator, next);
         if (setup.contains(AbbeyCapability.class)) {
-            // if abbey is passed, commit commit action phase follows to change salt by following Commit message
+            // if abbey is passed, commit action phase follows to change salt by following Commit message
             next = new CommitAbbeyPassPhase(randomGenerator, next);
             next = abbeyPhase = new AbbeyPhase(randomGenerator, next);
         }
@@ -112,12 +112,8 @@ public class GameStatePhaseReducer implements Function2<GameState, Message, Game
                 assert m.getReturnType().equals(StepResult.class) : String.format("Bad return type %s.%s()", phase.getClass().getSimpleName(), m.getName());
                 StepResult res = (StepResult) m.invoke(phase, state, message);
                 boolean commited = message instanceof CommitMessage;
-                boolean passed = message instanceof PassMessage;
                 if (res.getState().isCommited() != commited) {
                     res = new StepResult(res.getState().setCommited(commited), res.getNext());
-                }
-                if (res.getState().isPassed() != passed) {
-                    res = new StepResult(res.getState().setPassed(passed), res.getNext());
                 }
                 return res;
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {

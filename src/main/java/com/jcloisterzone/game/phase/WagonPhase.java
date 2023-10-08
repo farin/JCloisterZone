@@ -53,12 +53,12 @@ public class WagonPhase extends Phase {
                         .filter(t -> {
                             Structure f = t._2;
                             if (f instanceof Castle) {
-                                Castle castle = (Castle) f;
-                                return !castle.isOccupied(_state);
+                                // empty castle is considered completed and occupied exclude wagon too
+                                return false;
                             }
                             if (f instanceof Completable) {
                                 Completable nei = (Completable) f;
-                                if ((f instanceof  Structure) && wagon.isDeploymentAllowed(_state, t._1, f) != DeploymentCheckResult.OK) {
+                                if (wagon.isDeploymentAllowed(_state, t._1, f) != DeploymentCheckResult.OK) {
                                     return false;
                                 }
                                 if (nei.isCompleted(_state)) {
@@ -71,7 +71,7 @@ public class WagonPhase extends Phase {
                                 if (nei instanceof Road) {
                                     Road road = (Road) nei;
                                     if (road.isLabyrinth(_state)) {
-                                        // current tile musn't be labyrinth center - apply regular ocuupation rule to it
+                                        // current tile mustn't be labyrinth center - apply regular occupation rule to it
                                         Road initial = (Road) _state.getPlacedTile(t._1.getPosition()).getInitialFeaturePartOf(t._1.getLocation())._2;
                                         if (!initial.isLabyrinth(_state)) {
                                             // find if there is empty labyrinth segment
