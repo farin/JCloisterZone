@@ -9,6 +9,7 @@ import com.jcloisterzone.event.PlayEvent.PlayEventMeta;
 import com.jcloisterzone.feature.Feature;
 import com.jcloisterzone.figure.Barn;
 import com.jcloisterzone.figure.Meeple;
+import com.jcloisterzone.figure.Obelisk;
 import com.jcloisterzone.figure.Shepherd;
 import com.jcloisterzone.game.state.GameState;
 import com.jcloisterzone.game.state.NeutralFiguresState;
@@ -43,7 +44,7 @@ public class UndeployMeeples implements Reducer {
         for (Tuple2<Meeple, FeaturePointer> t : state
                 .getDeployedMeeples()
                 .filter(t -> fps.contains(t._2))
-                .filter(t -> !(t._1 instanceof Barn) &&  !(t._1 instanceof Shepherd))
+                .filter(t -> !(t._1 instanceof Barn) &&  !(t._1 instanceof Shepherd) && !(t._1 instanceof Obelisk))
             ) {
             meeples.add(t._1);
             events.add(
