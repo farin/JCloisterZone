@@ -4,6 +4,7 @@ import com.jcloisterzone.Immutable;
 import com.jcloisterzone.Player;
 import com.jcloisterzone.action.MeepleAction;
 import com.jcloisterzone.action.PlayerAction;
+import com.jcloisterzone.figure.Phantom;
 import io.vavr.collection.Seq;
 import io.vavr.collection.Vector;
 
@@ -100,6 +101,21 @@ public class ActionsState implements Serializable {
         actions = actions.appendAll(
             this.actions.filter(a -> !(a instanceof MeepleAction))
         ); // merge back all other non-MeepleActions
+        return setActions(actions);
+    }
+
+    /**
+     * Reorder actions to logical order, like Phantom at end of actions
+     *
+     * @return new instance with the logical order of Actions
+     */
+    public ActionsState reorderActions() {
+    	Vector<PlayerAction<?>> actions = this.actions.partition(
+    			a -> !(a instanceof MeepleAction)
+    			||
+    			!((MeepleAction) a).getMeepleType().equals(Phantom.class)
+    			).apply((nonPhantom, phantom) -> nonPhantom.appendAll(phantom));
+    
         return setActions(actions);
     }
 

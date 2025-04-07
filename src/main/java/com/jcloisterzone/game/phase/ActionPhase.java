@@ -79,6 +79,8 @@ public class ActionPhase extends AbstractActionPhase {
                 state = state.setPlayerActions(new ActionsState(player, actions, false));
             }
         }
+        
+        state = state.setPlayerActions(state.getPlayerActions().reorderActions());
 
         if (state.getPlayerActions().getActions().isEmpty()) {
             state = clearActions(state);
